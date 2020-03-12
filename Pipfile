@@ -11,6 +11,7 @@ psycopg2-binary = "*"
 pytest = "*"
 pytest-django = "*"
 pyrebase = "*"
+sphinx = "*"
 
 [requires]
 python_version = "3.8"
