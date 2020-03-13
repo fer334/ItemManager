@@ -3,8 +3,5 @@
   <component name="JavaScriptSettings">
     <option name="languageLevel" value="ES6" />
   </component>
-<<<<<<< HEAD
-=======
   <component name="ProjectRootManager" version="2" project-jdk-name="Pipenv (ItemManager)" project-jdk-type="Python SDK" />
->>>>>>> c9c6f2837060008e9bfab34db0997b348d64db86
 </project>
