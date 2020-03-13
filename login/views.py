@@ -19,16 +19,6 @@ firebase = pyrebase.initialize_app(config)
 
 authfb = firebase.auth()
 
-# Create your views here.
-
-@login_required
-def index(request):
-    if request.session.get('uid', False):
-        return render(request, 'login/login.html', {})
-    else:
-        return render(request, 'login/testLogin.html', {})
-
-
 
 def login( request ):
     return render( request, 'login/login.html', { })
@@ -48,7 +38,8 @@ def postRegister(request):
         return render(request, 'login/register.html', {'error_message' : 'Error al registrar, pruebe con otro email y contraseña de 6 caracteres'})
     return render( request, 'login/postReg.html', {})
 
-def testLogin( request ):
+@login_required
+def index( request ):
     email = request.POST['email']
     password = request.POST['password']
     try:
