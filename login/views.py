@@ -18,7 +18,9 @@ config = {
 firebase = pyrebase.initialize_app(config)
 
 authfb = firebase.auth()
-
+@login_required
+def index( request ):
+    return render(request, 'login/testLogin.html', {})
 
 def login( request ):
     return render( request, 'login/login.html', { })
@@ -38,8 +40,7 @@ def postRegister(request):
         return render(request, 'login/register.html', {'error_message' : 'Error al registrar, pruebe con otro email y contraseña de 6 caracteres'})
     return render( request, 'login/postReg.html', {})
 
-@login_required
-def index( request ):
+def makeLogin( request ):
     email = request.POST['email']
     password = request.POST['password']
     try:
