@@ -2,10 +2,12 @@ from urllib.error import HTTPError
 
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
 from django.shortcuts import render
 import pyrebase
 from django.contrib import auth
-from .models import Usuario,usr
+from .models import usr
+import os
 
 config = {
     'apiKey': "AIzaSyAbCiMgh8az4COYBvq038jbrvVGA16oCeo",
@@ -42,6 +44,21 @@ def postRegister(request):
 def makeLogin( request ):
     email = request.POST['email']
     password = request.POST['password']
+    user = authenticate( request, email=email, password=password)
+    if user is None:
+        message = 'Credenciales invalidas'
+        return render(request, 'login/login.html', {'error_message': message})
+    login( request, user )
+    return render( request, 'login/index.html', {})
+
+def logout( request ):
+    auth.logout( request )
+    return render( request, 'login/login.html',{})
+
+"""
+def makeLogin( request ):
+    email = request.POST['email']
+    password = request.POST['password']
     try:
         userfb = authfb.sign_in_with_email_and_password(email, password)
     except HTTPError as err:
@@ -56,7 +73,4 @@ def makeLogin( request ):
         'userFirebaseData': userfb
     }
     return render( request, 'login/index.html', context)
-
-def logout( request ):
-    auth.logout( request )
-    return render( request, 'login/login.html',{})
+"""
