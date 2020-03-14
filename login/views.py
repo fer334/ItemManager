@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 import pyrebase
 from django.contrib import auth
-from .models import Usuario
+from .models import Usuario,usr
 from django.views.generic.base import TemplateView
 config = {
     'apiKey': "AIzaSyAbCiMgh8az4COYBvq038jbrvVGA16oCeo",
@@ -32,6 +32,15 @@ def postRegister(request):
     var_email = request.POST['email']
     password = request.POST['password']
     username = request.POST['username']
+    user = authfb.create_user_with_email_and_password( var_email, password )
+    nuevo_usuario = usr( username = username, email= var_email, is_active= 1, localId = user['localId'] )
+    nuevo_usuario.save()
+    return render( request, 'login/postReg.html', {})
+
+def postRegisterV1(request):
+    var_email = request.POST['email']
+    password = request.POST['password']
+    username = request.POST['username']
     try:
         user = authfb.create_user_with_email_and_password( var_email, password )
         nuevo_usuario = Usuario( nombre_usuario = username, email = var_email )
@@ -40,17 +49,32 @@ def postRegister(request):
         return render(request, 'login/register.html', {'error_message' : 'Error al registrar, pruebe con otro email y contraseña de 6 caracteres'})
     return render( request, 'login/postReg.html', {})
 
-def makeLogin( request ):
+def makeLoginClean( request ):
     email = request.POST['email']
     password = request.POST['password']
     try:
         user = authfb.sign_in_with_email_and_password(email, password)
+        auth.login(request, user= user)
     except:
         message = 'Credenciales invalidas'
         return render( request, 'login/login.html',{ 'error_message' : message } )
     context = {
         'userFirebaseData': user
     }
+    session_id = user['idToken']
+    request.session['uid'] = str( session_id )
+    return render( request, 'login/testLogin.html', context)
+
+def makeLogin( request ):
+    email = request.POST['email']
+    password = request.POST['password']
+
+    user = authfb.sign_in_with_email_and_password(email, password)
+    #auth.login(request, user= user)
+    context = {
+        'userFirebaseData': user
+    }
+    print(user)
     session_id = user['idToken']
     request.session['uid'] = str( session_id )
     return render( request, 'login/testLogin.html', context)
