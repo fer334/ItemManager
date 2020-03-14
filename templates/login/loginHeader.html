@@ -34,6 +34,7 @@
                 </ul>
                 {% if user.is_authenticated %}
                     <div class="form-inline my-2 my-lg-0">
+                        <p class="mr-3 my-2 my-sm-0 text-white">Usuario: {{ user.username }}</p>
                         <a class="btn btn-secondary my-2 my-sm-0" href="{% url 'login:logout' %}">Cerrar sesion</a>
                     </div>
                 {% endif %}
