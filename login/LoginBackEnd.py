@@ -18,7 +18,12 @@ class LoginBackEnd(BaseBackend):
     def authenticate(self, request, email=None, password=None):
         try:
             userfb = authfb.sign_in_with_email_and_password(email, password)
-            user = usr.objects.get( localId=userfb['localId'] )
+            try:
+                user = usr.objects.get( localId=userfb['localId'] )
+            except usr.DoesNotExist:
+                usuario = usr( email = email, localId= userfb['localId'] )
+                usuario.save()
+                user = usuario
             return user
         except:
             return None
