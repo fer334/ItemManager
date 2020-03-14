@@ -6,11 +6,12 @@ verify_ssl = true
 [dev-packages]
 
 [packages]
-psycopg2 = "*"
+django = "*"
 psycopg2-binary = "*"
 pytest = "*"
 pytest-django = "*"
 pyrebase = "*"
+sphinx = "*"
 
 [requires]
 python_version = "3.8"
