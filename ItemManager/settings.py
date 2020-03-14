@@ -79,15 +79,28 @@ WSGI_APPLICATION = 'ItemManager.wsgi.application'
 
 
 # Database
-# https://docs.djangoproject.com/en/3.0/ref/settings/#databases
+# https://docs.djangoproje
+# ct.com/en/3.0/ref/settings/#databases
 
-DATABASES = {
+""" DESARROLLO
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'itemmanagerdb',
         'USER': 'postgres',
         'PASSWORD': 'postgres',
         'HOST': 'localhost',
+        'PORT': '5432',
+    }
+    ABAJO PARA PRODUCCION:
+    """
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'd9kba9iahfs8lp',
+        'USER': 'kwpecmocttvflw',
+        'PASSWORD': 'e3c7f531fd4d79c2727d386375c98ed693874412189466ab214f664e4a0733a2',
+        'HOST': 'ec2-52-23-14-156.compute-1.amazonaws.com',
         'PORT': '5432',
     }
 }
