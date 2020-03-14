@@ -5,7 +5,11 @@ from django.contrib.auth.models import AnonymousUser
 from .models import usr
 import pytest
 
+
 class TestViews:
+    """
+    Clase para realizar pruebas sobre las vistas de la aplicacion login del proyecto
+    """
 
     def test_index_usuario_no_autenticado(self):
         """
