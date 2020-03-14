@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 import pyrebase
 from django.contrib import auth
-from .models import Usuario,usr
+from .models import usr
 
 config = {
     'apiKey': "AIzaSyAbCiMgh8az4COYBvq038jbrvVGA16oCeo",
