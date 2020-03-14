@@ -1,0 +1,29 @@
+{% extends 'login/loginHeader.html' %}
+{% block content %}
+    <div class="container">
+        <h1 class="col-12 text-center">Inicie Sesion</h1>
+            <div class="row justify-content-center mt-3">
+                <form class="col-sm-12 col-md-8 col-lg-6 pt-3" method="post" action="{% url 'login:makeLogin' %}">
+                    {% csrf_token %}
+                    {%  if error_message %}
+                        <div class="form-group">
+                            <div class=" alert alert-danger">
+                                {{ error_message }}
+                            </div>
+                        </div>
+                    {%  endif %}
+                    <div class="form-group">
+                        <label for="email">Email de usuario</label>
+                        <input type="email" class="form-control" id="email" aria-describedby="emailHelp" name="email">
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Contraseña</label>
+                        <input type="password" class="form-control" id="password" name="password">
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block mb-3">Ingresar</button>
+                    <hr>
+                    <a href="{% url 'login:register' %}" class="btn btn-secondary btn-block mt-3"> Registrarse</a>
+                </form>
+            </div>
+    </div>
+{% endblock %}

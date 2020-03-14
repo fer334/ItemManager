@@ -1,0 +1,12 @@
+{% extends 'login/loginHeader.html' %}
+{% block content %}
+    <div class="container">
+        <div>
+
+            <h3>Usuario creado con exito!</h3>
+
+            <h3><a href="{% url 'login:login' %}">Acceder</a></h3>
+            <h3><a href="{% url 'login:register' %}">Registrar nuevo usuario</a></h3>
+        </div>
+    </div>
+{% endblock %}

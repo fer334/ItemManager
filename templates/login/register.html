@@ -1,0 +1,52 @@
+{% extends 'login/loginHeader.html' %}
+{% block content %}
+    <div class="container">
+        <h1 class="col-12 text-center">Poliproyectos App</h1>
+            <div class="row justify-content-center mt-3">
+                <form class="col-sm-12 col-md-8 col-lg-6 pt-3 needs-validation" novalidate method="post" action="{% url 'login:postRegister' %}" onsubmit="e=>checkPass(e)">
+                    {% csrf_token %}
+                    {%  if error_message %}
+                        <div class="form-group">
+                            <div class=" alert alert-danger">
+                                {{ error_message }}
+                            </div>
+                        </div>
+                    {%  endif %}
+                    <div class="form-group">
+                        <label for="username">Nombre de usuario</label>
+                        <input type="text" class="form-control" id="username" aria-describedby="emailHelp" name="username">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email de usuario</label>
+                        <input type="email" class="form-control" id="email" aria-describedby="emailHelp" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Contraseña</label>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                        <div class="invalid-feedback">
+                            La contrasenha debe tener al menos 6 caracteres
+                         </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block mb-3" id="registerButton">Registrarse</button>
+
+                </form>
+            </div>
+    </div>
+    <script>
+        // Example starter JavaScript for disabling form submissions if there are invalid fields
+        (function() {
+            'use strict';
+            window.addEventListener('load', function() {
+                // Fetch all the forms we want to apply custom Bootstrap validation styles to
+                var form = document.querySelector('.needs-validation');
+                    form.addEventListener('submit', function(event) {
+                        if (form.checkValidity() === false) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                    }, false);
+            }, false);
+        })();
+    </script>
+  {% endblock %}
