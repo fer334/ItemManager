@@ -1,7 +1,12 @@
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 
 # Create your models here.
+class usr( AbstractUser ):
+    localId = models.CharField( max_length=200)
+    pass
+
 class Usuario(models.Model):
     """
     clase que hereda de models para representar a los usuarios que serán utilizados por el sistema con

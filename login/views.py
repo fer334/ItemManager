@@ -1,10 +1,13 @@
+from urllib.error import HTTPError
+
+from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect
 import pyrebase
 from django.contrib import auth
-from .models import Usuario
-from django.views.generic.base import TemplateView
+from .models import Usuario,usr
+from .LoginBackEnd import LoginBackEnd
+
 config = {
     'apiKey': "AIzaSyAbCiMgh8az4COYBvq038jbrvVGA16oCeo",
     'authDomain': "poliproyecto-6dfb4.firebaseapp.com",
@@ -22,7 +25,7 @@ authfb = firebase.auth()
 def index( request ):
     return render(request, 'login/testLogin.html', {})
 
-def login( request ):
+def loginPage( request ):
     return render( request, 'login/login.html', { })
 
 def register( request ):
@@ -32,27 +35,27 @@ def postRegister(request):
     var_email = request.POST['email']
     password = request.POST['password']
     username = request.POST['username']
-    try:
-        user = authfb.create_user_with_email_and_password( var_email, password )
-        nuevo_usuario = Usuario( nombre_usuario = username, email = var_email )
-        nuevo_usuario.save()
-    except:
-        return render(request, 'login/register.html', {'error_message' : 'Error al registrar, pruebe con otro email y contraseña de 6 caracteres'})
+    user = authfb.create_user_with_email_and_password( var_email, password )
+    nuevo_usuario = usr( username = username, email= var_email, is_active= 1, localId = user['localId'] )
+    nuevo_usuario.save()
     return render( request, 'login/postReg.html', {})
 
 def makeLogin( request ):
     email = request.POST['email']
     password = request.POST['password']
     try:
-        user = authfb.sign_in_with_email_and_password(email, password)
-    except:
+        userfb = authfb.sign_in_with_email_and_password(email, password)
+    except HTTPError as err:
+        pass
+
+    user = authenticate( request, email=email, password=password)
+    if user is None:
         message = 'Credenciales invalidas'
-        return render( request, 'login/login.html',{ 'error_message' : message } )
+        return render(request, 'login/login.html', {'error_message': message})
+    login( request, user )
     context = {
-        'userFirebaseData': user
+        'userFirebaseData': userfb
     }
-    session_id = user['idToken']
-    request.session['uid'] = str( session_id )
     return render( request, 'login/testLogin.html', context)
 
 def logout( request ):
