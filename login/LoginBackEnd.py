@@ -27,7 +27,6 @@ class LoginBackEnd(BaseBackend):
             return user
         except:
             return None
-
     def get_user(self, user_id):
         try:
             return usr.objects.get(pk=user_id)

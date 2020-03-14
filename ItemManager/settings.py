@@ -32,7 +32,7 @@ ALLOWED_HOSTS = [
 ]
 
 # Application definition
-
+print( "ESTOY EN SETTINGS DEV")
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
