@@ -11,9 +11,24 @@
     <title>Landing page</title>
   </head>
   <body>
-    <div class="nav-bar bg-primary p-4 mb-3">
-        <h1 class="text-white text-center">Poliproyecto</h1>
-    </div>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+            <a class="navbar-brand" href="#">Item Manager</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarColor01">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#">Inicio <span class="sr-only">(current)</span></a>
+                    </li>
+                    </li>
+                </ul>
+                <div class="form-inline my-2 my-lg-0">
+                    <a class="btn btn-secondary my-2 my-sm-0" href="{% url 'login:logout' %}">Cerrar sesion</a>
+                </div>
+            </div>
+        </nav>
     <div class="container">
         <div class="row">
             <h1 class="col-12 mb-3">Bienvenido

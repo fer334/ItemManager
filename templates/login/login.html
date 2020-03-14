@@ -14,7 +14,7 @@
     <div class="container">
         <h1 class="col-12 text-center">Poliproyectos App</h1>
             <div class="row justify-content-center mt-3">
-                <form class="col-sm-12 col-md-8 col-lg-6 pt-3" method="post" action="{% url 'PaoApp:testLogin' %}">
+                <form class="col-sm-12 col-md-8 col-lg-6 pt-3" method="post" action="{% url 'login:makeLogin' %}">
                     {% csrf_token %}
                     {%  if error_message %}
                         <div class="form-group">
@@ -33,7 +33,7 @@
                     </div>
                     <button type="submit" class="btn btn-primary btn-block mb-3">Ingresar</button>
                     <hr>
-                    <a href="{% url 'PaoApp:register' %}" class="btn btn-secondary btn-block mt-3"> Registrarse</a>
+                    <a href="{% url 'login:register' %}" class="btn btn-secondary btn-block mt-3"> Registrarse</a>
                 </form>
             </div>
     </div>
