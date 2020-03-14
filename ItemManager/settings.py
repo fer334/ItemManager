@@ -41,9 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
-    'login',
-    'allauth',
-    'allauth.account'
+    'login'
 ]
 SITE=1
 MIDDLEWARE = [
