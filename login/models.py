@@ -1,11 +1,16 @@
+"""
+Modulo que se encarga de presentar el modelo de la base de datos
+"""
+
 from django.db import models
 
 
 # Create your models here.
 class Usuario(models.Model):
     """
-    clase que hereda de models para representar a los usuarios que serán utilizados por el sistema con
+    Clase que hereda de models para representar a los usuarios que serán utilizados por el sistema con
     sus atributos respectivos
+
     """
     nombre_usuario = models.CharField(max_length=100)
     nombre_y_apellido = models.CharField(max_length=300)
@@ -15,9 +20,10 @@ class Usuario(models.Model):
     # implementacion provisional de la lista de permisos: permiso1|permiso2|...
     lista_permisos_sistema = models.CharField(max_length=800)
 
-    def __init__(self, nombre_usuario="vacio", nombre_real="vacio", email="vacio", contrasegna="", lista_permisos=""):
+    def __init__(self, nombre_usuario, nombre_real, email, contrasegna, lista_permisos):
         """
-        constructor de la clase Usuario
+        Constructor de la clase Usuario
+
         :param nombre_usuario: username para el sistema
         :param nombre_real: nombre y apellidos
         :param email: email para registrarse
