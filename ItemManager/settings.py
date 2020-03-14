@@ -27,7 +27,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     'localhost',
-    '127.0.0.1'
+    '127.0.0.1',
+    ''
 ]
 
 
@@ -43,7 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'login'
 ]
-SITE=1
+SITE = 1
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',

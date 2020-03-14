@@ -12,6 +12,7 @@ pytest = "*"
 pytest-django = "*"
 pyrebase = "*"
 sphinx = "*"
+gunicorn = "*"
 
 [requires]
 python_version = "3.8"
