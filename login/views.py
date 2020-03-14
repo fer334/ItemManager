@@ -6,7 +6,6 @@ from django.shortcuts import render
 import pyrebase
 from django.contrib import auth
 from .models import Usuario,usr
-from .LoginBackEnd import LoginBackEnd
 
 config = {
     'apiKey': "AIzaSyAbCiMgh8az4COYBvq038jbrvVGA16oCeo",
@@ -19,11 +18,11 @@ config = {
     'measurementId': "G-GED6N0CHKC"
 }
 firebase = pyrebase.initialize_app(config)
-
 authfb = firebase.auth()
+
 @login_required
 def index( request ):
-    return render(request, 'login/testLogin.html', {})
+    return render(request, 'login/index.html', {})
 
 def loginPage( request ):
     return render( request, 'login/login.html', { })
@@ -56,7 +55,7 @@ def makeLogin( request ):
     context = {
         'userFirebaseData': userfb
     }
-    return render( request, 'login/testLogin.html', context)
+    return render( request, 'login/index.html', context)
 
 def logout( request ):
     auth.logout( request )
