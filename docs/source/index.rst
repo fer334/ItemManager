@@ -17,6 +17,8 @@ Sistema de gestion de Items
    login.urls
    login.views
    login.apps
+   login.LoginBackEnd
+   login.Register
 
 
 Indices and tables

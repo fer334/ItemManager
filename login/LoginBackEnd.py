@@ -35,7 +35,7 @@ class LoginBackEnd(BaseBackend):
         :param email: email del usuario a loguear
         :param password: password del usuario a loguear
 
-        :return Se retorna el objeto correspondiente al usuario de la base de datos local
+        :returns Se retorna el objeto correspondiente al usuario de la base de datos local
         """
         try:
             userfb = authfb.sign_in_with_email_and_password(email, password)
@@ -58,7 +58,7 @@ class LoginBackEnd(BaseBackend):
 
         :param user_id: El id del usuario a buscar(De la BD local)
 
-        :return Se retorna el objeto correspondiente al usuario de la base de datos local
+        :returns Se retorna el objeto correspondiente al usuario de la base de datos local
         """
         try:
             return usr.objects.get(pk=user_id)
