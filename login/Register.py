@@ -16,6 +16,13 @@ authfb = firebase.auth()
 
 
 def crearUsuario( username, var_email, password):
+    """
+    Metodo que se encarga de la creacion del usuario tanto en firebase como en la base local
+
+    :param username: El nombre de usuario a ser creado
+    :param var_email: El email del usuario a ser creado
+    :param password: El password del usuario a ser creado
+    """
     try:
         user = authfb.create_user_with_email_and_password(var_email, password)
         nuevo_usuario = usr(username=username, email=var_email, is_active=1, localId=user['localId'])
