@@ -36,9 +36,17 @@ def postRegister(request):
     var_email = request.POST['email']
     password = request.POST['password']
     username = request.POST['username']
-    user = authfb.create_user_with_email_and_password( var_email, password )
-    nuevo_usuario = usr( username = username, email= var_email, is_active= 1, localId = user['localId'] )
-    nuevo_usuario.save()
+    if os.environ['DESARROLLO'] == 'true':
+        user = authfb.create_user_with_email_and_password( var_email, password )
+        nuevo_usuario = usr( username = username, email= var_email, is_active= 1, localId = user['localId'] )
+        nuevo_usuario.save()
+    else:
+        try:
+            user = authfb.create_user_with_email_and_password(var_email, password)
+            nuevo_usuario = usr(username=username, email=var_email, is_active=1, localId=user['localId'])
+            nuevo_usuario.save()
+        except:
+            return render(request, 'login/register.html', {'error_message': 'Error, vuelva a intenter' })
     return render( request, 'login/postReg.html', {})
 
 def makeLogin( request ):

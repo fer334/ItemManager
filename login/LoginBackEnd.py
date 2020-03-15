@@ -14,6 +14,8 @@ config = {
 }
 firebase = pyrebase.initialize_app( config )
 authfb = firebase.auth()
+
+
 class LoginBackEnd(BaseBackend):
     def authenticate(self, request, email=None, password=None):
         try:
