@@ -14,7 +14,7 @@ import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
+os.environ.setdefault('DESARROLLO', 'true')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
@@ -25,11 +25,14 @@ SECRET_KEY = 'a0h8$%)-y#p#=d*2-^%#xcs#u_hxtib1s!j^zpa46913o3w6e='
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    ''
+]
 
 # Application definition
-
+print( "ESTOY EN SETTINGS DEV")
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -37,8 +40,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
     'login'
 ]
+SITE = 1
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -76,7 +82,7 @@ WSGI_APPLICATION = 'ItemManager.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'itemmanagerdb',
         'USER': 'postgres',
         'PASSWORD': 'postgres',
@@ -124,3 +130,8 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 LOGIN_URL = '/login'
+AUTH_USER_MODEL = 'login.usr'
+AUTHENTICATION_BACKENDS = {
+    'django.contrib.auth.backends.ModelBackend',
+    'login.LoginBackEnd.LoginBackEnd'
+}
