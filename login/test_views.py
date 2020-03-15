@@ -1,6 +1,6 @@
 from django.test import RequestFactory
 from django.urls import reverse
-from login.views import index
+from login.views import index, loginPage
 from django.contrib.auth.models import AnonymousUser
 from .models import usr
 import pytest
@@ -55,6 +55,6 @@ class TestViews:
         request = RequestFactory().get(path)
         request.user = AnonymousUser()
 
-        response = index(request)
+        response = loginPage(request)
 
         assert response.status_code == 200
