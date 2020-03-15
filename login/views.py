@@ -9,12 +9,12 @@ from .Register import crearUsuario
 from django.views.generic import TemplateView
 
 @login_required
-class Index(TemplateView):
+def index(request):
     """
-    Clase que solo muestra el index, validando antes si el usuario inicio sesion
+    Funcion que solo muestra el index, validando antes si el usuario inicio sesion
 
     """
-    template_name = 'login/index.html'
+    return render(request, 'login/index.html', {})
 
 
 class LoginPage(TemplateView):
@@ -31,6 +31,7 @@ class Register(TemplateView):
 
     """
     template_name = 'login/register.html'
+
 
 def postRegister(request):
     """
@@ -49,7 +50,7 @@ def postRegister(request):
         return render(request, 'login/register.html', {'error_message': 'Error, vuelva a intenter'})
 
 
-def makeLogin( request ):
+def makeLogin(request):
     """
     Funcion que se encarga de loguear al usuario
 
@@ -59,17 +60,18 @@ def makeLogin( request ):
     """
     email = request.POST['email']
     password = request.POST['password']
-    user = authenticate( request, email=email, password=password)
+    user = authenticate(request, email=email, password=password)
     if user is None:
         message = 'Credenciales invalidas'
         return render(request, 'login/login.html', {'error_message': message})
-    login( request, user )
-    return render( request, 'login/index.html', {})
+    login(request, user)
+    return render(request, 'login/index.html', {})
 
-def logout( request ):
+
+def logout(request):
     """
     Funcion que se encarga de cerrar la sesion del usuario
 
     """
-    auth.logout( request )
-    return render( request, 'login/login.html',{})
+    auth.logout(request)
+    return render(request, 'login/login.html', {})
