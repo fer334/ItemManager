@@ -1,0 +1,144 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <title>login.LoginBackEnd &#8212; documentación de ItemManager - 1.0</title>
+    <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/translations.js"></script>
+    <link rel="index" title="Índice" href="../../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navegación</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="Índice General"
+             accesskey="I">índice</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Índice de Módulos Python"
+             >módulos</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">documentación de ItemManager - 1.0</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Código de módulo</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Código fuente para login.LoginBackEnd</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Clase creada para gestionar el Login del usuario</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">urllib.error</span> <span class="kn">import</span> <span class="n">HTTPError</span>
+
+<span class="kn">from</span> <span class="nn">django.contrib.auth.backends</span> <span class="kn">import</span> <span class="n">BaseBackend</span>
+<span class="kn">import</span> <span class="nn">pyrebase</span>
+<span class="kn">from</span> <span class="nn">.models</span> <span class="kn">import</span> <span class="n">usr</span>
+
+<span class="n">config</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;apiKey&#39;</span><span class="p">:</span> <span class="s2">&quot;AIzaSyAbCiMgh8az4COYBvq038jbrvVGA16oCeo&quot;</span><span class="p">,</span>
+    <span class="s1">&#39;authDomain&#39;</span><span class="p">:</span> <span class="s2">&quot;poliproyecto-6dfb4.firebaseapp.com&quot;</span><span class="p">,</span>
+    <span class="s1">&#39;databaseURL&#39;</span><span class="p">:</span> <span class="s2">&quot;https://poliproyecto-6dfb4.firebaseio.com&quot;</span><span class="p">,</span>
+    <span class="s1">&#39;projectId&#39;</span><span class="p">:</span> <span class="s2">&quot;poliproyecto-6dfb4&quot;</span><span class="p">,</span>
+    <span class="s1">&#39;storageBucket&#39;</span><span class="p">:</span> <span class="s2">&quot;poliproyecto-6dfb4.appspot.com&quot;</span><span class="p">,</span>
+    <span class="s1">&#39;messagingSenderId&#39;</span><span class="p">:</span> <span class="s2">&quot;562557261320&quot;</span><span class="p">,</span>
+    <span class="s1">&#39;appId&#39;</span><span class="p">:</span> <span class="s2">&quot;1:562557261320:web:64f3792e7ca3608c1463bd&quot;</span><span class="p">,</span>
+    <span class="s1">&#39;measurementId&#39;</span><span class="p">:</span> <span class="s2">&quot;G-GED6N0CHKC&quot;</span>
+<span class="p">}</span>
+<span class="n">firebase</span> <span class="o">=</span> <span class="n">pyrebase</span><span class="o">.</span><span class="n">initialize_app</span><span class="p">(</span> <span class="n">config</span> <span class="p">)</span>
+<span class="n">authfb</span> <span class="o">=</span> <span class="n">firebase</span><span class="o">.</span><span class="n">auth</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="LoginBackEnd"><a class="viewcode-back" href="../../_autosummary/login.LoginBackEnd.html#login.LoginBackEnd.LoginBackEnd">[documentos]</a><span class="k">class</span> <span class="nc">LoginBackEnd</span><span class="p">(</span><span class="n">BaseBackend</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Clase que hereda de BaseBackend para implementar la autenticacion del usuario, esta clase realiza la coneccion con</span>
+<span class="sd">    firebase y autentica al usuario en la base de datos de la app</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="LoginBackEnd.authenticate"><a class="viewcode-back" href="../../_autosummary/login.LoginBackEnd.html#login.LoginBackEnd.LoginBackEnd.authenticate">[documentos]</a>    <span class="k">def</span> <span class="nf">authenticate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">email</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Metodo que se encarga de la autenticacion del usuario tanto en firebase como en la base local</span>
+
+<span class="sd">        :param request: Request HTTP</span>
+<span class="sd">        :param email: email del usuario a loguear</span>
+<span class="sd">        :param password: password del usuario a loguear</span>
+
+<span class="sd">        :returns Se retorna el objeto correspondiente al usuario de la base de datos local</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">userfb</span> <span class="o">=</span> <span class="n">authfb</span><span class="o">.</span><span class="n">sign_in_with_email_and_password</span><span class="p">(</span><span class="n">email</span><span class="p">,</span> <span class="n">password</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">user</span> <span class="o">=</span> <span class="n">usr</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span> <span class="n">localId</span><span class="o">=</span><span class="n">userfb</span><span class="p">[</span><span class="s1">&#39;localId&#39;</span><span class="p">]</span> <span class="p">)</span>
+            <span class="k">except</span> <span class="n">usr</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
+                <span class="n">usuario</span> <span class="o">=</span> <span class="n">usr</span><span class="p">(</span> <span class="n">email</span> <span class="o">=</span> <span class="n">email</span><span class="p">,</span> <span class="n">localId</span><span class="o">=</span> <span class="n">userfb</span><span class="p">[</span><span class="s1">&#39;localId&#39;</span><span class="p">]</span> <span class="p">)</span>
+                <span class="n">usuario</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+                <span class="n">user</span> <span class="o">=</span> <span class="n">usuario</span>
+            <span class="k">return</span> <span class="n">user</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="sd">&quot;&quot;&quot;requests.exceptions.HTTPError as err:</span>
+<span class="sd">            print( repr(err) )</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="LoginBackEnd.get_user"><a class="viewcode-back" href="../../_autosummary/login.LoginBackEnd.html#login.LoginBackEnd.LoginBackEnd.get_user">[documentos]</a>    <span class="k">def</span> <span class="nf">get_user</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Metodo que busca un usuario en la base local</span>
+
+<span class="sd">        :param user_id: El id del usuario a buscar(De la BD local)</span>
+
+<span class="sd">        :returns Se retorna el objeto correspondiente al usuario de la base de datos local</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">usr</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">user_id</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">usr</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Búsqueda rápida</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Ir a" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navegación</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="Índice General"
+             >índice</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Índice de Módulos Python"
+             >módulos</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">documentación de ItemManager - 1.0</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Código de módulo</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Derechos de autor 2020, Paola Olmedo, Matías López, David Nuñez, Luis Ríos.
+      Creado con <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
+    </div>
+  </body>
+</html>
