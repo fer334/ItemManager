@@ -1,6 +1,7 @@
 from .models import usr
 import pytest
 
+
 @pytest.mark.django_db
 class TestModels:
     """
@@ -17,5 +18,5 @@ class TestModels:
 
         assert usuario.username == 'prueba'
         assert usuario.email == 'prueba@mail.com'
-        #obs: la contraseña estará encriptada por lo que no será igual a la guardada
+        # obs: la contraseña estará encriptada por lo que no será igual a la guardada
         assert usuario.password != 'contraseña'

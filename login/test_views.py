@@ -14,7 +14,7 @@ class TestViews:
     def test_index_usuario_no_autenticado(self):
         """
         La vista index tiene la marca de @login_required por lo que si el usuario no se ha logeado
-        se redireccionara a login con el codigo 302 de rediccionamiento
+        se redireccionara a login con el codigo 302 de redireccionamiento
 
         :return: el assert retornara true si se hace un redireccionamiento y false en otros casos
         """
