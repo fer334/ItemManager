@@ -14,7 +14,7 @@ import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-os.environ.setdefault('DESARROLLO', 'true')
+print("Estoy en settings.py DE PROD")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
@@ -23,16 +23,15 @@ os.environ.setdefault('DESARROLLO', 'true')
 SECRET_KEY = 'a0h8$%)-y#p#=d*2-^%#xcs#u_hxtib1s!j^zpa46913o3w6e='
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
-    'localhost',
-    '127.0.0.1',
-    ''
+    'obscure-river-81564.herokuapp.com',
+    '127.0.0.1'
 ]
 
 # Application definition
-print( "ESTOY EN SETTINGS DEV")
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -83,10 +82,10 @@ WSGI_APPLICATION = 'ItemManager.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'itemmanagerdb',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
-        'HOST': 'localhost',
+        'NAME': 'd9kba9iahfs8lp',
+        'USER': 'kwpecmocttvflw',
+        'PASSWORD': 'e3c7f531fd4d79c2727d386375c98ed693874412189466ab214f664e4a0733a2',
+        'HOST': 'ec2-52-23-14-156.compute-1.amazonaws.com',
         'PORT': '5432',
     }
 }
