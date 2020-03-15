@@ -1,0 +1,195 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <title>login.views &#8212; documentación de ItemManager - 1.0</title>
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../_static/translations.js"></script>
+    <link rel="index" title="Índice" href="../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../search.html" />
+    <link rel="next" title="login.apps" href="login.apps.html" />
+    <link rel="prev" title="login.urls" href="login.urls.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navegación</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="Índice General"
+             accesskey="I">índice</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Índice de Módulos Python"
+             >módulos</a> |</li>
+        <li class="right" >
+          <a href="login.apps.html" title="login.apps"
+             accesskey="N">siguiente</a> |</li>
+        <li class="right" >
+          <a href="login.urls.html" title="login.urls"
+             accesskey="P">anterior</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">documentación de ItemManager - 1.0</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="login-views">
+<h1>login.views<a class="headerlink" href="#login-views" title="Enlazar permanentemente con este título">¶</a></h1>
+<p class="rubric">Functions</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#login.views.index" title="login.views.index"><code class="xref py py-obj docutils literal notranslate"><span class="pre">index</span></code></a>(request)</p></td>
+<td><p>Funcion que solo muestra el index, validando antes si el usuario inicio sesion</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#login.views.logout" title="login.views.logout"><code class="xref py py-obj docutils literal notranslate"><span class="pre">logout</span></code></a>(request)</p></td>
+<td><p>Funcion que se encarga de cerrar la sesion del usuario</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#login.views.makeLogin" title="login.views.makeLogin"><code class="xref py py-obj docutils literal notranslate"><span class="pre">makeLogin</span></code></a>(request)</p></td>
+<td><p>Funcion que se encarga de loguear al usuario</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#login.views.postRegister" title="login.views.postRegister"><code class="xref py py-obj docutils literal notranslate"><span class="pre">postRegister</span></code></a>(request)</p></td>
+<td><p>Funcion que se encarga de registrar al usuario, espera un POST Request</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Classes</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#login.views.LoginPage" title="login.views.LoginPage"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LoginPage</span></code></a>(**kwargs)</p></td>
+<td><p>Clase que solo muestra el template del login</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#login.views.Register" title="login.views.Register"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Register</span></code></a>(**kwargs)</p></td>
+<td><p>Clase que solo muestra el template de creacion de usuario</p></td>
+</tr>
+</tbody>
+</table>
+<span class="target" id="module-login.views"></span><p>Vistas que seran utilizadas por la app</p>
+<dl class="class">
+<dt id="login.views.LoginPage">
+<em class="property">class </em><code class="sig-prename descclassname">login.views.</code><code class="sig-name descname">LoginPage</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/login/views.html#LoginPage"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#login.views.LoginPage" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Clase que solo muestra el template del login</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="login.views.Register">
+<em class="property">class </em><code class="sig-prename descclassname">login.views.</code><code class="sig-name descname">Register</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/login/views.html#Register"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#login.views.Register" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Clase que solo muestra el template de creacion de usuario</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="login.views.index">
+<code class="sig-prename descclassname">login.views.</code><code class="sig-name descname">index</code><span class="sig-paren">(</span><em class="sig-param">request</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/login/views.html#index"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#login.views.index" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Funcion que solo muestra el index, validando antes si el usuario inicio sesion</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="login.views.logout">
+<code class="sig-prename descclassname">login.views.</code><code class="sig-name descname">logout</code><span class="sig-paren">(</span><em class="sig-param">request</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/login/views.html#logout"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#login.views.logout" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Funcion que se encarga de cerrar la sesion del usuario</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="login.views.makeLogin">
+<code class="sig-prename descclassname">login.views.</code><code class="sig-name descname">makeLogin</code><span class="sig-paren">(</span><em class="sig-param">request</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/login/views.html#makeLogin"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#login.views.makeLogin" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Funcion que se encarga de loguear al usuario</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>POST</strong><strong>[</strong><strong>email</strong><strong>]</strong> – Email del usuario</p></li>
+<li><p><strong>POST</strong><strong>[</strong><strong>password</strong><strong>]</strong> – Contraseña del usuario</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="login.views.postRegister">
+<code class="sig-prename descclassname">login.views.</code><code class="sig-name descname">postRegister</code><span class="sig-paren">(</span><em class="sig-param">request</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/login/views.html#postRegister"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#login.views.postRegister" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Funcion que se encarga de registrar al usuario, espera un POST Request</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>POST</strong><strong>[</strong><strong>email</strong><strong>]</strong> – Email del usuario nuevo</p></li>
+<li><p><strong>POST</strong><strong>[</strong><strong>password</strong><strong>]</strong> – Contraseña del usuario nuevo</p></li>
+<li><p><strong>POST</strong><strong>[</strong><strong>username</strong><strong>]</strong> – Nombre del usuario nuevo</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Tema anterior</h4>
+  <p class="topless"><a href="login.urls.html"
+                        title="capítulo anterior">login.urls</a></p>
+  <h4>Próximo tema</h4>
+  <p class="topless"><a href="login.apps.html"
+                        title="próximo capítulo">login.apps</a></p>
+  <div role="note" aria-label="source link">
+    <h3>Esta página</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/_autosummary/login.views.rst.txt"
+            rel="nofollow">Mostrar el código</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Búsqueda rápida</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Ir a" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navegación</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="Índice General"
+             >índice</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Índice de Módulos Python"
+             >módulos</a> |</li>
+        <li class="right" >
+          <a href="login.apps.html" title="login.apps"
+             >siguiente</a> |</li>
+        <li class="right" >
+          <a href="login.urls.html" title="login.urls"
+             >anterior</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">documentación de ItemManager - 1.0</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Derechos de autor 2020, Paola Olmedo, Matías López, David Nuñez, Luis Ríos.
+      Creado con <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
+    </div>
+  </body>
+</html>
