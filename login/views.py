@@ -16,6 +16,7 @@ class Index(TemplateView):
     """
     template_name = 'login/index.html'
 
+
 class LoginPage(TemplateView):
     """
     Clase que solo muestra el template del login

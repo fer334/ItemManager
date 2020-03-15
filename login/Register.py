@@ -15,7 +15,7 @@ firebase = pyrebase.initialize_app(config)
 authfb = firebase.auth()
 
 
-def crearUsuario( username, var_email, password):
+def crearUsuario(username, var_email, password):
     """
     Metodo que se encarga de la creacion del usuario tanto en firebase como en la base local
 
