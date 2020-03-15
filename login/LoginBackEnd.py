@@ -1,10 +1,11 @@
 """
 Clase creada para gestionar el Login del usuario
 """
+from urllib.error import HTTPError
 
 from django.contrib.auth.backends import BaseBackend
 import pyrebase
-from  .models import usr
+from .models import usr
 
 config = {
     'apiKey': "AIzaSyAbCiMgh8az4COYBvq038jbrvVGA16oCeo",
@@ -46,6 +47,9 @@ class LoginBackEnd(BaseBackend):
                 user = usuario
             return user
         except:
+            """requests.exceptions.HTTPError as err:
+            print( repr(err) )
+            """
             return None
 
     def get_user(self, user_id):
