@@ -1,6 +1,6 @@
 from django.test import RequestFactory
 from django.urls import reverse
-from login.views import index, loginPage
+from login.views import index, LoginPage
 from django.contrib.auth.models import AnonymousUser
 from .models import usr
 import pytest
@@ -44,17 +44,3 @@ class TestViews:
 
         assert response.status_code == 200
 
-    def test_login_page(self):
-        """
-        Esta vista no requiere previo logeo del usuario por lo que si se solicita el template relacionado
-        a ella se retornara sin problemas y con un codigo 200 de exito
-
-        :return: el assert retornara true si el codigo de respuesta es 200 (exito)
-        """
-        path = reverse('login:login')
-        request = RequestFactory().get(path)
-        request.user = AnonymousUser()
-
-        response = loginPage(request)
-
-        assert response.status_code == 200
