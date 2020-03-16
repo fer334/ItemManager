@@ -1,4 +1,6 @@
-
+"""
+Este modulo se encarga de registrar los usuarios en firebase y la base de datos del sistema
+"""
 import pyrebase
 from .models import usr
 config = {
@@ -22,7 +24,7 @@ def crearUsuario(username, var_email, password):
     :param username: El nombre de usuario a ser creado
     :param var_email: El email del usuario a ser creado
     :param password: El password del usuario a ser creado
-    :returns  true si el usuario se creo correctamente, false si no
+    :returns true: si el usuario se creo correctamente, false si no
     """
     try:
         user = authfb.create_user_with_email_and_password(var_email, password)

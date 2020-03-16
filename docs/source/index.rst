@@ -12,13 +12,11 @@ Sistema de gestion de Items
    :toctree: _autosummary
 
    login.models
-   login.admin
-   login.tests
-   login.urls
    login.views
-   login.apps
    login.LoginBackEnd
    login.Register
+   login.test_models
+   login.test_urls
 
 
 Indices and tables
