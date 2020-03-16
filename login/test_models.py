@@ -1,16 +1,22 @@
-from login.models import Usuario
+from .models import usr
+import pytest
 
 
+@pytest.mark.django_db
 class TestModels:
     """
-    clase para realizar pruebas sobre los modelos de la aplicación login
+    Esta clase se utiliza para probar las clases que implementan o utilizan modelos django en la aplicacion login
     """
-    def test_usuario(self):
+
+    def test_usr(self):
         """
-        prueba de inicializacion de la clase usuario
+        Se probará la creación de un usuario con la implementacion usr
+
+        :return: los asserts devuelven true si el usuario fue correctamente creado
         """
-        usuario = Usuario("user1","Ulises Suario","user1@hotmail.com","12345abdce","")
-        assert usuario.nombre_usuario == "user1"
-        assert usuario.nombre_y_apellido == "Ulises Suario"
-        assert usuario.email == "user1@hotmail.com"
-        assert usuario.contrasegna == "12345abdce"
+        usuario = usr.objects.create_user(username="prueba", email="prueba@mail.com", password="contraseña")
+
+        assert usuario.username == 'prueba'
+        assert usuario.email == 'prueba@mail.com'
+        # obs: la contraseña estará encriptada por lo que no será igual a la guardada
+        assert usuario.password != 'contraseña'

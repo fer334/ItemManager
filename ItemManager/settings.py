@@ -14,7 +14,7 @@ import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
+os.environ.setdefault('DESARROLLO', 'true')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
@@ -31,8 +31,8 @@ ALLOWED_HOSTS = [
     'obscure-river-81564.herokuapp.com'
 ]
 
-
 # Application definition
+print("SE ENCUENTRAN EN EL AMBIENTE DE DESARROLLO")
 
 INSTALLED_APPS = [
     'django.contrib.admin',

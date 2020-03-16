@@ -1,0 +1,153 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <title>login.LoginBackEnd &#8212; documentación de ItemManager - 1.0</title>
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../_static/translations.js"></script>
+    <link rel="index" title="Índice" href="../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../search.html" />
+    <link rel="next" title="login.Register" href="login.Register.html" />
+    <link rel="prev" title="login.apps" href="login.apps.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navegación</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="Índice General"
+             accesskey="I">índice</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Índice de Módulos Python"
+             >módulos</a> |</li>
+        <li class="right" >
+          <a href="login.Register.html" title="login.Register"
+             accesskey="N">siguiente</a> |</li>
+        <li class="right" >
+          <a href="login.apps.html" title="login.apps"
+             accesskey="P">anterior</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">documentación de ItemManager - 1.0</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="login-loginbackend">
+<h1>login.LoginBackEnd<a class="headerlink" href="#login-loginbackend" title="Enlazar permanentemente con este título">¶</a></h1>
+<p class="rubric">Classes</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#login.LoginBackEnd.LoginBackEnd" title="login.LoginBackEnd.LoginBackEnd"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LoginBackEnd</span></code></a></p></td>
+<td><p>Clase que hereda de BaseBackend para implementar la autenticacion del usuario, esta clase realiza la coneccion con firebase y autentica al usuario en la base de datos de la app</p></td>
+</tr>
+</tbody>
+</table>
+<span class="target" id="module-login.LoginBackEnd"></span><p>Clase creada para gestionar el Login del usuario</p>
+<dl class="class">
+<dt id="login.LoginBackEnd.LoginBackEnd">
+<em class="property">class </em><code class="sig-prename descclassname">login.LoginBackEnd.</code><code class="sig-name descname">LoginBackEnd</code><a class="reference internal" href="../_modules/login/LoginBackEnd.html#LoginBackEnd"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#login.LoginBackEnd.LoginBackEnd" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Clase que hereda de BaseBackend para implementar la autenticacion del usuario, esta clase realiza la coneccion con
+firebase y autentica al usuario en la base de datos de la app</p>
+<dl class="method">
+<dt id="login.LoginBackEnd.LoginBackEnd.authenticate">
+<code class="sig-name descname">authenticate</code><span class="sig-paren">(</span><em class="sig-param">request</em>, <em class="sig-param">email=None</em>, <em class="sig-param">password=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/login/LoginBackEnd.html#LoginBackEnd.authenticate"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#login.LoginBackEnd.LoginBackEnd.authenticate" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Metodo que se encarga de la autenticacion del usuario tanto en firebase como en la base local</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>request</strong> – Request HTTP</p></li>
+<li><p><strong>email</strong> – email del usuario a loguear</p></li>
+<li><p><strong>password</strong> – password del usuario a loguear</p></li>
+</ul>
+</dd>
+</dl>
+<p>:returns Se retorna el objeto correspondiente al usuario de la base de datos local</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="login.LoginBackEnd.LoginBackEnd.get_user">
+<code class="sig-name descname">get_user</code><span class="sig-paren">(</span><em class="sig-param">user_id</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/login/LoginBackEnd.html#LoginBackEnd.get_user"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#login.LoginBackEnd.LoginBackEnd.get_user" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Metodo que busca un usuario en la base local</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros</dt>
+<dd class="field-odd"><p><strong>user_id</strong> – El id del usuario a buscar(De la BD local)</p>
+</dd>
+</dl>
+<p>:returns Se retorna el objeto correspondiente al usuario de la base de datos local</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Tema anterior</h4>
+  <p class="topless"><a href="login.apps.html"
+                        title="capítulo anterior">login.apps</a></p>
+  <h4>Próximo tema</h4>
+  <p class="topless"><a href="login.Register.html"
+                        title="próximo capítulo">login.Register</a></p>
+  <div role="note" aria-label="source link">
+    <h3>Esta página</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/_autosummary/login.LoginBackEnd.rst.txt"
+            rel="nofollow">Mostrar el código</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Búsqueda rápida</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Ir a" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navegación</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="Índice General"
+             >índice</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Índice de Módulos Python"
+             >módulos</a> |</li>
+        <li class="right" >
+          <a href="login.Register.html" title="login.Register"
+             >siguiente</a> |</li>
+        <li class="right" >
+          <a href="login.apps.html" title="login.apps"
+             >anterior</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">documentación de ItemManager - 1.0</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Derechos de autor 2020, Paola Olmedo, Matías López, David Nuñez, Luis Ríos.
+      Creado con <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
+    </div>
+  </body>
+</html>
