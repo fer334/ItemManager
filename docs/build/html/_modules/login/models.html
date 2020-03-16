@@ -36,17 +36,20 @@
           <div class="body" role="main">
             
   <h1>Código fuente para login.models</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">django.contrib.auth.models</span> <span class="kn">import</span> <span class="n">AbstractUser</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Mapeador objeto-relacional en el que es posible definir la estructura de la base de datos utilizando código Python.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">django.contrib.auth.models</span> <span class="kn">import</span> <span class="n">AbstractUser</span>
 <span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
 
 
 <span class="c1"># Create your models here.</span>
-<div class="viewcode-block" id="usr"><a class="viewcode-back" href="../../_autosummary/login.models.html#login.models.usr">[documentos]</a><span class="k">class</span> <span class="nc">usr</span><span class="p">(</span> <span class="n">AbstractUser</span> <span class="p">):</span>
+<div class="viewcode-block" id="usr"><a class="viewcode-back" href="../../_autosummary/login.models.html#login.models.usr">[documentos]</a><span class="k">class</span> <span class="nc">usr</span><span class="p">(</span><span class="n">AbstractUser</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Clase que representa al usuario en la base de datos local</span>
-
+<span class="sd">    Clase que representa al usuario en la base de datos local que extiende del modelo AbstractUser</span>
+<span class="sd">    de django</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">localId</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+    <span class="n">localId</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
     <span class="k">pass</span></div>
 </pre></div>
 
