@@ -1,0 +1,155 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <title>login.views &#8212; documentación de ItemManager - 1.0</title>
+    <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/translations.js"></script>
+    <link rel="index" title="Índice" href="../../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navegación</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="Índice General"
+             accesskey="I">índice</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Índice de Módulos Python"
+             >módulos</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">documentación de ItemManager - 1.0</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Código de módulo</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Código fuente para login.views</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">En este modulo se detalla la logica para las vistas que serán utilizadas por la app</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">django.contrib.auth</span> <span class="kn">import</span> <span class="n">authenticate</span><span class="p">,</span> <span class="n">login</span>
+<span class="kn">from</span> <span class="nn">django.contrib.auth.decorators</span> <span class="kn">import</span> <span class="n">login_required</span>
+<span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">render</span>
+<span class="kn">from</span> <span class="nn">django.contrib</span> <span class="kn">import</span> <span class="n">auth</span>
+<span class="kn">from</span> <span class="nn">.Register</span> <span class="kn">import</span> <span class="n">crearUsuario</span>
+<span class="kn">from</span> <span class="nn">django.views.generic</span> <span class="kn">import</span> <span class="n">TemplateView</span>
+
+<div class="viewcode-block" id="index"><a class="viewcode-back" href="../../_autosummary/login.views.html#login.views.index">[documentos]</a><span class="nd">@login_required</span>
+<span class="k">def</span> <span class="nf">index</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Funcion que solo muestra el index, validando antes si el usuario inicio sesion</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;login/index.html&#39;</span><span class="p">,</span> <span class="p">{})</span></div>
+
+
+<div class="viewcode-block" id="LoginPage"><a class="viewcode-back" href="../../_autosummary/login.views.html#login.views.LoginPage">[documentos]</a><span class="k">class</span> <span class="nc">LoginPage</span><span class="p">(</span><span class="n">TemplateView</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Clase que solo muestra el template del login</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">template_name</span> <span class="o">=</span> <span class="s1">&#39;login/login.html&#39;</span></div>
+
+
+<div class="viewcode-block" id="Register"><a class="viewcode-back" href="../../_autosummary/login.views.html#login.views.Register">[documentos]</a><span class="k">class</span> <span class="nc">Register</span><span class="p">(</span><span class="n">TemplateView</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Clase que solo muestra el template de creacion de usuario</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">template_name</span> <span class="o">=</span> <span class="s1">&#39;login/register.html&#39;</span></div>
+
+
+<div class="viewcode-block" id="postRegister"><a class="viewcode-back" href="../../_autosummary/login.views.html#login.views.postRegister">[documentos]</a><span class="k">def</span> <span class="nf">postRegister</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Funcion que se encarga de registrar al usuario, espera un POST Request</span>
+
+<span class="sd">    :param POST[email]: Email del usuario nuevo</span>
+<span class="sd">    :param POST[password]: Contraseña del usuario nuevo</span>
+<span class="sd">    :param POST[username]: Nombre del usuario nuevo</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">var_email</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;email&#39;</span><span class="p">]</span>
+    <span class="n">password</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;password&#39;</span><span class="p">]</span>
+    <span class="n">username</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;username&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">crearUsuario</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">var_email</span><span class="p">,</span> <span class="n">password</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;login/postReg.html&#39;</span><span class="p">,</span> <span class="p">{})</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;login/register.html&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;error_message&#39;</span><span class="p">:</span> <span class="s1">&#39;Error, vuelva a intenter&#39;</span><span class="p">})</span></div>
+
+
+<div class="viewcode-block" id="makeLogin"><a class="viewcode-back" href="../../_autosummary/login.views.html#login.views.makeLogin">[documentos]</a><span class="k">def</span> <span class="nf">makeLogin</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Funcion que se encarga de loguear al usuario</span>
+
+<span class="sd">    :param POST[email]: Email del usuario</span>
+<span class="sd">    :param POST[password]: Contraseña del usuario</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">email</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;email&#39;</span><span class="p">]</span>
+    <span class="n">password</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;password&#39;</span><span class="p">]</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="n">authenticate</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">email</span><span class="o">=</span><span class="n">email</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="n">password</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">user</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;Credenciales invalidas&#39;</span>
+        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;login/login.html&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;error_message&#39;</span><span class="p">:</span> <span class="n">message</span><span class="p">})</span>
+    <span class="n">login</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;login/index.html&#39;</span><span class="p">,</span> <span class="p">{})</span></div>
+
+
+<div class="viewcode-block" id="logout"><a class="viewcode-back" href="../../_autosummary/login.views.html#login.views.logout">[documentos]</a><span class="k">def</span> <span class="nf">logout</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Funcion que se encarga de cerrar la sesion del usuario</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">auth</span><span class="o">.</span><span class="n">logout</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;login/login.html&#39;</span><span class="p">,</span> <span class="p">{})</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Búsqueda rápida</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Ir a" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navegación</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="Índice General"
+             >índice</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Índice de Módulos Python"
+             >módulos</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">documentación de ItemManager - 1.0</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Código de módulo</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Derechos de autor 2020, Paola Olmedo, Matías López, David Nuñez, Luis Ríos.
+      Creado con <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
+    </div>
+  </body>
+</html>

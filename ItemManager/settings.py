@@ -32,7 +32,8 @@ ALLOWED_HOSTS = [
 ]
 
 # Application definition
-print( "ESTOY EN SETTINGS DEV")
+print("SE ENCUENTRAN EN EL AMBIENTE DE DESARROLLO")
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
