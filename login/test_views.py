@@ -1,3 +1,6 @@
+"""
+Modulo para hacer test sobre el modulo views.py
+"""
 from django.test import RequestFactory
 from django.urls import reverse
 from login.views import index, LoginPage
