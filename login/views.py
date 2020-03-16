@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.contrib import auth
-from .Register import crearUsuario
+from .Register import crear_usuario
 from django.views.generic import TemplateView
 
 @login_required
@@ -44,7 +44,7 @@ def postRegister(request):
     var_email = request.POST['email']
     password = request.POST['password']
     username = request.POST['username']
-    if crearUsuario(username, var_email, password):
+    if crear_usuario(username, var_email, password):
         return render(request, 'login/postReg.html', {})
     else:
         return render(request, 'login/register.html', {'error_message': 'Error, vuelva a intenter'})
