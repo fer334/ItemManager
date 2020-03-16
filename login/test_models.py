@@ -1,3 +1,6 @@
+"""
+Modulo para hacer test sobre el modulo models.py
+"""
 from .models import usr
 import pytest
 

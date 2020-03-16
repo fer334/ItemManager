@@ -1,5 +1,5 @@
 """
-Vistas que seran utilizadas por la app
+En este modulo se detalla la logica para las vistas que serán utilizadas por la app
 """
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
