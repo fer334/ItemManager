@@ -22,4 +22,4 @@ class TestModels:
         assert usuario.username == 'prueba'
         assert usuario.email == 'prueba@mail.com'
         # obs: la contraseña estará encriptada por lo que no será igual a la guardada
-        assert usuario.password != 'contraseña'
+        assert usuario.password != 'contraseña', "falla porque esta encriptado"
