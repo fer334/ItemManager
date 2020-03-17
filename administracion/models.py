@@ -5,9 +5,22 @@ from django.db import models
 class Proyecto(models):
     pass
 
+
 """
 Esta clase representa los tipos de items
+
+:param nombre: Se almacena el nombre del tipo de item
+:type string
+:param descripcion: Descripcion del tipo de item
+:type string
+:param prefijo: Prefijo para mostrarse en todos los items instanciados de esta plantilla
+:type string
+:param proyecto: Proyecto asociado al Tipo de Item
+:type Proyecto
+ 
 """
+
+
 class TipoItem(models):
     nombre = models.CharField(max_length=200)
     descripcion = models.CharField( max_length=800)
@@ -15,6 +28,19 @@ class TipoItem(models):
     proyecto = models.ForeignKey(Proyecto, on_delete=models.CASCADE)
     def __str__(self):
         return self.nombre
+
+
+"""
+Esta clase representa las plantilla de atributos usada por el tipo de item 
+
+:param nombre: Se almacena el nombre del tipo de item
+:type string
+:param tipo: Tipo del item a ser instanciado
+:type string
+:param proyecto: TipoItem asociado a la plantilla
+:type TipoItem
+
+"""
 
 
 class PlantillaAtributo(models):
