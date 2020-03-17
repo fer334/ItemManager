@@ -1,0 +1,25 @@
+{% extends 'login/loginHeader.html' %}
+{% block content %}
+    <div class="container">
+        <h1 class="text-center pt-3 mb-3">Crear tipo de item</h1>
+        <form class="pt-3" METHOD="post" ACTION="{% url 'administracion:registrarEnBase' id_proyecto %}">
+            {% csrf_token %}
+            <div class="form-row">
+                <div class="form-group col-sm-12 col-md-8">
+                    <label for="inputNombre">Nombre</label>
+                    <input type="text" class="form-control" id="inputNombre" name="nombre" placeholder="Ej. Caso de Uso">
+                </div>
+                <div class="form-group col-sm-12 col-md-4">
+                    <label for="inputPrefijo">Prefijo</label>
+                    <input type="text" class="form-control" id="inputPrefijo" name="prefijo" placeholder="Ej.CU">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="areaDescripcion">Descripcion</label>
+                <textarea class="form-control" id="areaDescripcion" rows="3" name="descripcion"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Continuar</button>
+        </form>
+    </div>
+
+{% endblock %}

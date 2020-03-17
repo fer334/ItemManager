@@ -28,7 +28,7 @@ DEBUG = True
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
-    ''
+    'obscure-river-81564.herokuapp.com'
 ]
 
 # Application definition
@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
-    'login'
+    'login',
+    'administracion'
 ]
 SITE = 1
 
@@ -79,7 +80,8 @@ WSGI_APPLICATION = 'ItemManager.wsgi.application'
 
 
 # Database
-# https://docs.djangoproject.com/en/3.0/ref/settings/#databases
+# https://docs.djangoproje
+# ct.com/en/3.0/ref/settings/#databases
 
 DATABASES = {
     'default': {

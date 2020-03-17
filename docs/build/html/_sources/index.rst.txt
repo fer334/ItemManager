@@ -17,6 +17,7 @@ Sistema de gestion de Items
    login.Register
    login.test_models
    login.test_urls
+   administracion.models
 
 
 Indices and tables

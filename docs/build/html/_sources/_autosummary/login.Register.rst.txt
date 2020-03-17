@@ -9,7 +9,7 @@ login.Register
 
 .. autosummary::
 
-  crearUsuario
+  crear_usuario
 
 
 
