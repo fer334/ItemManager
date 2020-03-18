@@ -25,7 +25,11 @@ def crear_proyecto(request):
     gerente = request.POST['gerente']
     # comite =
     # participantes =
-    nuevo_proyecto = Proyecto(nombre=nombre, fecha_inicio=fecha_inicio, numero_fases=numero_fases, gerente=gerente)
+    # buscar forma más eficiente de hacer el if-else de abajo
+    if fecha_inicio == "":
+        nuevo_proyecto = Proyecto(nombre=nombre, numero_fases=numero_fases, gerente=gerente)
+    else:
+        nuevo_proyecto = Proyecto(nombre=nombre, fecha_inicio=fecha_inicio, numero_fases=numero_fases, gerente=gerente)
     nuevo_proyecto.save()
     return HttpResponse("Proyecto creado con éxito")
 

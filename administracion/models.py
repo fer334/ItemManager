@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from login.models import  usr
 # from login.models import models as login_models
 
 
@@ -26,14 +27,14 @@ class Proyecto(models.Model):
     :param participantes: equipo de usuarios que participa en el proyecto
     """
     nombre = models.CharField(max_length=200, default='null')
-    fecha_inicio = models.DateField(auto_now=False, auto_now_add=False, default=timezone.now)
+    fecha_inicio = models.DateField(auto_now=False, auto_now_add=False, default=timezone.now())
     estado = models.CharField(max_length=200, default='iniciado')
     numero_fases = models.IntegerField(default=0)
-    # cant_comite = models.IntegerField(default=0)
+    cant_comite = models.IntegerField(default=0)
     # ponerse de acuerdo después para fases
     # fases = models.ForeignKey('Fase', on_delete=models.CASCADE)
-    # investigar relacion uno a uno(?
-    gerente = models.CharField(max_length=200, default='null')
+    # para el gerente sería mejor que el usuario tenga un foreign key a proyectos
+    gerente = models.CharField(max_length=700, default='null')
     comite = models.CharField(max_length=700, default='null')
     # ponerse de acuerdo después para participantes
     participantes = models.ManyToManyField('login.usr')
