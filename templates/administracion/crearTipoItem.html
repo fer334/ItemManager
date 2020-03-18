@@ -2,7 +2,7 @@
 {% block content %}
     <div class="container">
         <h1 class="text-center pt-3 mb-3">Crear tipo de item</h1>
-        <form class="pt-3" METHOD="post" ACTION="{% url 'administracion:registrarTipoItemEnBase' id_proyecto %}">
+        <form class="pt-3" METHOD="post" ACTION="{% url 'administracion:registrar_tipoitem_en_base' id_proyecto %}">
             {% csrf_token %}
             <div class="form-row">
                 <div class="form-group col-sm-12 col-md-8">

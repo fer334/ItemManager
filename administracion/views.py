@@ -34,7 +34,7 @@ def ver_tipo(request, id_tipo):
     return render(request, 'administracion/verTipoItem.html', {})
 
 
-def registrarEnBase(request, id_proyecto):
+def registrar_tipoitem_en_base(request, id_proyecto):
     nombre = request.POST['nombre']
     descripcion = request.POST['descripcion']
     prefijo = request.POST['prefijo']
