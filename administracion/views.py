@@ -4,6 +4,15 @@ from django.shortcuts import render
 from .models import TipoItem, Proyecto
 
 
+def index_administracion(request):
+    return render(request,'administracion/indexAdmin.html')
+
+
+def proyectos(request):
+    lista_proyectos = Proyecto.objects.all()
+    return render(request, 'administracion/proyectos.html', {'lista_proyectos' : lista_proyectos})
+
+
 def creando_proyecto(request):
     return render(request, 'administracion/crearProyecto.html')
 

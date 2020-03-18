@@ -31,9 +31,6 @@
                         <a class="nav-link" href="{% url 'login:register' %}">Registrarse<span class="sr-only">(current)</span></a>
                     </li>
                     {% endif %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'administracion:index' %}">Test tipo Item<span class="sr-only">(current)</span></a>
-                    </li>
                 </ul>
                 {% if user.is_authenticated %}
                     <div class="form-inline my-2 my-lg-0">
