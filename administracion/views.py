@@ -11,6 +11,11 @@ def crear_tipo(request, id_proyecto):
     return render(request, 'administracion/crearTipoItem.html', {'id_proyecto':id_proyecto})
 
 
+def ver_tipo(request, id_tipo):
+    tipo_item = Proyecto.objects.get(pk=id_tipo)
+    return render(request, 'administracion/verTipoItem.html', {})
+
+
 def registrarEnBase(request, id_proyecto):
     nombre = request.POST['nombre']
     descripcion = request.POST['descripcion']
