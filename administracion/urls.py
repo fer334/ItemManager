@@ -6,5 +6,7 @@ urlpatterns = [
     path('tipo/', views.tipo_item, name='index'),
     path('tipo/<int:id_tipo>', views.ver_tipo, name='verTipoItem'),
     path('<int:id_proyecto>/tipo/crear/', views.crear_tipo, name='crearTipoItem'),
-    path('<int:id_proyecto>/tipo/registrarEnBase', views.registrarEnBase, name='registrarTipoItemEnBase'),
+    path('<int:id_proyecto>/tipo/registrarEnBase', views.registrarEnBase, name='registrarEnBase'),
+    path('proyectos/crear/', views.creando_proyecto, name='crearProyecto'),
+    path('proyectos/registrar/', views.crear_proyecto, name='registrarProyecto'),
 ]

@@ -3,7 +3,7 @@ Modulo para hacer test sobre el modulo views.py
 """
 from django.test import RequestFactory
 from django.urls import reverse
-from login.views import index, LoginPage
+from login.views import index
 from django.contrib.auth.models import AnonymousUser
 from .models import usr
 import pytest

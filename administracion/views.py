@@ -3,6 +3,24 @@ from django.shortcuts import render
 
 from .models import TipoItem, Proyecto
 
+
+def creando_proyecto(request):
+    return render(request, 'administracion/crearProyecto.html')
+
+
+def crear_proyecto(request):
+    nombre = request.POST['nombre']
+    fecha_inicio = request.POST['fecha_inicio']
+    numero_fases = request.POST['numero_fase']
+    # fases =
+    gerente = request.POST['gerente']
+    # comite =
+    # participantes =
+    nuevo_proyecto = Proyecto(nombre=nombre, fecha_inicio=fecha_inicio, numero_fases=numero_fases, gerente=gerente)
+    nuevo_proyecto.save()
+    return HttpResponse("Proyecto creado con éxito")
+
+
 def tipo_item(request):
     return render(request, 'administracion/tipoItemTest.html', {})
 
