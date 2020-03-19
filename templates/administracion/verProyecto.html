@@ -2,7 +2,25 @@
 {% block content %}
     <div class="container">
         <h2 class="text-center pt-3 mb-3">{{ proyecto.nombre }}</h2>
-
+        <table class="table table-hover">
+          <tbody>
+            <tr class="table-primary">
+              <td>Estado: </td><td>{{proyecto.estado}}</td>
+            </tr>
+            <tr class="table-default">
+              <td>Fecha de Inicio: </td><td>{{proyecto.fecha_inicio}}</td>
+            </tr>
+            <tr class="table-primary">
+              <td>Gerente del Proyecto: </td><td>{{proyecto.gerente}}</td>
+            </tr>
+            <tr class="table-default">
+              <td>Miembros del Comité: </td><td>{{proyecto.comite}}</td>
+            </tr>
+            <tr class="table-primary">
+              <td>Participantes: </td><td>{{proyecto.participantes}}</td>
+            </tr>
+          </tbody>
+        </table>
         <br>
         <br>
         <a class="btn btn-primary" href="{% url 'administracion:crearTipoItem' proyecto.id %}" role="button">Añadir Tipo de Item al proyecto</a>
