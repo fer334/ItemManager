@@ -9,7 +9,6 @@ urlpatterns = [
     path('<int:id_proyecto>/tipo/crear/', views.crear_tipo, name='crearTipoItem'),
     path('<int:id_proyecto>/tipo/registrarEnBase', views.registrarEnBase, name='registrarEnBase'),
     path('proyectos/', views.proyectos, name='proyectos'),
-    path('proyectos/crear/', views.creando_proyecto, name='crearProyecto'),
-    path('proyectos/registrar/', views.crear_proyecto, name='registrarProyecto'),
+    path('proyectos/crear/', views.crear_proyecto, name='crearProyecto'),
     path('proyectos/<int:id_proyecto>/', views.ver_proyecto, name='verProyecto')
 ]

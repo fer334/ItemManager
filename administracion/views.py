@@ -2,7 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import render
 
 from .models import TipoItem, Proyecto
-
+from .forms import ProyectoForm
 
 def index_administracion(request):
     return render(request,'administracion/indexAdmin.html')
@@ -18,20 +18,25 @@ def creando_proyecto(request):
 
 
 def crear_proyecto(request):
-    nombre = request.POST['nombre']
-    fecha_inicio = request.POST['fecha_inicio']
-    numero_fases = request.POST['numero_fase']
-    # fases =
-    gerente = request.POST['gerente']
-    # comite =
-    # participantes =
-    # buscar forma más eficiente de hacer el if-else de abajo
-    if fecha_inicio == "":
-        nuevo_proyecto = Proyecto(nombre=nombre, numero_fases=numero_fases, gerente=gerente)
+    if request.method == 'POST':
+        form = ProyectoForm(request.POST)
+        if form.is_valid():
+            nombre = form.cleaned_data['nombre']
+            fecha_inicio = request.POST['fecha_inicio']
+            numero_fases = request.POST['numero_fases']
+            # fases =
+            gerente = request.POST['gerente']
+            # comite =
+            # participantes =
+            nuevo_proyecto = Proyecto(nombre=nombre, fecha_inicio=fecha_inicio, numero_fases=numero_fases,
+                                      gerente=gerente)
+            nuevo_proyecto.save()
+
+            return HttpResponse("Proyecto creado con éxito")
     else:
-        nuevo_proyecto = Proyecto(nombre=nombre, fecha_inicio=fecha_inicio, numero_fases=numero_fases, gerente=gerente)
-    nuevo_proyecto.save()
-    return HttpResponse("Proyecto creado con éxito")
+        form = ProyectoForm()
+
+    return render(request, 'administracion/crearProyecto.html', {'form': form})
 
 
 def ver_proyecto(request, id_proyecto):
