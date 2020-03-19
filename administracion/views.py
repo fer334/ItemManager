@@ -48,3 +48,8 @@ def registrar_tipoitem_en_base(request, id_proyecto):
     nuevo_tipo_item.proyecto.add(proyecto)
 
     return HttpResponseRedirect(reverse('administracion:verTipoItem',args=(id_proyecto, nuevo_tipo_item.id)))
+
+
+def crear_atributo(request, id_tipo):
+    request.POST['']
+    return render(request,'administracion/verTipoItem.html',{})

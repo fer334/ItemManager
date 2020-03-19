@@ -1,33 +1,52 @@
 {% extends 'login/loginHeader.html' %}
 {% block content %}
     <div class="container">
-        <div class="col-lg-12 p-3">
-            <h2>{{ tipo_item.nombre }} ({{ tipo_item.prefijo }})</h2>
-        </div>
+        <div class="row justify-content-center">
+            <div class="col-sm-12 col-md-8 col-lg-6 ">
+                <div class="col-lg-12 p-3">
+                    <h2>{{ tipo_item.nombre }} ({{ tipo_item.prefijo }})</h2>
+                </div>
 
-        <div class="lg-12 mb-3">
-            <h3>Atributos comunes</h3>
-        </div>
-        <ul class="list-group pb-3">
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-                Complejidad
-            </li>
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-                Atributo x
-            </li>
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-                Atributo y
-            </li>
-        </ul>
-        <hr/>
-        <div class="lg-12 pt-3">
-            <h3>Atributos particulares</h3>
-        </div>
-        <ul class="list-group">
+                <div class="lg-12 mb-3">
+                    <h3>Atributos comunes</h3>
+                </div>
+                <ul class="list-group pb-3">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">Complejidad</li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">Atributo x</li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">Atributo y</li>
+                </ul>
+                <hr/>
+                <div class="lg-12 pt-3">
+                    <h3>Atributos particulares</h3>
+                </div>
+                <ul class="list-group pb-3">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">Complejidad</li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">Atributo x</li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">Atributo y</li>
+                </ul>
+                <form class="form-row" method="post" action="{% url 'administracion:crearAtributo' tipo_item.id %}">
+                    {% csrf_token %}
+                    <div class="form-group col-sm-12 col-lg-6">
+                        <label for="inputNombreAtrib">Nombre</label>
+                        <input type="text" id="inputNombreAtrib" class="form-control"/>
+                    </div>
+                    <div class="form-group col-sm-12 col-lg-5">
+                        <label for="inputTipo">Tipo</label>
+                        <select id="inputTipo" class="form-control">
+                            <option>Alfanumerico</option>
+                            <option>numerico</option>
+                            <option>Archivo</option>
+                            <option>Fecha</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-lg-1">
+                        <label for="submitIn" class="text-white">.</label>
+                        <input class="btn btn-primary" id="submitIn" type="submit" value="+">
+                    </div>
 
-        </ul>
-        <a href="#" class="btn btn-block btn-primary">Agregar atributo</a>
-
+                </form>
+            </div>
+        </div>
     </div>
 
 {% endblock %}
