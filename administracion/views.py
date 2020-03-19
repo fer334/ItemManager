@@ -13,10 +13,6 @@ def proyectos(request):
     return render(request, 'administracion/proyectos.html', {'lista_proyectos' : lista_proyectos})
 
 
-def creando_proyecto(request):
-    return render(request, 'administracion/crearProyecto.html')
-
-
 def crear_proyecto(request):
     if request.method == 'POST':
         form = ProyectoForm(request.POST)
