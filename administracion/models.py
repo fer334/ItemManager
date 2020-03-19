@@ -1,5 +1,6 @@
 from django.db import models
 from login.models import  usr
+from django.utils import timezone
 # from login.models import models as login_models
 
 
@@ -26,7 +27,7 @@ class Proyecto(models.Model):
     :param participantes: equipo de usuarios que participa en el proyecto
     """
     nombre = models.CharField(max_length=200, default='null')
-    fecha_inicio = models.DateField(auto_now=False, auto_now_add=False)
+    fecha_inicio = models.DateField(auto_now=False, auto_now_add=False, default=timezone.now().date())
     estado = models.CharField(max_length=200, default='iniciado')
     numero_fases = models.IntegerField(default=0)
     cant_comite = models.IntegerField(default=0)

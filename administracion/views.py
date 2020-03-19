@@ -1,5 +1,6 @@
 from django.http import HttpResponse
 from django.shortcuts import render
+from login.models import usr
 
 from .models import TipoItem, Proyecto
 
@@ -10,11 +11,12 @@ def index_administracion(request):
 
 def proyectos(request):
     lista_proyectos = Proyecto.objects.all()
-    return render(request, 'administracion/proyectos.html', {'lista_proyectos' : lista_proyectos})
+    return render(request, 'administracion/proyectos.html', {'lista_proyectos': lista_proyectos})
 
 
 def creando_proyecto(request):
-    return render(request, 'administracion/crearProyecto.html')
+    usuarios = usr.objects.all()
+    return render(request, 'administracion/crearProyecto.html', {'usuarios': usuarios})
 
 
 def crear_proyecto(request):

@@ -21,6 +21,16 @@
                     <label for="inputGerente">Gerente del proyecto:</label>
                     <input type="text" class="form-control" id="inputGerente" name="gerente" placeholder="Ej. Pedro Parques">
                 </div>
+                <div class="form-group col-sm-12 col-md-8">
+                    <label for="inputGerente">Gerente del proyecto:</label>
+                    <select class="form-control" id="inputGerente">
+                        <option selected>Seleccione al Gerente... </option>
+                       {% for usuario in usuarios %}
+                            <option value="{{ usuario.localId }}">{{ usuario }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
             </div>
             <button type="submit" class="btn btn-primary">Crear Proyecto</button>
 
