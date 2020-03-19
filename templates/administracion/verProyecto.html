@@ -1,0 +1,12 @@
+{% extends 'login/loginHeader.html' %}
+{% block content %}
+    <div class="container">
+        <h2 class="text-center pt-3 mb-3">{{ proyecto.nombre }}</h2>
+
+        <br>
+        <br>
+        <a class="btn btn-primary" href="{% url 'administracion:crearTipoItem' proyecto.id %}" role="button">Añadir Tipo de Item al proyecto</a>
+    </div>
+{% endblock %}
+
+

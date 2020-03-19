@@ -34,12 +34,17 @@ def crear_proyecto(request):
     return HttpResponse("Proyecto creado con éxito")
 
 
+def ver_proyecto(request, id_proyecto):
+    proyecto = Proyecto.objects.get(pk=id_proyecto)
+    return render(request, 'administracion/verProyecto.html', {'proyecto': proyecto})
+
+
 def tipo_item(request):
     return render(request, 'administracion/tipoItemTest.html', {})
 
 
 def crear_tipo(request, id_proyecto):
-    return render(request, 'administracion/crearTipoItem.html', {'id_proyecto':id_proyecto})
+    return render(request, 'administracion/crearTipoItem.html', {'id_proyecto': id_proyecto})
 
 
 def registrarEnBase(request, id_proyecto):
