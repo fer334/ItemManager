@@ -13,7 +13,7 @@ urlpatterns = [
     ##URLs de DAVID
     path('tipo/', views.tipo_item, name='tipoItem'),
     path('<int:id_proyecto>/tipo/crear/', views.crear_tipo, name='crearTipoItem'),
-    path('<int:id_proyecto>/tipo/registrarEnBase', views.registrarEnBase, name='registrarEnBase'),
+    path('<int:id_proyecto>/tipo/registrarEnBase', views.registrar_tipoitem_en_base, name='registrarEnBase'),
     path('<int:id_proyecto>/tipo/<int:id_tipo>', views.ver_tipo, name='verTipoItem'),
     path('<int:id_proyecto>/tipo/<int:id_tipo>/atributo/', views.crear_atributo, name='crearAtributo'),
     path('<int:id_proyecto>/tipo/<int:id_tipo>/atributo/quitar/', views.quitar_atributo, name='quitarAtributo'),
