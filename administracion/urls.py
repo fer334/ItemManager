@@ -9,5 +9,6 @@ urlpatterns = [
     path('<int:id_proyecto>/tipo/registrarEnBase', views.registrar_tipoitem_en_base, name='registrar_tipoitem_en_base'),
     path('proyectos/crear/', views.creando_proyecto, name='crearProyecto'),
     path('proyectos/registrar/', views.crear_proyecto, name='registrarProyecto'),
-    path('tipo/<int:id_tipo>/atributo/', views.crear_atributo, name='crearAtributo'),
+    path('<int:id_proyecto>/tipo/<int:id_tipo>/atributo/', views.crear_atributo, name='crearAtributo'),
+    path('<int:id_proyecto>/tipo/<int:id_tipo>/atributo/quitar/', views.quitar_atributo, name='quitarAtributo'),
 ]

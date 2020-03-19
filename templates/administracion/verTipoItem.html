@@ -20,31 +20,35 @@
                     <h3>Atributos particulares</h3>
                 </div>
                 <ul class="list-group pb-3">
-                    <li class="list-group-item d-flex justify-content-between align-items-center">Complejidad</li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">Atributo x</li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">Atributo y</li>
+                    {% for atributo in tipo_item.plantillaatributo_set.all %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            {{ atributo.nombre }}<span class="text-secondary">({{ atributo.tipo }})</span>
+                            <a class="btn btn-danger" href="{% url 'administracion:quitarAtributo' proyecto.id tipo_item.id %}">x</a>
+                        </li>
+                    {% endfor %}
                 </ul>
-                <form class="form-row" method="post" action="{% url 'administracion:crearAtributo' tipo_item.id %}">
+                <form class="form-row" method="post" action="{% url 'administracion:crearAtributo' proyecto.id tipo_item.id %}">
                     {% csrf_token %}
                     <div class="form-group col-sm-12 col-lg-6">
                         <label for="inputNombreAtrib">Nombre</label>
-                        <input type="text" id="inputNombreAtrib" class="form-control"/>
+                        <input type="text" id="inputNombreAtrib" name="nombre" class="form-control"/>
                     </div>
                     <div class="form-group col-sm-12 col-lg-5">
                         <label for="inputTipo">Tipo</label>
-                        <select id="inputTipo" class="form-control">
-                            <option>Alfanumerico</option>
-                            <option>numerico</option>
-                            <option>Archivo</option>
-                            <option>Fecha</option>
+                        <select id="inputTipo" name="tipo" class="form-control">
+                            <option value="string">Alfanumerico</option>
+                            <option value="number">numerico</option>
+                            <option value="file">Archivo</option>
+                            <option value="date">Fecha</option>
                         </select>
                     </div>
                     <div class="form-group col-lg-1">
                         <label for="submitIn" class="text-white">.</label>
-                        <input class="btn btn-primary" id="submitIn" type="submit" value="+">
+                        <input class="btn btn-success" id="submitIn" type="submit" value="+">
                     </div>
 
                 </form>
+                <button class="btn btn-block btn-primary">Guardar</button>
             </div>
         </div>
     </div>

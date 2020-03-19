@@ -1,7 +1,7 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
-from .models import TipoItem, Proyecto
+from .models import TipoItem, Proyecto, PlantillaAtributo
 
 
 def creando_proyecto(request):
@@ -50,6 +50,13 @@ def registrar_tipoitem_en_base(request, id_proyecto):
     return HttpResponseRedirect(reverse('administracion:verTipoItem',args=(id_proyecto, nuevo_tipo_item.id)))
 
 
-def crear_atributo(request, id_tipo):
-    request.POST['']
-    return render(request,'administracion/verTipoItem.html',{})
+def crear_atributo(request, id_proyecto, id_tipo):
+    nombre = request.POST['nombre']
+    tipo = request.POST['tipo']
+    tipo_item = TipoItem.objects.get(pk=id_tipo)
+    atributo = PlantillaAtributo(nombre=nombre, tipo=tipo, tipo_item=tipo_item)
+    atributo.save()
+    return HttpResponseRedirect(reverse('administracion:verTipoItem',args=(id_proyecto, tipo_item.id)))
+
+def quitar_atributo(request, id_proyecto, id_tipo):
+    return HttpResponse("Quitado")
