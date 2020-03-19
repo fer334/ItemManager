@@ -4,6 +4,15 @@ from django.urls import reverse
 from .models import TipoItem, Proyecto, PlantillaAtributo
 
 
+def index_administracion(request):
+    return render(request,'administracion/indexAdmin.html')
+
+
+def proyectos(request):
+    lista_proyectos = Proyecto.objects.all()
+    return render(request, 'administracion/proyectos.html', {'lista_proyectos' : lista_proyectos})
+
+
 def creando_proyecto(request):
     return render(request, 'administracion/crearProyecto.html')
 
@@ -16,9 +25,18 @@ def crear_proyecto(request):
     gerente = request.POST['gerente']
     # comite =
     # participantes =
-    nuevo_proyecto = Proyecto(nombre=nombre, fecha_inicio=fecha_inicio, numero_fases=numero_fases, gerente=gerente)
+    # buscar forma más eficiente de hacer el if-else de abajo
+    if fecha_inicio == "":
+        nuevo_proyecto = Proyecto(nombre=nombre, numero_fases=numero_fases, gerente=gerente)
+    else:
+        nuevo_proyecto = Proyecto(nombre=nombre, fecha_inicio=fecha_inicio, numero_fases=numero_fases, gerente=gerente)
     nuevo_proyecto.save()
     return HttpResponse("Proyecto creado con éxito")
+
+
+def ver_proyecto(request, id_proyecto):
+    proyecto = Proyecto.objects.get(pk=id_proyecto)
+    return render(request, 'administracion/verProyecto.html', {'proyecto': proyecto})
 
 
 def tipo_item(request):
@@ -26,7 +44,7 @@ def tipo_item(request):
 
 
 def crear_tipo(request, id_proyecto):
-    return render(request, 'administracion/crearTipoItem.html', {'id_proyecto':id_proyecto})
+    return render(request, 'administracion/crearTipoItem.html', {'id_proyecto': id_proyecto})
 
 
 def ver_tipo(request, id_proyecto, id_tipo):
