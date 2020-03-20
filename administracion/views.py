@@ -1,9 +1,9 @@
 from django.http import HttpResponse
 from django.shortcuts import render
-from login.models import usr
 
 from .models import TipoItem, Proyecto
-
+from .forms import ProyectoForm
+from login.models import usr
 
 def index_administracion(request):
     return render(request,'administracion/indexAdmin.html')
@@ -11,34 +11,35 @@ def index_administracion(request):
 
 def proyectos(request):
     lista_proyectos = Proyecto.objects.all()
-    return render(request, 'administracion/proyectos.html', {'lista_proyectos': lista_proyectos})
-
-
-def creando_proyecto(request):
-    usuarios = usr.objects.all()
-    return render(request, 'administracion/crearProyecto.html', {'usuarios': usuarios})
+    return render(request, 'administracion/proyectos.html', {'lista_proyectos' : lista_proyectos})
 
 
 def crear_proyecto(request):
-    nombre = request.POST['nombre']
-    fecha_inicio = request.POST['fecha_inicio']
-    numero_fases = request.POST['numero_fase']
-    # fases =
-    gerente = request.POST['gerente']
-    # comite =
-    # participantes =
-    # buscar forma más eficiente de hacer el if-else de abajo
-    if fecha_inicio == "":
-        nuevo_proyecto = Proyecto(nombre=nombre, numero_fases=numero_fases, gerente=gerente)
+    if request.method == 'POST':
+        form = ProyectoForm(request.POST)
+        if form.is_valid():
+            nombre = form.cleaned_data['nombre']
+            fecha_inicio = request.POST['fecha_inicio']
+            numero_fases = request.POST['numero_fases']
+            # fases =
+            gerente = request.POST['gerente']
+            # comite =
+            # participantes =
+            nuevo_proyecto = Proyecto(nombre=nombre, fecha_inicio=fecha_inicio, numero_fases=numero_fases,
+                                      gerente=gerente)
+            nuevo_proyecto.save()
+
+            return HttpResponse("Proyecto creado con éxito")
     else:
-        nuevo_proyecto = Proyecto(nombre=nombre, fecha_inicio=fecha_inicio, numero_fases=numero_fases, gerente=gerente)
-    nuevo_proyecto.save()
-    return HttpResponse("Proyecto creado con éxito")
+        form = ProyectoForm()
+
+    return render(request, 'administracion/crearProyecto.html', {'form': form})
 
 
 def ver_proyecto(request, id_proyecto):
     proyecto = Proyecto.objects.get(pk=id_proyecto)
-    return render(request, 'administracion/verProyecto.html', {'proyecto': proyecto})
+    gerente = usr.objects.get(localId=proyecto.gerente)
+    return render(request, 'administracion/verProyecto.html', {'proyecto': proyecto, 'gerente': gerente})
 
 
 def tipo_item(request):

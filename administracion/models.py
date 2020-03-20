@@ -1,7 +1,5 @@
 from django.db import models
-from login.models import  usr
-from django.utils import timezone
-# from login.models import models as login_models
+from login.models import usr
 
 
 # Create your models here.
@@ -20,14 +18,14 @@ class Proyecto(models.Model):
     :param fecha_inicio: fecha en la que el proyecto comienza
     :param estado: estado actual del proyecto, puede variar entre iniciado, en ejecución, cancelado, finalizado
     :param numero_fases = cantidad de fases que tiene el proyecto
-    :param cant_comite = cantida de miembros que deberá tener el comité, debe ser impar y mayor o igual a 3
+    :param cant_comite = cantidad de miembros que deberá tener el comité, debe ser impar y mayor o igual a 3
     :param fases: lista de fases del proyecto
     :param gerente: usuario que toma el rol de gerente del proyecto
     :param comite: conjunto impar de usuarios que conforma el comité para el proyecto
     :param participantes: equipo de usuarios que participa en el proyecto
     """
     nombre = models.CharField(max_length=200, default='null')
-    fecha_inicio = models.DateField(auto_now=False, auto_now_add=False, default=timezone.now().date())
+    fecha_inicio = models.DateField(auto_now=False, auto_now_add=False)
     estado = models.CharField(max_length=200, default='iniciado')
     numero_fases = models.IntegerField(default=0)
     cant_comite = models.IntegerField(default=0)
