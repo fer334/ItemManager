@@ -53,6 +53,12 @@ def ver_tipo(request, id_proyecto, id_tipo):
     return render(request, 'administracion/verTipoItem.html', {'proyecto': obj_proyecto,'tipo_item':obj_tipo_item})
 
 
+def ver_tipo_por_proyecto(request, id_proyecto):
+    proyecto = Proyecto.objects.get(pk=id_proyecto)
+
+    tipo_item = proyecto.tipoitem_set.all()
+    return render(request,'administracion/tipoItemTest.html',{'lista_tipoitem':tipo_item})
+
 def registrar_tipoitem_en_base(request, id_proyecto):
     nombre = request.POST['nombre']
     descripcion = request.POST['descripcion']
