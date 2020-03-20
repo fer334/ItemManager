@@ -3,11 +3,11 @@
 {% block content %}
     <div class="container">
         <h1 class="text-center pt-3 mb-3">Creación De Proyecto</h1>
-        <form class="pt-3" METHOD="post" ACTION="{% url 'administracion:crearProyecto'%}">
+        <form class="pt-3" METHOD="post" ACTION="{% url 'administracion:administrarParticipantes'%}">
             {% csrf_token %}
             {{ form|crispy}}
             <p align="right">
-                <button type="submit" class="btn btn-primary" align="right">Crear Proyecto</button>
+                <button type="submit" class="btn btn-primary" align="right">Guardar Cambios</button>
             </p>
         </form>
     </div>

@@ -19,11 +19,23 @@
             <tr class="table-primary">
               <td>Participantes: </td><td>{{proyecto.participantes}}</td>
             </tr>
+            <tr class="table-default">
+                <th>Tipos de Item</th>
+                <td> <ul>
+                    {% for tipoItem in tipo_item %}
+                        <li>
+                            {{ tipoItem.nombre }}
+                        </li>
+                    {% endfor %}
+                </ul></td>
+            </tr>
           </tbody>
         </table>
         <br>
         <br>
         <a class="btn btn-primary" href="{% url 'administracion:crearTipoItem' proyecto.id %}" role="button">Añadir Tipo de Item al proyecto</a>
+        <a class="btn btn-primary" href="{% url 'administracion:administrarParticipantes' proyecto.id %}" role="button">Administrar Participantes del proyecto</a>
+
     </div>
 {% endblock %}
 

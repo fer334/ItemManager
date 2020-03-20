@@ -10,6 +10,7 @@ urlpatterns = [
     path('proyectos/', views.proyectos, name='proyectos'),
     path('proyectos/crear/', views.crear_proyecto, name='crearProyecto'),
     path('proyectos/<int:id_proyecto>/', views.ver_proyecto, name='verProyecto'),
+    path('proyectos/<int:id_proyecto>/participantes', views.administrar_participantes, name='administrarParticipantes'),
     # URLs de DAVID
     path('tipo/todos', views.mostrar_tipo_item, name='tipoItem'),
     path('<int:id_proyecto>/tipo/', views.ver_tipo_por_proyecto, name='tipoItemPorProyecto'),

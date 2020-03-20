@@ -2,7 +2,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from .models import TipoItem, Proyecto, PlantillaAtributo
-from .forms import ProyectoForm
+from .forms import ProyectoForm, ParticipanteForm
 from login.models import usr
 
 
@@ -25,12 +25,12 @@ def crear_proyecto(request):
             # fases =
             gerente = request.POST['gerente']
             # comite =
-            participantes = request.POST['participantes']
+            # participantes = request.POST['participantes']
             nuevo_proyecto = Proyecto(nombre=nombre, fecha_inicio=fecha_inicio, numero_fases=numero_fases,
-                                      gerente=gerente, participantes=participantes)
+                                      gerente=gerente)
             nuevo_proyecto.save()
 
-            return HttpResponse("Proyecto creado con éxito")
+            return HttpResponseRedirect(reverse('administracion:verProyecto', args=[nuevo_proyecto.id]))
     else:
         form = ProyectoForm()
 
@@ -40,7 +40,21 @@ def crear_proyecto(request):
 def ver_proyecto(request, id_proyecto):
     proyecto = Proyecto.objects.get(pk=id_proyecto)
     gerente = usr.objects.get(localId=proyecto.gerente)
-    return render(request, 'administracion/verProyecto.html', {'proyecto': proyecto, 'gerente': gerente})
+    tipo_item = proyecto.tipoitem_set.all()
+    return render(request, 'administracion/verProyecto.html', {'proyecto': proyecto, 'gerente': gerente, 'tipo_item':tipo_item})
+
+
+def administrar_participantes(request, id_proyecto):
+    proyecto = Proyecto.objects.get(pk=id_proyecto)
+    if request.method == 'POST':
+        form = ParticipanteForm(request.POST)
+        if form.is_valid():
+            participantes = form.cleaned_data['participantes']
+            proyecto.participantes = participantes
+            return HttpResponseRedirect(reverse('administracion:administrarParticipantes', args=[proyecto.id]))
+    else:
+        form = ParticipanteForm()
+    return render(request, 'administracion/administrarParticipantes.html')
 
 
 def mostrar_tipo_item(request):

@@ -8,7 +8,7 @@ class ProyectoForm(forms.Form):
                              widget=forms.TextInput(attrs={'placeholder': 'Ej. Proyecto 1', 'size': 35}),
                              )
     fecha_inicio = forms.DateField(label='Fecha de Inicio', initial=timezone.now().date(),
-                                   widget=forms.TextInput(attrs={'placeholder': 'Ej. 2020-09-28', 'size': 35}))
+                                   widget=forms.TextInput(attrs={'placeholder': 'Ej. 2020-09-28', 'type': 'date'}))
     numero_fases = forms.IntegerField(label='Numero de fases del proyecto:', min_value=1,
                                       widget=forms.TextInput(attrs={'placeholder': 'Ej. 7', 'size': 35}))
     cant_comite = forms.IntegerField(label='Cantidad De Miembros del Comité', min_value=3,
@@ -17,10 +17,14 @@ class ProyectoForm(forms.Form):
     eleccion = [(x.localId, x.username) for x in usr.objects.all()]
     gerente = forms.ChoiceField(label='Gerente del proyecto', initial=('a', 'Seleccione el gerente'),
                                 choices=eleccion)
-    participantes = forms.MultipleChoiceField(label='Usuarios Participantes:', choices=eleccion)
 
     def clean_cant_comite(self):
         cant_comite = self.cleaned_data['cant_comite']
         if cant_comite % 2 == 0:
             raise forms.ValidationError('Tiene que ser impar.')
         return cant_comite
+
+
+class ParticipanteForm(forms.Form):
+    eleccion = [(x.localId, x.username) for x in usr.objects.all()]
+    participantes = forms.MultipleChoiceField(label='Usuarios Participantes:', choices=eleccion)
