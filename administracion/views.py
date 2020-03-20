@@ -1,17 +1,18 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from .models import TipoItem, Proyecto, PlantillaAtributo
 from .forms import ProyectoForm
 from login.models import usr
 
+
 def index_administracion(request):
-    return render(request,'administracion/indexAdmin.html')
+    return render(request, 'administracion/indexAdmin.html')
 
 
 def proyectos(request):
     lista_proyectos = Proyecto.objects.all()
-    return render(request, 'administracion/proyectos.html', {'lista_proyectos' : lista_proyectos})
+    return render(request, 'administracion/proyectos.html', {'lista_proyectos': lista_proyectos})
 
 
 def crear_proyecto(request):
@@ -44,7 +45,7 @@ def ver_proyecto(request, id_proyecto):
 
 def mostrar_tipo_item(request):
     tipo_items = TipoItem.objects.all()
-    return render(request, 'administracion/tipoItemTest.html', {'lista_tipoitem':tipo_items})
+    return render(request, 'administracion/tipoItemTest.html', {'lista_tipoitem': tipo_items})
 
 
 def crear_tipo(request, id_proyecto):
@@ -54,14 +55,15 @@ def crear_tipo(request, id_proyecto):
 def ver_tipo(request, id_proyecto, id_tipo):
     obj_proyecto = Proyecto.objects.get(pk=id_proyecto)
     obj_tipo_item = TipoItem.objects.get(pk=id_tipo)
-    return render(request, 'administracion/verTipoItem.html', {'proyecto': obj_proyecto,'tipo_item':obj_tipo_item})
+    return render(request, 'administracion/verTipoItem.html', {'proyecto': obj_proyecto, 'tipo_item': obj_tipo_item})
 
 
 def ver_tipo_por_proyecto(request, id_proyecto):
     proyecto = Proyecto.objects.get(pk=id_proyecto)
 
     tipo_item = proyecto.tipoitem_set.all()
-    return render(request,'administracion/tipoItemTest.html',{'lista_tipoitem':tipo_item})
+    return render(request, 'administracion/tipoItemTest.html', {'lista_tipoitem': tipo_item})
+
 
 def registrar_tipoitem_en_base(request, id_proyecto):
     nombre = request.POST['nombre']
@@ -72,7 +74,7 @@ def registrar_tipoitem_en_base(request, id_proyecto):
     nuevo_tipo_item.save()
     nuevo_tipo_item.proyecto.add(proyecto)
 
-    return HttpResponseRedirect(reverse('administracion:verTipoItem',args=(id_proyecto, nuevo_tipo_item.id)))
+    return HttpResponseRedirect(reverse('administracion:verTipoItem', args=(id_proyecto, nuevo_tipo_item.id)))
 
 
 def crear_atributo(request, id_proyecto, id_tipo):
@@ -81,10 +83,10 @@ def crear_atributo(request, id_proyecto, id_tipo):
     tipo_item = TipoItem.objects.get(pk=id_tipo)
     atributo = PlantillaAtributo(nombre=nombre, tipo=tipo, tipo_item=tipo_item)
     atributo.save()
-    return HttpResponseRedirect(reverse('administracion:verTipoItem',args=(id_proyecto, tipo_item.id)))
+    return HttpResponseRedirect(reverse('administracion:verTipoItem', args=(id_proyecto, tipo_item.id)))
 
 
 def quitar_atributo(request, id_proyecto, id_tipo, id_atributo):
     atributo = PlantillaAtributo.objects.get(pk=id_atributo)
     atributo.delete()
-    return HttpResponseRedirect(reverse('administracion:verTipoItem',args=(id_proyecto, id_tipo )))
+    return HttpResponseRedirect(reverse('administracion:verTipoItem', args=(id_proyecto, id_tipo)))
