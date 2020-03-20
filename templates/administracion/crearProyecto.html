@@ -1,21 +1,11 @@
 {% extends 'login/loginHeader.html' %}
+{% load crispy_forms_tags %}
 {% block content %}
     <div class="container">
         <h1 class="text-center pt-3 mb-3">Creación De Proyecto</h1>
         <form class="pt-3" METHOD="post" ACTION="{% url 'administracion:crearProyecto'%}">
             {% csrf_token %}
-            {{ form.non_field_errors }}
-            {% for field in form %}
-                <div class="form-group">
-                    {{ field.errors }}
-                    {{ field.label_tag }}
-                    <br>
-                    {{ field }}
-                    {% if field.help_text %}
-                    <small id="smallHelp" class="form-text text-muted">{{ field.help_text|safe }}</small>
-                    {% endif %}
-                </div>
-            {% endfor %}
+            {{ form|crispy}}
             <button type="submit" class="btn btn-primary">Crear Proyecto</button>
         </form>
     </div>
