@@ -3,7 +3,6 @@ from django.shortcuts import render
 from django.urls import reverse
 from .models import TipoItem, Proyecto, PlantillaAtributo
 
-
 def index_administracion(request):
     return render(request,'administracion/indexAdmin.html')
 
@@ -39,8 +38,9 @@ def ver_proyecto(request, id_proyecto):
     return render(request, 'administracion/verProyecto.html', {'proyecto': proyecto})
 
 
-def tipo_item(request):
-    return render(request, 'administracion/tipoItemTest.html', {})
+def mostrar_tipo_item(request):
+    tipo_items = TipoItem.objects.all()
+    return render(request, 'administracion/tipoItemTest.html', {'lista_tipoitem':tipo_items})
 
 
 def crear_tipo(request, id_proyecto):
@@ -48,11 +48,8 @@ def crear_tipo(request, id_proyecto):
 
 
 def ver_tipo(request, id_proyecto, id_tipo):
-    #tipo_item = Proyecto.objects.get(pk=id_proyecto)
-    print(id_proyecto)
     obj_proyecto = Proyecto.objects.get(pk=id_proyecto)
     obj_tipo_item = TipoItem.objects.get(pk=id_tipo)
-    print(id_tipo)
     return render(request, 'administracion/verTipoItem.html', {'proyecto': obj_proyecto,'tipo_item':obj_tipo_item})
 
 
@@ -76,5 +73,8 @@ def crear_atributo(request, id_proyecto, id_tipo):
     atributo.save()
     return HttpResponseRedirect(reverse('administracion:verTipoItem',args=(id_proyecto, tipo_item.id)))
 
-def quitar_atributo(request, id_proyecto, id_tipo):
-    return HttpResponse("Quitado")
+
+def quitar_atributo(request, id_proyecto, id_tipo, id_atributo):
+    atributo = PlantillaAtributo.objects.get(pk=id_atributo)
+    atributo.delete()
+    return HttpResponseRedirect(reverse('administracion:verTipoItem',args=(id_proyecto, id_tipo )))

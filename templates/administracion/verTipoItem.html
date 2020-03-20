@@ -11,9 +11,11 @@
                     <h3>Atributos comunes</h3>
                 </div>
                 <ul class="list-group pb-3">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">Nombre</li>
                     <li class="list-group-item d-flex justify-content-between align-items-center">Complejidad</li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">Atributo x</li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">Atributo y</li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">Version</li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">Descripcion</li>
+
                 </ul>
                 <hr/>
                 <div class="lg-12 pt-3">
@@ -23,7 +25,7 @@
                     {% for atributo in tipo_item.plantillaatributo_set.all %}
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             {{ atributo.nombre }}<span class="text-secondary">({{ atributo.tipo }})</span>
-                            <a class="btn btn-danger" href="{% url 'administracion:quitarAtributo' proyecto.id tipo_item.id %}">x</a>
+                            <a class="btn btn-danger" href="{% url 'administracion:quitarAtributo' proyecto.id tipo_item.id atributo.id%}">x</a>
                         </li>
                     {% endfor %}
                 </ul>
@@ -37,7 +39,7 @@
                         <label for="inputTipo">Tipo</label>
                         <select id="inputTipo" name="tipo" class="form-control">
                             <option value="string">Alfanumerico</option>
-                            <option value="number">numerico</option>
+                            <option value="number">Numerico</option>
                             <option value="file">Archivo</option>
                             <option value="date">Fecha</option>
                         </select>
@@ -48,7 +50,7 @@
                     </div>
 
                 </form>
-                <button class="btn btn-block btn-primary">Guardar</button>
+                <a href="{% url 'administracion:verProyecto' proyecto.id %}" class="btn btn-block btn-primary">Guardar</a>
             </div>
         </div>
     </div>
