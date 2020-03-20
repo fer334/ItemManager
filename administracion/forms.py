@@ -14,3 +14,8 @@ class ProyectoForm(forms.Form):
     cant_comite = forms.IntegerField(label='Cantidad De Miembros del Comité', min_value=3,
                                      widget=forms.TextInput(attrs={'placeholder': '(obs: nro. impar >=3) Ej. 5'}))
 
+    def clean_cant_comite(self):
+        cant_comite = self.cleaned_data['cant_comite']
+        if cant_comite % 2 == 0:
+            raise forms.ValidationError('Tiene que ser impar.')
+        return cant_comite
