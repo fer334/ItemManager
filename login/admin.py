@@ -1,4 +1,4 @@
 from django.contrib import admin
-from .models import usr
+from .models import Usuario
 # Register your models here.
-admin.site.register(usr)
+admin.site.register(Usuario)

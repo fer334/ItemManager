@@ -2,7 +2,7 @@
 Este modulo se encarga de registrar los usuarios en firebase y la base de datos del sistema
 """
 import pyrebase
-from .models import usr
+from .models import Usuario
 config = {
     'apiKey': "AIzaSyAbCiMgh8az4COYBvq038jbrvVGA16oCeo",
     'authDomain': "poliproyecto-6dfb4.firebaseapp.com",
@@ -17,19 +17,15 @@ firebase = pyrebase.initialize_app(config)
 authfb = firebase.auth()
 
 
-def crear_usuario(username, var_email, password):
+def crear_usuario(var_email, password):
     """
-    Metodo que se encarga de la creacion del usuario tanto en firebase como en la base local
+    Metodo que se encarga de la creacion del usuario tanto en firebase
 
     :param username: El nombre de usuario a ser creado
     :param var_email: El email del usuario a ser creado
     :param password: El password del usuario a ser creado
     :returns true: si el usuario se creo correctamente, false si no
     """
-    try:
-        user = authfb.create_user_with_email_and_password(var_email, password)
-        nuevo_usuario = usr(username=username, email=var_email, is_active=1, localId=user['localId'])
-        nuevo_usuario.save()
-        return True
-    except:
-        return False
+    user = authfb.create_user_with_email_and_password(var_email, password)
+    print(user)
+    return user

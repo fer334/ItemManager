@@ -132,8 +132,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
-LOGIN_URL = '/login'
-AUTH_USER_MODEL = 'login.usr'
+LOGIN_URL = '/login/'
+AUTH_USER_MODEL = 'login.Usuario'
 AUTHENTICATION_BACKENDS = {
     'django.contrib.auth.backends.ModelBackend',
     'login.LoginBackEnd.LoginBackEnd'
