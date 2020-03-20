@@ -3,6 +3,7 @@ from django.shortcuts import render
 
 from .models import TipoItem, Proyecto
 from .forms import ProyectoForm
+from login.models import usr
 
 def index_administracion(request):
     return render(request,'administracion/indexAdmin.html')
@@ -37,7 +38,8 @@ def crear_proyecto(request):
 
 def ver_proyecto(request, id_proyecto):
     proyecto = Proyecto.objects.get(pk=id_proyecto)
-    return render(request, 'administracion/verProyecto.html', {'proyecto': proyecto})
+    gerente = usr.objects.get(localId=proyecto.gerente)
+    return render(request, 'administracion/verProyecto.html', {'proyecto': proyecto, 'gerente': gerente})
 
 
 def tipo_item(request):
