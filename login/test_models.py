@@ -1,7 +1,7 @@
 """
 Modulo para hacer test sobre el modulo models.py
 """
-from .models import usr
+from .models import Usuario
 import pytest
 
 
@@ -13,11 +13,11 @@ class TestModels:
 
     def test_usr(self):
         """
-        Se probará la creación de un usuario con la implementacion usr
+        Se probará la creación de un usuario con la implementacion Usuario
 
         :return: los asserts devuelven true si el usuario fue correctamente creado
         """
-        usuario = usr.objects.create_user(username="prueba", email="prueba@mail.com", password="contraseña")
+        usuario = Usuario.objects.create_user(username="prueba", email="prueba@mail.com", password="contraseña")
 
         assert usuario.username == 'prueba'
         assert usuario.email == 'prueba@mail.com'
