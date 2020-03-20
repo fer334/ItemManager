@@ -4,9 +4,35 @@
         <h1 class="text-center pt-3 mb-3">Creación De Proyecto</h1>
         <form class="pt-3" METHOD="post" ACTION="{% url 'administracion:crearProyecto'%}">
             {% csrf_token %}
-                {{ form.as_p }}
+            {{ form.non_field_errors }}
+            <div class="form-row">
+                <div class="form-group col-sm-12 col-md-8">
+                    {{ form.nombre.errors }}
+                    <label for="{{form.nombre.id_for_label}}">{{ form.nombre.label }}</label>
+                    {{ form.nombre }}
+                </div>
+                <div class="form-group col-sm-12 col-md-8">
+                    {{ form.nombre.errors }}
+                    <label for="{{form.fecha_inicio.id_for_label}}">Fecha de Inicio</label>
+                    {{ form.fecha_inicio }}
+                </div>
+                <div class="form-group col-sm-12 col-md-8">
+                    {{ form.numero_fases.errors }}
+                    <label for="{{form.numero_fases.id_for_label}}">Numero de fases del proyecto:</label>
+                    {{ form.numero_fases }}
+                </div>
+                <div class="form-group col-sm-12 col-md-8">
+                    {{ form.cant_comite.errors }}
+                    <label for="{{form.cant_comite.id_for_label}}">Cantidad De Miembros del Comité</label>
+                    {{ form.cant_comite }}
+                </div>
+                <div class="form-group col-sm-12 col-md-8">
+                    {{ form.gerente.errors }}
+                    <label for="{{ form.gerente.id_for_label }}">Gerente del proyecto:</label>
+                    {{ form.gerente }}
+                </div>
                 <button type="submit" class="btn btn-primary">Crear Proyecto</button>
-
+            </div>
         </form>
     </div>
 {% endblock %}
