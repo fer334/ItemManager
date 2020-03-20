@@ -1,9 +1,10 @@
 {% extends 'login/loginHeader.html' %}
+{% load crispy_forms_tags %}
 {% block content %}
     <div class="container">
         <h1 class="col-12 text-center">Crear usuario</h1>
             <div class="row justify-content-center mt-3">
-                <form class="col-sm-12 col-md-8 col-lg-6 pt-3 needs-validation" novalidate method="post" onsubmit="e=>checkPass(e)">
+                <form class="col-sm-12 col-md-8 col-lg-6 pt-3" method="post" onsubmit="e=>checkPass(e)">
                     {% csrf_token %}
                     {%  if error_message %}
                         <div class="form-group">
@@ -12,7 +13,7 @@
                             </div>
                         </div>
                     {%  endif %}
-                    {{form.as_p}}
+                    {{ form|crispy }}
                     <button type="submit" class="btn btn-primary btn-block mb-3" id="registerButton">Registrarse</button>
 
                 </form>

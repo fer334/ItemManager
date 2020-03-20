@@ -27,5 +27,4 @@ def crear_usuario(var_email, password):
     :returns true: si el usuario se creo correctamente, false si no
     """
     user = authfb.create_user_with_email_and_password(var_email, password)
-    print(user)
     return user
