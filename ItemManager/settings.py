@@ -28,7 +28,9 @@ DEBUG = True
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
-    'obscure-river-81564.herokuapp.com'
+    'obscure-river-81564.herokuapp.com',
+    '0.0.0.0',
+    '192.168.0.105'
 ]
 
 # Application definition
