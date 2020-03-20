@@ -9,7 +9,7 @@ class ProyectoForm(forms.Form):
                              widget=forms.TextInput(attrs={'placeholder': 'Ej. Proyecto 1', 'size': 35}),
                              )
     fecha_inicio = forms.DateField(label='Fecha de Inicio', initial=timezone.now().date(),
-                                   widget=forms.TextInput(attrs={'placeholder': 'Ej. 2020-09-28', 'size': 35}))
+                                   widget=forms.DateInput(attrs={'size': 35, 'type':'date'}))
     numero_fases = forms.IntegerField(label='Numero de fases del proyecto:', min_value=1,
                                       widget=forms.TextInput(attrs={'placeholder': 'Ej. 7', 'size': 35}))
     cant_comite = forms.IntegerField(label='Cantidad De Miembros del Comité', min_value=3, help_text='obs: nro. impar >=3',
