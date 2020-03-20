@@ -24,9 +24,9 @@ def crear_proyecto(request):
             # fases =
             gerente = request.POST['gerente']
             # comite =
-            # participantes =
+            participantes = request.POST['participantes']
             nuevo_proyecto = Proyecto(nombre=nombre, fecha_inicio=fecha_inicio, numero_fases=numero_fases,
-                                      gerente=gerente)
+                                      gerente=gerente, participantes=participantes)
             nuevo_proyecto.save()
 
             return HttpResponse("Proyecto creado con éxito")
