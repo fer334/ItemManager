@@ -5,12 +5,6 @@ from django.utils import timezone
 
 
 # Create your models here.
-class Fase(models.Model):
-    """
-    provisorio, reemplazar luego por el original, también la referencia en la clase Proyecto
-    """
-    pass
-
 
 class Proyecto(models.Model):
     """
@@ -20,14 +14,14 @@ class Proyecto(models.Model):
     :param fecha_inicio: fecha en la que el proyecto comienza
     :param estado: estado actual del proyecto, puede variar entre iniciado, en ejecución, cancelado, finalizado
     :param numero_fases = cantidad de fases que tiene el proyecto
-    :param cant_comite = cantida de miembros que deberá tener el comité, debe ser impar y mayor o igual a 3
+    :param cant_comite = cantidad de miembros que deberá tener el comité, debe ser impar y mayor o igual a 3
     :param fases: lista de fases del proyecto
     :param gerente: usuario que toma el rol de gerente del proyecto
     :param comite: conjunto impar de usuarios que conforma el comité para el proyecto
     :param participantes: equipo de usuarios que participa en el proyecto
     """
     nombre = models.CharField(max_length=200, default='null')
-    fecha_inicio = models.DateField(auto_now=False, auto_now_add=False, default=timezone.now)
+    fecha_inicio = models.DateField(auto_now=False, auto_now_add=False)
     estado = models.CharField(max_length=200, default='iniciado')
     numero_fases = models.IntegerField(default=0)
     cant_comite = models.IntegerField(default=0)
@@ -42,6 +36,25 @@ class Proyecto(models.Model):
 
     def __str__(self):
         return self.nombre
+
+
+class Fase(models.Model):
+    """
+    Esta clase representa las fases
+
+    :param nombre: Se almacena el nombre de la fase
+    :type string
+    :param descripcion: Descripcion de la fase
+    :type string
+    :param estado: Estado de la fase, iniciada, cerrada etc.
+    :type string
+    :param proyecto: Proyecto asociado a la fase
+    :type Proyecto
+    """
+    nombre = models.CharField(max_length=200, null=False)
+    descripcion = models.CharField(max_length=400, null=True)
+    estado = models.CharField(max_length=200, default='abierta')
+    proyecto = models.ForeignKey(Proyecto, on_delete=models.CASCADE)
 
 
 class TipoItem(models.Model):
