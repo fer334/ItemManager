@@ -3,12 +3,6 @@ from login.models import usr
 
 
 # Create your models here.
-class Fase(models.Model):
-    """
-    provisorio, reemplazar luego por el original, también la referencia en la clase Proyecto
-    """
-    pass
-
 
 class Proyecto(models.Model):
     """
@@ -40,6 +34,25 @@ class Proyecto(models.Model):
 
     def __str__(self):
         return self.nombre
+
+
+class Fase(models.Model):
+    """
+    Esta clase representa las fases
+
+    :param nombre: Se almacena el nombre de la fase
+    :type string
+    :param descripcion: Descripcion de la fase
+    :type string
+    :param estado: Estado de la fase, iniciada, cerrada etc.
+    :type string
+    :param proyecto: Proyecto asociado a la fase
+    :type Proyecto
+    """
+    nombre = models.CharField(max_length=200)
+    descripcion = models.CharField(max_length=400)
+    estado = models.CharField(max_length=200)
+    proyecto = models.ForeignKey(Proyecto, on_delete=models.CASCADE)
 
 
 class TipoItem(models.Model):
