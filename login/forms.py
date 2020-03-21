@@ -77,6 +77,10 @@ class RegisterForm(forms.Form):
 		data['localId'] = user['localId']
 		data['is_active'] = False
 
+		if (Usuario.objects.count() == 0):
+			data['is_superuser'] = True
+			data['is_active'] = True
+
 		nuevo_usuario = Usuario(**data)
 		nuevo_usuario.save()
 
