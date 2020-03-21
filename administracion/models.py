@@ -27,8 +27,7 @@ class Proyecto(models.Model):
     cant_comite = models.IntegerField(default=0)
     # ponerse de acuerdo después para fases
     # fases = models.ForeignKey('Fase', on_delete=models.CASCADE)
-    # para el gerente sería mejor que el usuario tenga un foreign key a proyectos
-    gerente = models.CharField(max_length=700, default='null')
+    gerente = models.CharField(max_length=250, default='null')
     comite = models.CharField(max_length=700, default='null')
     # ponerse de acuerdo después para participantes
     participantes = models.ManyToManyField('login.Usuario')

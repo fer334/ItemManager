@@ -1,0 +1,21 @@
+{% extends 'login/loginHeader.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="container">
+        <h1 class="text-center pt-3 mb-3">Administración de Participantes</h1>
+        <h4>Lista Actual de Participantes:</h4>
+        <ul>
+            {% for participante in proyecto.participantes.all %}
+                <li>{{ participante }}</li>
+            {% endfor %}
+        </ul>
+        <form class="pt-3" METHOD="post" ACTION="{% url 'administracion:administrarParticipantes'  proyecto.id %}">
+            {% csrf_token %}
+            {{ form|crispy}}
+            <p align="right">
+                <button type="submit" class="btn btn-primary" align="right">Añadir al Proyecto</button>
+            </p>
+            <a href="{% url 'administracion:verProyecto' proyecto.id %}" class="button">Volver a detalles de {{ proyecto.nombre }}</a>
+        </form>
+    </div>
+{% endblock %}

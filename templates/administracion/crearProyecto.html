@@ -6,7 +6,9 @@
         <form class="pt-3" METHOD="post" ACTION="{% url 'administracion:crearProyecto'%}">
             {% csrf_token %}
             {{ form|crispy}}
-            <button type="submit" class="btn btn-primary">Crear Proyecto</button>
+            <p align="right">
+                <button type="submit" class="btn btn-primary" align="right">Crear Proyecto</button>
+            </p>
         </form>
     </div>
 {% endblock %}

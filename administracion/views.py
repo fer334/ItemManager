@@ -2,7 +2,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from .models import TipoItem, Proyecto, PlantillaAtributo, Rol
-from .forms import ProyectoForm
+from administracion.forms import ProyectoForm, ParticipanteForm
 from login.models import Usuario
 
 
@@ -20,17 +20,18 @@ def crear_proyecto(request):
         form = ProyectoForm(request.POST)
         if form.is_valid():
             nombre = form.cleaned_data['nombre']
-            fecha_inicio = request.POST['fecha_inicio']
-            numero_fases = request.POST['numero_fases']
+            fecha_inicio = form.cleaned_data['fecha_inicio']
+            numero_fases = form.cleaned_data['numero_fases']
             # fases =
-            gerente = request.POST['gerente']
+            gerente = form.cleaned_data['gerente']
             # comite =
-            # participantes =
             nuevo_proyecto = Proyecto(nombre=nombre, fecha_inicio=fecha_inicio, numero_fases=numero_fases,
                                       gerente=gerente)
             nuevo_proyecto.save()
+            participante = Usuario.objects.get(localId=gerente)
+            nuevo_proyecto.participantes.add(participante)
 
-            return HttpResponse("Proyecto creado con éxito")
+            return HttpResponseRedirect(reverse('administracion:verProyecto', args=[nuevo_proyecto.id]))
     else:
         form = ProyectoForm()
 
@@ -40,7 +41,22 @@ def crear_proyecto(request):
 def ver_proyecto(request, id_proyecto):
     proyecto = Proyecto.objects.get(pk=id_proyecto)
     gerente = Usuario.objects.get(localId=proyecto.gerente)
-    return render(request, 'administracion/verProyecto.html', {'proyecto': proyecto, 'gerente': gerente})
+    tipo_item = proyecto.tipoitem_set.all()
+    return render(request, 'administracion/verProyecto.html', {'proyecto': proyecto, 'gerente': gerente, 'tipo_item':tipo_item})
+
+
+def administrar_participantes(request, id_proyecto):
+    proyecto = Proyecto.objects.get(pk=id_proyecto)
+    if request.method == 'POST':
+        form = ParticipanteForm(request.POST)
+        if form.is_valid():
+            id_usuario = request.POST['participantes']
+            participante = Usuario.objects.get(localId=id_usuario)
+            proyecto.participantes.add(participante)
+            return HttpResponseRedirect(reverse('administracion:administrarParticipantes', args=[proyecto.id]))
+    else:
+        form = ParticipanteForm()
+    return render(request, 'administracion/administrarParticipantes.html', {'proyecto': proyecto, 'form': form})
 
 
 def mostrar_tipo_item(request):
@@ -106,8 +122,6 @@ def quitar_atributo(request, id_proyecto, id_tipo, id_atributo):
     atributo = PlantillaAtributo.objects.get(pk=id_atributo)
     atributo.delete()
     return HttpResponseRedirect(reverse('administracion:verTipoItem', args=(id_proyecto, id_tipo)))
-
-
 
 def crear_rol (request):
     return render(request, 'administracion/crearRol.html')
