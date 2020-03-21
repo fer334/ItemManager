@@ -4,6 +4,7 @@ from login.models import usr
 
 
 class ProyectoForm(forms.Form):
+
     nombre = forms.CharField(label='Nombre del Proyecto', max_length=200,
                              widget=forms.TextInput(attrs={'placeholder': 'Ej. Proyecto 1', 'size': 35}),
                              )
@@ -14,9 +15,12 @@ class ProyectoForm(forms.Form):
     cant_comite = forms.IntegerField(label='Cantidad De Miembros del Comité', min_value=3,
                                      help_text='obs: nro. impar >=3',
                                      widget=forms.TextInput(attrs={'placeholder': 'Ej. 5', 'size': 35}))
-    eleccion = [(x.localId, x.username) for x in usr.objects.all()]
-    gerente = forms.ChoiceField(label='Gerente del proyecto', initial=('a', 'Seleccione el gerente'),
-                                choices=eleccion)
+    gerente = forms.ChoiceField(label='Gerente del proyecto', choices=[('', '')])
+
+    # init para evitar problemas de migraciones con choice cuando la base de datos aun no se creó
+    def __init__(self, *args, **kwargs):
+        super(ProyectoForm, self).__init__(*args, **kwargs)
+        self.fields['gerente'].choices = [('', '')] + [(x.localId, x.username) for x in usr.objects.all()]
 
     def clean_cant_comite(self):
         cant_comite = self.cleaned_data['cant_comite']
@@ -26,5 +30,10 @@ class ProyectoForm(forms.Form):
 
 
 class ParticipanteForm(forms.Form):
-    eleccion = [(x.localId, x.username) for x in usr.objects.all()]
-    participantes = forms.MultipleChoiceField(label='Usuarios Participantes:', choices=[()])
+
+    participantes = forms.MultipleChoiceField(label='Usuarios Participantes:', choices=[('', '')])
+
+    # init para evitar problemas de migraciones con choice cuando la base de datos aun no se creó
+    def __init__(self, *args, **kwargs):
+        super(ParticipanteForm, self).__init__(*args, **kwargs)
+        self.fields['participantes'].choices = [('', '')] + [(x.localId, x.username) for x in usr.objects.all()]
