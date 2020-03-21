@@ -47,10 +47,18 @@ def mostrar_tipo_item(request):
     tipo_items = TipoItem.objects.all()
     return render(request, 'administracion/tipoItemTest.html', {'lista_tipoitem': tipo_items})
 
+
 def mostrar_tipo_import(request, id_proyecto):
     tipo_item_proyecto_actual = Proyecto.objects.get(pk=id_proyecto).tipoitem_set.all()
     tipo_items = [tipo for tipo in TipoItem.objects.all() if not (tipo in tipo_item_proyecto_actual)]
-    return render(request, 'administracion/importarTipoItem.html', {'lista_tipoitem': tipo_items})
+    return render(request, 'administracion/importarTipoItem.html', {'lista_tipoitem': tipo_items, 'id_proyecto':id_proyecto})
+
+def importar_tipo(request, id_proyecto, id_tipo):
+    tipo_item = TipoItem.objects.get(pk=id_tipo)
+    proyecto = Proyecto.objects.get(pk=id_proyecto)
+    tipo_item.proyecto.add(proyecto)
+    return HttpResponseRedirect(reverse('administracion:verProyecto', args=(id_proyecto,)))
+
 
 def crear_tipo(request, id_proyecto):
     return render(request, 'administracion/crearTipoItem.html', {'id_proyecto': id_proyecto})

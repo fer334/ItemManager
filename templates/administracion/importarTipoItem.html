@@ -5,7 +5,7 @@
 
         <div class="list-group col-sm-12 col-md-6">
             {% for tipo_item in lista_tipoitem %}
-                <a href="#" class="list-group-item list-group-item-action"> {{ tipo_item.nombre }}({{ tipo_item.prefijo }})</a>
+                <a href="{% url 'administracion:confirmarImportarTipoItem' id_proyecto tipo_item.id %}" class="list-group-item list-group-item-action"> {{ tipo_item.nombre }}({{ tipo_item.prefijo }})</a>
             {% endfor %}
         </div>
     </div>
