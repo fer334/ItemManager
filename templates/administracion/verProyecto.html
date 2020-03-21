@@ -17,8 +17,14 @@
               <td>Miembros del Comité: </td><td>{{proyecto.comite}}</td>
             </tr>
             <tr class="table-primary">
-              <td>Participantes: </td><td>{{proyecto.participantes}}</td>
-            </tr>
+                <th>Participantes</th>
+                <td> <ul>
+                    {% for participante in proyecto.participantes.all %}
+                        <li>
+                            {{ participante }}
+                        </li>
+                    {% endfor %}
+                </ul></td></tr>
             <tr class="table-default">
                 <th>Tipos de Item</th>
                 <td> <ul>

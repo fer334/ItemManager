@@ -27,4 +27,4 @@ class ProyectoForm(forms.Form):
 
 class ParticipanteForm(forms.Form):
     eleccion = [(x.localId, x.username) for x in usr.objects.all()]
-    participantes = forms.MultipleChoiceField(label='Usuarios Participantes:', choices=eleccion)
+    participantes = forms.MultipleChoiceField(label='Usuarios Participantes:', choices=[()])

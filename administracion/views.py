@@ -20,15 +20,16 @@ def crear_proyecto(request):
         form = ProyectoForm(request.POST)
         if form.is_valid():
             nombre = form.cleaned_data['nombre']
-            fecha_inicio = request.POST['fecha_inicio']
-            numero_fases = request.POST['numero_fases']
+            fecha_inicio = form.cleaned_data['fecha_inicio']
+            numero_fases = form.cleaned_data['numero_fases']
             # fases =
-            gerente = request.POST['gerente']
+            gerente = form.cleaned_data['gerente']
             # comite =
-            # participantes = request.POST['participantes']
             nuevo_proyecto = Proyecto(nombre=nombre, fecha_inicio=fecha_inicio, numero_fases=numero_fases,
                                       gerente=gerente)
             nuevo_proyecto.save()
+            participante = usr.objects.get(localId=gerente)
+            nuevo_proyecto.participantes.add(participante)
 
             return HttpResponseRedirect(reverse('administracion:verProyecto', args=[nuevo_proyecto.id]))
     else:
@@ -49,12 +50,13 @@ def administrar_participantes(request, id_proyecto):
     if request.method == 'POST':
         form = ParticipanteForm(request.POST)
         if form.is_valid():
-            participantes = form.cleaned_data['participantes']
-            proyecto.participantes = participantes
+            id_usuario = request.POST['participantes']
+            participante = usr.objects.get(localId=id_usuario)
+            proyecto.participantes.add(participante)
             return HttpResponseRedirect(reverse('administracion:administrarParticipantes', args=[proyecto.id]))
     else:
         form = ParticipanteForm()
-    return render(request, 'administracion/administrarParticipantes.html')
+    return render(request, 'administracion/administrarParticipantes.html', {'proyecto': proyecto, 'form': form})
 
 
 def mostrar_tipo_item(request):
