@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from .models import TipoItem, Proyecto, PlantillaAtributo
 from .forms import ProyectoForm
-from login.models import usr
+from login.models import Usuario
 
 
 def index_administracion(request):
@@ -39,7 +39,7 @@ def crear_proyecto(request):
 
 def ver_proyecto(request, id_proyecto):
     proyecto = Proyecto.objects.get(pk=id_proyecto)
-    gerente = usr.objects.get(localId=proyecto.gerente)
+    gerente = Usuario.objects.get(localId=proyecto.gerente)
     return render(request, 'administracion/verProyecto.html', {'proyecto': proyecto, 'gerente': gerente})
 
 
