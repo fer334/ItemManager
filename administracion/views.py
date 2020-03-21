@@ -108,14 +108,14 @@ def asignar_rol_por_fase_al_usuario(request, id_rol):
 
 def asignar_rol_por_fase(request, id_rol):
     Rol = Rol.objects.get(pk=id_rol)
-    nuevo_rol_asignado = Rol(Nombre=Nombre,Permisos=Permisos)
-    nuevo_rol_asignado.save()
+    #nuevo_rol_asignado = Rol(Nombre=Nombre,Permisos=Permisos)
+    #nuevo_rol_asignado.save()
     return HttpResponse("Rol Asignado")
 
 def desasignar_rol_al_usuario(request, id_rol):
     return render (request, 'admimistracion/desasignarRol.html')
 
 def desasignar_rol_al_usuario(request, id_rol):
-    Rol = Rol.objects.get(pk=id_rol)
-    rol_desasignado = Rol(Nombre=Nombre, Permisos=Permisos)
+    rol = Rol.objects.get(pk=id_rol)
+    #rol_desasignado = Rol(Nombre=Nombre, Permisos=Permisos)
     return HttpResponse("Rol sacado")
