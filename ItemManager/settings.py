@@ -28,7 +28,9 @@ DEBUG = True
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
-    ''
+    'obscure-river-81564.herokuapp.com',
+    '0.0.0.0',
+    '192.168.0.105'
 ]
 
 # Application definition
@@ -42,10 +44,14 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
-    'login'
+    'login',
+    'administracion',
+    'crispy_forms',
 ]
+
 SITE = 1
 
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -79,7 +85,8 @@ WSGI_APPLICATION = 'ItemManager.wsgi.application'
 
 
 # Database
-# https://docs.djangoproject.com/en/3.0/ref/settings/#databases
+# https://docs.djangoproje
+# ct.com/en/3.0/ref/settings/#databases
 
 DATABASES = {
     'default': {

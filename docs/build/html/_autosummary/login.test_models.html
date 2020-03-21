@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es">
   <head>
     <meta charset="utf-8" />
-    <title>login.Register &#8212; documentación de ItemManager - 1.0</title>
+    <title>login.test_models &#8212; documentación de ItemManager - 1.0</title>
     <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -15,8 +15,8 @@
     <script src="../_static/translations.js"></script>
     <link rel="index" title="Índice" href="../genindex.html" />
     <link rel="search" title="Búsqueda" href="../search.html" />
-    <link rel="next" title="login.test_models" href="login.test_models.html" />
-    <link rel="prev" title="login.LoginBackEnd" href="login.LoginBackEnd.html" /> 
+    <link rel="next" title="login.test_urls" href="login.test_urls.html" />
+    <link rel="prev" title="login.Register" href="login.Register.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navegación</h3>
@@ -28,10 +28,10 @@
           <a href="../py-modindex.html" title="Índice de Módulos Python"
              >módulos</a> |</li>
         <li class="right" >
-          <a href="login.test_models.html" title="login.test_models"
+          <a href="login.test_urls.html" title="login.test_urls"
              accesskey="N">siguiente</a> |</li>
         <li class="right" >
-          <a href="login.LoginBackEnd.html" title="login.LoginBackEnd"
+          <a href="login.Register.html" title="login.Register"
              accesskey="P">anterior</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">documentación de ItemManager - 1.0</a> &#187;</li> 
       </ul>
@@ -42,37 +42,36 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="login-register">
-<h1>login.Register<a class="headerlink" href="#login-register" title="Enlazar permanentemente con este título">¶</a></h1>
-<p class="rubric">Functions</p>
+  <div class="section" id="login-test-models">
+<h1>login.test_models<a class="headerlink" href="#login-test-models" title="Enlazar permanentemente con este título">¶</a></h1>
+<p class="rubric">Classes</p>
 <table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#login.Register.crear_usuario" title="login.Register.crear_usuario"><code class="xref py py-obj docutils literal notranslate"><span class="pre">crear_usuario</span></code></a>(username, var_email, password)</p></td>
-<td><p>Metodo que se encarga de la creacion del usuario tanto en firebase como en la base local</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#login.test_models.TestModels" title="login.test_models.TestModels"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TestModels</span></code></a></p></td>
+<td><p>Esta clase se utiliza para probar las clases que implementan o utilizan modelos django en la aplicacion login</p></td>
 </tr>
 </tbody>
 </table>
-<span class="target" id="module-login.Register"></span><p>Este modulo se encarga de registrar los usuarios en firebase y la base de datos del sistema</p>
-<dl class="function">
-<dt id="login.Register.crear_usuario">
-<code class="sig-prename descclassname">login.Register.</code><code class="sig-name descname">crear_usuario</code><span class="sig-paren">(</span><em class="sig-param">username</em>, <em class="sig-param">var_email</em>, <em class="sig-param">password</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/login/Register.html#crear_usuario"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#login.Register.crear_usuario" title="Enlazar permanentemente con esta definición">¶</a></dt>
-<dd><p>Metodo que se encarga de la creacion del usuario tanto en firebase como en la base local</p>
+<span class="target" id="module-login.test_models"></span><p>Modulo para hacer test sobre el modulo models.py</p>
+<dl class="class">
+<dt id="login.test_models.TestModels">
+<em class="property">class </em><code class="sig-prename descclassname">login.test_models.</code><code class="sig-name descname">TestModels</code><a class="reference internal" href="../_modules/login/test_models.html#TestModels"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#login.test_models.TestModels" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Esta clase se utiliza para probar las clases que implementan o utilizan modelos django en la aplicacion login</p>
+<dl class="method">
+<dt id="login.test_models.TestModels.test_usr">
+<code class="sig-name descname">test_usr</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/login/test_models.html#TestModels.test_usr"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#login.test_models.TestModels.test_usr" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Se probará la creación de un usuario con la implementacion usr</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parámetros</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>username</strong> – El nombre de usuario a ser creado</p></li>
-<li><p><strong>var_email</strong> – El email del usuario a ser creado</p></li>
-<li><p><strong>password</strong> – El password del usuario a ser creado</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns true</dt>
-<dd class="field-even"><p>si el usuario se creo correctamente, false si no</p>
+<dt class="field-odd">Devuelve</dt>
+<dd class="field-odd"><p>los asserts devuelven true si el usuario fue correctamente creado</p>
 </dd>
 </dl>
+</dd></dl>
+
 </dd></dl>
 
 </div>
@@ -84,15 +83,15 @@
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
   <h4>Tema anterior</h4>
-  <p class="topless"><a href="login.LoginBackEnd.html"
-                        title="capítulo anterior">login.LoginBackEnd</a></p>
+  <p class="topless"><a href="login.Register.html"
+                        title="capítulo anterior">login.Register</a></p>
   <h4>Próximo tema</h4>
-  <p class="topless"><a href="login.test_models.html"
-                        title="próximo capítulo">login.test_models</a></p>
+  <p class="topless"><a href="login.test_urls.html"
+                        title="próximo capítulo">login.test_urls</a></p>
   <div role="note" aria-label="source link">
     <h3>Esta página</h3>
     <ul class="this-page-menu">
-      <li><a href="../_sources/_autosummary/login.Register.rst.txt"
+      <li><a href="../_sources/_autosummary/login.test_models.rst.txt"
             rel="nofollow">Mostrar el código</a></li>
     </ul>
    </div>
@@ -120,10 +119,10 @@
           <a href="../py-modindex.html" title="Índice de Módulos Python"
              >módulos</a> |</li>
         <li class="right" >
-          <a href="login.test_models.html" title="login.test_models"
+          <a href="login.test_urls.html" title="login.test_urls"
              >siguiente</a> |</li>
         <li class="right" >
-          <a href="login.LoginBackEnd.html" title="login.LoginBackEnd"
+          <a href="login.Register.html" title="login.Register"
              >anterior</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">documentación de ItemManager - 1.0</a> &#187;</li> 
       </ul>

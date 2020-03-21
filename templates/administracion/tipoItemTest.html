@@ -1,0 +1,13 @@
+{% extends 'login/loginHeader.html' %}
+{% block content %}
+    <div class="container">
+        <h2>Todos los tipo Item:</h2>
+        <ul>
+            {% for tipo_item in lista_tipoitem %}
+                <li>{{ tipo_item.nombre }}</li>
+            {% endfor %}
+
+        </ul>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends 'login/loginHeader.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="container">
+        <h1 class="text-center pt-3 mb-3">Creación De Proyecto</h1>
+        <form class="pt-3" METHOD="post" ACTION="{% url 'administracion:crearProyecto'%}">
+            {% csrf_token %}
+            {{ form|crispy}}
+            <button type="submit" class="btn btn-primary">Crear Proyecto</button>
+        </form>
+    </div>
+{% endblock %}
