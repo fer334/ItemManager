@@ -11,9 +11,9 @@ class ProyectoForm(forms.Form):
     fecha_inicio = forms.DateField(label='Fecha de Inicio', initial=timezone.now().date(),
                                    widget=forms.DateInput(attrs={'size': 35, 'type':'date'}))
     numero_fases = forms.IntegerField(label='Numero de fases del proyecto:', min_value=1,
-                                      widget=forms.TextInput(attrs={'placeholder': 'Ej. 7', 'size': 35}))
+                                      widget=forms.NumberInput(attrs={'placeholder': 'Ej. 7','type':'number', 'size': 35}))
     cant_comite = forms.IntegerField(label='Cantidad De Miembros del Comité', min_value=3, help_text='obs: nro. impar >=3',
-                                     widget=forms.TextInput(attrs={'placeholder': 'Ej. 5', 'size': 35}))
+                                     widget=forms.NumberInput(attrs={'placeholder': 'Ej. 5','type':'number', 'size': 35}))
     eleccion = [(x.localId, x.username) for x in usr.objects.all()]
     gerente = forms.ChoiceField(label='Gerente del proyecto',    initial=('a', 'Seleccione el gerente'), choices=eleccion)
 

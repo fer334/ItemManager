@@ -2,10 +2,12 @@
 {% block content %}
     <div class="container">
         <h1 class="text-center pt-3 mb-3">Módulo de Administración</h1>
+
+        <h3 class="mb-3">Proyectos:</h3>
         <div class="list-group">
           <a href="{% url 'administracion:proyectos' %}" class="list-group-item list-group-item-action">Proyectos</a>
           <a href="{% url 'administracion:tipoItem' %}" class="list-group-item list-group-item-action">Tipos de Item</a>
         </div>
-        <a class="btn btn-primary" href="{% url 'login:index' %}" role="button">Salir</a>
+        <a class="btn btn-primary mt-3" href="{% url 'login:index' %}" role="button">Salir</a>
     </div>
 {% endblock %}
