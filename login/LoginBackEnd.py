@@ -5,7 +5,7 @@ from urllib.error import HTTPError
 
 from django.contrib.auth.backends import BaseBackend
 import pyrebase
-from .models import usr
+from .models import Usuario
 
 config = {
     'apiKey': "AIzaSyCqhDwOP5cTSm58BV7gnkFnF4qz-26OWI8",
@@ -40,9 +40,9 @@ class LoginBackEnd(BaseBackend):
         try:
             userfb = authfb.sign_in_with_email_and_password(email, password)
             try:
-                user = usr.objects.get( localId=userfb['localId'] )
-            except usr.DoesNotExist:
-                usuario = usr( email = email, localId= userfb['localId'] )
+                user = Usuario.objects.get( localId=userfb['localId'] )
+            except Usuario.DoesNotExist:
+                usuario = Usuario( email = email, localId= userfb['localId'] )
                 usuario.save()
                 user = usuario
             return user
@@ -51,6 +51,7 @@ class LoginBackEnd(BaseBackend):
             print( repr(err) )
             """
             return None
+
 
     def get_user(self, user_id):
         """
@@ -61,6 +62,6 @@ class LoginBackEnd(BaseBackend):
         :returns Se retorna el objeto correspondiente al usuario de la base de datos local
         """
         try:
-            return usr.objects.get(pk=user_id)
-        except usr.DoesNotExist:
+            return Usuario.objects.get(pk=user_id)
+        except Usuario.DoesNotExist:
             return None

@@ -1,0 +1,31 @@
+{% extends 'login/loginHeader.html' %}
+{% block content %}
+    <div class="container">
+        <h1 class="col-12 text-center">Administrar accesos</h1>
+        <h5 class="col-12 text-center mt-3">
+            Seleccione a los usuarios a los cuales se le permitira
+            acceso al sistema
+        </h5>
+        <hr>
+        <div class="row justify-content-center mt-3">
+            <form class="col-sm-12 col-md-8 col-lg-6 pt-3" method="post">
+                {% csrf_token %}
+                {% for usuario in usuarios %}  
+                <div class="form-group ">
+
+                    <label> {{ usuario }} ( {{ usuario.email }} ) </label>
+                    <input 
+                        type="checkbox" 
+                        value=True 
+                        name={{usuario}} 
+                        {% if usuario.is_active%}
+                            checked
+                        {%endif%}>
+                </div>
+                {% endfor %}
+               
+                <button type="submit" class="btn btn-primary btn-block mb-3">Guardar</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

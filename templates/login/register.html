@@ -1,9 +1,10 @@
 {% extends 'login/loginHeader.html' %}
+{% load crispy_forms_tags %}
 {% block content %}
     <div class="container">
-        <h1 class="col-12 text-center">Cree un usuario</h1>
+        <h1 class="col-12 text-center">Crear usuario</h1>
             <div class="row justify-content-center mt-3">
-                <form class="col-sm-12 col-md-8 col-lg-6 pt-3 needs-validation" novalidate method="post" action="{% url 'login:postRegister' %}" onsubmit="e=>checkPass(e)">
+                <form class="col-sm-12 col-md-8 col-lg-6 pt-3" method="post" onsubmit="e=>checkPass(e)">
                     {% csrf_token %}
                     {%  if error_message %}
                         <div class="form-group">
@@ -12,21 +13,7 @@
                             </div>
                         </div>
                     {%  endif %}
-                    <div class="form-group">
-                        <label for="username">Nombre de usuario</label>
-                        <input type="text" class="form-control" id="username" aria-describedby="emailHelp" name="username">
-                    </div>
-                    <div class="form-group">
-                        <label for="email">Email de usuario</label>
-                        <input type="email" class="form-control" id="email" aria-describedby="emailHelp" name="email" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="password">Contraseña</label>
-                        <input type="password" class="form-control" id="password" name="password" required>
-                        <div class="invalid-feedback">
-                            La contrasenha debe tener al menos 6 caracteres
-                         </div>
-                    </div>
+                    {{ form|crispy }}
                     <button type="submit" class="btn btn-primary btn-block mb-3" id="registerButton">Registrarse</button>
 
                 </form>

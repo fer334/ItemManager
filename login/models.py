@@ -6,7 +6,7 @@ from django.db import models
 
 
 # Create your models here.
-class usr(AbstractUser):
+class Usuario(AbstractUser):
     """
     Clase que representa al usuario en la base de datos local que extiende del modelo AbstractUser
     de django

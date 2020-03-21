@@ -1,6 +1,6 @@
 from django import forms
 from django.utils import timezone
-from login.models import usr
+from login.models import Usuario
 
 
 class ProyectoForm(forms.Form):
@@ -14,7 +14,7 @@ class ProyectoForm(forms.Form):
                                       widget=forms.NumberInput(attrs={'placeholder': 'Ej. 7','type':'number', 'size': 35}))
     cant_comite = forms.IntegerField(label='Cantidad De Miembros del Comité', min_value=3, help_text='obs: nro. impar >=3',
                                      widget=forms.NumberInput(attrs={'placeholder': 'Ej. 5','type':'number', 'size': 35}))
-    eleccion = [(x.localId, x.username) for x in usr.objects.all()]
+    eleccion = [(x.localId, x.username) for x in Usuario.objects.all()]
     gerente = forms.ChoiceField(label='Gerente del proyecto',    initial=('a', 'Seleccione el gerente'), choices=eleccion)
 
     def clean_cant_comite(self):
