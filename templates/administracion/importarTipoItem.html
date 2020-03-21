@@ -1,0 +1,13 @@
+{% extends 'login/loginHeader.html' %}
+{% block content %}
+    <div class="container">
+        <h3 class="mb-3">Seleccione el tipo item a importar</h3>
+
+        <div class="list-group col-sm-12 col-md-6">
+            {% for tipo_item in lista_tipoitem %}
+                <a href="#" class="list-group-item list-group-item-action"> {{ tipo_item.nombre }}({{ tipo_item.prefijo }})</a>
+            {% endfor %}
+        </div>
+    </div>
+
+{% endblock %}
