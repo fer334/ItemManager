@@ -49,9 +49,9 @@ class Fase(models.Model):
     :param proyecto: Proyecto asociado a la fase
     :type Proyecto
     """
-    nombre = models.CharField(max_length=200)
-    descripcion = models.CharField(max_length=400)
-    estado = models.CharField(max_length=200)
+    nombre = models.CharField(max_length=200, null=False)
+    descripcion = models.CharField(max_length=400, null=True)
+    estado = models.CharField(max_length=200, default='abierta')
     proyecto = models.ForeignKey(Proyecto, on_delete=models.CASCADE)
 
 
