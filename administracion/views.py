@@ -11,6 +11,7 @@ def index_administracion(request):
 
 
 def proyectos(request):
+
     lista_proyectos = Proyecto.objects.all()
     return render(request, 'administracion/proyectos.html', {'lista_proyectos': lista_proyectos})
 
@@ -42,7 +43,8 @@ def ver_proyecto(request, id_proyecto):
     proyecto = Proyecto.objects.get(pk=id_proyecto)
     gerente = Usuario.objects.get(localId=proyecto.gerente)
     tipo_item = proyecto.tipoitem_set.all()
-    return render(request, 'administracion/verProyecto.html', {'proyecto': proyecto, 'gerente': gerente, 'tipo_item':tipo_item})
+    return render(request, 'administracion/verProyecto.html',
+                  {'proyecto': proyecto, 'gerente': gerente, 'tipo_item': tipo_item})
 
 
 def administrar_participantes(request, id_proyecto):
@@ -67,7 +69,9 @@ def mostrar_tipo_item(request):
 def mostrar_tipo_import(request, id_proyecto):
     tipo_item_proyecto_actual = Proyecto.objects.get(pk=id_proyecto).tipoitem_set.all()
     tipo_items = [tipo for tipo in TipoItem.objects.all() if not (tipo in tipo_item_proyecto_actual)]
-    return render(request, 'administracion/importarTipoItem.html', {'lista_tipoitem': tipo_items, 'id_proyecto':id_proyecto})
+    return render(request, 'administracion/importarTipoItem.html',
+                  {'lista_tipoitem': tipo_items, 'id_proyecto': id_proyecto})
+
 
 def importar_tipo(request, id_proyecto, id_tipo):
     tipo_item = TipoItem.objects.get(pk=id_tipo)
@@ -89,7 +93,8 @@ def ver_tipo(request, id_proyecto, id_tipo):
 def confirmar_tipo_import(request, id_proyecto, id_tipo):
     obj_proyecto = Proyecto.objects.get(pk=id_proyecto)
     obj_tipo_item = TipoItem.objects.get(pk=id_tipo)
-    return render(request, 'administracion/verTipoItemParaImport.html', {'proyecto': obj_proyecto, 'tipo_item': obj_tipo_item})
+    return render(request, 'administracion/verTipoItemParaImport.html',
+                  {'proyecto': obj_proyecto, 'tipo_item': obj_tipo_item})
 
 
 def ver_tipo_por_proyecto(request, id_proyecto):
@@ -123,13 +128,15 @@ def quitar_atributo(request, id_proyecto, id_tipo, id_atributo):
     atributo.delete()
     return HttpResponseRedirect(reverse('administracion:verTipoItem', args=(id_proyecto, id_tipo)))
 
-def crear_rol (request):
+
+def crear_rol(request):
     return render(request, 'administracion/crearRol.html')
+
 
 def crear_rol(request):
     Nombre = request.POST['Nombre']
     Permisos = request.POST['Permisos']
-    nuevo_rol = Rol(Nombre= Nombre, Permisos= Permisos)
+    nuevo_rol = Rol(Nombre=Nombre, Permisos=Permisos)
     nuevo_rol.save()
     return HttpResponse("Rol creado")
 
@@ -137,16 +144,19 @@ def crear_rol(request):
 def asignar_rol_por_fase_al_usuario(request, id_rol):
     return render(request, 'administracion/asignarRol')
 
+
 def asignar_rol_por_fase(request, id_rol):
-    Rol = Rol.objects.get(pk=id_rol)
-    #nuevo_rol_asignado = Rol(Nombre=Nombre,Permisos=Permisos)
-    #nuevo_rol_asignado.save()
+    rol = Rol.objects.get(pk=id_rol)
+    # nuevo_rol_asignado = rol(Nombre=Nombre,Permisos=Permisos)
+    # nuevo_rol_asignado.save()
     return HttpResponse("Rol Asignado")
 
+
 def desasignar_rol_al_usuario(request, id_rol):
-    return render (request, 'admimistracion/desasignarRol.html')
+    return render(request, 'admimistracion/desasignarRol.html')
+
 
 def desasignar_rol_al_usuario(request, id_rol):
     rol = Rol.objects.get(pk=id_rol)
-    #rol_desasignado = Rol(Nombre=Nombre, Permisos=Permisos)
+    # rol_desasignado = Rol(Nombre=Nombre, Permisos=Permisos)
     return HttpResponse("Rol sacado")
