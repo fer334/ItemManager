@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils import timezone
-from login.models import usr
+#from login.models import usuario
 # from login.models import models as login_models
 
 
@@ -37,7 +37,7 @@ class Proyecto(models.Model):
     gerente = models.CharField(max_length=700, default='null')
     comite = models.CharField(max_length=700, default='null')
     # ponerse de acuerdo después para participantes
-    participantes = models.ManyToManyField('login.usr')
+    participantes = models.ManyToManyField('login.Usuario')
     # este no: tipos_de_item = models.ManyToManyField('TipoItem')
 
     def __str__(self):

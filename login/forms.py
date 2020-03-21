@@ -69,15 +69,13 @@ class RegisterForm(forms.Form):
 		"""Create user and profile."""
 		data = self.cleaned_data
 
-		try:
-			user=crear_usuario(data['email'],data['password'])
-		except:
-			raise forms.ValidationError('''El correo electronico ya esta en uso. En teoria la base de datos local debe estar sincronizada con el auth de firebase, yyy no esta''')
+		user = crear_usuario(data['email'],data['password'])
 
 		data.pop('password_confirmation')
 		data.pop('password')
 		
-		data['localId']=user['localId']
+		data['localId'] = user['localId']
+		data['is_active'] = False
 
 		nuevo_usuario = Usuario(**data)
 		nuevo_usuario.save()

@@ -4,22 +4,20 @@
         <div class="row">
             <main role="main" class="container">
                 <div class="d-flex align-items-center p-3 my-3  bg-purple rounded shadow-sm">
-                <h2 class="">Bienvenido a Item Manager</h2>
+                <h2 class="">Bienvenido a Item Manager - Administrador</h2>
                 </div>
 
-                {% if request.user.is_active %}
 
                 <div class="d-flex align-items-center p-3 my-3  bg-purple rounded shadow-sm">
                     <h4>Seleccione Un Módulo:   </h4>
                     <br>
                     <div class="list-group">
-                      <a href="{% url 'administracion:indexAdmin' %}" class="list-group-item list-group-item-action active">Módulo de Administración</a>
+                      <a href="{% url 'login:administrarAccesos' %}" class="list-group-item list-group-item-action active">Administrar Accesos de los usuarios</a>
                       <a href="#" class="list-group-item list-group-item-action">Módulo de Desarrollo</a>
                       <a href="#" class="list-group-item list-group-item-action">Módulo de Configuración</a>
                     </div>
 
                     </div>
-                {% endif %}
 
                 <div class="my-3 p-3 bg-white rounded shadow-sm">
                 <h6 class="border-bottom border-gray pb-2 mb-0">Recent updates</h6>
