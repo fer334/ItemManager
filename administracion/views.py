@@ -40,7 +40,8 @@ def ver_proyecto(request, id_proyecto):
     proyecto = Proyecto.objects.get(pk=id_proyecto)
     gerente = Usuario.objects.get(localId=proyecto.gerente)
     tipo_item = proyecto.tipoitem_set.all()
-    return render(request, 'administracion/verProyecto.html', {'proyecto': proyecto, 'gerente': gerente, 'tipo_item': tipo_item})
+    return render(request, 'administracion/verProyecto.html',
+                  {'proyecto': proyecto, 'gerente': gerente, 'tipo_item': tipo_item})
 
 
 def administrar_participantes(request, id_proyecto):
@@ -60,12 +61,12 @@ def administrar_participantes(request, id_proyecto):
 def editar_proyecto(request, id_proyecto):
     proyecto = Proyecto.objects.get(pk=id_proyecto)
     if request.method == 'POST':
-            nombre = request.POST['nombre']
-            fecha_inicio = request.POST['fecha_inicio']
-            proyecto.nombre = nombre
-            proyecto.fecha_inicio = datetime.datetime.strptime(fecha_inicio, "%Y-%m-%d")
-            proyecto.save()
-            return render(request, 'administracion/editarProyecto.html', {'proyecto':proyecto})
+        nombre = request.POST['nombre']
+        fecha_inicio = request.POST['fecha_inicio']
+        proyecto.nombre = nombre
+        proyecto.fecha_inicio = datetime.datetime.strptime(fecha_inicio, "%Y-%m-%d")
+        proyecto.save()
+        return render(request, 'administracion/editarProyecto.html', {'proyecto': proyecto})
 
     return render(request, 'administracion/editarProyecto.html', {'proyecto': proyecto})
 
