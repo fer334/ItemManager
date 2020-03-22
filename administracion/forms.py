@@ -6,8 +6,7 @@ from login.models import Usuario
 class ProyectoForm(forms.Form):
 
     nombre = forms.CharField(label='Nombre del Proyecto', max_length=200,
-                             widget=forms.TextInput(attrs={'placeholder': 'Ej. Proyecto 1', 'size': 35}),
-                             )
+                             widget=forms.TextInput(attrs={'placeholder': 'Ej. Proyecto 1', 'size': 35}))
     fecha_inicio = forms.DateField(label='Fecha de Inicio', initial=timezone.now().date(),
                                    widget=forms.TextInput(attrs={'placeholder': 'Ej. 2020-09-28', 'type': 'date'}))
     numero_fases = forms.IntegerField(label='Numero de fases del proyecto:', min_value=1,

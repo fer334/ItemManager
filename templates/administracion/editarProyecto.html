@@ -1,0 +1,34 @@
+{% extends 'login/loginHeader.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="container">
+        <h3 class="text-center pt-3 mb-3">Datos Actuales:</h3>
+         <table class="table table-hover">
+          <tbody>
+            <tr class="table-primary">
+              <td>Estado: </td><td>{{proyecto.nombre}}</td>
+            </tr>
+            <tr class="table-default">
+              <td>Fecha de Inicio: </td><td>{{proyecto.fecha_inicio}}</td>
+            </tr>
+          </tbody>
+         </table>
+        <form class="pt-3" METHOD="post" ACTION="{% url 'administracion:editarProyecto' proyecto.id %}">
+            {% csrf_token %}
+            <div class="form-row">
+                <div class="form-group col-sm-12 col-md-8">
+                    <label for="inputNombre">Nombre:</label>
+                    <input type="text" class="form-control" id="inputNombre" name="nombre" value="{{ proyecto.nombre }}">
+                </div>
+                <div class="form-group col-sm-12 col-md-4">
+                    <label for="inputFecha">Fecha de Inicio:</label>
+                    <input type="date" class="form-control" id="inputFecha" name="prefijo" value="2020-10-09">
+                </div>
+            </div>
+            <p align="right">
+                <button type="submit" class="btn btn-primary" align="right">Modificar</button>
+            </p>
+            <a class="btn btn-primary" href="{% url 'administracion:verProyecto' proyecto.id %}" role="button">Cancelar</a>
+        </form>
+    </div>
+{% endblock %}

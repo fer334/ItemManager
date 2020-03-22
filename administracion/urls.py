@@ -10,13 +10,13 @@ urlpatterns = [
     path('roles/crear/',views.crear_rol, name='crearRol'),
     path('roles/<id_rol>/',views.asignar_rol_por_fase, name='asignarRol'),
     path('roles/<id_rol>/',views.desasignar_rol_al_usuario, name='desasignarRol'),
-    # no sé si el path de abajo está bien que deje en modadmin o puedo dejar vacio? no van a haber conflictos?
     # URLs DE MATI
-    path('modadmin/', views.index_administracion, name='indexAdmin'),
+    path('moduloadmin/', views.index_administracion, name='indexAdmin'),
     path('proyectos/', views.proyectos, name='proyectos'),
     path('proyectos/crear/', views.crear_proyecto, name='crearProyecto'),
     path('proyectos/<int:id_proyecto>/', views.ver_proyecto, name='verProyecto'),
     path('proyectos/<int:id_proyecto>/participantes', views.administrar_participantes, name='administrarParticipantes'),
+    path('proyectos/<int:id_proyecto>/editar', views.editar_proyecto, name='editarProyecto'),
     # URLs de DAVID
     path('tipo/todos', views.mostrar_tipo_item, name='tipoItem'),
     path('<int:id_proyecto>/tipo/showForImport', views.mostrar_tipo_import, name='importarTipoItem'),

@@ -11,7 +11,6 @@ def index_administracion(request):
 
 
 def proyectos(request):
-
     lista_proyectos = Proyecto.objects.all()
     return render(request, 'administracion/proyectos.html', {'lista_proyectos': lista_proyectos})
 
@@ -59,6 +58,18 @@ def administrar_participantes(request, id_proyecto):
     else:
         form = ParticipanteForm()
     return render(request, 'administracion/administrarParticipantes.html', {'proyecto': proyecto, 'form': form})
+
+
+def editar_proyecto(request, id_proyecto):
+    proyecto = Proyecto.objects.get(pk=id_proyecto)
+    if request.method == 'POST':
+            nombre = request.POST['nombre']
+            fecha_inicio = request.POST['fecha_inicio']
+            proyecto.nombre.set(nombre)
+            proyecto.fecha_inicio.set(fecha_inicio)
+            return render(request, 'administracion/editarProyecto.html', args=[id_proyecto])
+
+    return render(request, 'administracion/editarProyecto.html', {'proyecto': proyecto})
 
 
 def mostrar_tipo_item(request):
