@@ -24,13 +24,13 @@
                     <table class="table table-hover">
                       <tbody>
                         <tr class="table-primary">
-                            <td>Núm</td><td>Nombre</td><td>Descripción</td>
+                            <td>Nombre</td><td>Descripción</td><td></td>
                         </tr>
                         {% for fase in fases %}
                         <form class="pt-3" METHOD="post" ACTION="{% url 'administracion:administrarFasesProyecto' proyecto.id %}">
                          {% csrf_token %}
                             <tr class="table-default">
-                                <td>{{ fase.id }} <input type="hidden" class="form-control" id="inputId" name="id" value="{{ fase.id }}"> </td>
+                                 <input type="hidden" class="form-control" id="inputId" name="id" value="{{ fase.id }}">
                                 <td>
                                     <input type="text" class="form-control" id="inputNombre" name="nombre" value="{{ fase.nombre }}">
                                 </td>
