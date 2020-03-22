@@ -3,7 +3,7 @@
     <div class="container">
         <h2 class="text-center pt-3 mb-3">{{ proyecto.nombre }}</h2>
         <div class="row">
-            <table class="table table-hover col-sm-12 col-md-6">
+            <table class="table table-hover col-sm-12">
                 <tbody>
                     <tr class="table-primary">
                         <td>Estado: </td><td>{{proyecto.estado}}</td>
@@ -39,23 +39,19 @@
                     </tr>
                 </tbody>
             </table>
-            <div class="col-sm-12 col-md-6">
-                <a class="btn btn-block btn-primary m-3" href="{% url 'administracion:crearTipoItem' proyecto.id %}" role="button">Añadir Tipo de Item al proyecto</a>
-                <a class="btn btn-block btn-primary m-3" href="{% url 'administracion:administrarParticipantes' proyecto.id %}" role="button">Administrar Participantes del proyecto</a>
-                <a class="btn btn-block btn-primary m-3" href="#" role="button">Modificar Estado del Proyecto</a>
-                <a class="btn btn-block btn-primary m-3" href="{% url 'administracion:editarProyecto' proyecto.id %}" role="button">Modificar datos del Proyecto</a>
-                <a class="btn btn-block btn-primary m-3" href="#" role="button">Administrar Fases del Proyecto</a>
-            </div>
-            <div class="dropdown mr-1 col-sm-12">
-                <button type="button" class="btn btn-secondary dropdown-toggle" id="dropdownMenuOffset" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-offset="10,20">
-                    Acciones
-                </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuOffset">
-                    <a class="dropdown-item" href="{% url 'administracion:crearTipoItem' proyecto.id %}" role="button">Añadir Tipo de Item al proyecto</a>
-                    <a class="dropdown-item" href="{% url 'administracion:administrarParticipantes' proyecto.id %}" role="button">Administrar Participantes del proyecto</a>
-                    <a class="dropdown-item" href="#" role="button">Modificar Estado del Proyecto</a>
-                    <a class="dropdown-item" href="{% url 'administracion:editarProyecto' proyecto.id %}" role="button">Modificar datos del Proyecto</a>
-                    <a class="dropdown-item" href="#" role="button">Administrar Fases del Proyecto</a>
+            <p class="col-sm-12">
+                <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#multiCollapseExample2" aria-expanded="false" aria-controls="multiCollapseExample2">Acciones</button>
+            </p>
+            <div class="col-sm-12">
+                <div class="collapse multi-collapse" id="multiCollapseExample2">
+                    <div class="list-group col-sm-12">
+                        <a class="list-group-item list-group-item-action" href="{% url 'administracion:crearTipoItem' proyecto.id %}" role="button">Añadir Tipo de Item al proyecto</a>
+                        <a class="list-group-item list-group-item-action" href="{% url 'administracion:administrarParticipantes' proyecto.id %}" role="button">Administrar Participantes del proyecto</a>
+                        <a class="list-group-item list-group-item-action" href="#" role="button">Modificar Estado del Proyecto</a>
+                        <a class="list-group-item list-group-item-action" href="{% url 'administracion:editarProyecto' proyecto.id %}" role="button">Modificar datos del Proyecto</a>
+                        <a class="list-group-item list-group-item-action" href="#" role="button">Administrar Fases del Proyecto</a>
+                        <a class="list-group-item list-group-item-action" href="{% url 'administracion:crearRol' proyecto.id %}" role="button">Crear Rol</a>
+                    </div>
                 </div>
             </div>
         </div>
