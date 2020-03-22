@@ -18,6 +18,7 @@ urlpatterns = [
     path('proyectos/<int:id_proyecto>/participantes', views.administrar_participantes, name='administrarParticipantes'),
     path('proyectos/<int:id_proyecto>/editar', views.editar_proyecto, name='editarProyecto'),
     path('proyectos/<int:id_proyecto>/estado', views.estado_proyecto, name='estadoProyecto'),
+    path('proyectos/<int:id_proyecto>/adminfases', views.administrar_fases_del_proyecto, name='administrarFasesProyecto'),
     # URLs de DAVID
     path('tipo/todos', views.mostrar_tipo_item, name='tipoItem'),
     path('<int:id_proyecto>/tipo/showForImport', views.mostrar_tipo_import, name='importarTipoItem'),
