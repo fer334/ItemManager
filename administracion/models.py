@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils import timezone
-#from login.models import usuario
+# from login.models import usuario
 # from login.models import models as login_models
 
 
@@ -25,13 +25,11 @@ class Proyecto(models.Model):
     estado = models.CharField(max_length=200, default='iniciado')
     numero_fases = models.IntegerField(null=False)
     cant_comite = models.IntegerField(null=False)
-    # ponerse de acuerdo después para fases
     # fases = models.ForeignKey('Fase', on_delete=models.CASCADE)
     gerente = models.CharField(max_length=250, null=False)
     comite = models.CharField(max_length=700, null=True)
-    # ponerse de acuerdo después para participantes
     participantes = models.ManyToManyField('login.Usuario')
-    # este no: tipos_de_item = models.ManyToManyField('TipoItem')
+
 
     def __str__(self):
         return self.nombre

@@ -63,13 +63,24 @@ def administrar_participantes(request, id_proyecto):
 def editar_proyecto(request, id_proyecto):
     proyecto = Proyecto.objects.get(pk=id_proyecto)
     if request.method == 'POST':
-            nombre = request.POST['nombre']
-            fecha_inicio = request.POST['fecha_inicio']
-            proyecto.nombre.set(nombre)
-            #proyecto.fecha_inicio.set(fecha_inicio)
-            return render(request, 'administracion/editarProyecto.html', args=[id_proyecto])
+        nombre = request.POST['nombre']
+        fecha_inicio = request.POST['fecha_inicio']
+        proyecto.nombre.set(nombre)
+        # proyecto.fecha_inicio.set(fecha_inicio)
+        return render(request, 'administracion/editarProyecto.html', args=[id_proyecto])
 
     return render(request, 'administracion/editarProyecto.html', {'proyecto': proyecto})
+
+
+def estado_proyecto(request, id_proyecto):
+    proyecto = Proyecto.objects.get(pk=id_proyecto)
+    if request.method == 'POST':
+        estado = request.POST['estado']
+        proyecto.estado = estado
+        proyecto.save()
+        return HttpResponseRedirect(reverse('administracion:estadoProyecto', args=[id_proyecto]))
+
+    return render(request, 'administracion/estadoProyecto.html', {'proyecto': proyecto})
 
 
 def mostrar_tipo_item(request):
