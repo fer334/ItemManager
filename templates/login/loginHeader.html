@@ -8,6 +8,22 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
+    <style>
+        a.btn:hover {
+            -webkit-transform: scale(1.1);
+            -moz-transform: scale(1.1);
+            -o-transform: scale(1.1);
+        }
+        a.btn {
+            -webkit-transform: scale(0.8);
+            -moz-transform: scale(0.8);
+            -o-transform: scale(0.8);
+            -webkit-transition-duration: 0.5s;
+            -moz-transition-duration: 0.5s;
+            -o-transition-duration: 0.5s;
+        }
+    </style>
+
     <title>Landing page</title>
   </head>
   <body>
@@ -38,7 +54,10 @@
                 </ul>
                 {% if user.is_authenticated %}
                     <div class="form-inline my-2 my-lg-0">
-                        <p class="my-2 my-sm-0 text-white mr-3"> {{ user.username }}</p>
+                        <a link="{{ request.user.username }}/update"
+                            class="my-2 my-sm-0 text-white mr-3"> 
+                            &#128394; {{ user.username }} 
+                        </a>
                         <a class="btn btn-secondary my-2 my-sm-0" href="{% url 'login:logout' %}">Cerrar sesion</a>
                     </div>
                 {% endif %}

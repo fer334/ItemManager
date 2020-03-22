@@ -1,6 +1,7 @@
 """
 En este modulo se detalla la logica para las vistas que serán utilizadas por la app
 """
+#Django
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
@@ -8,18 +9,44 @@ from django.contrib import auth
 from django.views.generic import TemplateView
 from django.http import HttpResponse
 
+#RegisterBackend
 from login.Register import crear_usuario
 
 #Forms
-from login.forms import RegisterForm
+from login.forms import RegisterForm, UpdateUserForm
 
 #Models
 from login.models import Usuario
 
 
+def user_update(request,name):
+    """
+    Vista encargada de la modificacion de datos
+    de los usuarios
+    """
+
+    if request.method == 'POST':
+        form = UpdateUserForm(request.POST)
+        if form.is_valid():
+            form.update(key=name)
+            return redirect('login:index')
+
+    else:
+        instance = Usuario.objects.get(username=name)
+        form = UpdateUserForm(instance=instance)
+
+    return render(
+        request=request,
+        template_name='login/user_update.html',
+        context={
+            'form': form,
+        }
+    )
+
+
 @login_required
 def index(request):
-    """`
+    """
     Funcion que solo muestra el index, validando antes si el usuario inicio sesion
 
     """
@@ -106,4 +133,8 @@ def users_access(request):
                 ).update(is_active=True)
 
         return redirect('login:index')
-    return render(request, 'login/access.html', {'usuarios':usuarios})
+    return render(
+        request, 
+        'login/access.html', 
+        {'usuarios':usuarios}
+    )
