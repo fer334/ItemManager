@@ -1,0 +1,61 @@
+{% extends 'login/loginHeader.html' %}
+{% block content %}
+    <div class="container">
+        <h1 class="text-center pt-3 mb-3">Crear Rol</h1>
+        <form class="pt-3" METHOD="post">
+            {% csrf_token %}
+            <div class="form-row">
+                <div class="form-group col-sm-12">
+                    <label for="id_nombre">Nombre</label>
+                    {{ form.nombre }}
+                </div>
+            </div>
+            <div class="form-group row mt-3">
+                <p class="col-sm-12">Permisos:</p>
+                <div class="col-sm-12 col-md-6">
+                    <div class="custom-control custom-checkbox">
+                        <!--<input type="checkbox" class="custom-control-input" id="crearItem" name="crearItem">-->
+                        {{ form.crear_item }}
+                        <label class="custom-control-label" for="id_crear_item">Crear item</label>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                        {{ form.aprobar_item }}
+                        <label class="custom-control-label" for="id_aprobar_item">Aprobar item</label>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                        {{ form.modificar_item }}
+                        <label class="custom-control-label" for="id_modificar_item">Modificar item</label>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                        {{ form.reversionar_item }}
+                        <label class="custom-control-label" for="id_reversionar_item">Reversionar item</label>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                        {{ form.desactivar_item }}
+                        <label class="custom-control-label" for="id_desactivar_item">Desactivar item</label>
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-6">
+                    <div class="custom-control custom-checkbox">
+                        {{ form.crear_relaciones_ph }}
+                        <label class="custom-control-label" for="id_crear_relaciones_ph">Crear relaciones padre-hijo</label>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                        {{ form.crear_relaciones_as }}
+                        <label class="custom-control-label" for="id_crear_relaciones_as">Crear relaciones antecesor-sucesor</label>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                        {{ form.borrar_relaciones }}
+                        <label class="custom-control-label" for="id_borrar_relaciones">Desactivar relaciones</label>
+                    </div>
+                </div>
+            </div>
+            <div class="row justify-content-center pt-3">
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-primary btn-block">Crear</button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+{% endblock %}
