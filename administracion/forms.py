@@ -28,6 +28,17 @@ class ProyectoForm(forms.Form):
         return cant_comite
 
 
+class RolForm(forms.Form):
+    nombre = forms.CharField(required=True, widget=forms.TextInput(attrs={'placeholder':'Ej. Aprobador', 'class': 'form-control'}))
+    crear_item = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs={'class':'custom-control-input'}))
+    modificar_item = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs={'class':'custom-control-input'}))
+    desactivar_item = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs={'class':'custom-control-input'}))
+    aprobar_item = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs={'class':'custom-control-input'}))
+    reversionar_item = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs={'class':'custom-control-input'}))
+    crear_relaciones_ph = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs={'class':'custom-control-input'}))
+    crear_relaciones_as = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs={'class':'custom-control-input'}))
+    borrar_relaciones = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs={'class':'custom-control-input'}))
+
 class ParticipanteForm(forms.Form):
 
     participantes = forms.MultipleChoiceField(label='Usuarios Participantes:', choices=[('', '')])

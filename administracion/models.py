@@ -99,6 +99,7 @@ class PlantillaAtributo(models.Model):
     def __str__(self):
         return self.nombre
 
+
 class Rol(models.Model):
     """
     Clase que representa los roles de los usuarios en los proyectos
@@ -106,15 +107,19 @@ class Rol(models.Model):
     :param Nombre: Nombre a ser asignado al Rol
     :param Permisos: lista de permisos asociados a ese Rol
     """
-
-
-    Nombre =  models.CharField( max_length= 150, default= 'null')
-    Permisos = models.CharField(max_length= 1000, default='null')
-
-
+    nombre = models.CharField( max_length=150, default= 'null')
+    crear_item = models.BooleanField(default=False)
+    modificar_item = models.BooleanField(default=False)
+    desactivar_item = models.BooleanField(default=False)
+    aprobar_item = models.BooleanField(default=False)
+    reversionar_item = models.BooleanField(default=False)
+    crear_relaciones_ph = models.BooleanField(default=False)
+    crear_relaciones_as = models.BooleanField(default=False)
+    borrar_relaciones = models.BooleanField(default=False)
 
     def __str__(self):
         return (self.Nombre)
+
 
 class UsuarioxRol(models.Model):
     """ Clase en la cual se definen los roles del usuario

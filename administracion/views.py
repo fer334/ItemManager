@@ -2,10 +2,9 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from .models import TipoItem, Proyecto, PlantillaAtributo, Rol
-from administracion.forms import ProyectoForm, ParticipanteForm
+from administracion.forms import ProyectoForm, ParticipanteForm, RolForm
 from login.models import Usuario
 import datetime
-
 
 def index_administracion(request):
     return render(request, 'administracion/indexAdmin.html')
@@ -31,11 +30,9 @@ def crear_proyecto(request):
             nuevo_proyecto.save()
             participante = Usuario.objects.get(localId=gerente)
             nuevo_proyecto.participantes.add(participante)
-
             return HttpResponseRedirect(reverse('administracion:verProyecto', args=[nuevo_proyecto.id]))
     else:
         form = ProyectoForm()
-
     return render(request, 'administracion/crearProyecto.html', {'form': form})
 
 
@@ -141,16 +138,27 @@ def quitar_atributo(request, id_proyecto, id_tipo, id_atributo):
     return HttpResponseRedirect(reverse('administracion:verTipoItem', args=(id_proyecto, id_tipo)))
 
 
-def crear_rol(request):
-    return render(request, 'administracion/crearRol.html')
-
-
-def crear_rol(request):
-    Nombre = request.POST['Nombre']
-    Permisos = request.POST['Permisos']
-    nuevo_rol = Rol(Nombre=Nombre, Permisos=Permisos)
-    nuevo_rol.save()
-    return HttpResponse("Rol creado")
+def crear_rol(request, id_proyecto):
+    if request.method == 'POST':
+        form = RolForm(request.POST)
+        if form.is_valid():
+            nombre = form.cleaned_data['nombre']
+            crear_item = form.cleaned_data['crear_item']
+            modificar_item = form.cleaned_data['modificar_item']
+            desactivar_item = form.cleaned_data['desactivar_item']
+            aprobar_item = form.cleaned_data['aprobar_item']
+            reversionar_item = form.cleaned_data['reversionar_item']
+            crear_relaciones_ph = form.cleaned_data['crear_relaciones_ph']
+            crear_relaciones_as = form.cleaned_data['crear_relaciones_as']
+            borrar_relaciones = form.cleaned_data['borrar_relaciones']
+            nuevo_rol = Rol(nombre=nombre, crear_item=crear_item, modificar_item=modificar_item, desactivar_item=desactivar_item,
+                            aprobar_item=aprobar_item, reversionar_item=reversionar_item,
+                            crear_relaciones_as=crear_relaciones_as, crear_relaciones_ph=crear_relaciones_ph,
+                            borrar_relaciones=borrar_relaciones)
+            nuevo_rol.save()
+            return HttpResponseRedirect(reverse('administracion:verProyecto', args=(id_proyecto,)))
+    form = RolForm()
+    return render(request, 'administracion/crearRol.html', {'form': form})
 
 
 def asignar_rol_por_fase_al_usuario(request, id_rol):
