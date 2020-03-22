@@ -20,15 +20,15 @@ class Proyecto(models.Model):
     :param comite: conjunto impar de usuarios que conforma el comité para el proyecto
     :param participantes: equipo de usuarios que participa en el proyecto
     """
-    nombre = models.CharField(max_length=200, default='null')
+    nombre = models.CharField(max_length=200, null=False)
     fecha_inicio = models.DateField(auto_now=False, auto_now_add=False)
     estado = models.CharField(max_length=200, default='iniciado')
-    numero_fases = models.IntegerField(default=0)
-    cant_comite = models.IntegerField(default=0)
+    numero_fases = models.IntegerField(null=False)
+    cant_comite = models.IntegerField(null=False)
     # ponerse de acuerdo después para fases
     # fases = models.ForeignKey('Fase', on_delete=models.CASCADE)
-    gerente = models.CharField(max_length=250, default='null')
-    comite = models.CharField(max_length=700, default='null')
+    gerente = models.CharField(max_length=250, null=False)
+    comite = models.CharField(max_length=700, null=True)
     # ponerse de acuerdo después para participantes
     participantes = models.ManyToManyField('login.Usuario')
     # este no: tipos_de_item = models.ManyToManyField('TipoItem')
