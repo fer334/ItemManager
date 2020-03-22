@@ -2,7 +2,7 @@
 Este modulo se encarga de registrar los usuarios en firebase y la base de datos del sistema
 """
 import pyrebase
-from .models import Usuario
+from login.models import Usuario
 config = {
     'apiKey': "AIzaSyCqhDwOP5cTSm58BV7gnkFnF4qz-26OWI8",
     'authDomain': "itemmanager-77211.firebaseapp.com",

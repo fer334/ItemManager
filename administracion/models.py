@@ -20,16 +20,15 @@ class Proyecto(models.Model):
     :param comite: conjunto impar de usuarios que conforma el comité para el proyecto
     :param participantes: equipo de usuarios que participa en el proyecto
     """
-    nombre = models.CharField(max_length=200, default='null')
+    nombre = models.CharField(max_length=200, null=False)
     fecha_inicio = models.DateField(auto_now=False, auto_now_add=False)
     estado = models.CharField(max_length=200, default='iniciado')
-    numero_fases = models.IntegerField(default=0)
-    cant_comite = models.IntegerField(default=0)
+    numero_fases = models.IntegerField(null=False)
+    cant_comite = models.IntegerField(null=False)
     # ponerse de acuerdo después para fases
     # fases = models.ForeignKey('Fase', on_delete=models.CASCADE)
-    # para el gerente sería mejor que el usuario tenga un foreign key a proyectos
-    gerente = models.CharField(max_length=700, default='null')
-    comite = models.CharField(max_length=700, default='null')
+    gerente = models.CharField(max_length=250, null=False)
+    comite = models.CharField(max_length=700, null=True)
     # ponerse de acuerdo después para participantes
     participantes = models.ManyToManyField('login.Usuario')
     # este no: tipos_de_item = models.ManyToManyField('TipoItem')
@@ -99,3 +98,36 @@ class PlantillaAtributo(models.Model):
 
     def __str__(self):
         return self.nombre
+
+class Rol(models.Model):
+    """
+    Clase que representa los roles de los usuarios en los proyectos
+    :param Id_Rol: Identificador del Rol
+    :param Nombre: Nombre a ser asignado al Rol
+    :param Permisos: lista de permisos asociados a ese Rol
+    """
+
+
+    Nombre =  models.CharField( max_length= 150, default= 'null')
+    Permisos = models.CharField(max_length= 1000, default='null')
+
+
+
+    def __str__(self):
+        return (self.Nombre)
+
+class UsuarioxRol(models.Model):
+    """ Clase en la cual se definen los roles del usuario
+    :param Id: Identificador del rol correspondiente
+    :param Usuario: Usuario al cual le corresponde dicho rol
+    :param rol: Rol del usuario
+    """
+
+    Usuario = models.ForeignKey('login.Usuario', on_delete=models.CASCADE)
+    rol = models.ForeignKey(Rol,on_delete=models.CASCADE)
+    fase = models.ForeignKey(Fase, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.Id
+
+

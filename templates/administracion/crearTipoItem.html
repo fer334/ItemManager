@@ -18,7 +18,16 @@
                 <label for="areaDescripcion">Descripcion</label>
                 <textarea class="form-control" id="areaDescripcion" rows="3" name="descripcion"></textarea>
             </div>
-            <button type="submit" class="btn btn-primary">Continuar</button>
+            <div class="row">
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-primary btn-block">Crear</button>
+                </div>
+                <div class="p-1">o</div>
+                <div class="col-md-3">
+                    <a href="{% url 'administracion:importarTipoItem' id_proyecto %}" class="btn btn-primary btn-block">Importar</a>
+                </div>
+            </div>
+
         </form>
     </div>
 {% endblock %}

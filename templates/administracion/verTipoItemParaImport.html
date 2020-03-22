@@ -1,0 +1,44 @@
+{% extends 'login/loginHeader.html' %}
+{% block content %}
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-sm-12 col-md-8 col-lg-6 ">
+                <div class="col-lg-12 p-3">
+                    <h2>{{ tipo_item.nombre }} ({{ tipo_item.prefijo }})</h2>
+                </div>
+
+                <div class="lg-12 mb-3">
+                    <h3>Atributos comunes</h3>
+                </div>
+                <ul class="list-group pb-3">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">Nombre</li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">Complejidad</li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">Version</li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">Descripcion</li>
+
+                </ul>
+                <hr/>
+                <div class="lg-12 pt-3">
+                    <h3>Atributos particulares</h3>
+                </div>
+                <ul class="list-group pb-3">
+                    {% for atributo in tipo_item.plantillaatributo_set.all %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            {{ atributo.nombre }}<span class="text-secondary">({{ atributo.tipo }})</span>
+                        </li>
+                    {% endfor %}
+                </ul>
+                <div class="row">
+                    <div class="col-sm-12 col-md-6">
+                        <a href="{% url 'administracion:importarTipoItemAProyecto' proyecto.id tipo_item.id %}" class="btn btn-block btn-primary">Confirmar Importacion</a>
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+                        <a href="{% url 'administracion:importarTipoItem' proyecto.id %}" class="btn btn-block btn-secondary">Volver</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
