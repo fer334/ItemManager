@@ -66,7 +66,7 @@ def editar_proyecto(request, id_proyecto):
             nombre = request.POST['nombre']
             fecha_inicio = request.POST['fecha_inicio']
             proyecto.nombre.set(nombre)
-            proyecto.fecha_inicio.set(fecha_inicio)
+            #proyecto.fecha_inicio.set(fecha_inicio)
             return render(request, 'administracion/editarProyecto.html', args=[id_proyecto])
 
     return render(request, 'administracion/editarProyecto.html', {'proyecto': proyecto})
