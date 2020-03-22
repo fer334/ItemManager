@@ -73,6 +73,17 @@ def editar_proyecto(request, id_proyecto):
     return render(request, 'administracion/editarProyecto.html', {'proyecto': proyecto})
 
 
+def estado_proyecto(request, id_proyecto):
+    proyecto = Proyecto.objects.get(pk=id_proyecto)
+    if request.method == 'POST':
+        estado = request.POST['estado']
+        proyecto.estado = estado
+        proyecto.save()
+        return HttpResponseRedirect(reverse('administracion:estadoProyecto', args=[id_proyecto]))
+
+    return render(request, 'administracion/estadoProyecto.html', {'proyecto': proyecto})
+
+
 def mostrar_tipo_item(request):
     tipo_items = TipoItem.objects.all()
     return render(request, 'administracion/tipoItemTest.html', {'lista_tipoitem': tipo_items})
