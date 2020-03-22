@@ -4,6 +4,7 @@ from django.urls import reverse
 from .models import TipoItem, Proyecto, PlantillaAtributo, Rol
 from administracion.forms import ProyectoForm, ParticipanteForm
 from login.models import Usuario
+import datetime
 
 
 def index_administracion(request):
@@ -65,9 +66,10 @@ def editar_proyecto(request, id_proyecto):
     if request.method == 'POST':
             nombre = request.POST['nombre']
             fecha_inicio = request.POST['fecha_inicio']
-            proyecto.nombre.set(nombre)
-            #proyecto.fecha_inicio.set(fecha_inicio)
-            return render(request, 'administracion/editarProyecto.html', args=[id_proyecto])
+            proyecto.nombre = nombre
+            proyecto.fecha_inicio = datetime.datetime.strptime(fecha_inicio, "%Y-%m-%d")
+            proyecto.save()
+            return render(request, 'administracion/editarProyecto.html', {'proyecto':proyecto})
 
     return render(request, 'administracion/editarProyecto.html', {'proyecto': proyecto})
 
