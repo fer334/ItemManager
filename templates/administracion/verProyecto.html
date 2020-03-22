@@ -37,6 +37,16 @@
                             </ul>
                         </td>
                     </tr>
+                    <tr class="table-primary">
+                        <th>Fases del Proyecto:</th>
+                        <td>
+                            <ul>
+                                {% for fase in fases %}
+                                    <li>{{ fase.nombre }}</li>
+                                {% endfor %}
+                            </ul>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
             <p class="col-sm-12">
@@ -49,7 +59,7 @@
                         <a class="list-group-item list-group-item-action" href="{% url 'administracion:administrarParticipantes' proyecto.id %}" role="button">Administrar Participantes del proyecto</a>
                         <a class="list-group-item list-group-item-action" href="#" role="button">Modificar Estado del Proyecto</a>
                         <a class="list-group-item list-group-item-action" href="{% url 'administracion:editarProyecto' proyecto.id %}" role="button">Modificar datos del Proyecto</a>
-                        <a class="list-group-item list-group-item-action" href="#" role="button">Administrar Fases del Proyecto</a>
+                        <a class="list-group-item list-group-item-action" href="{% url 'administracion:administrarFasesProyecto' proyecto.id %}" role="button">Administrar Fases del Proyecto</a>
                         <a class="list-group-item list-group-item-action" href="{% url 'administracion:crearRol' proyecto.id %}" role="button">Crear Rol</a>
                     </div>
                 </div>

@@ -1,10 +1,11 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
-from .models import TipoItem, Proyecto, PlantillaAtributo, Rol
+from .models import TipoItem, Proyecto, PlantillaAtributo, Rol, Fase
 from administracion.forms import ProyectoForm, ParticipanteForm, RolForm
 from login.models import Usuario
 import datetime
+
 
 def index_administracion(request):
     return render(request, 'administracion/indexAdmin.html')
@@ -19,17 +20,24 @@ def crear_proyecto(request):
     if request.method == 'POST':
         form = ProyectoForm(request.POST)
         if form.is_valid():
+            # primero registramos los atributos en el proyecto
             nombre = form.cleaned_data['nombre']
             fecha_inicio = form.cleaned_data['fecha_inicio']
             numero_fases = form.cleaned_data['numero_fases']
-            # fases =
-            gerente = form.cleaned_data['gerente']
-            # comite =
+            cant_comite = form.cleaned_data['cant_comite']
+            # establecemos al usuario que crea el proyecto como gerente
+            gerente = request.user.localId
             nuevo_proyecto = Proyecto(nombre=nombre, fecha_inicio=fecha_inicio, numero_fases=numero_fases,
-                                      gerente=gerente)
+                                      cant_comite=cant_comite, gerente=gerente)
             nuevo_proyecto.save()
+            # ponemos al gerente como participante en el proyecto
             participante = Usuario.objects.get(localId=gerente)
             nuevo_proyecto.participantes.add(participante)
+            # creamos la cantidad de fases para este proyecto
+            for x in range(0, nuevo_proyecto.numero_fases):
+                nueva_fase = Fase(nombre='Nombre Indefinido', descripcion='añadir descripción...',
+                                  proyecto=nuevo_proyecto)
+                nueva_fase.save()
             return HttpResponseRedirect(reverse('administracion:verProyecto', args=[nuevo_proyecto.id]))
     else:
         form = ProyectoForm()
@@ -40,8 +48,9 @@ def ver_proyecto(request, id_proyecto):
     proyecto = Proyecto.objects.get(pk=id_proyecto)
     gerente = Usuario.objects.get(localId=proyecto.gerente)
     tipo_item = proyecto.tipoitem_set.all()
+    fases = proyecto.fase_set.all()
     return render(request, 'administracion/verProyecto.html',
-                  {'proyecto': proyecto, 'gerente': gerente, 'tipo_item': tipo_item})
+                  {'proyecto': proyecto, 'gerente': gerente, 'tipo_item': tipo_item, 'fases':fases})
 
 
 def administrar_participantes(request, id_proyecto):
@@ -80,6 +89,22 @@ def estado_proyecto(request, id_proyecto):
         return HttpResponseRedirect(reverse('administracion:estadoProyecto', args=[id_proyecto]))
 
     return render(request, 'administracion/estadoProyecto.html', {'proyecto': proyecto})
+
+
+def administrar_fases_del_proyecto(request, id_proyecto):
+    proyecto = Proyecto.objects.get(pk=id_proyecto)
+    fases = proyecto.fase_set.all()
+    if request.method == 'POST':
+        nombre = request.POST['nombre']
+        descripcion = request.POST['descripcion']
+        id_fase = request.POST['id']
+        fase = Fase.objects.get(pk=id_fase)
+        fase.nombre = nombre
+        fase.descripcion = descripcion
+        fase.save()
+        return render(request, 'administracion/administrarFasesProyecto.html', {'proyecto': proyecto, 'fases': fases})
+
+    return render(request, 'administracion/administrarFasesProyecto.html', {'proyecto': proyecto, 'fases': fases})
 
 
 def mostrar_tipo_item(request):
