@@ -26,8 +26,8 @@ class Proyecto(models.Model):
     numero_fases = models.IntegerField(null=False)
     cant_comite = models.IntegerField(null=False)
     gerente = models.CharField(max_length=250, null=False)
-    comite = models.CharField(max_length=700, null=False)
-    participantes = models.ManyToManyField('login.Usuario')
+    comite = models.ForeignKey('login.Usuario',on_delete=models.CASCADE,related_name='usuario_login_comite', null=True)
+    participantes = models.ManyToManyField('login.Usuario', related_name='usuario_login_participante')
 
     def __str__(self):
         return self.nombre
@@ -124,7 +124,7 @@ class UsuarioxRol(models.Model):
     :param rol: Rol del usuario
     """
 
-    Usuario = models.ForeignKey('login.Usuario', on_delete=models.CASCADE)
+    usuario = models.ForeignKey('login.Usuario', on_delete=models.CASCADE)
     rol = models.ForeignKey(Rol,on_delete=models.CASCADE)
     fase = models.ForeignKey(Fase, on_delete=models.CASCADE)
 
