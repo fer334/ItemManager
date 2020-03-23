@@ -2,14 +2,23 @@
 Mapeador objeto-relacional en el que es posible definir la estructura de la base de datos utilizando código Python.
 """
 from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.db import models
 
 
 # Create your models here.
 class Usuario(AbstractUser):
     """
-    Clase que representa al usuario en la base de datos local que extiende del modelo AbstractUser
-    de django
+    Clase que representa al usuario en la base de datos local que extiende del
+    modelo AbstractUser de django
     """
+
+    #: Atributo para el campo del Correo Electronico
+    email = models.EmailField(
+        'Dirección de correo electrónico',
+        unique=True,
+        blank=False,
+    )
+
+    #: Atributo para el campo id en la base de datos de Firebase
     localId = models.CharField(max_length=200)
-    pass
