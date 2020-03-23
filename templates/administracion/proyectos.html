@@ -3,9 +3,21 @@
     <div class="container">
         <h1 class="text-center pt-3 mb-3">Proyectos:</h1>
             <div class="list-group">
-                {% for proyecto in lista_proyectos %}
-                    <a href="{% url 'administracion:verProyecto' proyecto.id %}" class="list-group-item list-group-item-action">{{proyecto}}</a> ({{ proyecto.estado }})
-                {% endfor %}
+                <table class="table table-hover col-sm-12">
+                    <tbody>
+                        {% for proyecto in lista_proyectos %}
+                            <tr>
+                                <td width="65%">
+                                    <a href="{% url 'administracion:verProyecto' proyecto.id %}"
+                                       class="list-group-item list-group-item-action">{{proyecto}}</a>
+                                </td>
+                                <td width="35%">
+                                    ({{ proyecto.estado }})
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
         <br>
         <br>

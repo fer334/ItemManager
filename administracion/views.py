@@ -107,7 +107,7 @@ def administrar_fases_del_proyecto(request, id_proyecto):
                         fase = Fase.objects.get(pk=id_fase)
                         fase.nombre = valor
                     fase.save()
-        return render(request, 'administracion/administrarFasesProyecto.html', {'proyecto': proyecto, 'fases': fases})
+        return HttpResponseRedirect(reverse('administracion:verProyecto', args=[proyecto.id]))
 
     return render(request, 'administracion/administrarFasesProyecto.html', {'proyecto': proyecto, 'fases': fases})
 

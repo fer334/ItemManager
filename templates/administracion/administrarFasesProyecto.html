@@ -24,7 +24,7 @@
                     <table class="table table-hover">
                       <tbody>
                         <tr class="table-primary">
-                            <td>Nombre</td><td>Descripción</td>
+                            <td></td></td><td>Nombre</td><td>Descripción</td>
                         </tr>
                         <form class="pt-3" METHOD="post">
                         {% for fase in fases %}
@@ -54,16 +54,25 @@
                                            value="{{ fase.descripcion }}"
                                     >
                                 </td>
-                                <td>
                             </tr>
                         {% endfor %}
-                            <button type="submit" class="btn btn-primary" >Guardar</button></td>
+                        <tr>
+                            <td></td>
+                            <td>
+                                <a class="btn btn-primary" href="{% url 'administracion:verProyecto' proyecto.id %}"
+                                    role="button">Volver Atrás</a>
+                            </td>
+                            <td>
+                                <p align="right">
+                                    <button type="submit" class="btn btn-primary" >Guardar</button>
+                                </p>
+                            </td>
+                        </tr>
                         </form>
                       </tbody>
                      </table>
                 </div>
             </div>
-            <a class="btn btn-primary" href="{% url 'administracion:verProyecto' proyecto.id %}" role="button">Volver Atrás</a>
 
     </div>
 {% endblock %}
