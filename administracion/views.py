@@ -96,16 +96,15 @@ def administrar_fases_del_proyecto(request, id_proyecto):
     fases = proyecto.fase_set.all()
     if request.method == 'POST':
         ids = request.POST
-        for id, valor in ids.items():
-            if id != 'csrfmiddlewaretoken':
-                if id.isnumeric() or id.split('d')[1].isnumeric():
-                    #si encuentra una d antes es una descripcion
-                    if id.find('d') == 0:
-                        intid = pk = id.split('d')[1]
-                        fase = Fase.objects.get(pk=id.split('d')[1])
+        for id_fase, valor in ids.items():
+            if id_fase != 'csrfmiddlewaretoken':
+                if id_fase.isnumeric() or id_fase.split('d')[1].isnumeric():
+                    # si encuentra una d antes es una descripcion
+                    if id_fase.find('d') == 0:
+                        fase = Fase.objects.get(pk=id_fase.split('d')[1])
                         fase.descripcion = valor
                     else:
-                        fase = Fase.objects.get(pk=id)
+                        fase = Fase.objects.get(pk=id_fase)
                         fase.nombre = valor
                     fase.save()
         return render(request, 'administracion/administrarFasesProyecto.html', {'proyecto': proyecto, 'fases': fases})
