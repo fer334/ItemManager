@@ -132,23 +132,3 @@ class UpdateUserForm(forms.ModelForm):
                     'El nombre de usuario no esta disponible'
                 )
         return username
-
-
-class AdminUpdUserForm(forms.Form):
-    username = forms.ChoiceField(
-        label='Usuarios',
-        choices=[('', '')]
-    )
-
-    def __init__(self, *args, **kwargs):
-        """
-        Constructor de clase, se sobreescribe los campos para evitar
-        problemas en las migraciones
-
-        :param args: args por defecto
-        :param kwargs: kwargs por defecto
-        """
-
-        super(AdminUpdUserForm, self).__init__(*args, **kwargs)
-        self.fields['username'].choices = [('', '')] \
-            + [(x.localId, x.username) for x in Usuario.objects.all()]
