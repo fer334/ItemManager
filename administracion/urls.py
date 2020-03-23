@@ -5,8 +5,8 @@ from administracion import views
 app_name = 'administracion'
 urlpatterns = [
 
-    #URL DE PAO vamo a ver si me sale
-    path('roles/',views.Rol, name = 'roles' ),
+    # URL DE PAO vamo a ver si me sale
+    path('roles/', views.Rol, name = 'roles' ),
     path('proyectos/<int:id_proyecto>/roles/crear/',views.crear_rol, name='crearRol'),
     path('proyectos/<int:id_proyecto>/roles/<int:id_usuario>', views.asignar_rol_por_fase_al_usuario, name='asignarRol'),
     path('roles/<id_rol>/', views.desasignar_rol_al_usuario, name='desasignarRol'),
@@ -17,6 +17,8 @@ urlpatterns = [
     path('proyectos/<int:id_proyecto>/', views.ver_proyecto, name='verProyecto'),
     path('proyectos/<int:id_proyecto>/participantes', views.administrar_participantes, name='administrarParticipantes'),
     path('proyectos/<int:id_proyecto>/editar', views.editar_proyecto, name='editarProyecto'),
+    path('proyectos/<int:id_proyecto>/estado', views.estado_proyecto, name='estadoProyecto'),
+    path('proyectos/<int:id_proyecto>/adminfases', views.administrar_fases_del_proyecto, name='administrarFasesProyecto'),
     # URLs de DAVID
     path('tipo/todos', views.mostrar_tipo_item, name='tipoItem'),
     path('<int:id_proyecto>/tipo/showForImport', views.mostrar_tipo_import, name='importarTipoItem'),

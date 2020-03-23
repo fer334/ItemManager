@@ -10,4 +10,5 @@ urlpatterns = [
     
     path('admin/', views.admin, name='admin'),
     path('access/', views.users_access, name='administrarAccesos'),
+    path('<str:name>/update/', views.user_update, name='userUpdate')
 ]

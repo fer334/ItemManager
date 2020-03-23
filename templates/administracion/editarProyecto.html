@@ -6,10 +6,10 @@
          <table class="table table-hover">
           <tbody>
             <tr class="table-primary">
-              <td>Estado: </td><td>{{proyecto.nombre}}</td>
+              <td>Nombre: </td><td>{{proyecto.nombre}}</td>
             </tr>
             <tr class="table-default">
-              <td>Fecha de Inicio: </td><td>{{proyecto.fecha_inicio}}</td>
+              <td>Fecha de Inicio: </td><td>{{proyecto.fecha_inicio|date:"d - M - Y"}}</td>
             </tr>
           </tbody>
          </table>
@@ -28,7 +28,7 @@
             <p align="right">
                 <button type="submit" class="btn btn-primary" align="right">Modificar</button>
             </p>
-            <a class="btn btn-primary" href="{% url 'administracion:verProyecto' proyecto.id %}" role="button">Cancelar</a>
+            <a class="btn btn-primary" href="{% url 'administracion:verProyecto' proyecto.id %}" role="button">Volver Atrás</a>
         </form>
     </div>
 {% endblock %}
