@@ -2,45 +2,69 @@
 {% block content %}
     <div class="container">
         <h2 class="text-center pt-3 mb-3">{{ proyecto.nombre }}</h2>
-        <table class="table table-hover">
-          <tbody>
-            <tr class="table-primary">
-              <td>Estado: </td><td>{{proyecto.estado}}</td>
-            </tr>
-            <tr class="table-default">
-              <td>Fecha de Inicio: </td><td>{{proyecto.fecha_inicio}}</td>
-            </tr>
-            <tr class="table-primary">
-              <td>Gerente del Proyecto: </td><td>{{gerente}}</td>
-            </tr>
-            <tr class="table-default">
-              <td>Miembros del Comité: </td><td>{{proyecto.comite}}</td>
-            </tr>
-            <tr class="table-primary">
-                <th>Participantes</th>
-                <td> <ul>
-                    {% for participante in proyecto.participantes.all %}
-                        <li>
-                            {{ participante }}
-                        </li>
-                    {% endfor %}
-                </ul></td></tr>
-            <tr class="table-default">
-                <th>Tipos de Item</th>
-                <td> <ul>
-                    {% for tipoItem in tipo_item %}
-                        <li>
-                            {{ tipoItem.nombre }}
-                        </li>
-                    {% endfor %}
-                </ul></td>
-            </tr>
-          </tbody>
-        </table>
-        <br>
-        <br>
-        <a class="btn btn-primary" href="{% url 'administracion:crearTipoItem' proyecto.id %}" role="button">Añadir Tipo de Item al proyecto</a>
-        <a class="btn btn-primary" href="{% url 'administracion:administrarParticipantes' proyecto.id %}" role="button">Administrar Participantes del proyecto</a>
+        <div class="row">
+            <table class="table table-hover col-sm-12">
+                <tbody>
+                    <tr class="table-primary">
+                        <td>Estado: </td><td>{{proyecto.estado}}</td>
+                    </tr>
+                    <tr class="table-default">
+                        <td>Fecha de Inicio: </td><td>{{proyecto.fecha_inicio}}</td>
+                    </tr>
+                    <tr class="table-primary">
+                        <td>Gerente del Proyecto: </td><td>{{gerente}}</td>
+                    </tr>
+                    <tr class="table-default">
+                        <td>Miembros del Comité: </td><td>{{proyecto.comite}}</td>
+                    </tr>
+                    <tr class="table-primary">
+                        <th>Participantes</th>
+                        <td>
+                            <ul>
+                                {% for participante in proyecto.participantes.all %}
+                                    <li>{{ participante }}</li>
+                                {% endfor %}
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr class="table-default">
+                        <th>Tipos de Item</th>
+                        <td>
+                            <ul>
+                                {% for tipoItem in tipo_item %}
+                                    <li>{{ tipoItem.nombre }}</li>
+                                {% endfor %}
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr class="table-primary">
+                        <th>Fases del Proyecto:</th>
+                        <td>
+                            <ul>
+                                {% for fase in fases %}
+                                    <li>{{ fase.nombre }}</li>
+                                {% endfor %}
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="col-sm-12">
+                <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#multiCollapseExample2" aria-expanded="false" aria-controls="multiCollapseExample2">Acciones</button>
+            </p>
+            <div class="col-sm-12">
+                <div class="collapse multi-collapse" id="multiCollapseExample2">
+                    <div class="list-group col-sm-12">
+                        <a class="list-group-item list-group-item-action" href="{% url 'administracion:crearTipoItem' proyecto.id %}" role="button">Añadir Tipo de Item al proyecto</a>
+                        <a class="list-group-item list-group-item-action" href="{% url 'administracion:administrarParticipantes' proyecto.id %}" role="button">Administrar Participantes del proyecto</a>
+                        <a class="list-group-item list-group-item-action" href="#" role="button">Modificar Estado del Proyecto</a>
+                        <a class="list-group-item list-group-item-action" href="{% url 'administracion:editarProyecto' proyecto.id %}" role="button">Modificar datos del Proyecto</a>
+                        <a class="list-group-item list-group-item-action" href="{% url 'administracion:administrarFasesProyecto' proyecto.id %}" role="button">Administrar Fases del Proyecto</a>
+                        <a class="list-group-item list-group-item-action" href="{% url 'administracion:crearRol' proyecto.id %}" role="button">Crear Rol</a>
+                    </div>
+                </div>
+            </div>
+        </div>
 
     </div>
 {% endblock %}

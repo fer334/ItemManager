@@ -1,7 +1,5 @@
 from django.db import models
 from django.utils import timezone
-
-
 # from login.models import usuario
 # from login.models import models as login_models
 
@@ -22,19 +20,14 @@ class Proyecto(models.Model):
     :param comite: conjunto impar de usuarios que conforma el comité para el proyecto
     :param participantes: equipo de usuarios que participa en el proyecto
     """
-    nombre = models.CharField(max_length=200, default='null')
+    nombre = models.CharField(max_length=200, null=False)
     fecha_inicio = models.DateField(auto_now=False, auto_now_add=False)
     estado = models.CharField(max_length=200, default='iniciado')
-    numero_fases = models.IntegerField(default=0)
-    cant_comite = models.IntegerField(default=0)
-    # ponerse de acuerdo después para fases
-    # fases = models.ForeignKey('Fase', on_delete=models.CASCADE)
-    gerente = models.CharField(max_length=250, default='null')
-    comite = models.CharField(max_length=700, default='null')
-    # ponerse de acuerdo después para participantes
+    numero_fases = models.IntegerField(null=False)
+    cant_comite = models.IntegerField(null=False)
+    gerente = models.CharField(max_length=250, null=False)
+    comite = models.CharField(max_length=700, null=False)
     participantes = models.ManyToManyField('login.Usuario')
-
-    # este no: tipos_de_item = models.ManyToManyField('TipoItem')
 
     def __str__(self):
         return self.nombre
@@ -75,7 +68,7 @@ class TipoItem(models.Model):
     """
 
     nombre = models.CharField(max_length=200)
-    descripcion = models.CharField(max_length=800)
+    descripcion = models.CharField( max_length=800)
     prefijo = models.CharField(max_length=5)
     proyecto = models.ManyToManyField('Proyecto')
 
@@ -109,9 +102,15 @@ class Rol(models.Model):
     :param nombre: Nombre a ser asignado al Rol
     :param permisos: lista de permisos asociados a ese Rol
     """
-
-    nombre = models.CharField(max_length=150, null=False)
-    permisos = models.CharField(max_length=200, null= False)
+    nombre = models.CharField( max_length=150, default= 'null')
+    crear_item = models.BooleanField(default=False)
+    modificar_item = models.BooleanField(default=False)
+    desactivar_item = models.BooleanField(default=False)
+    aprobar_item = models.BooleanField(default=False)
+    reversionar_item = models.BooleanField(default=False)
+    crear_relaciones_ph = models.BooleanField(default=False)
+    crear_relaciones_as = models.BooleanField(default=False)
+    borrar_relaciones = models.BooleanField(default=False)
 
     def __str__(self):
         return self.nombre

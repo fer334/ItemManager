@@ -15,7 +15,7 @@
             <p align="right">
                 <button type="submit" class="btn btn-primary" align="right">Añadir al Proyecto</button>
             </p>
-            <a href="{% url 'administracion:verProyecto' proyecto.id %}" class="button">Volver a detalles de {{ proyecto.nombre }}</a>
+            <a class="btn btn-primary" href="{% url 'administracion:verProyecto' proyecto.id %}" role="button">Volver a detalles de {{ proyecto.nombre }}</a>
         </form>
     </div>
 {% endblock %}
