@@ -1,6 +1,8 @@
 from django.db import models
 from django.utils import timezone
-#from login.models import usuario
+
+
+# from login.models import usuario
 # from login.models import models as login_models
 
 
@@ -31,6 +33,7 @@ class Proyecto(models.Model):
     comite = models.CharField(max_length=700, default='null')
     # ponerse de acuerdo después para participantes
     participantes = models.ManyToManyField('login.Usuario')
+
     # este no: tipos_de_item = models.ManyToManyField('TipoItem')
 
     def __str__(self):
@@ -72,7 +75,7 @@ class TipoItem(models.Model):
     """
 
     nombre = models.CharField(max_length=200)
-    descripcion = models.CharField( max_length=800)
+    descripcion = models.CharField(max_length=800)
     prefijo = models.CharField(max_length=5)
     proyecto = models.ManyToManyField('Proyecto')
 
@@ -99,35 +102,31 @@ class PlantillaAtributo(models.Model):
     def __str__(self):
         return self.nombre
 
+
 class Rol(models.Model):
     """
     Clase que representa los roles de los usuarios en los proyectos
-    :param Id_Rol: Identificador del Rol
-    :param Nombre: Nombre a ser asignado al Rol
-    :param Permisos: lista de permisos asociados a ese Rol
+    :param nombre: Nombre a ser asignado al Rol
+    :param permisos: lista de permisos asociados a ese Rol
     """
 
-
-    Nombre =  models.CharField( max_length= 150, default= 'null')
-    Permisos = models.CharField(max_length= 1000, default='null')
-
-
+    nombre = models.CharField(max_length=150, null=False)
+    permisos = models.CharField(max_length=200, null= False)
 
     def __str__(self):
-        return (self.Nombre)
+        return self.nombre
+
 
 class UsuarioxRol(models.Model):
     """ Clase en la cual se definen los roles del usuario
-    :param Id: Identificador del rol correspondiente
-    :param Usuario: Usuario al cual le corresponde dicho rol
+    :param usuario: Usuario al cual le corresponde dicho rol
     :param rol: Rol del usuario
+    :param fase: Fase con la cual va asociada
     """
 
-    Usuario = models.ForeignKey('login.Usuario', on_delete=models.CASCADE)
-    rol = models.ForeignKey(Rol,on_delete=models.CASCADE)
+    usuario = models.ForeignKey('login.Usuario', on_delete=models.CASCADE)
+    rol = models.ForeignKey(Rol, on_delete=models.CASCADE)
     fase = models.ForeignKey(Fase, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.Id
-
-
+        return self.id_rol

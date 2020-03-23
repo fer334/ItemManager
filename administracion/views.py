@@ -1,9 +1,10 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
-from .models import TipoItem, Proyecto, PlantillaAtributo, Rol
+
 from administracion.forms import ProyectoForm, ParticipanteForm
 from login.models import Usuario
+from .models import TipoItem, Proyecto, PlantillaAtributo, Rol, Fase, UsuarioxRol
 
 
 def index_administracion(request):
@@ -11,7 +12,6 @@ def index_administracion(request):
 
 
 def proyectos(request):
-
     lista_proyectos = Proyecto.objects.all()
     return render(request, 'administracion/proyectos.html', {'lista_proyectos': lista_proyectos})
 
@@ -129,16 +129,36 @@ def quitar_atributo(request, id_proyecto, id_tipo, id_atributo):
     return HttpResponseRedirect(reverse('administracion:verTipoItem', args=(id_proyecto, id_tipo)))
 
 
+def roles(request):
+    lista_roles = Rol.objects.all()
+    return render(request, 'administracion/roles.html', {'lista_roles': lista_roles})
+
+
 def crear_rol(request):
     return render(request, 'administracion/crearRol.html')
 
 
 def crear_rol(request):
-    Nombre = request.POST['Nombre']
-    Permisos = request.POST['Permisos']
-    nuevo_rol = Rol(Nombre=Nombre, Permisos=Permisos)
+    nombre = request.POST['nombre']
+    permisos = request.POST['permisos']
+    nuevo_rol = Rol(nombre=nombre, permisos=permisos)
     nuevo_rol.save()
     return HttpResponse("Rol creado")
+
+
+def ver_fase(request, id_fase):
+    fase = Fase.objects.all()
+    return render(request, 'administracion/verFases.html', {'lista_fase': fase})
+
+
+def ver_fase(request, id_fase):
+    nombre_fase = request.POST['nombre_fase']
+    rol_fase = Rol.objects.get(pk=id_rol)
+    usuario_fase= Usuario.objects.get(pk='login.Usuario')
+    nueva_fase = Fase(nombre=nombre, descripcion=descripcion,)
+    nueva_fase.save()
+    nueva_fase.Rol.add(usuario)
+    return HttpResponseRedirect(reverse('administracion:verFases', args=(id_rol, nueva_fase)))
 
 
 def asignar_rol_por_fase_al_usuario(request, id_rol):
@@ -146,9 +166,12 @@ def asignar_rol_por_fase_al_usuario(request, id_rol):
 
 
 def asignar_rol_por_fase(request, id_rol):
+    nombre = request.POST['nombre']
+    permisos = request.POST['permisos']
+    fase = request.POST['fase']
     rol = Rol.objects.get(pk=id_rol)
-    # nuevo_rol_asignado = rol(Nombre=Nombre,Permisos=Permisos)
-    # nuevo_rol_asignado.save()
+    nuevo_rol_asignado = rol(nombre=nombre, permisos=permisos, fase=fase)
+    nuevo_rol_asignado.save()
     return HttpResponse("Rol Asignado")
 
 
@@ -157,6 +180,11 @@ def desasignar_rol_al_usuario(request, id_rol):
 
 
 def desasignar_rol_al_usuario(request, id_rol):
+    nombre = request.POST['nombre']
+    permisos = request.POST['permisos']
     rol = Rol.objects.get(pk=id_rol)
-    # rol_desasignado = Rol(Nombre=Nombre, Permisos=Permisos)
+    rol_desasignado = Rol(nombre=nombre, permisos=permisos)
     return HttpResponse("Rol sacado")
+
+
+
