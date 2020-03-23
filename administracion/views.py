@@ -35,7 +35,7 @@ def crear_proyecto(request):
             nuevo_proyecto.participantes.add(participante)
             # creamos la cantidad de fases para este proyecto
             for x in range(0, nuevo_proyecto.numero_fases):
-                nueva_fase = Fase(nombre='Nombre Indefinido', descripcion='añadir descripción...',
+                nueva_fase = Fase(nombre=f'Nombre Indefinido {x+1}', descripcion='añadir descripción...',
                                   proyecto=nuevo_proyecto)
                 nueva_fase.save()
             return HttpResponseRedirect(reverse('administracion:verProyecto', args=[nuevo_proyecto.id]))
