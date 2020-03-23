@@ -22,3 +22,7 @@ con esto, se creara un nuevo entorno virtual con ninguna libreria para nuestro p
 ```
 pipenv sync
 ```
+
+###Notas fer 
+http://www.sphinx-doc.org/en/master/usage/extensions/autodoc.html#directive-autoattribute
+https://thomas-cokelaer.info/tutorials/sphinx/docstring_python.html

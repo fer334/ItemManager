@@ -143,5 +143,5 @@ AUTHENTICATION_BACKENDS = {
     'login.LoginBackEnd.LoginBackEnd'
 }
 
-
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
