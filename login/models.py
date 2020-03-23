@@ -22,3 +22,9 @@ class Usuario(AbstractUser):
 
     #: Atributo para el campo id en la base de datos de Firebase
     localId = models.CharField(max_length=200)
+
+    #: Atributo para el campo diferenciar usuarios normales de gerentes
+    is_gerente = models.BooleanField(
+        "Gerente",
+        default=False
+    )

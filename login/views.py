@@ -13,7 +13,7 @@ from django.http import HttpResponse
 from login.Register import crear_usuario
 
 # Forms
-from login.forms import RegisterForm, UpdateUserForm
+from login.forms import RegisterForm, UpdateUserForm, AdminUpdUserForm
 
 # Models
 from login.models import Usuario
@@ -74,23 +74,36 @@ def admin(request):
 
 
 def users_access(request):
-    usuarios = Usuario.objects.order_by('id').\
+    usuarios = Usuario.objects.order_by('id'). \
         exclude(is_superuser=True)
 
     if request.method == 'POST':
-        usuarios_activos = request.POST.keys()
+        usuarios = request.POST
+        print(usuarios)
         Usuario.objects.update(is_active=False)
-        for user in usuarios_activos:
-            if user != 'csrfmiddlewaretoken':
-                Usuario.objects.filter(
-                    username=user
-                ).update(is_active=True)
+        Usuario.objects.update(is_gerente=False)
+        for id_usuario, valor in usuarios.items():
+            if id_usuario != 'csrfmiddlewaretoken':
+                if id_usuario.isnumeric() or \
+                        id_usuario.split('g')[1].isnumeric():
 
+                    # si encuentra una g antes es el campo gerente
+                    if id_usuario.find('g') == 0:
+                        Usuario.objects.filter(
+                            id=id_usuario.split('g')[1]
+                        ).update(is_gerente=valor)
+
+                    # sino es el campo is_active
+                    else:
+                        Usuario.objects.filter(
+                            id=id_usuario
+                        ).update(is_active=valor)
         return redirect('login:index')
+
     return render(
         request,
         'login/access.html',
-        {'usuarios': usuarios}
+        {'usuarios': usuarios, }
     )
 
 
@@ -115,20 +128,24 @@ def user_register(request):
 
 
 def user_update(request, name):
-
     """
     Vista encargada de la modificacion de datos
     de los usuarios
     """
 
+    instance = Usuario.objects.get(username=name)
     if request.method == 'POST':
-        form = UpdateUserForm(request.POST)
+        form = UpdateUserForm(
+            request.POST,
+            instance=instance,
+        )
         if form.is_valid():
             form.update(key=name)
             return redirect('login:index')
 
     else:
-        instance = Usuario.objects.get(username=name)
+        print('instance')
+        print(instance.id)
         form = UpdateUserForm(
             instance=instance,
             initial={'username': name}

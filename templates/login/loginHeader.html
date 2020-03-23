@@ -38,7 +38,7 @@
                 </ul>
                 {% if user.is_authenticated %}
                     <div class="form-inline my-2 my-lg-0">
-                        <a  href="{{ request.user.username }}/update"
+                        <a  href="{% url 'login:userUpdate' request.user.username %}"
                             class="my-2 my-sm-0 text-white mr-3"> 
                             &#128394; {{ user.username }} 
                         </a>
