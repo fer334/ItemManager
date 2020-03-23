@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils import timezone
-#from login.models import usuario
+# from login.models import usuario
 # from login.models import models as login_models
 
 
@@ -25,13 +25,9 @@ class Proyecto(models.Model):
     estado = models.CharField(max_length=200, default='iniciado')
     numero_fases = models.IntegerField(null=False)
     cant_comite = models.IntegerField(null=False)
-    # ponerse de acuerdo después para fases
-    # fases = models.ForeignKey('Fase', on_delete=models.CASCADE)
     gerente = models.CharField(max_length=250, null=False)
-    comite = models.CharField(max_length=700, null=True)
-    # ponerse de acuerdo después para participantes
+    comite = models.CharField(max_length=700, null=False)
     participantes = models.ManyToManyField('login.Usuario')
-    # este no: tipos_de_item = models.ManyToManyField('TipoItem')
 
     def __str__(self):
         return self.nombre
@@ -99,6 +95,7 @@ class PlantillaAtributo(models.Model):
     def __str__(self):
         return self.nombre
 
+
 class Rol(models.Model):
     """
     Clase que representa los roles de los usuarios en los proyectos
@@ -106,15 +103,19 @@ class Rol(models.Model):
     :param Nombre: Nombre a ser asignado al Rol
     :param Permisos: lista de permisos asociados a ese Rol
     """
-
-
-    Nombre =  models.CharField( max_length= 150, default= 'null')
-    Permisos = models.CharField(max_length= 1000, default='null')
-
-
+    nombre = models.CharField( max_length=150, default= 'null')
+    crear_item = models.BooleanField(default=False)
+    modificar_item = models.BooleanField(default=False)
+    desactivar_item = models.BooleanField(default=False)
+    aprobar_item = models.BooleanField(default=False)
+    reversionar_item = models.BooleanField(default=False)
+    crear_relaciones_ph = models.BooleanField(default=False)
+    crear_relaciones_as = models.BooleanField(default=False)
+    borrar_relaciones = models.BooleanField(default=False)
 
     def __str__(self):
         return (self.Nombre)
+
 
 class UsuarioxRol(models.Model):
     """ Clase en la cual se definen los roles del usuario

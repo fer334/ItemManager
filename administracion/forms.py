@@ -14,12 +14,6 @@ class ProyectoForm(forms.Form):
     cant_comite = forms.IntegerField(label='Cantidad De Miembros del Comité', min_value=3,
                                      help_text='obs: nro. impar >=3',
                                      widget=forms.TextInput(attrs={'placeholder': 'Ej. 5', 'size': 35}))
-    gerente = forms.ChoiceField(label='Gerente del proyecto', choices=[('', '')])
-
-    # init para evitar problemas de migraciones con choice cuando la base de datos aun no se creó
-    def __init__(self, *args, **kwargs):
-        super(ProyectoForm, self).__init__(*args, **kwargs)
-        self.fields['gerente'].choices = [('', '')] + [(x.localId, x.username) for x in Usuario.objects.all()]
 
     def clean_cant_comite(self):
         cant_comite = self.cleaned_data['cant_comite']
@@ -27,6 +21,17 @@ class ProyectoForm(forms.Form):
             raise forms.ValidationError('Tiene que ser impar.')
         return cant_comite
 
+
+class RolForm(forms.Form):
+    nombre = forms.CharField(required=True, widget=forms.TextInput(attrs={'placeholder':'Ej. Aprobador', 'class': 'form-control'}))
+    crear_item = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs={'class':'custom-control-input'}))
+    modificar_item = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs={'class':'custom-control-input'}))
+    desactivar_item = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs={'class':'custom-control-input'}))
+    aprobar_item = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs={'class':'custom-control-input'}))
+    reversionar_item = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs={'class':'custom-control-input'}))
+    crear_relaciones_ph = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs={'class':'custom-control-input'}))
+    crear_relaciones_as = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs={'class':'custom-control-input'}))
+    borrar_relaciones = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs={'class':'custom-control-input'}))
 
 class ParticipanteForm(forms.Form):
 
