@@ -12,7 +12,7 @@ urlpatterns = [
     path('roles/<id_rol>/', views.desasignar_rol_al_usuario, name='desasignarRol'),
     # URLs DE MATI
     path('moduloadmin/', views.index_administracion, name='indexAdmin'),
-    path('proyectos/', views.proyectos, name='proyectos'),
+    path('proyectos/<str:filtro>', views.proyectos, name='proyectos'),
     path('proyectos/crear/', views.crear_proyecto, name='crearProyecto'),
     path('proyectos/<int:id_proyecto>/', views.ver_proyecto, name='verProyecto'),
     path('proyectos/<int:id_proyecto>/participantes', views.administrar_participantes, name='administrarParticipantes'),

@@ -11,9 +11,16 @@ def index_administracion(request):
     return render(request, 'administracion/indexAdmin.html')
 
 
-def proyectos(request):
-    lista_proyectos = Proyecto.objects.all()
-    return render(request, 'administracion/proyectos.html', {'lista_proyectos': lista_proyectos})
+def proyectos(request, filtro):
+    lista_proyectos = []
+    lista_todos_proyectos = Proyecto.objects.all()
+    if filtro == 'todos':
+        lista_proyectos = lista_todos_proyectos
+    else:
+        for proyecto in lista_todos_proyectos:
+            if proyecto.estado == filtro:
+                lista_proyectos.append(proyecto)
+    return render(request, 'administracion/proyectos.html', {'lista_proyectos': lista_proyectos, 'filtro':filtro})
 
 
 def crear_proyecto(request):
