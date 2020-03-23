@@ -13,7 +13,7 @@ from django.http import HttpResponse
 from login.Register import crear_usuario
 
 # Forms
-from login.forms import RegisterForm, UpdateUserForm, AdminUpdUserForm
+from login.forms import RegisterForm, UpdateUserForm
 
 # Models
 from login.models import Usuario
