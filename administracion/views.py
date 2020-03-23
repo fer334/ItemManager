@@ -161,8 +161,9 @@ def crear_rol(request, id_proyecto):
     return render(request, 'administracion/crearRol.html', {'form': form})
 
 
-def asignar_rol_por_fase_al_usuario(request, id_rol):
-    return render(request, 'administracion/asignarRol')
+def asignar_rol_por_fase_al_usuario(request, id_proyecto):
+    return render(request, 'administracion/asignarRol.html')
+
 
 
 def asignar_rol_por_fase(request, id_rol):

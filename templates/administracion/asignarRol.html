@@ -1,0 +1,41 @@
+{% extends 'login/loginHeader.html' %}
+{% block content %}
+    <div class="container">
+        <h2>Asignar roles</h2>
+        <form class="needs-validation">
+            <div class="form-row">
+                <div class="col-md-3 mb-3">
+                    <label for="validationTooltip04">Usuario</label>
+                    <select class="custom-select" id="validationTooltip04" required>
+                        <option selected disabled value="">Seleccione...</option>
+                        <option>...</option>
+                    </select>
+                    <div class="invalid-tooltip">
+                        Favor seleccione un usuario
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="validationTooltip04">Rol</label>
+                    <select class="custom-select" id="validationTooltip04" required>
+                        <option selected disabled value="">Seleccione...</option>
+                        <option>...</option>
+                    </select>
+                    <div class="invalid-tooltip">
+                        Favor seleccione un usuario
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="validationTooltip04">Fase</label>
+                    <select class="custom-select" id="validationTooltip04" required>
+                        <option selected disabled value="">Seleccione...</option>
+                        <option>...</option>
+                    </select>
+                    <div class="invalid-tooltip">
+                        Favor seleccione un usuario
+                    </div>
+                </div>
+            </div>
+            <button class="btn btn-primary" type="submit">Submit form</button>
+        </form>
+    </div>
+{% endblock %}
