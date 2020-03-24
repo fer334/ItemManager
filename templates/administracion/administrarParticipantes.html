@@ -4,16 +4,18 @@
     <div class="container">
         <h1 class="text-center pt-3 mb-3">Administración de Participantes</h1>
         <h4>Lista Actual de Participantes:</h4>
+        <h6 style="color: #6BA81E">Consejo: haga click en un participante de esta lista para administrar sus roles</h6>
         <ul>
             {% for participante in proyecto.participantes.all %}
-                <li>{{ participante }}</li>
+                <li><a href="{% url 'administracion:verProyecto' proyecto.id %}">{{ participante }}</a></li>
             {% endfor %}
         </ul>
         <form class="pt-3" METHOD="post" ACTION="{% url 'administracion:administrarParticipantes'  proyecto.id %}">
             {% csrf_token %}
             {{ form|crispy}}
             <p align="right">
-                <button type="submit" class="btn btn-primary" align="right">Añadir al Proyecto</button>
+                <button type="submit" class="btn btn-primary" {% if  proyecto.estado == 'finalizado' %}disabled=""{% endif %}
+                        align="right">Añadir al Proyecto</button>
             </p>
             <a class="btn btn-primary" href="{% url 'administracion:verProyecto' proyecto.id %}" role="button">Volver a detalles de {{ proyecto.nombre }}</a>
         </form>
