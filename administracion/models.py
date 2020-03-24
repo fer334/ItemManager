@@ -104,6 +104,7 @@ class Rol(models.Model):
     :param Permisos: lista de permisos asociados a ese Rol
     """
     nombre = models.CharField( max_length=150, default= 'null')
+    proyecto = models.ForeignKey(Proyecto, on_delete=models.CASCADE)
     crear_item = models.BooleanField(default=False)
     modificar_item = models.BooleanField(default=False)
     desactivar_item = models.BooleanField(default=False)
@@ -114,7 +115,7 @@ class Rol(models.Model):
     borrar_relaciones = models.BooleanField(default=False)
 
     def __str__(self):
-        return (self.Nombre)
+        return (self.nombre)
 
 
 class UsuarioxRol(models.Model):
@@ -127,8 +128,9 @@ class UsuarioxRol(models.Model):
     usuario = models.ForeignKey('login.Usuario', on_delete=models.CASCADE)
     rol = models.ForeignKey(Rol,on_delete=models.CASCADE)
     fase = models.ForeignKey(Fase, on_delete=models.CASCADE)
+    activo = models.BooleanField(default=True)
 
     def __str__(self):
-        return self.Id
+        return self.id
 
 
