@@ -204,7 +204,7 @@ def ver_roles_usuario(request, id_proyecto, id_usuario):
     participante = Usuario.objects.get(pk=id_usuario)
     lista_roles = [UsuarioxRol.objects.filter(fase=fase, usuario=participante) for fase in proyecto.fase_set.all()]
     union_listas = zip(proyecto.fase_set.all(), lista_roles)
-    return render(request, 'administracion/asignarRol.html', {
+    return render(request, 'administracion/verDetallesRol.html', {
         'proyecto': proyecto,
         'participante': participante,
         'listaRol': union_listas
@@ -212,11 +212,17 @@ def ver_roles_usuario(request, id_proyecto, id_usuario):
 
 
 
-def asignar_rol_por_fase(request, id_rol):
-    rol = Rol.objects.get(pk=id_rol)
-    # nuevo_rol_asignado = rol(Nombre=Nombre,Permisos=Permisos)
-    # nuevo_rol_asignado.save()
-    return HttpResponse("Rol Asignado")
+def asignar_rol_por_fase(request, id_fase, id_usuario):
+    participante = Usuario.objects.get(pk=id_usuario)
+    fase = Fase.objects.get(pk=id_fase)
+    #roles_fase_actual = Proyecto.objects.get(pk=id_proyecto).tipoitem_set.all()
+    #tipo_items = [tipo for tipo in TipoItem.objects.all() if not (tipo in roles_fase_actual)]
+
+    return render(request, 'administracion/asignarRol.html', {
+        'participante': participante,
+        'fase': fase,
+        'proyecto': fase.proyecto
+    })
 
 
 def desasignar_rol_al_usuario(request, id_fase, id_usuario, id_rol):

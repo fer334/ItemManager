@@ -25,7 +25,7 @@
                             </ul>
                         </td>
                         <td>
-                            <a class="btn btn-primary" href="#">Agregar rol</a>
+                            <a class="btn btn-primary" href="{% url 'administracion:asignarRol' fase.id participante.id %}">Agregar rol</a>
                         </td>
                     </tr>
                 {% endfor %}
