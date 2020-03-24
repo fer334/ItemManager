@@ -3,7 +3,12 @@
     <div class="container">
         <h3 class="pt-3 mb-3 pb-3 text-center">Participante {{ participante.username }}</h3>
 
-
-
+        <p>Seleccione el rol a asignar</p>
+        <div class="list-group">
+            {% for rol in roles_disponibles %}
+                <a href="{% url 'administracion:registrarRolPorFase' fase.id participante.id rol.id %}" class="list-group-item list-group-item-action">{{rol.nombre}}</a>
+            {% endfor %}
+        </div>
+        <a href="{% url 'administracion:verRolesUsuario' fase.proyecto.id participante.id %}" class="btn btn-secondary mt-3">Volver</a>
     </div>
 {% endblock %}
