@@ -55,9 +55,9 @@ def ver_proyecto(request, id_proyecto):
     proyecto = Proyecto.objects.get(pk=id_proyecto)
     gerente = Usuario.objects.get(localId=proyecto.gerente)
     tipo_item = proyecto.tipoitem_set.all()
-    fases = proyecto.fase_set.all()
+    fases = proyecto.fase_set.all().order_by('id')
     return render(request, 'administracion/verProyecto.html',
-                  {'proyecto': proyecto, 'gerente': gerente, 'tipo_item': tipo_item, 'fases':fases})
+                  {'proyecto': proyecto, 'gerente': gerente, 'tipo_item': tipo_item, 'fases': fases})
 
 
 def administrar_participantes(request, id_proyecto):
@@ -105,7 +105,7 @@ def estado_proyecto(request, id_proyecto):
 
 def administrar_fases_del_proyecto(request, id_proyecto):
     proyecto = Proyecto.objects.get(pk=id_proyecto)
-    fases = proyecto.fase_set.all()
+    fases = proyecto.fase_set.all().order_by('id')
     if request.method == 'POST':
         ids = request.POST
         for id_fase, valor in ids.items():
@@ -219,8 +219,8 @@ def crear_rol(request, id_proyecto):
 def ver_roles_usuario(request, id_proyecto, id_usuario):
     proyecto = Proyecto.objects.get(pk=id_proyecto)
     participante = Usuario.objects.get(pk=id_usuario)
-    lista_roles = [UsuarioxRol.objects.filter(fase=fase, usuario=participante, activo=True) for fase in proyecto.fase_set.all()]
-    union_listas = zip(proyecto.fase_set.all(), lista_roles)
+    lista_roles = [UsuarioxRol.objects.filter(fase=fase, usuario=participante, activo=True) for fase in proyecto.fase_set.all().order_by('id')]
+    union_listas = zip(proyecto.fase_set.all().order_by('id'), lista_roles)
     return render(request, 'administracion/verDetallesRol.html', {
         'proyecto': proyecto,
         'participante': participante,
