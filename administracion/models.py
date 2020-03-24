@@ -104,6 +104,7 @@ class Rol(models.Model):
     :param Permisos: lista de permisos asociados a ese Rol
     """
     nombre = models.CharField( max_length=150, default= 'null')
+    proyecto = models.ForeignKey(Proyecto, on_delete=models.CASCADE)
     crear_item = models.BooleanField(default=False)
     modificar_item = models.BooleanField(default=False)
     desactivar_item = models.BooleanField(default=False)
