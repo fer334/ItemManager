@@ -176,6 +176,7 @@ def quitar_atributo(request, id_proyecto, id_tipo, id_atributo):
 
 
 def crear_rol(request, id_proyecto):
+    proyecto = Proyecto.objects.get(pk=id_proyecto)
     if request.method == 'POST':
         form = RolForm(request.POST)
         if form.is_valid():
@@ -191,7 +192,7 @@ def crear_rol(request, id_proyecto):
             nuevo_rol = Rol(nombre=nombre, crear_item=crear_item, modificar_item=modificar_item, desactivar_item=desactivar_item,
                             aprobar_item=aprobar_item, reversionar_item=reversionar_item,
                             crear_relaciones_as=crear_relaciones_as, crear_relaciones_ph=crear_relaciones_ph,
-                            borrar_relaciones=borrar_relaciones)
+                            borrar_relaciones=borrar_relaciones, proyecto=proyecto)
             nuevo_rol.save()
             return HttpResponseRedirect(reverse('administracion:verProyecto', args=(id_proyecto,)))
     form = RolForm()
