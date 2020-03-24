@@ -128,6 +128,7 @@ class UsuarioxRol(models.Model):
     usuario = models.ForeignKey('login.Usuario', on_delete=models.CASCADE)
     rol = models.ForeignKey(Rol,on_delete=models.CASCADE)
     fase = models.ForeignKey(Fase, on_delete=models.CASCADE)
+    activo = models.BooleanField(default=True)
 
     def __str__(self):
         return self.id

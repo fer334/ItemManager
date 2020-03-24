@@ -8,7 +8,7 @@ urlpatterns = [
     # URL DE PAO vamo a ver si me sale
     path('roles/', views.Rol, name = 'roles' ),
     path('proyectos/<int:id_proyecto>/roles/crear/',views.crear_rol, name='crearRol'),
-    path('proyectos/<int:id_proyecto>/usuario/<int:id_usuario>/roles', views.asignar_rol_por_fase_al_usuario, name='asignarRol'),
+    path('proyectos/<int:id_proyecto>/usuario/<int:id_usuario>/roles', views.ver_roles_usuario, name='verRolesUsuario'),
     path('proyectos/<int:id_fase>/usuario/<int:id_usuario>/roles/<int:id_rol>', views.desasignar_rol_al_usuario, name='desasignarRol'),
     # URLs DE MATI
     path('moduloadmin/', views.index_administracion, name='indexAdmin'),

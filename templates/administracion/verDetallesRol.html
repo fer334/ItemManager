@@ -18,7 +18,9 @@
                         <td>
                             <ul class="list-unstyled">
                             {% for rol in rol_x_fase %}
-                                <li class="m-1">{{ rol.rol.nombre }}(<a href="#">Desasignar</a>)</li>
+                                {% if rol.activo %}
+                                    <li class="m-1">{{ rol.rol.nombre }}(<a href="{% url 'administracion:desasignarRol' fase.id participante.id rol.rol.id %}">Desasignar</a>)</li>
+                                {% endif %}
                             {% endfor %}
                             </ul>
                         </td>

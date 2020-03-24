@@ -199,11 +199,10 @@ def crear_rol(request, id_proyecto):
     return render(request, 'administracion/crearRol.html', {'form': form})
 
 
-def asignar_rol_por_fase_al_usuario(request, id_proyecto, id_usuario):
+def ver_roles_usuario(request, id_proyecto, id_usuario):
     proyecto = Proyecto.objects.get(pk=id_proyecto)
     participante = Usuario.objects.get(pk=id_usuario)
     lista_roles = [UsuarioxRol.objects.filter(fase=fase, usuario=participante) for fase in proyecto.fase_set.all()]
-
     union_listas = zip(proyecto.fase_set.all(), lista_roles)
     return render(request, 'administracion/asignarRol.html', {
         'proyecto': proyecto,
@@ -220,11 +219,11 @@ def asignar_rol_por_fase(request, id_rol):
     return HttpResponse("Rol Asignado")
 
 
-def desasignar_rol_al_usuario(request, id_rol):
-    return render(request, 'admimistracion/desasignarRol.html')
-
-
-def desasignar_rol_al_usuario(request, id_rol):
+def desasignar_rol_al_usuario(request, id_fase, id_usuario, id_rol):
+    fase = Fase.objects.get(pk=id_fase)
+    usuario = Usuario.objects.get(pk=id_usuario)
     rol = Rol.objects.get(pk=id_rol)
-    # rol_desasignado = Rol(Nombre=Nombre, Permisos=Permisos)
-    return HttpResponse("Rol sacado")
+    rol_actual = UsuarioxRol.objects.get(fase=fase, usuario=usuario, rol=rol)
+    rol_actual.activo = False
+    rol_actual.save()
+    return HttpResponseRedirect(reverse('administracion:verRolesUsuario', args=(fase.proyecto.id, id_usuario)))
