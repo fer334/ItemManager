@@ -1,0 +1,36 @@
+{% extends 'login/loginHeader.html' %}
+{% block content %}
+    <div class="container">
+        <h3 class="pt-3 mb-3 pb-3 text-center">Participante {{ participante.username }}</h3>
+
+        <table class="table">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Fase</th>
+                    <th scope="col">Rol</th>
+                    <th scope="col">Accion</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for fase, rol_x_fase in listaRol %}
+                    <tr>
+                        <th>{{ fase.nombre }}</th>
+                        <td>
+                            <ul class="list-unstyled">
+                            {% for rol in rol_x_fase %}
+                                {% if rol.activo %}
+                                    <li class="m-1">{{ rol.rol.nombre }}(<a href="{% url 'administracion:desasignarRol' fase.id participante.id rol.rol.id %}">Desasignar</a>)</li>
+                                {% endif %}
+                            {% endfor %}
+                            </ul>
+                        </td>
+                        <td>
+                            <a class="btn btn-primary" href="{% url 'administracion:asignarRol' fase.id participante.id %}">Agregar rol</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+{% endblock %}

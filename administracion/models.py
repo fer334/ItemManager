@@ -99,10 +99,12 @@ class PlantillaAtributo(models.Model):
 class Rol(models.Model):
     """
     Clase que representa los roles de los usuarios en los proyectos
-    :param nombre: Nombre a ser asignado al Rol
-    :param permisos: lista de permisos asociados a ese Rol
+    :param Id_Rol: Identificador del Rol
+    :param Nombre: Nombre a ser asignado al Rol
+    :param Permisos: lista de permisos asociados a ese Rol
     """
     nombre = models.CharField( max_length=150, default= 'null')
+    proyecto = models.ForeignKey(Proyecto, on_delete=models.CASCADE)
     crear_item = models.BooleanField(default=False)
     modificar_item = models.BooleanField(default=False)
     desactivar_item = models.BooleanField(default=False)
@@ -113,19 +115,22 @@ class Rol(models.Model):
     borrar_relaciones = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.nombre
+        return (self.nombre)
 
 
 class UsuarioxRol(models.Model):
     """ Clase en la cual se definen los roles del usuario
-    :param usuario: Usuario al cual le corresponde dicho rol
+    :param Id: Identificador del rol correspondiente
+    :param Usuario: Usuario al cual le corresponde dicho rol
     :param rol: Rol del usuario
-    :param fase: Fase con la cual va asociada
     """
 
     usuario = models.ForeignKey('login.Usuario', on_delete=models.CASCADE)
-    rol = models.ForeignKey(Rol, on_delete=models.CASCADE)
+    rol = models.ForeignKey(Rol,on_delete=models.CASCADE)
     fase = models.ForeignKey(Fase, on_delete=models.CASCADE)
+    activo = models.BooleanField(default=True)
 
     def __str__(self):
-        return self.id_rol
+        return self.id
+
+

@@ -1,7 +1,7 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
-from .models import TipoItem, Proyecto, PlantillaAtributo, Rol, Fase
+from .models import TipoItem, Proyecto, PlantillaAtributo, Rol, Fase, UsuarioxRol
 from administracion.forms import ProyectoForm, ParticipanteForm, RolForm
 from login.models import Usuario
 import datetime
@@ -176,6 +176,7 @@ def quitar_atributo(request, id_proyecto, id_tipo, id_atributo):
 
 
 def crear_rol(request, id_proyecto):
+    proyecto = Proyecto.objects.get(pk=id_proyecto)
     if request.method == 'POST':
         form = RolForm(request.POST)
         if form.is_valid():
@@ -191,52 +192,57 @@ def crear_rol(request, id_proyecto):
             nuevo_rol = Rol(nombre=nombre, crear_item=crear_item, modificar_item=modificar_item, desactivar_item=desactivar_item,
                             aprobar_item=aprobar_item, reversionar_item=reversionar_item,
                             crear_relaciones_as=crear_relaciones_as, crear_relaciones_ph=crear_relaciones_ph,
-                            borrar_relaciones=borrar_relaciones)
+                            borrar_relaciones=borrar_relaciones, proyecto=proyecto)
             nuevo_rol.save()
             return HttpResponseRedirect(reverse('administracion:verProyecto', args=(id_proyecto,)))
     form = RolForm()
     return render(request, 'administracion/crearRol.html', {'form': form})
 
 
-def ver_fase(request, id_fase):
-    fase = Fase.objects.all()
-    return render(request, 'administracion/verFases.html', {'lista_fase': fase})
+def ver_roles_usuario(request, id_proyecto, id_usuario):
+    proyecto = Proyecto.objects.get(pk=id_proyecto)
+    participante = Usuario.objects.get(pk=id_usuario)
+    lista_roles = [UsuarioxRol.objects.filter(fase=fase, usuario=participante, activo=True) for fase in proyecto.fase_set.all()]
+    union_listas = zip(proyecto.fase_set.all(), lista_roles)
+    return render(request, 'administracion/verDetallesRol.html', {
+        'proyecto': proyecto,
+        'participante': participante,
+        'listaRol': union_listas
+    })
 
 
-def ver_fase(request, id_fase):
-    nombre_fase = request.POST['nombre_fase']
-    rol_fase = Rol.objects.get(pk=id_rol)
-    usuario_fase= Usuario.objects.get(pk='login.Usuario')
-    nueva_fase = Fase(nombre=nombre, descripcion=descripcion,)
-    nueva_fase.save()
-    nueva_fase.Rol.add(usuario)
-    return HttpResponseRedirect(reverse('administracion:verFases', args=(id_rol, nueva_fase)))
+def asignar_rol_por_fase(request, id_fase, id_usuario):
+    participante = Usuario.objects.get(pk=id_usuario)
+    fase = Fase.objects.get(pk=id_fase)
+    lista_usr_x_rol = UsuarioxRol.objects.filter(usuario=participante, fase=fase, activo=True)
+    roles_fase_actual = [obj.rol for obj in lista_usr_x_rol]
+    roles_proyecto = Rol.objects.filter(proyecto=fase.proyecto)
+    roles_disponibles = [rol for rol in roles_proyecto if not (rol in roles_fase_actual)]
+    return render(request, 'administracion/asignarRol.html', {
+        'participante': participante,
+        'fase': fase,
+        'roles_disponibles': roles_disponibles
+    })
 
 
-def asignar_rol_por_fase_al_usuario(request, id_rol):
-    return render(request, 'administracion/asignarRol')
-
-
-def asignar_rol_por_fase(request, id_rol):
-    nombre = request.POST['nombre']
-    permisos = request.POST['permisos']
-    fase = request.POST['fase']
+def registrar_rol_por_fase(request, id_fase, id_usuario, id_rol):
+    fase = Fase.objects.get(pk=id_fase)
     rol = Rol.objects.get(pk=id_rol)
-    nuevo_rol_asignado = rol(nombre=nombre, permisos=permisos, fase=fase)
-    nuevo_rol_asignado.save()
-    return HttpResponse("Rol Asignado")
+    usuario = Usuario.objects.get(pk=id_usuario)
+    try:# si ya esta lo pongo en activo
+        rol_asignado = UsuarioxRol.objects.get(fase=fase, rol=rol, usuario=usuario)
+        rol_asignado.activo = True
+    except:# si no esta lo creo
+        rol_asignado = UsuarioxRol(fase=fase, rol=rol, usuario=usuario)
+    rol_asignado.save()
+    return HttpResponseRedirect(reverse('administracion:verRolesUsuario', args=(fase.proyecto.id, id_usuario)))
 
 
-def desasignar_rol_al_usuario(request, id_rol):
-    return render(request, 'admimistracion/desasignarRol.html')
-
-
-def desasignar_rol_al_usuario(request, id_rol):
-    nombre = request.POST['nombre']
-    permisos = request.POST['permisos']
+def desasignar_rol_al_usuario(request, id_fase, id_usuario, id_rol):
+    fase = Fase.objects.get(pk=id_fase)
+    usuario = Usuario.objects.get(pk=id_usuario)
     rol = Rol.objects.get(pk=id_rol)
-    rol_desasignado = Rol(nombre=nombre, permisos=permisos)
-    return HttpResponse("Rol sacado")
-
-
-
+    rol_actual = UsuarioxRol.objects.get(fase=fase, usuario=usuario, rol=rol)
+    rol_actual.activo = False
+    rol_actual.save()
+    return HttpResponseRedirect(reverse('administracion:verRolesUsuario', args=(fase.proyecto.id, id_usuario)))

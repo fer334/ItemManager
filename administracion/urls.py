@@ -6,11 +6,12 @@ app_name = 'administracion'
 urlpatterns = [
 
     # URL DE PAO vamo a ver si me sale
-    path('roles/', views.Rol, name='roles'),
-    path('roles/crear/', views.crear_rol, name='crearRol'),
-    path('roles/<id_rol>/', views.asignar_rol_por_fase, name='asignarRol'),
-    path('roles/<id_rol>/', views.desasignar_rol_al_usuario, name='desasignarRol'),
-    # no sé si el path de abajo está bien que deje en modadmin o puedo dejar vacio? no van a haber conflictos?
+    path('roles/', views.Rol, name = 'roles' ),
+    path('proyectos/<int:id_proyecto>/roles/crear/',views.crear_rol, name='crearRol'),
+    path('proyectos/<int:id_proyecto>/usuario/<int:id_usuario>/roles', views.ver_roles_usuario, name='verRolesUsuario'),
+    path('fases/<int:id_fase>/usuario/<int:id_usuario>/roles/<int:id_rol>', views.desasignar_rol_al_usuario, name='desasignarRol'),
+    path('fases/<int:id_fase>/usuario/<int:id_usuario>', views.asignar_rol_por_fase, name='asignarRol'),
+    path('fases/<int:id_fase>/usuario/<int:id_usuario>/rol/<int:id_rol>', views.registrar_rol_por_fase, name='registrarRolPorFase'),
     # URLs DE MATI
     path('moduloadmin/', views.index_administracion, name='indexAdmin'),
     path('proyectos/', views.proyectos, name='proyectos'),
