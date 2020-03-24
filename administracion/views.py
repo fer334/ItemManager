@@ -1,7 +1,7 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
-from .models import TipoItem, Proyecto, PlantillaAtributo, Rol, Fase
+from .models import TipoItem, Proyecto, PlantillaAtributo, Rol, Fase, UsuarioxRol
 from administracion.forms import ProyectoForm, ParticipanteForm, RolForm
 from login.models import Usuario
 import datetime
@@ -201,7 +201,14 @@ def crear_rol(request, id_proyecto):
 def asignar_rol_por_fase_al_usuario(request, id_proyecto, id_usuario):
     proyecto = Proyecto.objects.get(pk=id_proyecto)
     participante = Usuario.objects.get(pk=id_usuario)
-    return render(request, 'administracion/asignarRol.html', {'proyecto': proyecto, 'participante': participante})
+    lista_roles = [UsuarioxRol.objects.filter(fase=fase, usuario=participante) for fase in proyecto.fase_set.all()]
+
+    union_listas = zip(proyecto.fase_set.all(), lista_roles)
+    return render(request, 'administracion/asignarRol.html', {
+        'proyecto': proyecto,
+        'participante': participante,
+        'listaRol': union_listas
+    })
 
 
 

@@ -114,7 +114,7 @@ class Rol(models.Model):
     borrar_relaciones = models.BooleanField(default=False)
 
     def __str__(self):
-        return (self.Nombre)
+        return (self.nombre)
 
 
 class UsuarioxRol(models.Model):
@@ -124,11 +124,11 @@ class UsuarioxRol(models.Model):
     :param rol: Rol del usuario
     """
 
-    Usuario = models.ForeignKey('login.Usuario', on_delete=models.CASCADE)
+    usuario = models.ForeignKey('login.Usuario', on_delete=models.CASCADE)
     rol = models.ForeignKey(Rol,on_delete=models.CASCADE)
     fase = models.ForeignKey(Fase, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.Id
+        return self.id
 
 
