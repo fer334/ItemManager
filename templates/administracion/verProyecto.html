@@ -55,7 +55,11 @@
             <div class="col-sm-12">
                 <div class="collapse multi-collapse" id="multiCollapseExample2">
                     <div class="list-group col-sm-12">
-                        <a class="list-group-item list-group-item-action" href="{% url 'administracion:crearTipoItem' proyecto.id %}" role="button">Añadir Tipo de Item al proyecto</a>
+                        {% if proyecto.estado == 'iniciado' %}
+                            <a class="list-group-item list-group-item-action" href="{% url 'administracion:crearTipoItem' proyecto.id %}" role="button">Añadir Tipo de Item al proyecto</a>
+                        {% else %}
+                            <a class="list-group-item list-group-item-action" role="button" disabled="">Añadir Tipo de Item <h6 style="color: #f57900">(solo en estado iniciado)</h6></a>
+                        {% endif %}
                         <a class="list-group-item list-group-item-action" href="{% url 'administracion:administrarParticipantes' proyecto.id %}" role="button">Administrar Participantes del proyecto</a>
                         <a class="list-group-item list-group-item-action" href="{% url 'administracion:estadoProyecto' proyecto.id %}" role="button">Modificar Estado del Proyecto</a>
                         <a class="list-group-item list-group-item-action" href="{% url 'administracion:editarProyecto' proyecto.id %}" role="button">Modificar datos del Proyecto</a>

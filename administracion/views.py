@@ -89,13 +89,18 @@ def editar_proyecto(request, id_proyecto):
 
 def estado_proyecto(request, id_proyecto):
     proyecto = Proyecto.objects.get(pk=id_proyecto)
+    habilitado = True
+    lista_fases = proyecto.fase_set.all()
+    for fase in lista_fases:
+        if fase.nombre.find('Nombre Indefinido') != -1:
+            habilitado = False
     if request.method == 'POST':
         estado = request.POST['estado']
         proyecto.estado = estado
         proyecto.save()
         return HttpResponseRedirect(reverse('administracion:estadoProyecto', args=[id_proyecto]))
 
-    return render(request, 'administracion/estadoProyecto.html', {'proyecto': proyecto})
+    return render(request, 'administracion/estadoProyecto.html', {'proyecto': proyecto, 'habilitado': habilitado})
 
 
 def administrar_fases_del_proyecto(request, id_proyecto):
