@@ -42,7 +42,9 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'login',
     'administracion'
+    'crispy_forms',
 ]
+
 SITE = 1
 
 
@@ -135,3 +137,6 @@ AUTHENTICATION_BACKENDS = {
     'django.contrib.auth.backends.ModelBackend',
     'login.LoginBackEnd.LoginBackEnd'
 }
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+

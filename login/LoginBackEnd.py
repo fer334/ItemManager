@@ -42,9 +42,7 @@ class LoginBackEnd(BaseBackend):
             try:
                 user = Usuario.objects.get( localId=userfb['localId'] )
             except Usuario.DoesNotExist:
-                usuario = Usuario( email = email, localId= userfb['localId'] )
-                usuario.save()
-                user = usuario
+                return None
             return user
         except:
             """requests.exceptions.HTTPError as err:
