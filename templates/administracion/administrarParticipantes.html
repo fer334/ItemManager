@@ -7,7 +7,10 @@
         <h6 style="color: #6BA81E">Consejo: haga click en un participante de esta lista para administrar sus roles</h6>
         <ul>
             {% for participante in proyecto.participantes.all %}
-                <li><a href="{% url 'administracion:verRolesUsuario' proyecto.id participante.id %}">{{ participante }}</a></li>
+                <li>
+                    <a href="{% url 'administracion:verRolesUsuario' proyecto.id participante.id %}">{{ participante }} </a>
+                    [<a href="{% url 'administracion:desasignarUsuario' proyecto.id participante.id 'participante' %}">X</a>]
+                </li>
             {% endfor %}
         </ul>
         <form class="pt-3" METHOD="post" ACTION="{% url 'administracion:administrarParticipantes'  proyecto.id %}">

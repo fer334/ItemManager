@@ -7,7 +7,7 @@
         <ul>
             {% for miembro in proyecto.comite.all %}
                 <li>{{ miembro }}
-                <!--    [<a href="{% url 'administracion:desasignarRol' fase.id participante.id rol.rol.id %}">X</a>]-->
+                    [<a href="{% url 'administracion:desasignarUsuario' proyecto.id miembro.id 'comite' %}">X</a>]
                 </li>
             {% endfor %}
         </ul>
@@ -17,8 +17,10 @@
             <select class="form-control" id="miembro_comite" name="miembro_comite">
                 <option selected>Eliga un miembro</option>
                 {% for participante in proyecto.participantes.all %}
-                    <option value="{{ participante.localId }}">{{ participante }}</option>
-                    <div class="dropdown-divider"></div>
+                    {% if participante not in proyecto.comite.all %}
+                        <option value="{{ participante.localId }}">{{ participante }}</option>
+                        <div class="dropdown-divider"></div>
+                    {% endif %}
                 {% endfor %}
             </select>
             <p align="right">

@@ -63,7 +63,7 @@ def ver_proyecto(request, id_proyecto):
 def administrar_participantes(request, id_proyecto):
     proyecto = Proyecto.objects.get(pk=id_proyecto)
     if request.method == 'POST':
-        form = ParticipanteForm(request.POST)
+        form = ParticipanteForm(request.POST, proyecto)
         if form.is_valid():
             id_usuario = request.POST['participantes']
             participante = Usuario.objects.get(localId=id_usuario)
@@ -132,6 +132,18 @@ def administrar_comite(request, id_proyecto):
         proyecto.comite.add(miembro_comite)
         return HttpResponseRedirect(reverse('administracion:administrarComite', args=[proyecto.id]))
     return render(request, 'administracion/administrarComite.html', {'proyecto': proyecto})
+
+
+def eliminar_participante_y_comite(request, id_proyecto, id_usuario, caso):
+    proyecto = Proyecto.objects.get(pk=id_proyecto)
+    usuario = Usuario.objects.get(pk=id_usuario)
+    if caso == 'comite':
+        proyecto.comite.remove(usuario)
+        return HttpResponseRedirect(reverse('administracion:administrarComite', args=[proyecto.id]))
+    elif caso == 'participante':
+        proyecto.participantes.remove(usuario)
+        proyecto.comite.remove(usuario)
+        return HttpResponseRedirect(reverse('administracion:administrarParticipantes', args=[proyecto.id]))
 
 
 def mostrar_tipo_item(request):

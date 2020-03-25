@@ -73,11 +73,11 @@
                             {% endif %}
                             <a class="list-group-item dropdown-item"
                                href="{% url 'administracion:administrarParticipantes' proyecto.id %}" role="button">
-                                Administrar Participantes del proyecto
+                                Administrar Participantes del Proyecto
                             </a>
                             <a class="list-group-item dropdown-item {% if  proyecto.estado == 'finalizado' %}disabled{% endif %}"
                                href="{% url 'administracion:administrarComite' proyecto.id %}" role="button">
-                                Administrar Miembros del comité
+                                Administrar Miembros del Comité
                             </a>
                             <a class="list-group-item dropdown-item {% if  proyecto.estado == 'finalizado' %}disabled{% endif %}"
                                href="{% url 'administracion:estadoProyecto' proyecto.id %}" role="button">
