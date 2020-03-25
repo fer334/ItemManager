@@ -25,7 +25,7 @@ class Proyecto(models.Model):
     estado = models.CharField(max_length=200, default='iniciado')
     numero_fases = models.IntegerField(null=False)
     cant_comite = models.IntegerField(null=False)
-    gerente = models.CharField(max_length=250, null=False)
+    gerente = models.IntegerField(null=False)
     comite = models.ManyToManyField('login.Usuario', related_name='usuario_login_comite')
     participantes = models.ManyToManyField('login.Usuario', related_name='usuario_login_participante')
 

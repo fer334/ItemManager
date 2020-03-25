@@ -4,13 +4,17 @@
     <div class="container">
         <h1 class="text-center pt-3 mb-3">Administrar Comité del Proyecto:</h1>
         <h4>Lista Actual de Miembros:</h4>
-        <ul>
-            {% for miembro in proyecto.comite.all %}
-                <li>{{ miembro }}
-                    [<a href="{% url 'administracion:desasignarUsuario' proyecto.id miembro.id 'comite' %}">X</a>]
-                </li>
-            {% endfor %}
-        </ul>
+        {% if not proyecto.comite.all.count  %}
+            <div class="alert alert-danger">No sé ha definido ningún miembro para el comité</div>
+        {% else %}
+            <ul>
+                {% for miembro in proyecto.comite.all %}
+                    <li>{{ miembro }}
+                        [<a href="{% url 'administracion:desasignarUsuario' proyecto.id miembro.id 'comite' %}">X</a>]
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
         <form class="pt-3" METHOD="post" ACTION="{% url 'administracion:administrarComite'  proyecto.id %}">
             {% csrf_token %}
             <label for="miembro_comite">Seleccionar Participantes:</label>
@@ -18,7 +22,7 @@
                 <option selected>Eliga un miembro</option>
                 {% for participante in proyecto.participantes.all %}
                     {% if participante not in proyecto.comite.all %}
-                        <option value="{{ participante.localId }}">{{ participante }}</option>
+                        <option value="{{ participante.id }}">{{ participante }}</option>
                         <div class="dropdown-divider"></div>
                     {% endif %}
                 {% endfor %}

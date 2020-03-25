@@ -158,8 +158,9 @@ def eliminar_participante_y_comite(request, id_proyecto, id_usuario, caso):
         proyecto.comite.remove(usuario)
         return HttpResponseRedirect(reverse('administracion:administrarComite', args=[proyecto.id]))
     elif caso == 'participante':
-        proyecto.participantes.remove(usuario)
-        proyecto.comite.remove(usuario)
+        if proyecto.gerente != usuario.id:
+            proyecto.participantes.remove(usuario)
+            proyecto.comite.remove(usuario)
         return HttpResponseRedirect(reverse('administracion:administrarParticipantes', args=[proyecto.id]))
 
 

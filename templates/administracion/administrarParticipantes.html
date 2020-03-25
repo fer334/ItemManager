@@ -9,7 +9,11 @@
             {% for participante in proyecto.participantes.all %}
                 <li>
                     <a href="{% url 'administracion:verRolesUsuario' proyecto.id participante.id %}">{{ participante }} </a>
-                    [<a href="{% url 'administracion:desasignarUsuario' proyecto.id participante.id 'participante' %}">X</a>]
+                    {% if participante.id != proyecto.gerente %}
+                        [<a href="{% url 'administracion:desasignarUsuario' proyecto.id participante.id 'participante' %}">X</a>]
+                    {% else %}
+                        [Gerente]
+                    {% endif %}
                 </li>
             {% endfor %}
         </ul>

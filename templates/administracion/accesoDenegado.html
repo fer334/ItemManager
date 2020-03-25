@@ -2,15 +2,18 @@
 {% load crispy_forms_tags %}
 {% block content %}
     <br>
-    <h3 style="color: #a40000" align="middle">ACCESO DENEGADO:</h3>
-    <br>
-    <h5 align="middle">
-        No se permite el ingreso a esta URL porque el estado actual del proyecto "{{ proyecto.nombre }}" es {{ proyecto.estado }}
-    </h5>
+    <div class="center-block col-md-12">
+        <div class="alert alert-danger">
+            <h3 style="color: #a40000" align="middle">ACCESO DENEGADO:</h3>
+            <br>
+            <h5 align="middle">
+                No se permite el ingreso a esta URL porque el proyecto "{{ proyecto.nombre }}"  tiene estado actual: {{ proyecto.estado }}
+            </h5>
+        </div>
+    </div>
     <br>
     <a class="btn btn-danger" href="{% url 'administracion:verProyecto' proyecto.id %}" role="button" >
       Volver a detalles de {{ proyecto.nombre }}
     </a>
-        </form>
-    </div>
+
 {% endblock %}
