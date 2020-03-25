@@ -15,9 +15,15 @@
                         <td>Gerente del Proyecto: </td><td>{{gerente}}</td>
                     </tr>
                     <tr class="table-default">
-                        <td>Miembros del Comité: </td><td>{{proyecto.comite}}</td>
-                    </tr>
-                    <tr class="table-primary">
+                        <th>Miembros del Comité:</th>
+                        <td>
+                            <ul>
+                                {% for miembro in proyecto.comite.all %}
+                                    <li>{{ miembro }}</li>
+                                {% endfor %}
+                            </ul>
+                        </td>
+                    </tr><tr class="table-primary">
                         <th>Participantes</th>
                         <td>
                             <ul>
@@ -50,26 +56,48 @@
                 </tbody>
             </table>
             {% if proyecto.estado != 'cancelado' %}
-                <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
                     Acciones
                 </button>
                 <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
                     {% if proyecto.estado == 'iniciado' %}
-                                <a class="list-group-item dropdown-item" href="{% url 'administracion:crearTipoItem' proyecto.id %}" role="button">Añadir Tipo de Item al proyecto</a>
+                                <a class="list-group-item dropdown-item"
+                                   href="{% url 'administracion:crearTipoItem' proyecto.id %}" role="button">
+                                    Añadir Tipo de Item al proyecto
+                                </a>
                             {% else %}
-                                <a class="list-group-item dropdown-item disabled" role="button">Añadir Tipo de Item <h6 style="color: #f57900">(solo en estado iniciado)</h6></a>
+                                <a class="list-group-item dropdown-item disabled" role="button">
+                                    Añadir Tipo de Item <h6 style="color: #f57900">(solo en estado iniciado)</h6>
+                                </a>
                             {% endif %}
-                            <a class="list-group-item dropdown-item" href="{% url 'administracion:administrarParticipantes' proyecto.id %}" role="button">Administrar Participantes del proyecto</a>
-                            <a class="list-group-item dropdown-item" href="{% url 'administracion:estadoProyecto' proyecto.id %}" role="button">Modificar Estado del Proyecto</a>
+                            <a class="list-group-item dropdown-item"
+                               href="{% url 'administracion:administrarParticipantes' proyecto.id %}" role="button">
+                                Administrar Participantes del proyecto
+                            </a>
                             <a class="list-group-item dropdown-item {% if  proyecto.estado == 'finalizado' %}disabled{% endif %}"
-                               href="{% url 'administracion:editarProyecto' proyecto.id %}" role="button">Modificar datos del Proyecto</a>
+                               href="{% url 'administracion:administrarComite' proyecto.id %}" role="button">
+                                Administrar Miembros del comité
+                            </a>
                             <a class="list-group-item dropdown-item {% if  proyecto.estado == 'finalizado' %}disabled{% endif %}"
-                               href="{% url 'administracion:administrarFasesProyecto' proyecto.id %}" role="button">Administrar Fases del Proyecto</a>
+                               href="{% url 'administracion:estadoProyecto' proyecto.id %}" role="button">
+                                Modificar Estado del Proyecto
+                            </a>
                             <a class="list-group-item dropdown-item {% if  proyecto.estado == 'finalizado' %}disabled{% endif %}"
-                               href="{% url 'administracion:crearRol' proyecto.id %}" role="button">Crear Rol</a>
+                               href="{% url 'administracion:editarProyecto' proyecto.id %}" role="button">
+                                Modificar datos del Proyecto
+                            </a>
+                            <a class="list-group-item dropdown-item {% if  proyecto.estado == 'finalizado' %}disabled{% endif %}"
+                               href="{% url 'administracion:administrarFasesProyecto' proyecto.id %}" role="button">
+                                Administrar Fases del Proyecto
+                            </a>
+                            <a class="list-group-item dropdown-item {% if  proyecto.estado == 'finalizado' %}disabled{% endif %}"
+                               href="{% url 'administracion:crearRol' proyecto.id %}" role="button">
+                                Crear Rol
+                            </a>
                 </div>
             {% else %}
-                <h4 style="color: #c60f0f">Proyecto Cancelado: No se permiten acciones</h4>
+                <h5 style="color: #c60f0f">Proyecto Cancelado: No se permiten acciones</h5>
             {% endif %}
         </div>
 

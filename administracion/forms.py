@@ -33,6 +33,7 @@ class RolForm(forms.Form):
     crear_relaciones_as = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs={'class':'custom-control-input'}))
     borrar_relaciones = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs={'class':'custom-control-input'}))
 
+
 class ParticipanteForm(forms.Form):
 
     participantes = forms.MultipleChoiceField(label='Usuarios Participantes:', choices=[('', '')])

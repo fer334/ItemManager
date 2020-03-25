@@ -26,11 +26,23 @@ class Proyecto(models.Model):
     numero_fases = models.IntegerField(null=False)
     cant_comite = models.IntegerField(null=False)
     gerente = models.CharField(max_length=250, null=False)
-    comite = models.ForeignKey('login.Usuario',on_delete=models.CASCADE,related_name='usuario_login_comite', null=True)
+    comite = models.ManyToManyField('login.Usuario', related_name='usuario_login_comite')
     participantes = models.ManyToManyField('login.Usuario', related_name='usuario_login_participante')
 
     def __str__(self):
         return self.nombre
+
+    def es_comite(self,id_usuario):
+        """
+        función booleana que retorna true si un usuario es parte del comité del proyecto
+
+        :param id_usuario: identificar unico del usuario del que se desea saber si es parte del comité
+        :return: retorna True si forma parte y False en caso contrario
+        """
+        for usuario in self.comite:
+            if usuario.id == id_usuario:
+                return True
+        return False
 
 
 class Fase(models.Model):

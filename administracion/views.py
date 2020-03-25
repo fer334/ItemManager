@@ -124,6 +124,16 @@ def administrar_fases_del_proyecto(request, id_proyecto):
     return render(request, 'administracion/administrarFasesProyecto.html', {'proyecto': proyecto, 'fases': fases})
 
 
+def administrar_comite(request, id_proyecto):
+    proyecto = Proyecto.objects.get(pk=id_proyecto)
+    if request.method == 'POST':
+        id_usuario = request.POST['miembro_comite']
+        miembro_comite = Usuario.objects.get(localId=id_usuario)
+        proyecto.comite.add(miembro_comite)
+        return HttpResponseRedirect(reverse('administracion:administrarComite', args=[proyecto.id]))
+    return render(request, 'administracion/administrarComite.html', {'proyecto': proyecto})
+
+
 def mostrar_tipo_item(request):
     tipo_items = TipoItem.objects.all()
     return render(request, 'administracion/tipoItemTest.html', {'lista_tipoitem': tipo_items})
