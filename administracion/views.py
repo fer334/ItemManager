@@ -242,19 +242,6 @@ def asignar_rol_por_fase(request, id_fase, id_usuario):
     })
 
 
-def registrar_rol_por_fasev1(request, id_fase, id_usuario, id_rol):
-    fase = Fase.objects.get(pk=id_fase)
-    rol = Rol.objects.get(pk=id_rol)
-    usuario = Usuario.objects.get(pk=id_usuario)
-    try:# si ya esta lo pongo en activo
-        rol_asignado = UsuarioxRol.objects.get(fase=fase, rol=rol, usuario=usuario)
-        rol_asignado.activo = True
-    except:# si no esta lo creo
-        rol_asignado = UsuarioxRol(fase=fase, rol=rol, usuario=usuario)
-    rol_asignado.save()
-    return HttpResponseRedirect(reverse('administracion:verRolesUsuario', args=(fase.proyecto.id, id_usuario)))
-
-
 def registrar_rol_por_fase(request, id_fase, id_usuario, id_rol):
     fase = Fase.objects.get(pk=id_fase)
     rol = Rol.objects.get(pk=id_rol)
