@@ -24,28 +24,55 @@
                     <table class="table table-hover">
                       <tbody>
                         <tr class="table-primary">
-                            <td>Nombre</td><td>Descripción</td><td></td>
+                            <td></td></td><td>Nombre</td><td>Descripción</td>
                         </tr>
+                        <form class="pt-3" METHOD="post">
                         {% for fase in fases %}
-                        <form class="pt-3" METHOD="post" ACTION="{% url 'administracion:administrarFasesProyecto' proyecto.id %}">
                          {% csrf_token %}
                             <tr class="table-default">
-                                 <input type="hidden" class="form-control" id="inputId" name="id" value="{{ fase.id }}">
                                 <td>
-                                    <input type="text" class="form-control" id="inputNombre" name="nombre" value="{{ fase.nombre }}">
+                                    <input type="hidden"
+                                           class="form-control"
+                                           id="inputId"
+                                           name="id"
+                                           value="{{ fase.id }}"
+                                    >
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control" id="inputDesc" name="descripcion" value="{{ fase.descripcion }}">
+                                    <input class="form-control"
+                                           id="inputNombre"
+                                           name="{{ fase.id }}"
+                                           type="text"
+                                           value="{{ fase.nombre }}"
+                                    >
                                 </td>
-                                <td><button type="submit" class="btn btn-primary" >Guardar</button></td>
+                                <td>
+                                    <input class="form-control"
+                                           id="inputDesc"
+                                           name="d{{ fase.id }}"
+                                           type="text"
+                                           value="{{ fase.descripcion }}"
+                                    >
+                                </td>
                             </tr>
-                        </form>
                         {% endfor %}
+                        <tr>
+                            <td></td>
+                            <td>
+                                <a class="btn btn-primary" href="{% url 'administracion:verProyecto' proyecto.id %}"
+                                    role="button">Volver Atrás</a>
+                            </td>
+                            <td>
+                                <p align="right">
+                                    <button type="submit" class="btn btn-primary" >Guardar</button>
+                                </p>
+                            </td>
+                        </tr>
+                        </form>
                       </tbody>
                      </table>
                 </div>
             </div>
-            <a class="btn btn-primary" href="{% url 'administracion:verProyecto' proyecto.id %}" role="button">Volver Atrás</a>
 
     </div>
 {% endblock %}

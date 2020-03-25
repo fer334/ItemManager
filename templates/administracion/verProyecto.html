@@ -49,21 +49,28 @@
                     </tr>
                 </tbody>
             </table>
-            <p class="col-sm-12">
-                <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#multiCollapseExample2" aria-expanded="false" aria-controls="multiCollapseExample2">Acciones</button>
-            </p>
-            <div class="col-sm-12">
-                <div class="collapse multi-collapse" id="multiCollapseExample2">
-                    <div class="list-group col-sm-12">
-                        <a class="list-group-item list-group-item-action" href="{% url 'administracion:crearTipoItem' proyecto.id %}" role="button">Añadir Tipo de Item al proyecto</a>
-                        <a class="list-group-item list-group-item-action" href="{% url 'administracion:administrarParticipantes' proyecto.id %}" role="button">Administrar Participantes del proyecto</a>
-                        <a class="list-group-item list-group-item-action" href="#" role="button">Modificar Estado del Proyecto</a>
-                        <a class="list-group-item list-group-item-action" href="{% url 'administracion:editarProyecto' proyecto.id %}" role="button">Modificar datos del Proyecto</a>
-                        <a class="list-group-item list-group-item-action" href="{% url 'administracion:administrarFasesProyecto' proyecto.id %}" role="button">Administrar Fases del Proyecto</a>
-                        <a class="list-group-item list-group-item-action" href="{% url 'administracion:crearRol' proyecto.id %}" role="button">Crear Rol</a>
-                    </div>
+            {% if proyecto.estado != 'cancelado' %}
+                <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Acciones
+                </button>
+                <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                    {% if proyecto.estado == 'iniciado' %}
+                                <a class="list-group-item dropdown-item" href="{% url 'administracion:crearTipoItem' proyecto.id %}" role="button">Añadir Tipo de Item al proyecto</a>
+                            {% else %}
+                                <a class="list-group-item dropdown-item disabled" role="button">Añadir Tipo de Item <h6 style="color: #f57900">(solo en estado iniciado)</h6></a>
+                            {% endif %}
+                            <a class="list-group-item dropdown-item" href="{% url 'administracion:administrarParticipantes' proyecto.id %}" role="button">Administrar Participantes del proyecto</a>
+                            <a class="list-group-item dropdown-item" href="{% url 'administracion:estadoProyecto' proyecto.id %}" role="button">Modificar Estado del Proyecto</a>
+                            <a class="list-group-item dropdown-item {% if  proyecto.estado == 'finalizado' %}disabled{% endif %}"
+                               href="{% url 'administracion:editarProyecto' proyecto.id %}" role="button">Modificar datos del Proyecto</a>
+                            <a class="list-group-item dropdown-item {% if  proyecto.estado == 'finalizado' %}disabled{% endif %}"
+                               href="{% url 'administracion:administrarFasesProyecto' proyecto.id %}" role="button">Administrar Fases del Proyecto</a>
+                            <a class="list-group-item dropdown-item {% if  proyecto.estado == 'finalizado' %}disabled{% endif %}"
+                               href="{% url 'administracion:crearRol' proyecto.id %}" role="button">Crear Rol</a>
                 </div>
-            </div>
+            {% else %}
+                <h4 style="color: #c60f0f">Proyecto Cancelado: No se permiten acciones</h4>
+            {% endif %}
         </div>
 
     </div>
