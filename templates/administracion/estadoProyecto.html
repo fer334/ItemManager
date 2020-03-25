@@ -42,7 +42,11 @@
                 </div>
             </div>
             <p align="right">
-                <button type="submit" class="btn btn-primary" align="right">Modificar</button>
+                <button type="submit" class="btn btn-primary"
+                        {% if proyecto.estado == 'cancelado' or proyecto.estado == 'finalizado'%}
+                            disabled=""
+                        {% endif %}>Modificar
+                </button>
             </p>
             <a class="btn btn-primary" href="{% url 'administracion:verProyecto' proyecto.id %}" role="button">Volver atrás</a>
         </form>
