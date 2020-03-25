@@ -4,24 +4,29 @@
     <div class="container">
         <h1 class="col-12 text-center">Gestion de Usuarios</h1>
         <h5 class="col-12 text-center mt-3">
-            Seleccione a los usuarios a los cuales se le permitira
-            acceso al sistema
+            Seleccione los permisos sobre el sistema que deseee proporcionar
+            a los usuarios
         </h5>
 
         <div class="row justify-content-center mt-3">
-            <form class="row col-sm-12 col-md-8 col-lg-6 pt-3" method="post">
+            <form class="row col-sm-9 col-md-9 col-lg-9 pt-6" method="post">
                 {% csrf_token %}
+                
                 <table class="table users table-hover">
                     <tr>
                         <th>Usuario</th>
+                        <th>Dirección correo electrónico</th>
                         <th>Activo</th>
                         <th>Gerente</th>
+                        <th></th>
                     </tr>
                     {% for usuario in usuarios %}
                         <tr>
                             <td>
-                                <label> {{ usuario }} - {{ usuario.email }}</label>
-                                <a href={% url 'login:userUpdate' usuario %}> Editar </a>
+                                <label> {{ usuario }} </label>
+                            </td>
+                            <td>
+                                <label> {{ usuario.email }}</label>
                             </td>
                             <td>
                                 <input name={{usuario.id}}
@@ -41,10 +46,78 @@
                                        {% endif %}
                                 >
                             </td>
+                            <td>
+                                <button type="button"
+                                        class="btn btn-primary"
+                                        href={% url 'login:userUpdate' usuario%}
+                                        btn-lg btn-block>
+                                        Editar
+                                </button>
+                            </td>
                         </tr>
                     {% endfor %}
                 </table>
-                <button type="submit" class="btn btn-primary btn-block mb-3">Guardar</button>
+                <div id="accordianId" role="tablist" aria-multiselectable="true" >
+                <div class="card">
+                    <div class="card-header " role="tab" id="sectionHeaderId">
+                        <button class="btn btn-primary mb-3" type="button" data-toggle="collapse"
+                                data-target="#sectionContentId"
+                                aria-expanded="false"
+                                aria-controls="sectionContentId">
+                                Ayuda
+                        </button>
+                        <button type="button" class="btn btn-primary mb-3" onclick="history.back()">
+                            Volver
+                        </button>
+                        <button type="submit" class="btn btn-primary mb-3">Guardar</button>
+                    </div>
+                    <div id="sectionContentId" class="collapse in" role="tabpanel"
+                         aria-labelledby="sectionHeaderId">
+                        <div class="card-body">
+                            <div id="accordianId" role="tablist" aria-multiselectable="true">
+                                <div class="card">
+                                    <div class="card-header" role="tab" id="section1HeaderId">
+                                        <h5 class="mb-0">
+                                            <a data-toggle="collapse" data-parent="#accordianId"
+                                               href="#section1ContentId" aria-expanded="true"
+                                               aria-controls="section1ContentId">
+                                                Activo
+                                            </a>
+                                        </h5>
+                                    </div>
+                                    <div id="section1ContentId" class="collapse in" role="tabpanel"
+                                         aria-labelledby="section1HeaderId">
+                                        <div class="card-body">
+                                            El campo Activo se refiere a que un usuario tiene los permisos para
+                                            acceder a las funcionalidades del sistema, al estar desactivado
+                                            la cuenta no sera habilitada para acceder a los datos del sistema.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-header" role="tab" id="section2HeaderId">
+                                        <h5 class="mb-0">
+                                            <a data-toggle="collapse" data-parent="#accordianId"
+                                               href="#section2ContentId" aria-expanded="true"
+                                               aria-controls="section2ContentId">
+                                                Gerente
+                                            </a>
+                                        </h5>
+                                    </div>
+                                    <div id="section2ContentId" class="collapse in" role="tabpanel"
+                                         aria-labelledby="section2HeaderId">
+                                        <div class="card-body">
+                                            El campo gerente se refiere a que un usuario tiene los permisos de
+                                            gerente, si este campo esta activo, el usuario podra tendra la
+                                            posibilidad de crear nuevos proyectos dentro del sistema.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </div>
             </form>
         </div>
     </div>
