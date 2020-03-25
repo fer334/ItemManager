@@ -11,9 +11,16 @@ def index_administracion(request):
     return render(request, 'administracion/indexAdmin.html')
 
 
-def proyectos(request):
-    lista_proyectos = Proyecto.objects.all()
-    return render(request, 'administracion/proyectos.html', {'lista_proyectos': lista_proyectos})
+def proyectos(request, filtro):
+    lista_proyectos = []
+    lista_todos_proyectos = Proyecto.objects.all()
+    if filtro == 'todos':
+        lista_proyectos = lista_todos_proyectos
+    else:
+        for proyecto in lista_todos_proyectos:
+            if proyecto.estado == filtro:
+                lista_proyectos.append(proyecto)
+    return render(request, 'administracion/proyectos.html', {'lista_proyectos': lista_proyectos, 'filtro':filtro})
 
 
 def crear_proyecto(request):
@@ -35,7 +42,7 @@ def crear_proyecto(request):
             nuevo_proyecto.participantes.add(participante)
             # creamos la cantidad de fases para este proyecto
             for x in range(0, nuevo_proyecto.numero_fases):
-                nueva_fase = Fase(nombre='Nombre Indefinido', descripcion='añadir descripción...',
+                nueva_fase = Fase(nombre=f'Nombre Indefinido {x+1}', descripcion='añadir descripción...',
                                   proyecto=nuevo_proyecto)
                 nueva_fase.save()
             return HttpResponseRedirect(reverse('administracion:verProyecto', args=[nuevo_proyecto.id]))
@@ -48,9 +55,9 @@ def ver_proyecto(request, id_proyecto):
     proyecto = Proyecto.objects.get(pk=id_proyecto)
     gerente = Usuario.objects.get(localId=proyecto.gerente)
     tipo_item = proyecto.tipoitem_set.all()
-    fases = proyecto.fase_set.all()
+    fases = proyecto.fase_set.all().order_by('id')
     return render(request, 'administracion/verProyecto.html',
-                  {'proyecto': proyecto, 'gerente': gerente, 'tipo_item': tipo_item, 'fases':fases})
+                  {'proyecto': proyecto, 'gerente': gerente, 'tipo_item': tipo_item, 'fases': fases})
 
 
 def administrar_participantes(request, id_proyecto):
@@ -82,27 +89,37 @@ def editar_proyecto(request, id_proyecto):
 
 def estado_proyecto(request, id_proyecto):
     proyecto = Proyecto.objects.get(pk=id_proyecto)
+    habilitado = True
+    lista_fases = proyecto.fase_set.all()
+    for fase in lista_fases:
+        if fase.nombre.find('Nombre Indefinido') != -1:
+            habilitado = False
     if request.method == 'POST':
         estado = request.POST['estado']
         proyecto.estado = estado
         proyecto.save()
         return HttpResponseRedirect(reverse('administracion:estadoProyecto', args=[id_proyecto]))
 
-    return render(request, 'administracion/estadoProyecto.html', {'proyecto': proyecto})
+    return render(request, 'administracion/estadoProyecto.html', {'proyecto': proyecto, 'habilitado': habilitado})
 
 
 def administrar_fases_del_proyecto(request, id_proyecto):
     proyecto = Proyecto.objects.get(pk=id_proyecto)
-    fases = proyecto.fase_set.all()
+    fases = proyecto.fase_set.all().order_by('id')
     if request.method == 'POST':
-        nombre = request.POST['nombre']
-        descripcion = request.POST['descripcion']
-        id_fase = request.POST['id']
-        fase = Fase.objects.get(pk=id_fase)
-        fase.nombre = nombre
-        fase.descripcion = descripcion
-        fase.save()
-        return render(request, 'administracion/administrarFasesProyecto.html', {'proyecto': proyecto, 'fases': fases})
+        ids = request.POST
+        for id_fase, valor in ids.items():
+            if id_fase != 'csrfmiddlewaretoken':
+                if id_fase.isnumeric() or id_fase.split('d')[1].isnumeric():
+                    # si encuentra una d antes es una descripcion
+                    if id_fase.find('d') == 0:
+                        fase = Fase.objects.get(pk=id_fase.split('d')[1])
+                        fase.descripcion = valor
+                    else:
+                        fase = Fase.objects.get(pk=id_fase)
+                        fase.nombre = valor
+                    fase.save()
+        return HttpResponseRedirect(reverse('administracion:verProyecto', args=[proyecto.id]))
 
     return render(request, 'administracion/administrarFasesProyecto.html', {'proyecto': proyecto, 'fases': fases})
 
@@ -202,8 +219,8 @@ def crear_rol(request, id_proyecto):
 def ver_roles_usuario(request, id_proyecto, id_usuario):
     proyecto = Proyecto.objects.get(pk=id_proyecto)
     participante = Usuario.objects.get(pk=id_usuario)
-    lista_roles = [UsuarioxRol.objects.filter(fase=fase, usuario=participante, activo=True) for fase in proyecto.fase_set.all()]
-    union_listas = zip(proyecto.fase_set.all(), lista_roles)
+    lista_roles = [UsuarioxRol.objects.filter(fase=fase, usuario=participante, activo=True) for fase in proyecto.fase_set.all().order_by('id')]
+    union_listas = zip(proyecto.fase_set.all().order_by('id'), lista_roles)
     return render(request, 'administracion/verDetallesRol.html', {
         'proyecto': proyecto,
         'participante': participante,
@@ -229,10 +246,11 @@ def registrar_rol_por_fase(request, id_fase, id_usuario, id_rol):
     fase = Fase.objects.get(pk=id_fase)
     rol = Rol.objects.get(pk=id_rol)
     usuario = Usuario.objects.get(pk=id_usuario)
-    try:# si ya esta lo pongo en activo
+    rol_asignado = UsuarioxRol.objects.filter(fase=fase, rol=rol, usuario=usuario)
+    if rol_asignado:
         rol_asignado = UsuarioxRol.objects.get(fase=fase, rol=rol, usuario=usuario)
         rol_asignado.activo = True
-    except:# si no esta lo creo
+    else:
         rol_asignado = UsuarioxRol(fase=fase, rol=rol, usuario=usuario)
     rol_asignado.save()
     return HttpResponseRedirect(reverse('administracion:verRolesUsuario', args=(fase.proyecto.id, id_usuario)))

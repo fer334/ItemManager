@@ -4,7 +4,7 @@
         <h1 class="text-center pt-3 mb-3">Módulo de Administración</h1>
 
         <div class="list-group">
-            <a href="{% url 'administracion:proyectos' %}" class="list-group-item list-group-item-action">Ver proyectos</a>
+            <a href="{% url 'administracion:proyectos' 'todos'%}" class="list-group-item list-group-item-action">Ver proyectos</a>
             <a href="{% url 'administracion:tipoItem' %}" class="list-group-item list-group-item-action">Ver tipos de item</a>
         </div>
         <a class="btn btn-primary mt-3" href="{% url 'login:index' %}" role="button">Salir</a>
