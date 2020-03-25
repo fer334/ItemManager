@@ -15,16 +15,13 @@
                     <a class="dropdown-item" href="{% url 'administracion:proyectos' 'cancelado'%}">Cancelado</a>
                   </div>
                 </div>
-                <table class="table table-hover col-sm-12">
+                <table class="table table-hover col-sm-12 mt-3">
                     <tbody>
                         {% for proyecto in lista_proyectos %}
                             <tr>
-                                <td width="65%">
+                                <td>
                                     <a href="{% url 'administracion:verProyecto' proyecto.id %}"
-                                       class="list-group-item list-group-item-action">{{proyecto}}</a>
-                                </td>
-                                <td width="35%">
-                                    ({{ proyecto.estado }})
+                                       class="list-group-item list-group-item-action text-primary">{{proyecto}} <span class="text-secondary">({{ proyecto.estado }})</span></a>
                                 </td>
                             </tr>
                         {% endfor %}
