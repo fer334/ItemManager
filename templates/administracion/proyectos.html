@@ -15,7 +15,7 @@
                     <a class="dropdown-item" href="{% url 'administracion:proyectos' 'cancelado'%}">Cancelado</a>
                   </div>
                 </div>
-                {% if not lista_tipoitem.count %}
+                {% if not lista_proyectos.count %}
                     <div class="alert alert-danger">Aún no hay Proyectos. ¡Cree su primer Proyecto!</div>
                 {% else %}
                     <table class="table table-hover col-sm-12 mt-3">
