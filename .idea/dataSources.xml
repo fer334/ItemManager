@@ -13,5 +13,11 @@
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>
       <jdbc-url>jdbc:postgresql://localhost:5432/itemmanagerdb</jdbc-url>
     </data-source>
+    <data-source source="LOCAL" name="DB_PROD" uuid="8c5729d6-4792-4d31-87dd-399716d18372">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://ec2-52-23-14-156.compute-1.amazonaws.com:5432/d9kba9iahfs8lp</jdbc-url>
+    </data-source>
   </component>
 </project>

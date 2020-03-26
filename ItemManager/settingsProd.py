@@ -40,9 +40,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
-    'login',
-    'administracion'
     'crispy_forms',
+    'login',
+    'administracion',
 ]
 
 SITE = 1
@@ -56,6 +56,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'ItemManager.middleware.ActiveAccountMiddleware',
 ]
 
 ROOT_URLCONF = 'ItemManager.urls'
@@ -131,8 +132,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+    '/var/www/static/',
+]
 LOGIN_URL = '/login'
-AUTH_USER_MODEL = 'login.usr'
+AUTH_USER_MODEL = 'login.Usuario'
 AUTHENTICATION_BACKENDS = {
     'django.contrib.auth.backends.ModelBackend',
     'login.LoginBackEnd.LoginBackEnd'
