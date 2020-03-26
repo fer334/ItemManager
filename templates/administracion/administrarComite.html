@@ -1,0 +1,52 @@
+{% extends 'login/loginHeader.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="container">
+        <h1 class="text-center pt-3 mb-3 pb-3" >Administrar Comité del Proyecto</h1>
+
+        {% if not proyecto.comite.all.count  %}
+            <div class="alert alert-warning">No se ha definido ningún miembro para el comité</div>
+        {% else %}
+            <table class="table table-hover col-sm-12 mt-3">
+                <thead>
+                    <tr>
+                        <th>Miembro</th>
+                        <th>Accion</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for miembro in proyecto.comite.all %}
+                    <tr>
+                        <td>{{ miembro }}</td>
+                        <td><a class="btn btn-danger" href="{% url 'administracion:desasignarUsuario' proyecto.id miembro.id 'comite' %}">Quitar del comite</a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+        <form class="pt-3" METHOD="post" ACTION="{% url 'administracion:administrarComite'  proyecto.id %}">
+            {% csrf_token %}
+            <label for="miembro_comite">Seleccionar Participantes:</label>
+            <select class="form-control" id="miembro_comite" name="miembro_comite" required>
+                <option selected value="">Elija un miembro</option>
+                {% for participante in proyecto.participantes.all %}
+                    {% if participante not in proyecto.comite.all %}
+                        <option value="{{ participante.id }}">{{ participante }}</option>
+                        <div class="dropdown-divider"></div>
+                    {% endif %}
+                {% endfor %}
+            </select>
+            <div class="mt-3">
+                <a class="btn btn-primary" href="{% url 'administracion:verProyecto' proyecto.id %}" role="button">
+                    Volver a detalles de {{ proyecto.nombre }}
+                </a>
+                <button type="submit" class="btn btn-primary float-right"
+                            {% if proyecto.cant_comite <= proyecto.comite.count %}
+                                disabled=""
+                            {% endif %}
+                            align="right">Añadir al Proyecto
+                </button>
+            </div>
+        </form>
+    </div>
+{% endblock %}

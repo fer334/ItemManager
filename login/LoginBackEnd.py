@@ -5,18 +5,18 @@ from urllib.error import HTTPError
 
 from django.contrib.auth.backends import BaseBackend
 import pyrebase
-from .models import usr
+from .models import Usuario
 
 config = {
-    'apiKey': "AIzaSyAbCiMgh8az4COYBvq038jbrvVGA16oCeo",
-    'authDomain': "poliproyecto-6dfb4.firebaseapp.com",
-    'databaseURL': "https://poliproyecto-6dfb4.firebaseio.com",
-    'projectId': "poliproyecto-6dfb4",
-    'storageBucket': "poliproyecto-6dfb4.appspot.com",
-    'messagingSenderId': "562557261320",
-    'appId': "1:562557261320:web:64f3792e7ca3608c1463bd",
-    'measurementId': "G-GED6N0CHKC"
-}
+    'apiKey': "AIzaSyCqhDwOP5cTSm58BV7gnkFnF4qz-26OWI8",
+    'authDomain': "itemmanager-77211.firebaseapp.com",
+    'databaseURL': "https://itemmanager-77211.firebaseio.com",
+    'projectId': "itemmanager-77211",
+    'storageBucket': "itemmanager-77211.appspot.com",
+    'messagingSenderId': "972002011767",
+    'appId': "1:972002011767:web:fe16134c99f6a8d6a3f472",
+    'measurementId': "G-R78XM8ZQD3"
+  };
 firebase = pyrebase.initialize_app( config )
 authfb = firebase.auth()
 
@@ -40,17 +40,16 @@ class LoginBackEnd(BaseBackend):
         try:
             userfb = authfb.sign_in_with_email_and_password(email, password)
             try:
-                user = usr.objects.get( localId=userfb['localId'] )
-            except usr.DoesNotExist:
-                usuario = usr( email = email, localId= userfb['localId'] )
-                usuario.save()
-                user = usuario
+                user = Usuario.objects.get( localId=userfb['localId'] )
+            except Usuario.DoesNotExist:
+                return None
             return user
         except:
             """requests.exceptions.HTTPError as err:
             print( repr(err) )
             """
             return None
+
 
     def get_user(self, user_id):
         """
@@ -61,6 +60,6 @@ class LoginBackEnd(BaseBackend):
         :returns Se retorna el objeto correspondiente al usuario de la base de datos local
         """
         try:
-            return usr.objects.get(pk=user_id)
-        except usr.DoesNotExist:
+            return Usuario.objects.get(pk=user_id)
+        except Usuario.DoesNotExist:
             return None

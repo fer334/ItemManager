@@ -1,0 +1,78 @@
+{% extends 'login/loginHeader.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="container">
+        <h3 class="text-center pt-3 mb-3">Fases de {{ proyecto.nombre }}:</h3>
+       <!--  por si se necesite ver la lista de fases actuales
+        <table class="table table-hover">
+          <tbody>
+            <tr class="table-primary">
+                <td>Núm</td><td>Nombre</td><td>Descripción</td>
+            </tr>
+            {for fase in fases %} aca falta un % al comienzo
+            <tr class="table-default">
+              <td>{ fase.id }} </td> aca falta un {
+                <td>{fase.nombre }}</td> aca falta un {
+                <td>{ fase.descripcion }}</td> aca falta un {
+            </tr>
+            { endfor %} aca falta un % al comienzo
+          </tbody>
+         </table>
+         -->
+            <div class="form-row">
+                <div class="form-group col-sm-12 col-md-8">
+                    <table class="table table-hover">
+                      <tbody>
+                        <tr class="table-primary">
+                            <td></td></td><td>Nombre</td><td>Descripción</td>
+                        </tr>
+                        <form class="pt-3" METHOD="post">
+                        {% for fase in fases %}
+                         {% csrf_token %}
+                            <tr class="table-default">
+                                <td>
+                                    <input type="hidden"
+                                           class="form-control"
+                                           id="inputId"
+                                           name="id"
+                                           value="{{ fase.id }}"
+                                    >
+                                </td>
+                                <td>
+                                    <input class="form-control"
+                                           id="inputNombre"
+                                           name="{{ fase.id }}"
+                                           type="text"
+                                           value="{{ fase.nombre }}"
+                                    >
+                                </td>
+                                <td>
+                                    <input class="form-control"
+                                           id="inputDesc"
+                                           name="d{{ fase.id }}"
+                                           type="text"
+                                           value="{{ fase.descripcion }}"
+                                    >
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        <tr>
+                            <td></td>
+                            <td>
+                                <a class="btn btn-primary" href="{% url 'administracion:verProyecto' proyecto.id %}"
+                                    role="button">Volver Atrás</a>
+                            </td>
+                            <td>
+                                <p align="right">
+                                    <button type="submit" class="btn btn-primary" >Guardar</button>
+                                </p>
+                            </td>
+                        </tr>
+                        </form>
+                      </tbody>
+                     </table>
+                </div>
+            </div>
+
+    </div>
+{% endblock %}

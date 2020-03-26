@@ -28,7 +28,9 @@ DEBUG = True
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
-    'obscure-river-81564.herokuapp.com'
+    'obscure-river-81564.herokuapp.com',
+    '0.0.0.0',
+    '192.168.0.105'
 ]
 
 # Application definition
@@ -42,8 +44,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
-    'login'
+    'crispy_forms',
+    'login',
+    'administracion',
 ]
+
 SITE = 1
 
 
@@ -55,6 +60,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'ItemManager.middleware.ActiveAccountMiddleware',
 ]
 
 ROOT_URLCONF = 'ItemManager.urls'
@@ -82,25 +88,13 @@ WSGI_APPLICATION = 'ItemManager.wsgi.application'
 # https://docs.djangoproje
 # ct.com/en/3.0/ref/settings/#databases
 
-""" DESARROLLO
+DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'itemmanagerdb',
         'USER': 'postgres',
         'PASSWORD': 'postgres',
         'HOST': 'localhost',
-        'PORT': '5432',
-    }
-    ABAJO PARA PRODUCCION:
-    """
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'd9kba9iahfs8lp',
-        'USER': 'kwpecmocttvflw',
-        'PASSWORD': 'e3c7f531fd4d79c2727d386375c98ed693874412189466ab214f664e4a0733a2',
-        'HOST': 'ec2-52-23-14-156.compute-1.amazonaws.com',
         'PORT': '5432',
     }
 }
@@ -143,9 +137,16 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
-LOGIN_URL = '/login'
-AUTH_USER_MODEL = 'login.usr'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+    '/var/www/static/',
+]
+LOGIN_URL = '/login/'
+AUTH_USER_MODEL = 'login.Usuario'
 AUTHENTICATION_BACKENDS = {
     'django.contrib.auth.backends.ModelBackend',
     'login.LoginBackEnd.LoginBackEnd'
 }
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+

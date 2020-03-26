@@ -1,0 +1,51 @@
+{% extends 'login/loginHeader.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="container">
+        <h1 class="col-12 text-center">Gestion de Usuarios</h1>
+        <h5 class="col-12 text-center mt-3">
+            Seleccione a los usuarios a los cuales se le permitira
+            acceso al sistema
+        </h5>
+
+        <div class="row justify-content-center mt-3">
+            <form class="row col-sm-12 col-md-8 col-lg-6 pt-3" method="post">
+                {% csrf_token %}
+                <table class="table users table-hover">
+                    <tr>
+                        <th>Usuario</th>
+                        <th>Activo</th>
+                        <th>Gerente</th>
+                    </tr>
+                    {% for usuario in usuarios %}
+                        <tr>
+                            <td>
+                                <label> {{ usuario }} - {{ usuario.email }}</label>
+                                <a href={% url 'login:userUpdate' usuario %}> Editar </a>
+                            </td>
+                            <td>
+                                <input name={{usuario.id}}
+                                       type="checkbox"
+                                       value=True
+                                       {% if usuario.is_active%}
+                                           checked
+                                       {% endif %}
+                                >
+                            </td>
+                            <td>
+                                <input name="g{{usuario.id}}"
+                                       type="checkbox"
+                                       value=True
+                                       {% if usuario.is_gerente%}
+                                           checked
+                                       {% endif %}
+                                >
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+                <button type="submit" class="btn btn-primary btn-block mb-3">Guardar</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

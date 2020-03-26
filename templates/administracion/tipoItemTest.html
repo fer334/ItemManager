@@ -1,0 +1,17 @@
+{% extends 'login/loginHeader.html' %}
+{% block content %}
+    <div class="container">
+        <h2>Todos los tipo Item:</h2>
+        {% if not  lista_tipoitem.count %}
+                <div class="alert alert-danger">No hay tipos de item disponibles para importar</div>
+        {% else %}
+            <ul>
+                {% for tipo_item in lista_tipoitem %}
+                    <li>{{ tipo_item.nombre }}</li>
+                {% endfor %}
+
+            </ul>
+        {% endif %}
+    </div>
+    <a class="btn btn-primary" href="{% url 'login:index' %}">Volver</a>
+{% endblock %}

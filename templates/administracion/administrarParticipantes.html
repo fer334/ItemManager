@@ -1,0 +1,42 @@
+{% extends 'login/loginHeader.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="container">
+        <h1 class="text-center pt-3 mb-3">Administración de Participantes</h1>
+        <h4 class="mb-3">Lista Actual de Participantes:</h4>
+        <table class="table table-hover col-sm-12 mt-3">
+            <thead>
+                <tr>
+                    <th>Participante</th>
+                    <th colspan="2">Accion</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for participante in proyecto.participantes.all %}
+                    <tr>
+                        <td>{{ participante }}</td>
+                        <td>
+                            {% if participante.id != proyecto.gerente %}
+                                <a class="btn btn-danger" href="{% url 'administracion:desasignarUsuario' proyecto.id participante.id 'participante' %}">Quitar participante</a>
+                            {% else %}
+                                <a class="btn btn-secondary" href="#">Usuario es gerente</a>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{% url 'administracion:verRolesUsuario' proyecto.id participante.id %}" class="btn btn-primary">Administrar roles</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <form class="pt-3" METHOD="post" ACTION="{% url 'administracion:administrarParticipantes'  proyecto.id %}">
+            {% csrf_token %}
+            {{ form|crispy}}
+            <a class="btn btn-primary" href="{% url 'administracion:verProyecto' proyecto.id %}" role="button">Volver a detalles de {{ proyecto.nombre }}</a>
+            <button type="submit" class="btn btn-primary float-right" {% if  proyecto.estado == 'finalizado' %}disabled=""{% endif %}
+                        align="right">Añadir al Proyecto</button>
+
+        </form>
+    </div>
+{% endblock %}

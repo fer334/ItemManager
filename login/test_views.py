@@ -3,9 +3,9 @@ Modulo para hacer test sobre el modulo views.py
 """
 from django.test import RequestFactory
 from django.urls import reverse
-from login.views import index, LoginPage
+from login.views import index
 from django.contrib.auth.models import AnonymousUser
-from .models import usr
+from .models import Usuario
 import pytest
 
 
@@ -39,7 +39,7 @@ class TestViews:
         """
         path = reverse('login:index')
         request = RequestFactory().get(path)
-        self.usuario = usr.objects.create_user(
+        self.usuario = Usuario.objects.create_user(
             username='testusuario', email='estoes@unaprueba.com', password='password')
         request.user = self.usuario
 
