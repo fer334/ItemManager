@@ -57,19 +57,19 @@
                         </tr>
                     {% endfor %}
                 </table>
-                <div id="accordianId" role="tablist" aria-multiselectable="true" >
-                <div class="card">
-                    <div class="card-header " role="tab" id="sectionHeaderId">
-                        <button class="btn btn-primary mb-3" type="button" data-toggle="collapse"
+                <div id="accordianId" class="col-sm-12 " role="tablist" aria-multiselectable="true" >
+                <div class="card ">
+                    <div class="card-header d-flex flex-row-reverse " role="tab" id="sectionHeaderId">
+                        <button type="submit" class="btn btn-primary m-1">Guardar</button>
+                        <button type="button" class="btn btn-primary m-1" onclick="history.back()">
+                            Volver
+                        </button>
+                        <button class="btn btn-primary m-1" type="button" data-toggle="collapse"
                                 data-target="#sectionContentId"
                                 aria-expanded="false"
                                 aria-controls="sectionContentId">
                                 Ayuda
                         </button>
-                        <button type="button" class="btn btn-primary mb-3" onclick="history.back()">
-                            Volver
-                        </button>
-                        <button type="submit" class="btn btn-primary mb-3">Guardar</button>
                     </div>
                     <div id="sectionContentId" class="collapse in" role="tabpanel"
                          aria-labelledby="sectionHeaderId">
