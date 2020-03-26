@@ -43,7 +43,6 @@ class RolForm(forms.Form):
 
 class ParticipanteForm(forms.Form):
     participantes = forms.MultipleChoiceField(label='Usuarios en el Sistema:', choices=[('', '')])
-
     # init para evitar problemas de migraciones con choice cuando la base de datos aun no se creó
     def __init__(self, *args, **kwargs):
         super(ParticipanteForm, self).__init__(*args, **kwargs)
