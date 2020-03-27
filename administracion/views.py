@@ -134,16 +134,14 @@ def administrar_participantes(request, id_proyecto):
     if proyecto.estado == 'cancelado':
         return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto]))
     else:
+        lista_usuarios = Usuario.objects.all()
         if request.method == 'POST':
-            form = ParticipanteForm(request.POST, proyecto)
-            if form.is_valid():
-                id_usuario = request.POST['participantes']
-                participante = Usuario.objects.get(pk=id_usuario)
-                proyecto.participantes.add(participante)
-                return HttpResponseRedirect(reverse('administracion:administrarParticipantes', args=[proyecto.id]))
-        else:
-            form = ParticipanteForm()
-        return render(request, 'administracion/administrarParticipantes.html', {'proyecto': proyecto, 'form': form})
+            id_usuario = request.POST['participante']
+            participante = Usuario.objects.get(pk=id_usuario)
+            proyecto.participantes.add(participante)
+            return HttpResponseRedirect(reverse('administracion:administrarParticipantes', args=[proyecto.id]))
+        return render(request, 'administracion/administrarParticipantes.html', {'proyecto': proyecto,
+                                                                                'lista_usuarios': lista_usuarios})
 
 
 def editar_proyecto(request, id_proyecto):
