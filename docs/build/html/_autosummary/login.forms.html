@@ -1,0 +1,210 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <title>login.forms &#8212; documentación de ItemManager - 1.0</title>
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../_static/translations.js"></script>
+    <link rel="index" title="Índice" href="../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../search.html" />
+    <link rel="next" title="login.views" href="login.views.html" />
+    <link rel="prev" title="login.models" href="login.models.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navegación</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="Índice General"
+             accesskey="I">índice</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Índice de Módulos Python"
+             >módulos</a> |</li>
+        <li class="right" >
+          <a href="login.views.html" title="login.views"
+             accesskey="N">siguiente</a> |</li>
+        <li class="right" >
+          <a href="login.models.html" title="login.models"
+             accesskey="P">anterior</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">documentación de ItemManager - 1.0</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="login-forms">
+<h1>login.forms<a class="headerlink" href="#login-forms" title="Enlazar permanentemente con este título">¶</a></h1>
+<p class="rubric">Classes</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#login.forms.RegisterForm" title="login.forms.RegisterForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RegisterForm</span></code></a>(*args, **kwargs)</p></td>
+<td><p>Formulario para la creacion del usuario.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#login.forms.UpdateUserForm" title="login.forms.UpdateUserForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">UpdateUserForm</span></code></a>(*args, **kwargs)</p></td>
+<td><p>Formulario para la modificacion del usuario.</p></td>
+</tr>
+</tbody>
+</table>
+<span class="target" id="module-login.forms"></span><p>Formularios para la aplicacion login</p>
+<dl class="class">
+<dt id="login.forms.RegisterForm">
+<em class="property">class </em><code class="sig-prename descclassname">login.forms.</code><code class="sig-name descname">RegisterForm</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/login/forms.html#RegisterForm"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#login.forms.RegisterForm" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Formulario para la creacion del usuario.</p>
+<dl class="class">
+<dt id="login.forms.RegisterForm.Meta">
+<em class="property">class </em><code class="sig-name descname">Meta</code><a class="reference internal" href="../_modules/login/forms.html#RegisterForm.Meta"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#login.forms.RegisterForm.Meta" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Form settings.</p>
+<dl class="attribute">
+<dt id="login.forms.RegisterForm.Meta.model">
+<code class="sig-name descname">model</code><a class="headerlink" href="#login.forms.RegisterForm.Meta.model" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>alias de <a class="reference internal" href="login.models.html#login.models.Usuario" title="login.models.Usuario"><code class="xref py py-class docutils literal notranslate"><span class="pre">login.models.Usuario</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="method">
+<dt id="login.forms.RegisterForm.clean">
+<code class="sig-name descname">clean</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/login/forms.html#RegisterForm.clean"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#login.forms.RegisterForm.clean" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Verifica la igualdad entre contraseñas.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="login.forms.RegisterForm.clean_email">
+<code class="sig-name descname">clean_email</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/login/forms.html#RegisterForm.clean_email"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#login.forms.RegisterForm.clean_email" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Metodo que comprueba si el usuario es unico</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="login.forms.RegisterForm.pass_confirmation">
+<code class="sig-name descname">pass_confirmation</code><em class="property"> = None</em><a class="headerlink" href="#login.forms.RegisterForm.pass_confirmation" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Campo para la confimacion de contraseñas</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="login.forms.RegisterForm.save">
+<code class="sig-name descname">save</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/login/forms.html#RegisterForm.save"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#login.forms.RegisterForm.save" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Metodo encargado de guardar los campos del formulario.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="login.forms.UpdateUserForm">
+<em class="property">class </em><code class="sig-prename descclassname">login.forms.</code><code class="sig-name descname">UpdateUserForm</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/login/forms.html#UpdateUserForm"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#login.forms.UpdateUserForm" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Formulario para la modificacion del usuario.</p>
+<dl class="class">
+<dt id="login.forms.UpdateUserForm.Meta">
+<em class="property">class </em><code class="sig-name descname">Meta</code><a class="reference internal" href="../_modules/login/forms.html#UpdateUserForm.Meta"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#login.forms.UpdateUserForm.Meta" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Form settings.</p>
+<dl class="attribute">
+<dt id="login.forms.UpdateUserForm.Meta.model">
+<code class="sig-name descname">model</code><a class="headerlink" href="#login.forms.UpdateUserForm.Meta.model" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>alias de <a class="reference internal" href="login.models.html#login.models.Usuario" title="login.models.Usuario"><code class="xref py py-class docutils literal notranslate"><span class="pre">login.models.Usuario</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="method">
+<dt id="login.forms.UpdateUserForm.clean_username">
+<code class="sig-name descname">clean_username</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/login/forms.html#UpdateUserForm.clean_username"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#login.forms.UpdateUserForm.clean_username" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Comprueba si el usuario es unico</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="login.forms.UpdateUserForm.id">
+<code class="sig-name descname">id</code><em class="property"> = 0</em><a class="headerlink" href="#login.forms.UpdateUserForm.id" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>de Usuario que esta siendo modificado</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="login.forms.UpdateUserForm.update">
+<code class="sig-name descname">update</code><span class="sig-paren">(</span><em class="sig-param">key</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/login/forms.html#UpdateUserForm.update"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#login.forms.UpdateUserForm.update" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Metodo que actualiza la base de datos.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros</dt>
+<dd class="field-odd"><p><strong>key</strong> – clave el query a la base de datos</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="login.forms.UpdateUserForm.username">
+<code class="sig-name descname">username</code><em class="property"> = None</em><a class="headerlink" href="#login.forms.UpdateUserForm.username" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Campo para la modificacion del nombre de Usuario</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Tema anterior</h4>
+  <p class="topless"><a href="login.models.html"
+                        title="capítulo anterior">login.models</a></p>
+  <h4>Próximo tema</h4>
+  <p class="topless"><a href="login.views.html"
+                        title="próximo capítulo">login.views</a></p>
+  <div role="note" aria-label="source link">
+    <h3>Esta página</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/_autosummary/login.forms.rst.txt"
+            rel="nofollow">Mostrar el código</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Búsqueda rápida</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Ir a" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navegación</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="Índice General"
+             >índice</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Índice de Módulos Python"
+             >módulos</a> |</li>
+        <li class="right" >
+          <a href="login.views.html" title="login.views"
+             >siguiente</a> |</li>
+        <li class="right" >
+          <a href="login.models.html" title="login.models"
+             >anterior</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">documentación de ItemManager - 1.0</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Derechos de autor 2020, Paola Olmedo, Matías López, David Nuñez, Luis Ríos.
+      Creado con <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
+    </div>
+  </body>
+</html>

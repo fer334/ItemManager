@@ -12,6 +12,7 @@ Sistema de gestion de Items
    :toctree: _autosummary
 
    login.models
+   login.forms
    login.views
    login.LoginBackEnd
    login.Register

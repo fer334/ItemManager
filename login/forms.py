@@ -1,15 +1,17 @@
+"""
+Formularios para la aplicacion login
+"""
+# django
 from django import forms
-
-# models
 from django.contrib.auth.validators import UnicodeUsernameValidator
 
+# models
 from login.models import Usuario
-
 from login.Register import crear_usuario
 
 
 class RegisterForm(forms.ModelForm):
-    """Formulario del usuario."""
+    """Formulario para la creacion del usuario."""
 
     class Meta:
         """Form settings."""
@@ -30,6 +32,7 @@ class RegisterForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields['email'].required = True
 
+    #: Campo para la confimacion de contraseñas
     pass_confirmation = forms.CharField(
         label='Confirmar contraseña',
         min_length=6,
@@ -38,7 +41,7 @@ class RegisterForm(forms.ModelForm):
     )
 
     def clean_email(self):
-        """Comprueba si el usuario es unico"""
+        """Metodo que comprueba si el usuario es unico"""
         email = self.cleaned_data['email']
         email_taken = Usuario.objects.filter(email=email).exists()
         if email_taken:
@@ -46,7 +49,7 @@ class RegisterForm(forms.ModelForm):
         return email
 
     def clean(self):
-        """Verifica que la igualdad entre contraseñas."""
+        """Verifica la igualdad entre contraseñas."""
         data = super().clean()
 
         password = data['password']
@@ -58,7 +61,7 @@ class RegisterForm(forms.ModelForm):
         return data
 
     def save(self):
-        """Create user and profile."""
+        """Metodo encargado de guardar los campos del formulario."""
         data = self.cleaned_data
 
         user = crear_usuario(data['email'], data['password'])
@@ -78,9 +81,12 @@ class RegisterForm(forms.ModelForm):
 
 
 class UpdateUserForm(forms.ModelForm):
-    """Formulario del usuario."""
+    """Formulario para la modificacion del usuario."""
+    # Atributo de clase que almacena el id
+    # de Usuario que esta siendo modificado
     id = 0
     username_validator = UnicodeUsernameValidator()
+
     #: Campo para la modificacion del nombre de Usuario
     username = forms.CharField(
         label='Nombre de Usuario',
@@ -95,7 +101,6 @@ class UpdateUserForm(forms.ModelForm):
     field_order = ('username', 'first_name', 'last_name')
 
     class Meta:
-
         """Form settings."""
 
         model = Usuario
@@ -117,7 +122,11 @@ class UpdateUserForm(forms.ModelForm):
         print(self.id)
 
     def update(self, key):
-        """Update user and profile."""
+        """
+        Metodo que actualiza la base de datos.
+
+        :param key: clave el query a la base de datos
+        """
         data = self.cleaned_data
         Usuario.objects.filter(username=key).update(**data)
 
