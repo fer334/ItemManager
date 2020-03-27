@@ -39,7 +39,7 @@
             <label for="miembro_comite">Seleccionar Participantes:</label>
             <select multiple="" class="form-control" id="participante" name="participante" required>
                 {% for usuario in lista_usuarios %}
-                    {% if usuario not in proyecto.participantes.all %}
+                    {% if usuario not in proyecto.participantes.all and usuario.is_active == True %}
                         <option value="{{ usuario.id }}">{{ usuario }}</option>
                         <div class="dropdown-divider"></div>
                     {% endif %}
