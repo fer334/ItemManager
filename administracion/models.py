@@ -1,3 +1,6 @@
+"""
+Mapeador objeto-relacional en el que es posible definir la estructura de la base de datos utilizando código Python.
+"""
 from django.db import models
 
 

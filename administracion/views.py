@@ -1,9 +1,16 @@
-from django.http import HttpResponse, HttpResponseRedirect
+"""
+Modulo se detalla la logica para las vistas que serán utilizadas por la app
+"""
+# Django
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
-from .models import TipoItem, Proyecto, PlantillaAtributo, Rol, Fase, UsuarioxRol
-from administracion.forms import ProyectoForm, ParticipanteForm, RolForm
+# Models
+from administracion.models import TipoItem, Proyecto, PlantillaAtributo, Rol, Fase, UsuarioxRol
 from login.models import Usuario
+# Forms
+from administracion.forms import ProyectoForm, ParticipanteForm, RolForm
+# Python
 import datetime
 
 
@@ -12,8 +19,10 @@ def acceso_denegado(request, id_proyecto):
     vista que se encarga de desplegar la página de acceso denegado si es que se intenta ingresar
     a un url no permitido.
 
-    :param request
+    :param request: objeto tipo diccionario que permite acceder a datos
     :param id_proyecto: identificador unico del proyecto
+    :return: objeto que se encarga de renderear accesoDenegado.html
+    :rtype: render
     """
     proyecto = Proyecto.objects.get(pk=id_proyecto)
     return render(request, 'administracion/accesoDenegado.html', {'proyecto': proyecto})
@@ -23,7 +32,9 @@ def index_administracion(request):
     """
     vista que despliega el menú del módulo de administración
 
-    :param request
+    :param request: objeto tipo diccionario que permite acceder a datos
+    :return: objeto que se encarga de renderear indexAdmin.html
+    :rtype: render
     """
     return render(request, 'administracion/indexAdmin.html')
 
@@ -33,9 +44,11 @@ def proyectos(request, filtro):
     Vista que despliega la lista de proyectos con su estado actual, también permite filtrar
     los proyectos según estado
 
-    :param request
+    :param request: objeto tipo diccionario que permite acceder a datos
     :param filtro: este parámetro indica el estado según se filtrarán los proyectos. Si el valor es 'todos'
     no se aplicará ningún filtro
+    :return: objeto que se encarga de renderear proyectos.html
+    :rtype: render
     """
     lista_proyectos = []
     lista_todos_proyectos = Proyecto.objects.all()
@@ -58,7 +71,9 @@ def crear_proyecto(request):
     ser modificados por el usuario. Finalmente, luego de ser creado el proyecto la vista redirecciona a la otra vista
     ver_proyecto.
 
-    :param request
+    :param request: objeto tipo diccionario que permite acceder a datos
+    :return: objeto que se encarga de renderear a crearProyecto.html o en caso de POST redireccion a verProyecto.html
+    :rtype: render, redirect
     """
     if request.method == 'POST':
         form = ProyectoForm(request.POST)
@@ -92,8 +107,10 @@ def ver_proyecto(request, id_proyecto):
     Esta vista despliega un proyecto con todos los valores que toman sus atributos, además de sus fases, roles
     y tipos de ítems
 
-    :param request
+    :param request: objeto tipo diccionario que permite acceder a datos
     :param id_proyecto: Se recibe como parámetro el id_del proyecto que se desea ver
+    :return: objeto que renderea verProyecto.html
+    :rtype: render
     """
     proyecto = Proyecto.objects.get(pk=id_proyecto)
     gerente = Usuario.objects.get(pk=proyecto.gerente)
@@ -104,6 +121,15 @@ def ver_proyecto(request, id_proyecto):
 
 
 def administrar_participantes(request, id_proyecto):
+    """
+    Esta vista permite añadir y sacar participantes del proyecto, además también acceder a los roles de un
+    participante
+
+    :param request: objeto tipo diccionario que permite acceder a datos
+    :param id_proyecto: identidficar del proyecto sobre el cual se quiere administrar sus participantes
+    :return: objeto que renderea administrarParticipantes.html y en caso de post que redirecciona
+    :rtype: render, redirect
+    """
     proyecto = Proyecto.objects.get(pk=id_proyecto)
     if proyecto.estado == 'cancelado':
         return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto]))
@@ -121,6 +147,14 @@ def administrar_participantes(request, id_proyecto):
 
 
 def editar_proyecto(request, id_proyecto):
+    """
+    Vista que permite editar los datos del proyecto seleccionado
+
+    :param request: objeto tipo diccionario que permite acceder a datos
+    :param id_proyecto: proyecto seleccionado para ser modificado
+    :return: objeto que se encarga de renderear editarProyecto.html
+    :rtype: render
+    """
     proyecto = Proyecto.objects.get(pk=id_proyecto)
     if proyecto.estado == 'cancelado' or proyecto.estado == 'finalizado':
         return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto]))
@@ -137,6 +171,14 @@ def editar_proyecto(request, id_proyecto):
 
 
 def estado_proyecto(request, id_proyecto):
+    """
+    vista que permite seleccionar y cambiar el estado de un proyecto
+
+    :param request: objeto tipo diccionario que permite acceder a datos
+    :param id_proyecto: id del proyecto el cual se desea administrar su estado
+    :return: objeto que renderea estadoProyecto.html o redireccion al mismo html
+    :rtype: render, redirect
+    """
     proyecto = Proyecto.objects.get(pk=id_proyecto)
     habilitado = True
     lista_fases = proyecto.fase_set.all()
@@ -153,6 +195,14 @@ def estado_proyecto(request, id_proyecto):
 
 
 def administrar_fases_del_proyecto(request, id_proyecto):
+    """
+    vista que permite modificar los nombres y las descripciones de las fases del proyecto
+
+    :param request: objeto de tipo diccionario que permite acceder a datos
+    :param id_proyecto: id del proyecto cuyas fases se quieren editar
+    :return: objeto que renderea administrarFasesProyecto.html o redireccion a verProyecto.html
+    :rtype: render, redirect
+    """
     proyecto = Proyecto.objects.get(pk=id_proyecto)
     if proyecto.estado == 'cancelado' or proyecto.estado == 'finalizado':
         return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto]))
@@ -177,6 +227,14 @@ def administrar_fases_del_proyecto(request, id_proyecto):
 
 
 def administrar_comite(request, id_proyecto):
+    """
+    vista que permite administrar que participantes del proyecto formaran parte del comité de decisión
+
+    :param request: objeto tipo diccionario que permite acceder a datos
+    :param id_proyecto: id del proyecto del cual se quiere administrar su comité
+    :return: objeto que renderea administrarComite.html o redireción
+    :rtype: render, redirect
+    """
     proyecto = Proyecto.objects.get(pk=id_proyecto)
     if proyecto.estado == 'cancelado' or proyecto.estado == 'finalizado':
         return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto]))
@@ -190,6 +248,17 @@ def administrar_comite(request, id_proyecto):
 
 
 def eliminar_participante_y_comite(request, id_proyecto, id_usuario, caso):
+    """
+    Vista que permite sacar a un usuario ya sea del proyecto completo o del comité de decisión del proyecto
+
+    :param request: objeto tipo diccionario que permite acceder a datos
+    :param id_proyecto: id del proyecto seleccionado
+    :param id_usuario: id del usuario que saldrá del comité o del proyecto
+    :param caso: toma los valores 'comite' y 'participante' indica si se desea sacar al usuario del comité o
+    del proyecto completo
+    :return: redireccion a administrarComite.html o administrarParticipantes.html dependiendo del caso
+    :rtype: redirect
+    """
     proyecto = Proyecto.objects.get(pk=id_proyecto)
     usuario = Usuario.objects.get(pk=id_usuario)
     if caso == 'comite':
