@@ -1,5 +1,5 @@
 """
-En este modulo se detalla la logica para las vistas que serán utilizadas por la app
+Modulo se detalla la logica para las vistas que serán utilizadas por la app
 """
 # Django
 from django.contrib.auth import authenticate, login
