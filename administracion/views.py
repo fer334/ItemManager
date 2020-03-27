@@ -8,15 +8,35 @@ import datetime
 
 
 def acceso_denegado(request, id_proyecto):
+    """
+    vista que se encarga de desplegar la página de acceso denegado si es que se intenta ingresar
+    a un url no permitido.
+
+    :param request
+    :param id_proyecto: identificador unico del proyecto
+    """
     proyecto = Proyecto.objects.get(pk=id_proyecto)
     return render(request, 'administracion/accesoDenegado.html', {'proyecto': proyecto})
 
 
 def index_administracion(request):
+    """
+    vista que despliega el menú del módulo de administración
+
+    :param request
+    """
     return render(request, 'administracion/indexAdmin.html')
 
 
 def proyectos(request, filtro):
+    """
+    Vista que despliega la lista de proyectos con su estado actual, también permite filtrar
+    los proyectos según estado
+
+    :param request
+    :param filtro: este parámetro indica el estado según se filtrarán los proyectos. Si el valor es 'todos'
+    no se aplicará ningún filtro
+    """
     lista_proyectos = []
     lista_todos_proyectos = Proyecto.objects.all()
     if filtro == 'todos':
@@ -29,6 +49,17 @@ def proyectos(request, filtro):
 
 
 def crear_proyecto(request):
+    """
+    esta vista se encarga de la creación del proyecto, primeramente verifica si el metodo del request es POST, de no
+    ser retorna un form vacío y de ser pasa el request como parametro al form y el form retorna como 'cleaned_data'
+    los datos para crear el proyecto. Para el gerente se guarda el id del usuario que realiza el request y luego se
+    guarda al gerente como el primer usuario participante del proyecto. Además se crean la cantidad de fases que
+    indica el atributo del proyecto: 'numero_fases', estas fases se crean con datos provisionales que luego pueden
+    ser modificados por el usuario. Finalmente, luego de ser creado el proyecto la vista redirecciona a la otra vista
+    ver_proyecto.
+
+    :param request
+    """
     if request.method == 'POST':
         form = ProyectoForm(request.POST)
         if form.is_valid():
@@ -57,6 +88,13 @@ def crear_proyecto(request):
 
 
 def ver_proyecto(request, id_proyecto):
+    """
+    Esta vista despliega un proyecto con todos los valores que toman sus atributos, además de sus fases, roles
+    y tipos de ítems
+
+    :param request
+    :param id_proyecto: Se recibe como parámetro el id_del proyecto que se desea ver
+    """
     proyecto = Proyecto.objects.get(pk=id_proyecto)
     gerente = Usuario.objects.get(pk=proyecto.gerente)
     tipo_item = proyecto.tipoitem_set.all()
