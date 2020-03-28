@@ -1,7 +1,7 @@
+"""
+Mapeador objeto-relacional en el que es posible definir la estructura de la base de datos utilizando código Python.
+"""
 from django.db import models
-from django.utils import timezone
-# from login.models import usuario
-# from login.models import models as login_models
 
 
 # Create your models here.
@@ -9,46 +9,51 @@ from django.utils import timezone
 class Proyecto(models.Model):
     """
     Clase que representa a los proyectos que administrará el sistema con sus respectivos atributos
-
-    :param nombre: nombre del proyecto
-    :param fecha_inicio: fecha en la que el proyecto comienza
-    :param estado: estado actual del proyecto, puede variar entre iniciado, en ejecución, cancelado, finalizado
-    :param numero_fases = cantidad de fases que tiene el proyecto
-    :param cant_comite = cantidad de miembros que deberá tener el comité, debe ser impar y mayor o igual a 3
-    :param fases: lista de fases del proyecto
-    :param gerente: usuario que toma el rol de gerente del proyecto
-    :param comite: conjunto impar de usuarios que conforma el comité para el proyecto
-    :param participantes: equipo de usuarios que participa en el proyecto
     """
+    #: nombre del proyecto
     nombre = models.CharField(max_length=200, null=False)
+    #: fecha en la que el proyecto comienza
     fecha_inicio = models.DateField(auto_now=False, auto_now_add=False)
+    #: estado actual del proyecto, puede variar entre iniciado, en ejecución, cancelado, finalizado
     estado = models.CharField(max_length=200, default='iniciado')
+    #: cantidad de fases que tiene el proyecto
     numero_fases = models.IntegerField(null=False)
+    #: cantidad de miembros que deberá tener el comité, debe ser impar y mayor o igual a 3
     cant_comite = models.IntegerField(null=False)
-    gerente = models.CharField(max_length=250, null=False)
-    comite = models.ForeignKey('login.Usuario',on_delete=models.CASCADE,related_name='usuario_login_comite', null=True)
+    #: usuario que toma el rol de gerente del proyecto
+    gerente = models.IntegerField(null=False)
+    #: conjunto impar de usuarios que conforma el comité para el proyecto
+    comite = models.ManyToManyField('login.Usuario', related_name='usuario_login_comite')
+    #: equipo de usuarios que participa en el proyecto
     participantes = models.ManyToManyField('login.Usuario', related_name='usuario_login_participante')
 
     def __str__(self):
         return self.nombre
 
+    def es_comite(self, id_usuario):
+        """
+        función booleana que retorna true si un usuario es parte del comité del proyecto
+
+        :param id_usuario: identificar unico del usuario del que se desea saber si es parte del comité
+        :return: retorna True si forma parte y False en caso contrario
+        """
+        for usuario in self.comite:
+            if usuario.id == id_usuario:
+                return True
+        return False
+
 
 class Fase(models.Model):
     """
     Esta clase representa las fases
-
-    :param nombre: Se almacena el nombre de la fase
-    :type string
-    :param descripcion: Descripcion de la fase
-    :type string
-    :param estado: Estado de la fase, iniciada, cerrada etc.
-    :type string
-    :param proyecto: Proyecto asociado a la fase
-    :type Proyecto
     """
+    #: nombre: Se almacena el nombre de la fase
     nombre = models.CharField(max_length=200, null=False)
+    #: descripcion: Descripcion de la fase
     descripcion = models.CharField(max_length=400, null=True)
+    #: estado: Estado de la fase, iniciada, cerrada etc.
     estado = models.CharField(max_length=200, default='abierta')
+    #: proyecto: Proyecto asociado a la fase
     proyecto = models.ForeignKey(Proyecto, on_delete=models.CASCADE)
 
 
@@ -68,7 +73,7 @@ class TipoItem(models.Model):
     """
 
     nombre = models.CharField(max_length=200)
-    descripcion = models.CharField( max_length=800)
+    descripcion = models.CharField(max_length=800)
     prefijo = models.CharField(max_length=5)
     proyecto = models.ManyToManyField('Proyecto')
 
@@ -103,8 +108,8 @@ class Rol(models.Model):
     :param Nombre: Nombre a ser asignado al Rol
     :param Permisos: lista de permisos asociados a ese Rol
     """
-    nombre = models.CharField( max_length=150, default= 'null')
-    proyecto = models.ForeignKey(Proyecto, on_delete=models.CASCADE,null=True)
+    nombre = models.CharField(max_length=150, default='null')
+    proyecto = models.ForeignKey(Proyecto, on_delete=models.CASCADE, null=True)
     crear_item = models.BooleanField(default=False)
     modificar_item = models.BooleanField(default=False)
     desactivar_item = models.BooleanField(default=False)
@@ -126,11 +131,9 @@ class UsuarioxRol(models.Model):
     """
 
     usuario = models.ForeignKey('login.Usuario', on_delete=models.CASCADE)
-    rol = models.ForeignKey(Rol,on_delete=models.CASCADE)
+    rol = models.ForeignKey(Rol, on_delete=models.CASCADE)
     fase = models.ForeignKey(Fase, on_delete=models.CASCADE)
     activo = models.BooleanField(default=True)
 
     def __str__(self):
         return self.id
-
-

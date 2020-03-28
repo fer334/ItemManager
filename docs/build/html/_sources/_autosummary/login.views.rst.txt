@@ -9,21 +9,17 @@ login.views
 
 .. autosummary::
 
+  admin
   index
   logout
-  makeLogin
-  postRegister
+  user_login
+  user_register
+  user_update
+  users_access
 
 
 
 
-
-.. rubric:: Classes
-
-.. autosummary::
-
-  LoginPage
-  Register
 
 
 

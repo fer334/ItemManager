@@ -40,17 +40,32 @@
 <span class="sd">Mapeador objeto-relacional en el que es posible definir la estructura de la base de datos utilizando código Python.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">from</span> <span class="nn">django.contrib.auth.models</span> <span class="kn">import</span> <span class="n">AbstractUser</span>
+<span class="kn">from</span> <span class="nn">django.contrib.auth.validators</span> <span class="kn">import</span> <span class="n">UnicodeUsernameValidator</span>
 <span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
 
 
 <span class="c1"># Create your models here.</span>
-<div class="viewcode-block" id="usr"><a class="viewcode-back" href="../../_autosummary/login.models.html#login.models.usr">[documentos]</a><span class="k">class</span> <span class="nc">usr</span><span class="p">(</span><span class="n">AbstractUser</span><span class="p">):</span>
+<div class="viewcode-block" id="Usuario"><a class="viewcode-back" href="../../_autosummary/login.models.html#login.forms.Usuario">[documentos]</a><span class="k">class</span> <span class="nc">Usuario</span><span class="p">(</span><span class="n">AbstractUser</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Clase que representa al usuario en la base de datos local que extiende del modelo AbstractUser</span>
-<span class="sd">    de django</span>
+<span class="sd">    Clase que representa al usuario en la base de datos local que extiende del</span>
+<span class="sd">    modelo AbstractUser de django</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1">#: Atributo para el campo del Correo Electronico</span>
+    <span class="n">email</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">EmailField</span><span class="p">(</span>
+        <span class="s1">&#39;Dirección de correo electrónico&#39;</span><span class="p">,</span>
+        <span class="n">unique</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">blank</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1">#: Atributo para el campo id en la base de datos de Firebase</span>
     <span class="n">localId</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
-    <span class="k">pass</span></div>
+
+    <span class="c1">#: Atributo para el campo diferenciar usuarios normales de gerentes</span>
+    <span class="n">is_gerente</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span>
+        <span class="s2">&quot;Gerente&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">)</span></div>
 </pre></div>
 
           </div>

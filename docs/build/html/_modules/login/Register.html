@@ -40,37 +40,34 @@
 <span class="sd">Este modulo se encarga de registrar los usuarios en firebase y la base de datos del sistema</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">pyrebase</span>
-<span class="kn">from</span> <span class="nn">.models</span> <span class="kn">import</span> <span class="n">usr</span>
+<span class="kn">from</span> <span class="nn">login.models</span> <span class="kn">import</span> <span class="n">Usuario</span>
+
 <span class="n">config</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;apiKey&#39;</span><span class="p">:</span> <span class="s2">&quot;AIzaSyAbCiMgh8az4COYBvq038jbrvVGA16oCeo&quot;</span><span class="p">,</span>
-    <span class="s1">&#39;authDomain&#39;</span><span class="p">:</span> <span class="s2">&quot;poliproyecto-6dfb4.firebaseapp.com&quot;</span><span class="p">,</span>
-    <span class="s1">&#39;databaseURL&#39;</span><span class="p">:</span> <span class="s2">&quot;https://poliproyecto-6dfb4.firebaseio.com&quot;</span><span class="p">,</span>
-    <span class="s1">&#39;projectId&#39;</span><span class="p">:</span> <span class="s2">&quot;poliproyecto-6dfb4&quot;</span><span class="p">,</span>
-    <span class="s1">&#39;storageBucket&#39;</span><span class="p">:</span> <span class="s2">&quot;poliproyecto-6dfb4.appspot.com&quot;</span><span class="p">,</span>
-    <span class="s1">&#39;messagingSenderId&#39;</span><span class="p">:</span> <span class="s2">&quot;562557261320&quot;</span><span class="p">,</span>
-    <span class="s1">&#39;appId&#39;</span><span class="p">:</span> <span class="s2">&quot;1:562557261320:web:64f3792e7ca3608c1463bd&quot;</span><span class="p">,</span>
-    <span class="s1">&#39;measurementId&#39;</span><span class="p">:</span> <span class="s2">&quot;G-GED6N0CHKC&quot;</span>
-<span class="p">}</span>
+    <span class="s1">&#39;apiKey&#39;</span><span class="p">:</span> <span class="s2">&quot;AIzaSyCqhDwOP5cTSm58BV7gnkFnF4qz-26OWI8&quot;</span><span class="p">,</span>
+    <span class="s1">&#39;authDomain&#39;</span><span class="p">:</span> <span class="s2">&quot;itemmanager-77211.firebaseapp.com&quot;</span><span class="p">,</span>
+    <span class="s1">&#39;databaseURL&#39;</span><span class="p">:</span> <span class="s2">&quot;https://itemmanager-77211.firebaseio.com&quot;</span><span class="p">,</span>
+    <span class="s1">&#39;projectId&#39;</span><span class="p">:</span> <span class="s2">&quot;itemmanager-77211&quot;</span><span class="p">,</span>
+    <span class="s1">&#39;storageBucket&#39;</span><span class="p">:</span> <span class="s2">&quot;itemmanager-77211.appspot.com&quot;</span><span class="p">,</span>
+    <span class="s1">&#39;messagingSenderId&#39;</span><span class="p">:</span> <span class="s2">&quot;972002011767&quot;</span><span class="p">,</span>
+    <span class="s1">&#39;appId&#39;</span><span class="p">:</span> <span class="s2">&quot;1:972002011767:web:fe16134c99f6a8d6a3f472&quot;</span><span class="p">,</span>
+    <span class="s1">&#39;measurementId&#39;</span><span class="p">:</span> <span class="s2">&quot;G-R78XM8ZQD3&quot;</span>
+    <span class="p">}</span>
+
 <span class="n">firebase</span> <span class="o">=</span> <span class="n">pyrebase</span><span class="o">.</span><span class="n">initialize_app</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
 <span class="n">authfb</span> <span class="o">=</span> <span class="n">firebase</span><span class="o">.</span><span class="n">auth</span><span class="p">()</span>
 
 
-<div class="viewcode-block" id="crear_usuario"><a class="viewcode-back" href="../../_autosummary/login.Register.html#login.Register.crear_usuario">[documentos]</a><span class="k">def</span> <span class="nf">crear_usuario</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">var_email</span><span class="p">,</span> <span class="n">password</span><span class="p">):</span>
+<div class="viewcode-block" id="crear_usuario"><a class="viewcode-back" href="../../_autosummary/login.Register.html#login.Register.crear_usuario">[documentos]</a><span class="k">def</span> <span class="nf">crear_usuario</span><span class="p">(</span><span class="n">var_email</span><span class="p">,</span> <span class="n">password</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Metodo que se encarga de la creacion del usuario tanto en firebase como en la base local</span>
+<span class="sd">    Metodo que se encarga de la creacion del usuario tanto en firebase</span>
 
 <span class="sd">    :param username: El nombre de usuario a ser creado</span>
 <span class="sd">    :param var_email: El email del usuario a ser creado</span>
 <span class="sd">    :param password: El password del usuario a ser creado</span>
 <span class="sd">    :returns true: si el usuario se creo correctamente, false si no</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">user</span> <span class="o">=</span> <span class="n">authfb</span><span class="o">.</span><span class="n">create_user_with_email_and_password</span><span class="p">(</span><span class="n">var_email</span><span class="p">,</span> <span class="n">password</span><span class="p">)</span>
-        <span class="n">nuevo_usuario</span> <span class="o">=</span> <span class="n">usr</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">username</span><span class="p">,</span> <span class="n">email</span><span class="o">=</span><span class="n">var_email</span><span class="p">,</span> <span class="n">is_active</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">localId</span><span class="o">=</span><span class="n">user</span><span class="p">[</span><span class="s1">&#39;localId&#39;</span><span class="p">])</span>
-        <span class="n">nuevo_usuario</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-        <span class="k">return</span> <span class="kc">True</span>
-    <span class="k">except</span><span class="p">:</span>
-        <span class="k">return</span> <span class="kc">False</span></div>
+    <span class="n">user</span> <span class="o">=</span> <span class="n">authfb</span><span class="o">.</span><span class="n">create_user_with_email_and_password</span><span class="p">(</span><span class="n">var_email</span><span class="p">,</span> <span class="n">password</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">user</span></div>
 </pre></div>
 
           </div>
