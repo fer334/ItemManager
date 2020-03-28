@@ -39,80 +39,180 @@
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">En este modulo se detalla la logica para las vistas que serán utilizadas por la app</span>
 <span class="sd">&quot;&quot;&quot;</span>
+<span class="c1"># Django</span>
 <span class="kn">from</span> <span class="nn">django.contrib.auth</span> <span class="kn">import</span> <span class="n">authenticate</span><span class="p">,</span> <span class="n">login</span>
 <span class="kn">from</span> <span class="nn">django.contrib.auth.decorators</span> <span class="kn">import</span> <span class="n">login_required</span>
-<span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">render</span>
+<span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">render</span><span class="p">,</span> <span class="n">redirect</span>
 <span class="kn">from</span> <span class="nn">django.contrib</span> <span class="kn">import</span> <span class="n">auth</span>
-<span class="kn">from</span> <span class="nn">.Register</span> <span class="kn">import</span> <span class="n">crear_usuario</span>
-<span class="kn">from</span> <span class="nn">django.views.generic</span> <span class="kn">import</span> <span class="n">TemplateView</span>
+
+<span class="c1"># Forms</span>
+<span class="kn">from</span> <span class="nn">login.forms</span> <span class="kn">import</span> <span class="n">RegisterForm</span><span class="p">,</span> <span class="n">UpdateUserForm</span>
+
+<span class="c1"># Models</span>
+<span class="kn">from</span> <span class="nn">login.models</span> <span class="kn">import</span> <span class="n">Usuario</span>
+
 
 <div class="viewcode-block" id="index"><a class="viewcode-back" href="../../_autosummary/login.views.html#login.views.index">[documentos]</a><span class="nd">@login_required</span>
 <span class="k">def</span> <span class="nf">index</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Funcion que solo muestra el index, validando antes si el usuario inicio sesion</span>
+<span class="sd">    Método que muestra el index, validando antes si el usuario inició sesión</span>
 
+<span class="sd">    :param request: objeto tipo diccionario que permite acceder a datos</span>
+<span class="sd">    :return: objeto que se encarga de renderar admin.html, index.html o no_active.html</span>
+<span class="sd">    :rtype: render</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;login/index.html&#39;</span><span class="p">,</span> <span class="p">{})</span></div>
-
-
-<div class="viewcode-block" id="LoginPage"><a class="viewcode-back" href="../../_autosummary/login.views.html#login.views.LoginPage">[documentos]</a><span class="k">class</span> <span class="nc">LoginPage</span><span class="p">(</span><span class="n">TemplateView</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Clase que solo muestra el template del login</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">template_name</span> <span class="o">=</span> <span class="s1">&#39;login/login.html&#39;</span></div>
-
-
-<div class="viewcode-block" id="Register"><a class="viewcode-back" href="../../_autosummary/login.views.html#login.views.Register">[documentos]</a><span class="k">class</span> <span class="nc">Register</span><span class="p">(</span><span class="n">TemplateView</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Clase que solo muestra el template de creacion de usuario</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">template_name</span> <span class="o">=</span> <span class="s1">&#39;login/register.html&#39;</span></div>
-
-
-<div class="viewcode-block" id="postRegister"><a class="viewcode-back" href="../../_autosummary/login.views.html#login.views.postRegister">[documentos]</a><span class="k">def</span> <span class="nf">postRegister</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Funcion que se encarga de registrar al usuario, espera un POST Request</span>
-
-<span class="sd">    :param POST[email]: Email del usuario nuevo</span>
-<span class="sd">    :param POST[password]: Contraseña del usuario nuevo</span>
-<span class="sd">    :param POST[username]: Nombre del usuario nuevo</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">var_email</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;email&#39;</span><span class="p">]</span>
-    <span class="n">password</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;password&#39;</span><span class="p">]</span>
-    <span class="n">username</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;username&#39;</span><span class="p">]</span>
-    <span class="k">if</span> <span class="n">crear_usuario</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">var_email</span><span class="p">,</span> <span class="n">password</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;login/postReg.html&#39;</span><span class="p">,</span> <span class="p">{})</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_superuser</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;login/admin.html&#39;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_active</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;login/index.html&#39;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;login/register.html&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;error_message&#39;</span><span class="p">:</span> <span class="s1">&#39;Error, vuelva a intenter&#39;</span><span class="p">})</span></div>
+        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;login/no_active.html&#39;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="makeLogin"><a class="viewcode-back" href="../../_autosummary/login.views.html#login.views.makeLogin">[documentos]</a><span class="k">def</span> <span class="nf">makeLogin</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<div class="viewcode-block" id="user_login"><a class="viewcode-back" href="../../_autosummary/login.views.html#login.views.user_login">[documentos]</a><span class="k">def</span> <span class="nf">user_login</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Funcion que se encarga de loguear al usuario</span>
+<span class="sd">    Vista que se encarga de loguear al usuario</span>
 
-<span class="sd">    :param POST[email]: Email del usuario</span>
-<span class="sd">    :param POST[password]: Contraseña del usuario</span>
-
+<span class="sd">    :param request: objeto tipo diccionario que permite acceder a datos</span>
+<span class="sd">    :return: objeto que se encarga de renderar login.html</span>
+<span class="sd">    :return: redirección a la vista index</span>
+<span class="sd">    :rtype: render, redirect</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">email</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;email&#39;</span><span class="p">]</span>
-    <span class="n">password</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;password&#39;</span><span class="p">]</span>
-    <span class="n">user</span> <span class="o">=</span> <span class="n">authenticate</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">email</span><span class="o">=</span><span class="n">email</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="n">password</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">user</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;Credenciales invalidas&#39;</span>
-        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;login/login.html&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;error_message&#39;</span><span class="p">:</span> <span class="n">message</span><span class="p">})</span>
-    <span class="n">login</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;login/index.html&#39;</span><span class="p">,</span> <span class="p">{})</span></div>
+
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;POST&#39;</span><span class="p">:</span>
+
+        <span class="n">email</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;email&#39;</span><span class="p">]</span>
+        <span class="n">password</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;password&#39;</span><span class="p">]</span>
+        <span class="n">user</span> <span class="o">=</span> <span class="n">authenticate</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">email</span><span class="o">=</span><span class="n">email</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="n">password</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">user</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;Credenciales invalidas&#39;</span>
+            <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;login/login.html&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;error_message&#39;</span><span class="p">:</span> <span class="n">message</span><span class="p">})</span>
+        <span class="n">login</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;login:index&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;login/login.html&#39;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="logout"><a class="viewcode-back" href="../../_autosummary/login.views.html#login.views.logout">[documentos]</a><span class="k">def</span> <span class="nf">logout</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Funcion que se encarga de cerrar la sesion del usuario</span>
+<span class="sd">    Función que se encarga de cerrar la sesión del usuario</span>
 
+<span class="sd">    :param request: objeto tipo diccionario que permite acceder a datos</span>
+<span class="sd">    :return: redireccion a la vista login</span>
+<span class="sd">    :rtype: redirect</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">auth</span><span class="o">.</span><span class="n">logout</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;login/login.html&#39;</span><span class="p">,</span> <span class="p">{})</span></div>
+    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;login:login&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="admin"><a class="viewcode-back" href="../../_autosummary/login.views.html#login.views.admin">[documentos]</a><span class="k">def</span> <span class="nf">admin</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Vista que solo sera visible para el administrador</span>
+
+<span class="sd">    :param request: objeto tipo diccionario que permite acceder a datos</span>
+<span class="sd">    :return: objeto que se encarga de renderar admin.html</span>
+<span class="sd">    :rtype: render</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;login/admin.html&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="users_access"><a class="viewcode-back" href="../../_autosummary/login.views.html#login.views.users_access">[documentos]</a><span class="k">def</span> <span class="nf">users_access</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Vista para modificar el acceso de los usuarios al sistema, ademas hacer a un</span>
+<span class="sd">    usuario gerente</span>
+
+<span class="sd">    :param request: objeto tipo diccionario que permite acceder a datos</span>
+<span class="sd">    :return: objeto que se encarga de renderar access.html</span>
+<span class="sd">    :rtype: render</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">usuarios</span> <span class="o">=</span> <span class="n">Usuario</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">)</span><span class="o">.</span> \
+        <span class="n">exclude</span><span class="p">(</span><span class="n">is_superuser</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;POST&#39;</span><span class="p">:</span>
+        <span class="n">usuarios</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">usuarios</span><span class="p">)</span>
+        <span class="n">Usuario</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">is_active</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">Usuario</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">is_gerente</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">id_usuario</span><span class="p">,</span> <span class="n">valor</span> <span class="ow">in</span> <span class="n">usuarios</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">id_usuario</span> <span class="o">!=</span> <span class="s1">&#39;csrfmiddlewaretoken&#39;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">id_usuario</span><span class="o">.</span><span class="n">isnumeric</span><span class="p">()</span> <span class="ow">or</span> \
+                        <span class="n">id_usuario</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;g&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">isnumeric</span><span class="p">():</span>
+
+                    <span class="c1"># si encuentra una g antes es el campo gerente</span>
+                    <span class="k">if</span> <span class="n">id_usuario</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;g&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="n">Usuario</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
+                            <span class="nb">id</span><span class="o">=</span><span class="n">id_usuario</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;g&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+                        <span class="p">)</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">is_gerente</span><span class="o">=</span><span class="n">valor</span><span class="p">)</span>
+
+                    <span class="c1"># sino es el campo is_active</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">Usuario</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
+                            <span class="nb">id</span><span class="o">=</span><span class="n">id_usuario</span>
+                        <span class="p">)</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">is_active</span><span class="o">=</span><span class="n">valor</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;login:index&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span>
+        <span class="n">request</span><span class="p">,</span>
+        <span class="s1">&#39;login/access.html&#39;</span><span class="p">,</span>
+        <span class="p">{</span><span class="s1">&#39;usuarios&#39;</span><span class="p">:</span> <span class="n">usuarios</span><span class="p">,</span> <span class="p">}</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="user_register"><a class="viewcode-back" href="../../_autosummary/login.views.html#login.views.user_register">[documentos]</a><span class="k">def</span> <span class="nf">user_register</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Vista que se encarga de registrar a un usuario</span>
+
+<span class="sd">    :param request: objeto tipo diccionario que permite acceder a datos</span>
+<span class="sd">    :return: objeto que se encarga de renderar register.html</span>
+<span class="sd">    :rtype: render</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">RegisterForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
+            <span class="n">form</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;login:login&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">RegisterForm</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;login/register.html&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;form&#39;</span><span class="p">:</span> <span class="n">form</span><span class="p">})</span></div>
+
+
+<div class="viewcode-block" id="user_update"><a class="viewcode-back" href="../../_autosummary/login.views.html#login.views.user_update">[documentos]</a><span class="k">def</span> <span class="nf">user_update</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Vista encargada de la modificacion de datos de los usuarios</span>
+
+<span class="sd">    :param request: objeto tipo diccionario que permite acceder a datos</span>
+<span class="sd">    :param name: nombre del usuario a modificar</span>
+<span class="sd">    :return: objeto que se encarga de renderar user_update.html</span>
+<span class="sd">    :rtype: render</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">instance</span> <span class="o">=</span> <span class="n">Usuario</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;POST&#39;</span><span class="p">:</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">UpdateUserForm</span><span class="p">(</span>
+            <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">,</span>
+            <span class="n">instance</span><span class="o">=</span><span class="n">instance</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
+            <span class="n">form</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;login:index&#39;</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;instance&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">instance</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">UpdateUserForm</span><span class="p">(</span>
+            <span class="n">instance</span><span class="o">=</span><span class="n">instance</span><span class="p">,</span>
+            <span class="n">initial</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;username&#39;</span><span class="p">:</span> <span class="n">name</span><span class="p">}</span>
+        <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span>
+        <span class="n">request</span><span class="o">=</span><span class="n">request</span><span class="p">,</span>
+        <span class="n">template_name</span><span class="o">=</span><span class="s1">&#39;login/user_update.html&#39;</span><span class="p">,</span>
+        <span class="n">context</span><span class="o">=</span><span class="p">{</span>
+            <span class="s1">&#39;form&#39;</span><span class="p">:</span> <span class="n">form</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="p">)</span></div>
 </pre></div>
 
           </div>

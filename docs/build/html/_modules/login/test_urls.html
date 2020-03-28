@@ -54,7 +54,16 @@
 <span class="sd">        :return: el assert retornara True si el path está bien</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">path</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;login:index&#39;</span><span class="p">)</span>
-        <span class="k">assert</span> <span class="n">resolve</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">view_name</span> <span class="o">==</span> <span class="s1">&#39;login:index&#39;</span></div></div>
+        <span class="k">assert</span> <span class="n">resolve</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">view_name</span> <span class="o">==</span> <span class="s1">&#39;login:index&#39;</span></div>
+
+<div class="viewcode-block" id="TestUrls.test_index_url_ejemplo_prueba_fallida"><a class="viewcode-back" href="../../_autosummary/login.test_urls.html#login.test_urls.TestUrls.test_index_url_ejemplo_prueba_fallida">[documentos]</a>    <span class="k">def</span> <span class="nf">test_index_url_ejemplo_prueba_fallida</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Prueba que falla de ejemplo para mostrar como hacer mensajes que expliquen el error</span>
+
+<span class="sd">        :return: el assert retornara True si el path está bien</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;login:index&#39;</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">resolve</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">view_name</span> <span class="o">==</span> <span class="s1">&#39;login:indexx&#39;</span><span class="p">,</span> <span class="s2">&quot;La prueba falló porque el nombre del template es incorrecto&quot;</span></div></div>
 </pre></div>
 
           </div>

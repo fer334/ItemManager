@@ -43,18 +43,18 @@
 
 <span class="kn">from</span> <span class="nn">django.contrib.auth.backends</span> <span class="kn">import</span> <span class="n">BaseBackend</span>
 <span class="kn">import</span> <span class="nn">pyrebase</span>
-<span class="kn">from</span> <span class="nn">.models</span> <span class="kn">import</span> <span class="n">usr</span>
+<span class="kn">from</span> <span class="nn">.models</span> <span class="kn">import</span> <span class="n">Usuario</span>
 
 <span class="n">config</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;apiKey&#39;</span><span class="p">:</span> <span class="s2">&quot;AIzaSyAbCiMgh8az4COYBvq038jbrvVGA16oCeo&quot;</span><span class="p">,</span>
-    <span class="s1">&#39;authDomain&#39;</span><span class="p">:</span> <span class="s2">&quot;poliproyecto-6dfb4.firebaseapp.com&quot;</span><span class="p">,</span>
-    <span class="s1">&#39;databaseURL&#39;</span><span class="p">:</span> <span class="s2">&quot;https://poliproyecto-6dfb4.firebaseio.com&quot;</span><span class="p">,</span>
-    <span class="s1">&#39;projectId&#39;</span><span class="p">:</span> <span class="s2">&quot;poliproyecto-6dfb4&quot;</span><span class="p">,</span>
-    <span class="s1">&#39;storageBucket&#39;</span><span class="p">:</span> <span class="s2">&quot;poliproyecto-6dfb4.appspot.com&quot;</span><span class="p">,</span>
-    <span class="s1">&#39;messagingSenderId&#39;</span><span class="p">:</span> <span class="s2">&quot;562557261320&quot;</span><span class="p">,</span>
-    <span class="s1">&#39;appId&#39;</span><span class="p">:</span> <span class="s2">&quot;1:562557261320:web:64f3792e7ca3608c1463bd&quot;</span><span class="p">,</span>
-    <span class="s1">&#39;measurementId&#39;</span><span class="p">:</span> <span class="s2">&quot;G-GED6N0CHKC&quot;</span>
-<span class="p">}</span>
+    <span class="s1">&#39;apiKey&#39;</span><span class="p">:</span> <span class="s2">&quot;AIzaSyCqhDwOP5cTSm58BV7gnkFnF4qz-26OWI8&quot;</span><span class="p">,</span>
+    <span class="s1">&#39;authDomain&#39;</span><span class="p">:</span> <span class="s2">&quot;itemmanager-77211.firebaseapp.com&quot;</span><span class="p">,</span>
+    <span class="s1">&#39;databaseURL&#39;</span><span class="p">:</span> <span class="s2">&quot;https://itemmanager-77211.firebaseio.com&quot;</span><span class="p">,</span>
+    <span class="s1">&#39;projectId&#39;</span><span class="p">:</span> <span class="s2">&quot;itemmanager-77211&quot;</span><span class="p">,</span>
+    <span class="s1">&#39;storageBucket&#39;</span><span class="p">:</span> <span class="s2">&quot;itemmanager-77211.appspot.com&quot;</span><span class="p">,</span>
+    <span class="s1">&#39;messagingSenderId&#39;</span><span class="p">:</span> <span class="s2">&quot;972002011767&quot;</span><span class="p">,</span>
+    <span class="s1">&#39;appId&#39;</span><span class="p">:</span> <span class="s2">&quot;1:972002011767:web:fe16134c99f6a8d6a3f472&quot;</span><span class="p">,</span>
+    <span class="s1">&#39;measurementId&#39;</span><span class="p">:</span> <span class="s2">&quot;G-R78XM8ZQD3&quot;</span>
+  <span class="p">};</span>
 <span class="n">firebase</span> <span class="o">=</span> <span class="n">pyrebase</span><span class="o">.</span><span class="n">initialize_app</span><span class="p">(</span> <span class="n">config</span> <span class="p">)</span>
 <span class="n">authfb</span> <span class="o">=</span> <span class="n">firebase</span><span class="o">.</span><span class="n">auth</span><span class="p">()</span>
 
@@ -78,17 +78,16 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="n">userfb</span> <span class="o">=</span> <span class="n">authfb</span><span class="o">.</span><span class="n">sign_in_with_email_and_password</span><span class="p">(</span><span class="n">email</span><span class="p">,</span> <span class="n">password</span><span class="p">)</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="n">user</span> <span class="o">=</span> <span class="n">usr</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span> <span class="n">localId</span><span class="o">=</span><span class="n">userfb</span><span class="p">[</span><span class="s1">&#39;localId&#39;</span><span class="p">]</span> <span class="p">)</span>
-            <span class="k">except</span> <span class="n">usr</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
-                <span class="n">usuario</span> <span class="o">=</span> <span class="n">usr</span><span class="p">(</span> <span class="n">email</span> <span class="o">=</span> <span class="n">email</span><span class="p">,</span> <span class="n">localId</span><span class="o">=</span> <span class="n">userfb</span><span class="p">[</span><span class="s1">&#39;localId&#39;</span><span class="p">]</span> <span class="p">)</span>
-                <span class="n">usuario</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-                <span class="n">user</span> <span class="o">=</span> <span class="n">usuario</span>
+                <span class="n">user</span> <span class="o">=</span> <span class="n">Usuario</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span> <span class="n">localId</span><span class="o">=</span><span class="n">userfb</span><span class="p">[</span><span class="s1">&#39;localId&#39;</span><span class="p">]</span> <span class="p">)</span>
+            <span class="k">except</span> <span class="n">Usuario</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">None</span>
             <span class="k">return</span> <span class="n">user</span>
         <span class="k">except</span><span class="p">:</span>
             <span class="sd">&quot;&quot;&quot;requests.exceptions.HTTPError as err:</span>
 <span class="sd">            print( repr(err) )</span>
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="k">return</span> <span class="kc">None</span></div>
+
 
 <div class="viewcode-block" id="LoginBackEnd.get_user"><a class="viewcode-back" href="../../_autosummary/login.LoginBackEnd.html#login.LoginBackEnd.LoginBackEnd.get_user">[documentos]</a>    <span class="k">def</span> <span class="nf">get_user</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_id</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -99,8 +98,8 @@
 <span class="sd">        :returns Se retorna el objeto correspondiente al usuario de la base de datos local</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">usr</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">user_id</span><span class="p">)</span>
-        <span class="k">except</span> <span class="n">usr</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">Usuario</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">user_id</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">Usuario</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span></div></div>
 </pre></div>
 

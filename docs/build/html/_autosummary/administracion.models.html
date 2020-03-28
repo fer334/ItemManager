@@ -1,0 +1,273 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <title>administracion.models &#8212; documentación de ItemManager - 1.0</title>
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../_static/translations.js"></script>
+    <link rel="index" title="Índice" href="../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../search.html" />
+    <link rel="prev" title="login.test_urls" href="login.test_urls.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navegación</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="Índice General"
+             accesskey="I">índice</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Índice de Módulos Python"
+             >módulos</a> |</li>
+        <li class="right" >
+          <a href="login.test_urls.html" title="login.test_urls"
+             accesskey="P">anterior</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">documentación de ItemManager - 1.0</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="administracion-models">
+<h1>administracion.models<a class="headerlink" href="#administracion-models" title="Enlazar permanentemente con este título">¶</a></h1>
+<p class="rubric">Classes</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#administracion.models.Fase" title="administracion.models.Fase"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Fase</span></code></a>(*args, **kwargs)</p></td>
+<td><p>Esta clase representa las fases</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#administracion.models.PlantillaAtributo" title="administracion.models.PlantillaAtributo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PlantillaAtributo</span></code></a>(*args, **kwargs)</p></td>
+<td><p>Esta clase representa las plantilla de atributos usada por el tipo de item</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#administracion.models.Proyecto" title="administracion.models.Proyecto"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Proyecto</span></code></a>(*args, **kwargs)</p></td>
+<td><p>Clase que representa a los proyectos que administrará el sistema con sus respectivos atributos</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#administracion.models.Rol" title="administracion.models.Rol"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Rol</span></code></a>(*args, **kwargs)</p></td>
+<td><p>Clase que representa los roles de los usuarios en los proyectos :param Id_Rol: Identificador del Rol :param Nombre: Nombre a ser asignado al Rol :param Permisos: lista de permisos asociados a ese Rol</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#administracion.models.TipoItem" title="administracion.models.TipoItem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TipoItem</span></code></a>(*args, **kwargs)</p></td>
+<td><p>Esta clase representa los tipos de items</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#administracion.models.UsuarioxRol" title="administracion.models.UsuarioxRol"><code class="xref py py-obj docutils literal notranslate"><span class="pre">UsuarioxRol</span></code></a>(*args, **kwargs)</p></td>
+<td><p>Clase en la cual se definen los roles del usuario :param Id: Identificador del rol correspondiente :param Usuario: Usuario al cual le corresponde dicho rol :param rol: Rol del usuario</p></td>
+</tr>
+</tbody>
+</table>
+<span class="target" id="module-administracion.models"></span><dl class="class">
+<dt id="administracion.models.Fase">
+<em class="property">class </em><code class="sig-prename descclassname">administracion.models.</code><code class="sig-name descname">Fase</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/administracion/models.html#Fase"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#administracion.models.Fase" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Esta clase representa las fases</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros</dt>
+<dd class="field-odd"><p><strong>nombre</strong> – Se almacena el nombre de la fase</p>
+</dd>
+</dl>
+<p>:type string
+:param descripcion: Descripcion de la fase
+:type string
+:param estado: Estado de la fase, iniciada, cerrada etc.
+:type string
+:param proyecto: Proyecto asociado a la fase
+:type Proyecto</p>
+<dl class="exception">
+<dt id="administracion.models.Fase.DoesNotExist">
+<em class="property">exception </em><code class="sig-name descname">DoesNotExist</code><a class="headerlink" href="#administracion.models.Fase.DoesNotExist" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="exception">
+<dt id="administracion.models.Fase.MultipleObjectsReturned">
+<em class="property">exception </em><code class="sig-name descname">MultipleObjectsReturned</code><a class="headerlink" href="#administracion.models.Fase.MultipleObjectsReturned" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="administracion.models.PlantillaAtributo">
+<em class="property">class </em><code class="sig-prename descclassname">administracion.models.</code><code class="sig-name descname">PlantillaAtributo</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/administracion/models.html#PlantillaAtributo"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#administracion.models.PlantillaAtributo" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Esta clase representa las plantilla de atributos usada por el tipo de item</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros</dt>
+<dd class="field-odd"><p><strong>nombre</strong> – Se almacena el nombre del tipo de item</p>
+</dd>
+</dl>
+<p>:type string
+:param tipo: Tipo del item a ser instanciado
+:type string
+:param proyecto: TipoItem asociado a la plantilla
+:type TipoItem</p>
+<dl class="exception">
+<dt id="administracion.models.PlantillaAtributo.DoesNotExist">
+<em class="property">exception </em><code class="sig-name descname">DoesNotExist</code><a class="headerlink" href="#administracion.models.PlantillaAtributo.DoesNotExist" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="exception">
+<dt id="administracion.models.PlantillaAtributo.MultipleObjectsReturned">
+<em class="property">exception </em><code class="sig-name descname">MultipleObjectsReturned</code><a class="headerlink" href="#administracion.models.PlantillaAtributo.MultipleObjectsReturned" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="administracion.models.Proyecto">
+<em class="property">class </em><code class="sig-prename descclassname">administracion.models.</code><code class="sig-name descname">Proyecto</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/administracion/models.html#Proyecto"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#administracion.models.Proyecto" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Clase que representa a los proyectos que administrará el sistema con sus respectivos atributos</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>nombre</strong> – nombre del proyecto</p></li>
+<li><p><strong>fecha_inicio</strong> – fecha en la que el proyecto comienza</p></li>
+<li><p><strong>estado</strong> – estado actual del proyecto, puede variar entre iniciado, en ejecución, cancelado, finalizado</p></li>
+</ul>
+</dd>
+</dl>
+<p>:param numero_fases = cantidad de fases que tiene el proyecto
+:param cant_comite = cantidad de miembros que deberá tener el comité, debe ser impar y mayor o igual a 3
+:param fases: lista de fases del proyecto
+:param gerente: usuario que toma el rol de gerente del proyecto
+:param comite: conjunto impar de usuarios que conforma el comité para el proyecto
+:param participantes: equipo de usuarios que participa en el proyecto</p>
+<dl class="exception">
+<dt id="administracion.models.Proyecto.DoesNotExist">
+<em class="property">exception </em><code class="sig-name descname">DoesNotExist</code><a class="headerlink" href="#administracion.models.Proyecto.DoesNotExist" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="exception">
+<dt id="administracion.models.Proyecto.MultipleObjectsReturned">
+<em class="property">exception </em><code class="sig-name descname">MultipleObjectsReturned</code><a class="headerlink" href="#administracion.models.Proyecto.MultipleObjectsReturned" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="administracion.models.Rol">
+<em class="property">class </em><code class="sig-prename descclassname">administracion.models.</code><code class="sig-name descname">Rol</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/administracion/models.html#Rol"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#administracion.models.Rol" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Clase que representa los roles de los usuarios en los proyectos
+:param Id_Rol: Identificador del Rol
+:param Nombre: Nombre a ser asignado al Rol
+:param Permisos: lista de permisos asociados a ese Rol</p>
+<dl class="exception">
+<dt id="administracion.models.Rol.DoesNotExist">
+<em class="property">exception </em><code class="sig-name descname">DoesNotExist</code><a class="headerlink" href="#administracion.models.Rol.DoesNotExist" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="exception">
+<dt id="administracion.models.Rol.MultipleObjectsReturned">
+<em class="property">exception </em><code class="sig-name descname">MultipleObjectsReturned</code><a class="headerlink" href="#administracion.models.Rol.MultipleObjectsReturned" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="administracion.models.TipoItem">
+<em class="property">class </em><code class="sig-prename descclassname">administracion.models.</code><code class="sig-name descname">TipoItem</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/administracion/models.html#TipoItem"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#administracion.models.TipoItem" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Esta clase representa los tipos de items</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros</dt>
+<dd class="field-odd"><p><strong>nombre</strong> – Se almacena el nombre del tipo de item</p>
+</dd>
+</dl>
+<p>:type string
+:param descripcion: Descripcion del tipo de item
+:type string
+:param prefijo: Prefijo para mostrarse en todos los items instanciados de esta plantilla
+:type string
+:param proyecto: Proyecto asociado al Tipo de Item
+:type Proyecto</p>
+<dl class="exception">
+<dt id="administracion.models.TipoItem.DoesNotExist">
+<em class="property">exception </em><code class="sig-name descname">DoesNotExist</code><a class="headerlink" href="#administracion.models.TipoItem.DoesNotExist" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="exception">
+<dt id="administracion.models.TipoItem.MultipleObjectsReturned">
+<em class="property">exception </em><code class="sig-name descname">MultipleObjectsReturned</code><a class="headerlink" href="#administracion.models.TipoItem.MultipleObjectsReturned" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="administracion.models.UsuarioxRol">
+<em class="property">class </em><code class="sig-prename descclassname">administracion.models.</code><code class="sig-name descname">UsuarioxRol</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/administracion/models.html#UsuarioxRol"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#administracion.models.UsuarioxRol" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Clase en la cual se definen los roles del usuario
+:param Id: Identificador del rol correspondiente
+:param Usuario: Usuario al cual le corresponde dicho rol
+:param rol: Rol del usuario</p>
+<dl class="exception">
+<dt id="administracion.models.UsuarioxRol.DoesNotExist">
+<em class="property">exception </em><code class="sig-name descname">DoesNotExist</code><a class="headerlink" href="#administracion.models.UsuarioxRol.DoesNotExist" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="exception">
+<dt id="administracion.models.UsuarioxRol.MultipleObjectsReturned">
+<em class="property">exception </em><code class="sig-name descname">MultipleObjectsReturned</code><a class="headerlink" href="#administracion.models.UsuarioxRol.MultipleObjectsReturned" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Tema anterior</h4>
+  <p class="topless"><a href="login.test_urls.html"
+                        title="capítulo anterior">login.test_urls</a></p>
+  <div role="note" aria-label="source link">
+    <h3>Esta página</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/_autosummary/administracion.models.rst.txt"
+            rel="nofollow">Mostrar el código</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Búsqueda rápida</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Ir a" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navegación</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="Índice General"
+             >índice</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Índice de Módulos Python"
+             >módulos</a> |</li>
+        <li class="right" >
+          <a href="login.test_urls.html" title="login.test_urls"
+             >anterior</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">documentación de ItemManager - 1.0</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Derechos de autor 2020, Paola Olmedo, Matías López, David Nuñez, Luis Ríos.
+      Creado con <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
+    </div>
+  </body>
+</html>

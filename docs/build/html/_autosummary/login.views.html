@@ -16,7 +16,7 @@
     <link rel="index" title="Índice" href="../genindex.html" />
     <link rel="search" title="Búsqueda" href="../search.html" />
     <link rel="next" title="login.LoginBackEnd" href="login.LoginBackEnd.html" />
-    <link rel="prev" title="login.models" href="login.models.html" /> 
+    <link rel="prev" title="login.forms" href="login.forms.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navegación</h3>
@@ -31,7 +31,7 @@
           <a href="login.LoginBackEnd.html" title="login.LoginBackEnd"
              accesskey="N">siguiente</a> |</li>
         <li class="right" >
-          <a href="login.models.html" title="login.models"
+          <a href="login.forms.html" title="login.forms"
              accesskey="P">anterior</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">documentación de ItemManager - 1.0</a> &#187;</li> 
       </ul>
@@ -51,85 +51,152 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#login.views.index" title="login.views.index"><code class="xref py py-obj docutils literal notranslate"><span class="pre">index</span></code></a>(request)</p></td>
-<td><p>Funcion que solo muestra el index, validando antes si el usuario inicio sesion</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#login.views.admin" title="login.views.admin"><code class="xref py py-obj docutils literal notranslate"><span class="pre">admin</span></code></a>(request)</p></td>
+<td><p>Vista que solo sera visible para el administrador</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#login.views.logout" title="login.views.logout"><code class="xref py py-obj docutils literal notranslate"><span class="pre">logout</span></code></a>(request)</p></td>
-<td><p>Funcion que se encarga de cerrar la sesion del usuario</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#login.views.index" title="login.views.index"><code class="xref py py-obj docutils literal notranslate"><span class="pre">index</span></code></a>(request)</p></td>
+<td><p>Método que muestra el index, validando antes si el usuario inició sesión</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#login.views.makeLogin" title="login.views.makeLogin"><code class="xref py py-obj docutils literal notranslate"><span class="pre">makeLogin</span></code></a>(request)</p></td>
-<td><p>Funcion que se encarga de loguear al usuario</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#login.views.logout" title="login.views.logout"><code class="xref py py-obj docutils literal notranslate"><span class="pre">logout</span></code></a>(request)</p></td>
+<td><p>Función que se encarga de cerrar la sesión del usuario</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#login.views.postRegister" title="login.views.postRegister"><code class="xref py py-obj docutils literal notranslate"><span class="pre">postRegister</span></code></a>(request)</p></td>
-<td><p>Funcion que se encarga de registrar al usuario, espera un POST Request</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#login.views.user_login" title="login.views.user_login"><code class="xref py py-obj docutils literal notranslate"><span class="pre">user_login</span></code></a>(request)</p></td>
+<td><p>Vista que se encarga de loguear al usuario</p></td>
 </tr>
-</tbody>
-</table>
-<p class="rubric">Classes</p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#login.views.LoginPage" title="login.views.LoginPage"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LoginPage</span></code></a>(**kwargs)</p></td>
-<td><p>Clase que solo muestra el template del login</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#login.views.user_register" title="login.views.user_register"><code class="xref py py-obj docutils literal notranslate"><span class="pre">user_register</span></code></a>(request)</p></td>
+<td><p>Vista que se encarga de registrar a un usuario</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#login.views.Register" title="login.views.Register"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Register</span></code></a>(**kwargs)</p></td>
-<td><p>Clase que solo muestra el template de creacion de usuario</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#login.views.user_update" title="login.views.user_update"><code class="xref py py-obj docutils literal notranslate"><span class="pre">user_update</span></code></a>(request, name)</p></td>
+<td><p>Vista encargada de la modificacion de datos de los usuarios</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#login.views.users_access" title="login.views.users_access"><code class="xref py py-obj docutils literal notranslate"><span class="pre">users_access</span></code></a>(request)</p></td>
+<td><p>Vista para modificar el acceso de los usuarios al sistema, ademas hacer a un usuario gerente</p></td>
 </tr>
 </tbody>
 </table>
 <span class="target" id="module-login.views"></span><p>En este modulo se detalla la logica para las vistas que serán utilizadas por la app</p>
-<dl class="class">
-<dt id="login.views.LoginPage">
-<em class="property">class </em><code class="sig-prename descclassname">login.views.</code><code class="sig-name descname">LoginPage</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/login/views.html#LoginPage"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#login.views.LoginPage" title="Enlazar permanentemente con esta definición">¶</a></dt>
-<dd><p>Clase que solo muestra el template del login</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="login.views.Register">
-<em class="property">class </em><code class="sig-prename descclassname">login.views.</code><code class="sig-name descname">Register</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/login/views.html#Register"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#login.views.Register" title="Enlazar permanentemente con esta definición">¶</a></dt>
-<dd><p>Clase que solo muestra el template de creacion de usuario</p>
-</dd></dl>
-
 <dl class="function">
-<dt id="login.views.index">
-<code class="sig-prename descclassname">login.views.</code><code class="sig-name descname">index</code><span class="sig-paren">(</span><em class="sig-param">request</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/login/views.html#index"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#login.views.index" title="Enlazar permanentemente con esta definición">¶</a></dt>
-<dd><p>Funcion que solo muestra el index, validando antes si el usuario inicio sesion</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="login.views.logout">
-<code class="sig-prename descclassname">login.views.</code><code class="sig-name descname">logout</code><span class="sig-paren">(</span><em class="sig-param">request</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/login/views.html#logout"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#login.views.logout" title="Enlazar permanentemente con esta definición">¶</a></dt>
-<dd><p>Funcion que se encarga de cerrar la sesion del usuario</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="login.views.makeLogin">
-<code class="sig-prename descclassname">login.views.</code><code class="sig-name descname">makeLogin</code><span class="sig-paren">(</span><em class="sig-param">request</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/login/views.html#makeLogin"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#login.views.makeLogin" title="Enlazar permanentemente con esta definición">¶</a></dt>
-<dd><p>Funcion que se encarga de loguear al usuario</p>
+<dt id="login.views.admin">
+<code class="sig-prename descclassname">login.views.</code><code class="sig-name descname">admin</code><span class="sig-paren">(</span><em class="sig-param">request</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/login/views.html#admin"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#login.views.admin" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Vista que solo sera visible para el administrador</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parámetros</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>POST</strong><strong>[</strong><strong>email</strong><strong>]</strong> – Email del usuario</p></li>
-<li><p><strong>POST</strong><strong>[</strong><strong>password</strong><strong>]</strong> – Contraseña del usuario</p></li>
-</ul>
+<dd class="field-odd"><p><strong>request</strong> – objeto tipo diccionario que permite acceder a datos</p>
+</dd>
+<dt class="field-even">Devuelve</dt>
+<dd class="field-even"><p>objeto que se encarga de renderar admin.html</p>
+</dd>
+<dt class="field-odd">Tipo del valor devuelto</dt>
+<dd class="field-odd"><p>render</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="function">
-<dt id="login.views.postRegister">
-<code class="sig-prename descclassname">login.views.</code><code class="sig-name descname">postRegister</code><span class="sig-paren">(</span><em class="sig-param">request</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/login/views.html#postRegister"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#login.views.postRegister" title="Enlazar permanentemente con esta definición">¶</a></dt>
-<dd><p>Funcion que se encarga de registrar al usuario, espera un POST Request</p>
+<dt id="login.views.index">
+<code class="sig-prename descclassname">login.views.</code><code class="sig-name descname">index</code><span class="sig-paren">(</span><em class="sig-param">request</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/login/views.html#index"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#login.views.index" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Método que muestra el index, validando antes si el usuario inició sesión</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros</dt>
+<dd class="field-odd"><p><strong>request</strong> – objeto tipo diccionario que permite acceder a datos</p>
+</dd>
+<dt class="field-even">Devuelve</dt>
+<dd class="field-even"><p>objeto que se encarga de renderar admin.html, index.html o no_active.html</p>
+</dd>
+<dt class="field-odd">Tipo del valor devuelto</dt>
+<dd class="field-odd"><p>render</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="login.views.logout">
+<code class="sig-prename descclassname">login.views.</code><code class="sig-name descname">logout</code><span class="sig-paren">(</span><em class="sig-param">request</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/login/views.html#logout"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#login.views.logout" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Función que se encarga de cerrar la sesión del usuario</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros</dt>
+<dd class="field-odd"><p><strong>request</strong> – objeto tipo diccionario que permite acceder a datos</p>
+</dd>
+<dt class="field-even">Devuelve</dt>
+<dd class="field-even"><p>redireccion a la vista login</p>
+</dd>
+<dt class="field-odd">Tipo del valor devuelto</dt>
+<dd class="field-odd"><p>redirect</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="login.views.user_login">
+<code class="sig-prename descclassname">login.views.</code><code class="sig-name descname">user_login</code><span class="sig-paren">(</span><em class="sig-param">request</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/login/views.html#user_login"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#login.views.user_login" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Vista que se encarga de loguear al usuario</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros</dt>
+<dd class="field-odd"><p><strong>request</strong> – objeto tipo diccionario que permite acceder a datos</p>
+</dd>
+<dt class="field-even">Devuelve</dt>
+<dd class="field-even"><p>objeto que se encarga de renderar login.html</p>
+</dd>
+<dt class="field-odd">Devuelve</dt>
+<dd class="field-odd"><p>redirección a la vista index</p>
+</dd>
+<dt class="field-even">Tipo del valor devuelto</dt>
+<dd class="field-even"><p>render, redirect</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="login.views.user_register">
+<code class="sig-prename descclassname">login.views.</code><code class="sig-name descname">user_register</code><span class="sig-paren">(</span><em class="sig-param">request</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/login/views.html#user_register"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#login.views.user_register" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Vista que se encarga de registrar a un usuario</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros</dt>
+<dd class="field-odd"><p><strong>request</strong> – objeto tipo diccionario que permite acceder a datos</p>
+</dd>
+<dt class="field-even">Devuelve</dt>
+<dd class="field-even"><p>objeto que se encarga de renderar register.html</p>
+</dd>
+<dt class="field-odd">Tipo del valor devuelto</dt>
+<dd class="field-odd"><p>render</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="login.views.user_update">
+<code class="sig-prename descclassname">login.views.</code><code class="sig-name descname">user_update</code><span class="sig-paren">(</span><em class="sig-param">request</em>, <em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/login/views.html#user_update"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#login.views.user_update" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Vista encargada de la modificacion de datos de los usuarios</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parámetros</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>POST</strong><strong>[</strong><strong>email</strong><strong>]</strong> – Email del usuario nuevo</p></li>
-<li><p><strong>POST</strong><strong>[</strong><strong>password</strong><strong>]</strong> – Contraseña del usuario nuevo</p></li>
-<li><p><strong>POST</strong><strong>[</strong><strong>username</strong><strong>]</strong> – Nombre del usuario nuevo</p></li>
+<li><p><strong>request</strong> – objeto tipo diccionario que permite acceder a datos</p></li>
+<li><p><strong>name</strong> – nombre del usuario a modificar</p></li>
 </ul>
+</dd>
+<dt class="field-even">Devuelve</dt>
+<dd class="field-even"><p>objeto que se encarga de renderar user_update.html</p>
+</dd>
+<dt class="field-odd">Tipo del valor devuelto</dt>
+<dd class="field-odd"><p>render</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="login.views.users_access">
+<code class="sig-prename descclassname">login.views.</code><code class="sig-name descname">users_access</code><span class="sig-paren">(</span><em class="sig-param">request</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/login/views.html#users_access"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#login.views.users_access" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Vista para modificar el acceso de los usuarios al sistema, ademas hacer a un
+usuario gerente</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros</dt>
+<dd class="field-odd"><p><strong>request</strong> – objeto tipo diccionario que permite acceder a datos</p>
+</dd>
+<dt class="field-even">Devuelve</dt>
+<dd class="field-even"><p>objeto que se encarga de renderar access.html</p>
+</dd>
+<dt class="field-odd">Tipo del valor devuelto</dt>
+<dd class="field-odd"><p>render</p>
 </dd>
 </dl>
 </dd></dl>
@@ -143,8 +210,8 @@
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
   <h4>Tema anterior</h4>
-  <p class="topless"><a href="login.models.html"
-                        title="capítulo anterior">login.models</a></p>
+  <p class="topless"><a href="login.forms.html"
+                        title="capítulo anterior">login.forms</a></p>
   <h4>Próximo tema</h4>
   <p class="topless"><a href="login.LoginBackEnd.html"
                         title="próximo capítulo">login.LoginBackEnd</a></p>
@@ -182,7 +249,7 @@
           <a href="login.LoginBackEnd.html" title="login.LoginBackEnd"
              >siguiente</a> |</li>
         <li class="right" >
-          <a href="login.models.html" title="login.models"
+          <a href="login.forms.html" title="login.forms"
              >anterior</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">documentación de ItemManager - 1.0</a> &#187;</li> 
       </ul>
