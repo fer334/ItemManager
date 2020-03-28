@@ -11,6 +11,9 @@ from login.models import Usuario
 class ProyectoForm(forms.Form):
     """Formulario para la creación de Proyectos"""
 
+    def __init__(self, *args, **kwargs):
+        super(ProyectoForm, self).__init__(*args, **kwargs)
+
     nombre = forms.CharField(label='Nombre del Proyecto', max_length=200,
                              widget=forms.TextInput(attrs={'placeholder': 'Ej. Proyecto 1', 'size': 35}))
     fecha_inicio = forms.DateField(label='Fecha de Inicio', initial=timezone.now().date(),
@@ -34,6 +37,10 @@ class ProyectoForm(forms.Form):
 
 
 class RolForm(forms.Form):
+
+    def __init__(self, *args, **kwargs):
+        super(RolForm, self).__init__(*args, **kwargs)
+
     nombre = forms.CharField(required=True, widget=forms.TextInput(attrs={'placeholder': 'Ej. Aprobador',
                                                                           'class': 'form-control'}))
     crear_item = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs={'class': 'custom-control-input'}))

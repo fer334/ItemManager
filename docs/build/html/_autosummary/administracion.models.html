@@ -15,6 +15,7 @@
     <script src="../_static/translations.js"></script>
     <link rel="index" title="Índice" href="../genindex.html" />
     <link rel="search" title="Búsqueda" href="../search.html" />
+    <link rel="next" title="administracion.views" href="administracion.views.html" />
     <link rel="prev" title="login.test_urls" href="login.test_urls.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
@@ -26,6 +27,9 @@
         <li class="right" >
           <a href="../py-modindex.html" title="Índice de Módulos Python"
              >módulos</a> |</li>
+        <li class="right" >
+          <a href="administracion.views.html" title="administracion.views"
+             accesskey="N">siguiente</a> |</li>
         <li class="right" >
           <a href="login.test_urls.html" title="login.test_urls"
              accesskey="P">anterior</a> |</li>
@@ -67,22 +71,11 @@
 </tr>
 </tbody>
 </table>
-<span class="target" id="module-administracion.models"></span><dl class="class">
+<span class="target" id="module-administracion.models"></span><p>Mapeador objeto-relacional en el que es posible definir la estructura de la base de datos utilizando código Python.</p>
+<dl class="class">
 <dt id="administracion.models.Fase">
 <em class="property">class </em><code class="sig-prename descclassname">administracion.models.</code><code class="sig-name descname">Fase</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/administracion/models.html#Fase"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#administracion.models.Fase" title="Enlazar permanentemente con esta definición">¶</a></dt>
 <dd><p>Esta clase representa las fases</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parámetros</dt>
-<dd class="field-odd"><p><strong>nombre</strong> – Se almacena el nombre de la fase</p>
-</dd>
-</dl>
-<p>:type string
-:param descripcion: Descripcion de la fase
-:type string
-:param estado: Estado de la fase, iniciada, cerrada etc.
-:type string
-:param proyecto: Proyecto asociado a la fase
-:type Proyecto</p>
 <dl class="exception">
 <dt id="administracion.models.Fase.DoesNotExist">
 <em class="property">exception </em><code class="sig-name descname">DoesNotExist</code><a class="headerlink" href="#administracion.models.Fase.DoesNotExist" title="Enlazar permanentemente con esta definición">¶</a></dt>
@@ -92,6 +85,30 @@
 <dt id="administracion.models.Fase.MultipleObjectsReturned">
 <em class="property">exception </em><code class="sig-name descname">MultipleObjectsReturned</code><a class="headerlink" href="#administracion.models.Fase.MultipleObjectsReturned" title="Enlazar permanentemente con esta definición">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="attribute">
+<dt id="administracion.models.Fase.descripcion">
+<code class="sig-name descname">descripcion</code><a class="headerlink" href="#administracion.models.Fase.descripcion" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>descripcion: Descripcion de la fase</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="administracion.models.Fase.estado">
+<code class="sig-name descname">estado</code><a class="headerlink" href="#administracion.models.Fase.estado" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>estado: Estado de la fase, iniciada, cerrada etc.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="administracion.models.Fase.nombre">
+<code class="sig-name descname">nombre</code><a class="headerlink" href="#administracion.models.Fase.nombre" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>nombre: Se almacena el nombre de la fase</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="administracion.models.Fase.proyecto">
+<code class="sig-name descname">proyecto</code><a class="headerlink" href="#administracion.models.Fase.proyecto" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>proyecto: Proyecto asociado a la fase</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -125,21 +142,6 @@
 <dt id="administracion.models.Proyecto">
 <em class="property">class </em><code class="sig-prename descclassname">administracion.models.</code><code class="sig-name descname">Proyecto</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/administracion/models.html#Proyecto"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#administracion.models.Proyecto" title="Enlazar permanentemente con esta definición">¶</a></dt>
 <dd><p>Clase que representa a los proyectos que administrará el sistema con sus respectivos atributos</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parámetros</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>nombre</strong> – nombre del proyecto</p></li>
-<li><p><strong>fecha_inicio</strong> – fecha en la que el proyecto comienza</p></li>
-<li><p><strong>estado</strong> – estado actual del proyecto, puede variar entre iniciado, en ejecución, cancelado, finalizado</p></li>
-</ul>
-</dd>
-</dl>
-<p>:param numero_fases = cantidad de fases que tiene el proyecto
-:param cant_comite = cantidad de miembros que deberá tener el comité, debe ser impar y mayor o igual a 3
-:param fases: lista de fases del proyecto
-:param gerente: usuario que toma el rol de gerente del proyecto
-:param comite: conjunto impar de usuarios que conforma el comité para el proyecto
-:param participantes: equipo de usuarios que participa en el proyecto</p>
 <dl class="exception">
 <dt id="administracion.models.Proyecto.DoesNotExist">
 <em class="property">exception </em><code class="sig-name descname">DoesNotExist</code><a class="headerlink" href="#administracion.models.Proyecto.DoesNotExist" title="Enlazar permanentemente con esta definición">¶</a></dt>
@@ -149,6 +151,68 @@
 <dt id="administracion.models.Proyecto.MultipleObjectsReturned">
 <em class="property">exception </em><code class="sig-name descname">MultipleObjectsReturned</code><a class="headerlink" href="#administracion.models.Proyecto.MultipleObjectsReturned" title="Enlazar permanentemente con esta definición">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="attribute">
+<dt id="administracion.models.Proyecto.cant_comite">
+<code class="sig-name descname">cant_comite</code><a class="headerlink" href="#administracion.models.Proyecto.cant_comite" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>cant_comite = cantidad de miembros que deberá tener el comité, debe ser impar y mayor o igual a 3</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="administracion.models.Proyecto.comite">
+<code class="sig-name descname">comite</code><a class="headerlink" href="#administracion.models.Proyecto.comite" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>comite: conjunto impar de usuarios que conforma el comité para el proyecto</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="administracion.models.Proyecto.es_comite">
+<code class="sig-name descname">es_comite</code><span class="sig-paren">(</span><em class="sig-param">id_usuario</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/administracion/models.html#Proyecto.es_comite"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#administracion.models.Proyecto.es_comite" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>función booleana que retorna true si un usuario es parte del comité del proyecto</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros</dt>
+<dd class="field-odd"><p><strong>id_usuario</strong> – identificar unico del usuario del que se desea saber si es parte del comité</p>
+</dd>
+<dt class="field-even">Devuelve</dt>
+<dd class="field-even"><p>retorna True si forma parte y False en caso contrario</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="administracion.models.Proyecto.estado">
+<code class="sig-name descname">estado</code><a class="headerlink" href="#administracion.models.Proyecto.estado" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>estado: estado actual del proyecto, puede variar entre iniciado, en ejecución, cancelado, finalizado</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="administracion.models.Proyecto.fecha_inicio">
+<code class="sig-name descname">fecha_inicio</code><a class="headerlink" href="#administracion.models.Proyecto.fecha_inicio" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>fecha_inicio: fecha en la que el proyecto comienza</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="administracion.models.Proyecto.gerente">
+<code class="sig-name descname">gerente</code><a class="headerlink" href="#administracion.models.Proyecto.gerente" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>gerente: usuario que toma el rol de gerente del proyecto</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="administracion.models.Proyecto.nombre">
+<code class="sig-name descname">nombre</code><a class="headerlink" href="#administracion.models.Proyecto.nombre" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>nombre: nombre del proyecto</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="administracion.models.Proyecto.numero_fases">
+<code class="sig-name descname">numero_fases</code><a class="headerlink" href="#administracion.models.Proyecto.numero_fases" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>numero_fases = cantidad de fases que tiene el proyecto</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="administracion.models.Proyecto.participantes">
+<code class="sig-name descname">participantes</code><a class="headerlink" href="#administracion.models.Proyecto.participantes" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>participantes: equipo de usuarios que participa en el proyecto</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -229,6 +293,9 @@
   <h4>Tema anterior</h4>
   <p class="topless"><a href="login.test_urls.html"
                         title="capítulo anterior">login.test_urls</a></p>
+  <h4>Próximo tema</h4>
+  <p class="topless"><a href="administracion.views.html"
+                        title="próximo capítulo">administracion.views</a></p>
   <div role="note" aria-label="source link">
     <h3>Esta página</h3>
     <ul class="this-page-menu">
@@ -259,6 +326,9 @@
         <li class="right" >
           <a href="../py-modindex.html" title="Índice de Módulos Python"
              >módulos</a> |</li>
+        <li class="right" >
+          <a href="administracion.views.html" title="administracion.views"
+             >siguiente</a> |</li>
         <li class="right" >
           <a href="login.test_urls.html" title="login.test_urls"
              >anterior</a> |</li>

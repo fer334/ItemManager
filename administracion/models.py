@@ -10,21 +10,21 @@ class Proyecto(models.Model):
     """
     Clase que representa a los proyectos que administrará el sistema con sus respectivos atributos
     """
-    #: nombre: nombre del proyecto
+    #: nombre del proyecto
     nombre = models.CharField(max_length=200, null=False)
-    #: fecha_inicio: fecha en la que el proyecto comienza
+    #: fecha en la que el proyecto comienza
     fecha_inicio = models.DateField(auto_now=False, auto_now_add=False)
-    #: estado: estado actual del proyecto, puede variar entre iniciado, en ejecución, cancelado, finalizado
+    #: estado actual del proyecto, puede variar entre iniciado, en ejecución, cancelado, finalizado
     estado = models.CharField(max_length=200, default='iniciado')
-    #: numero_fases = cantidad de fases que tiene el proyecto
+    #: cantidad de fases que tiene el proyecto
     numero_fases = models.IntegerField(null=False)
-    #: cant_comite = cantidad de miembros que deberá tener el comité, debe ser impar y mayor o igual a 3
+    #: cantidad de miembros que deberá tener el comité, debe ser impar y mayor o igual a 3
     cant_comite = models.IntegerField(null=False)
-    #: gerente: usuario que toma el rol de gerente del proyecto
+    #: usuario que toma el rol de gerente del proyecto
     gerente = models.IntegerField(null=False)
-    #: comite: conjunto impar de usuarios que conforma el comité para el proyecto
+    #: conjunto impar de usuarios que conforma el comité para el proyecto
     comite = models.ManyToManyField('login.Usuario', related_name='usuario_login_comite')
-    #: participantes: equipo de usuarios que participa en el proyecto
+    #: equipo de usuarios que participa en el proyecto
     participantes = models.ManyToManyField('login.Usuario', related_name='usuario_login_participante')
 
     def __str__(self):
