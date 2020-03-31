@@ -18,6 +18,7 @@ Sistema de gestion de Items
    login.Register
    login.test_models
    login.test_urls
+   login.test_views
    administracion.models
    administracion.views
    administracion.forms
