@@ -19,7 +19,8 @@ Sistema de gestion de Items
    login.test_models
    login.test_urls
    administracion.models
-
+   administracion.views
+   administracion.forms
 
 Indices and tables
 ==================
