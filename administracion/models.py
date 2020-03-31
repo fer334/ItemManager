@@ -104,9 +104,16 @@ class PlantillaAtributo(models.Model):
 class Rol(models.Model):
     """
     Clase que representa los roles de los usuarios en los proyectos
-    :param Id_Rol: Identificador del Rol
-    :param Nombre: Nombre a ser asignado al Rol
-    :param Permisos: lista de permisos asociados a ese Rol
+    :param nombre: Nombre a ser asignado al Rol
+    :param proyecto: Proyecto asociado
+    :param crear_item: Items del proyecto
+    :param modificar_item: Cambios realizados a los items del proyecto
+    :param desactivar_item: Dejar inactivo un item
+    :param aprobar_item: Confirmar que el item es correcto
+    :param reversionar_item: Cambiar version de un item
+    :param crear_relaciones_ph:
+    :param crear_relaciones_as:
+    :param borrar_relaciones:
     """
     nombre = models.CharField(max_length=150, default='null')
     proyecto = models.ForeignKey(Proyecto, on_delete=models.CASCADE, null=True)
@@ -125,9 +132,11 @@ class Rol(models.Model):
 
 class UsuarioxRol(models.Model):
     """ Clase en la cual se definen los roles del usuario
-    :param Id: Identificador del rol correspondiente
-    :param Usuario: Usuario al cual le corresponde dicho rol
+
+    :param usuario: Usuario al cual le corresponde dicho rol
     :param rol: Rol del usuario
+    :param fase: Fase del proyecto al cual esta asociado el usuario
+    :param activo: 
     """
 
     usuario = models.ForeignKey('login.Usuario', on_delete=models.CASCADE)

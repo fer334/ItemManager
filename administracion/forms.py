@@ -37,7 +37,9 @@ class ProyectoForm(forms.Form):
 
 
 class RolForm(forms.Form):
-
+    """
+    Formulario para la creacion de Roles del Usuario
+    """
     def __init__(self, *args, **kwargs):
         super(RolForm, self).__init__(*args, **kwargs)
 

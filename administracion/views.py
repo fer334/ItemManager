@@ -275,6 +275,13 @@ def mostrar_tipo_item(request):
 
 
 def mostrar_tipo_import(request, id_proyecto):
+    """
+     Vista que en la cual se muestra los tipos de item del proyecto
+
+    :param tipo_item_proyecto_actual: Tipo de item que posee el proyecto
+    :param tipo_items: tipos de items del
+    :return redirecciona al url imṕortarTipoItem.html
+    """
     tipo_item_proyecto_actual = Proyecto.objects.get(pk=id_proyecto).tipoitem_set.all()
     tipo_items = [tipo for tipo in TipoItem.objects.all() if not (tipo in tipo_item_proyecto_actual)]
     return render(request, 'administracion/importarTipoItem.html',
@@ -282,6 +289,19 @@ def mostrar_tipo_import(request, id_proyecto):
 
 
 def importar_tipo(request, id_proyecto, id_tipo):
+    """
+    Vista que permite traer de otro proyecto su tipo de item con sus
+    respectivos atributos
+
+    :param request: objeto tipo diccionario que permite acceder a datos
+    :param id_proyecto: Identificador del proyecto
+    :param id_tipo: identificador del tipo de item
+    :param tipo_item: tipo de item correspondiente al proyecto
+    :param proyecto: proyecto asociado
+    :return: redireccion a los permisos de acceso, en este caso si el proyecto es
+    cancelado, finalizado o en ejecucion, deriva a un acceso denegado sino a
+    verProyecto.
+    """
     tipo_item = TipoItem.objects.get(pk=id_tipo)
     proyecto = Proyecto.objects.get(pk=id_proyecto)
     if proyecto.estado == 'cancelado' or proyecto.estado == 'finalizado' or proyecto.estado == 'en ejecución':
@@ -292,6 +312,17 @@ def importar_tipo(request, id_proyecto, id_tipo):
 
 
 def crear_tipo(request, id_proyecto):
+    """
+    Vista en la cual se crean los tipos de item de los proyectos
+
+    :param request:  objeto tipo diccionario que permite acceder a datos
+    :param id_proyecto: identificador del proyecto
+    :param proyecto: proyecto asociado
+    :return: redirecciona a los permisos de acceso si el proyecto  es
+    cancelado, finalizado o en ejecucion, deriva a un acceso denegado sino
+    redirecciona a crearTipoItem.html mediante el id_proyecto.
+
+    """
     proyecto = Proyecto.objects.get(pk=id_proyecto)
     if proyecto.estado == 'cancelado' or proyecto.estado == 'finalizado' or proyecto.estado == 'en ejecución':
         return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto]))
@@ -300,6 +331,16 @@ def crear_tipo(request, id_proyecto):
 
 
 def ver_tipo(request, id_proyecto, id_tipo):
+    """
+    Vista en la cual se ve los tipos de items del proyecto
+    :param request: objeto tipo diccionario que permite acceder a datos
+    :param id_proyecto: identificador del proyecto
+    :param id_tipo: identificador del tipo de item
+    :param obj_proyecto: objeto de tipo proyecto
+    :return: redirecciona a los permisos de acceso si el proyecto  es
+    cancelado, finalizado o en ejecucion, deriva a un acceso denegado sino
+    redirecciona al url verTipoItem.html
+    """
     obj_proyecto = Proyecto.objects.get(pk=id_proyecto)
     if obj_proyecto.estado == 'cancelado' or obj_proyecto.estado == 'finalizado':
         return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto]))
@@ -310,6 +351,17 @@ def ver_tipo(request, id_proyecto, id_tipo):
 
 
 def confirmar_tipo_import(request, id_proyecto, id_tipo):
+    """
+    Vista en la cual se confirma el tipo de item a utilizar
+    :param request: objeto tipo diccionario que permite acceder a datos
+    :param id_proyecto: identificador del proyecto
+    :param id_tipo: identificador del tipo de item
+    :param obj_proyecto: objeto tipo proyecto
+    :return:redirecciona a los permisos de acceso si el proyecto  es
+    cancelado, finalizado o en ejecucion, deriva a un acceso denegado sino
+    redirecciona al url verTipoItemParaImport.html para ver que tipos de items
+    importar.
+    """
     obj_proyecto = Proyecto.objects.get(pk=id_proyecto)
     if obj_proyecto.estado == 'cancelado' or obj_proyecto.estado == 'finalizado' or obj_proyecto.estado == 'en ejecución':
         return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto]))
@@ -320,6 +372,15 @@ def confirmar_tipo_import(request, id_proyecto, id_tipo):
 
 
 def ver_tipo_por_proyecto(request, id_proyecto):
+    """
+    Vista que permite ver el tipo de item por proyectos
+    :param request: objeto tipo diccionario que permite acceder a datos
+    :param id_proyecto: identificador del proyecto
+    :param proyecto: proyecto asociado
+    :return: redirecciona a los permisos de acceso si el proyecto  es
+    cancelado, finalizado o en ejecucion, deriva a un acceso denegado sino
+    redirecciona al url tipoItemTest.html
+    """
     proyecto = Proyecto.objects.get(pk=id_proyecto)
     if proyecto.estado == 'cancelado' or proyecto.estado == 'finalizado':
         return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto]))
@@ -329,6 +390,15 @@ def ver_tipo_por_proyecto(request, id_proyecto):
 
 
 def registrar_tipoitem_en_base(request, id_proyecto):
+    """
+    Vista en la cual se registran los tipos de item a utilizar en el proyecto
+    :param request: objeto tipo diccionario que permite acceder a datos
+    :param id_proyecto: identificador del proyecto
+    :param proyecto: proyecto asociado
+    :return: redirecciona a los permisos de acceso si el proyecto  es
+    cancelado, finalizado o en ejecucion, deriva a un acceso denegado sino
+    redirecciona a verTipoItem.
+    """
     proyecto = Proyecto.objects.get(pk=id_proyecto)
     if proyecto.estado == 'cancelado' or proyecto.estado == 'finalizado' or proyecto.estado == 'en ejecución':
         return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto]))
@@ -343,6 +413,13 @@ def registrar_tipoitem_en_base(request, id_proyecto):
 
 
 def crear_atributo(request, id_proyecto, id_tipo):
+    """
+    Vista en la cual se permite crear los atributos de los tipos de item del proyecto
+    :param request: objeto tipo diccionario que permite acceder a datos
+    :param id_proyecto: identificador del proyecto
+    :param id_tipo: identificador del tipo de item
+    :return: redireccion a verTipoItem
+    """
     nombre = request.POST['nombre']
     tipo = request.POST['tipo']
     tipo_item = TipoItem.objects.get(pk=id_tipo)
@@ -352,12 +429,31 @@ def crear_atributo(request, id_proyecto, id_tipo):
 
 
 def quitar_atributo(request, id_proyecto, id_tipo, id_atributo):
+    """
+    Vista que permite quitar los atributos de los tipos de item
+    :param request: objeto tipo diccionario que permite acceder a datos
+    :param id_proyecto: identificador del proyecto
+    :param id_tipo: identificador del tipo de item
+    :param id_atributo: identificador del atributo
+    :return: redirecciona a verTipoItem
+    """
     atributo = PlantillaAtributo.objects.get(pk=id_atributo)
     atributo.delete()
     return HttpResponseRedirect(reverse('administracion:verTipoItem', args=(id_proyecto, id_tipo)))
 
 
 def crear_rol(request, id_proyecto):
+    """
+    Vista en la cual se crean los roles del proyecto
+    :param request: objeto tipo diccionario que permite acceder a datos
+    :param id_proyecto:identificador del proyecto
+    :return: redirecciona a los permisos de acceso si el proyecto  es
+    cancelado, finalizado o en ejecucion, deriva a un acceso denegado sino
+    redirecciona primeramente a verProyecto si el metodo corresponde a 'POST'
+    y luego va al formulario correspondiente al rol y si es valido crean los roles
+    con sus respectivos permisos y atributos, y retorna al verProyecto, luego va de
+    al formulario para crear el nuevo rol y por ultmo redirecciona a crearRol.html
+    """
     proyecto = Proyecto.objects.get(pk=id_proyecto)
     if proyecto.estado == 'cancelado' or proyecto.estado == 'finalizado':
         return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto]))
@@ -386,6 +482,16 @@ def crear_rol(request, id_proyecto):
 
 
 def ver_roles_usuario(request, id_proyecto, id_usuario):
+    """
+    Vista en donde se ven los roles del usuario
+    :param request:  objeto tipo diccionario que permite acceder a datos
+    :param id_proyecto: identificador del proyecto
+    :param id_usuario: identificador del usuario
+    :return: redirecciona redirecciona a los permisos de acceso si el proyecto  es
+    cancelado, finalizado o en ejecucion, deriva a un acceso denegado sino
+    redirecciona a verDetallesRol.html en donde se ven los detalles de cada,
+    con los proyectos, participantes y los roles que les corresponden.
+    """
     proyecto = Proyecto.objects.get(pk=id_proyecto)
     if proyecto.estado == 'cancelado' or proyecto.estado == 'finalizado':
         return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto]))
@@ -402,6 +508,15 @@ def ver_roles_usuario(request, id_proyecto, id_usuario):
 
 
 def asignar_rol_por_fase(request, id_fase, id_usuario):
+    """
+    Vista que permite asignar roles por fase a un participante del proyecto
+    :param request: objeto tipo diccionario que permite acceder a datos
+    :param id_fase: identificador de fase
+    :param id_usuario: identificador del participante
+    :return: redeirecciona al url asignarRol.html en los cuales se muestran
+    el participante al cual asignar en cierta fase con la lista de roles
+    disponibles en sistema.
+    """
     participante = Usuario.objects.get(pk=id_usuario)
     fase = Fase.objects.get(pk=id_fase)
     lista_usr_x_rol = UsuarioxRol.objects.filter(usuario=participante, fase=fase, activo=True)
@@ -416,6 +531,15 @@ def asignar_rol_por_fase(request, id_fase, id_usuario):
 
 
 def registrar_rol_por_fase(request, id_fase, id_usuario, id_rol):
+    """
+    Vista en la cual se registran los roles de cada fase
+    :param request: objeto tipo diccionario que permite acceder a datos
+    :param id_fase: identificador de la fase
+    :param id_usuario: identificador del participante
+    :param id_rol: identificador del rol de la fase
+    :return: redirecciona a verRolesUsuario en donde se vera que el rol ha sido
+    asignado correctamente.
+    """
     fase = Fase.objects.get(pk=id_fase)
     rol = Rol.objects.get(pk=id_rol)
     usuario = Usuario.objects.get(pk=id_usuario)
@@ -430,6 +554,15 @@ def registrar_rol_por_fase(request, id_fase, id_usuario, id_rol):
 
 
 def desasignar_rol_al_usuario(request, id_fase, id_usuario, id_rol):
+    """
+    Vista en donde se desasignan roles al usuario.
+    :param request: objeto tipo diccionario que permite acceder a datos
+    :param id_fase: identificador de la fase
+    :param id_usuario: identificador del participante
+    :param id_rol: identificador del rol
+    :return: redirecciona a verRolesUsuario en donde se visualiza que el rol
+    fue desasignado al usuario.'
+    """
     fase = Fase.objects.get(pk=id_fase)
     usuario = Usuario.objects.get(pk=id_usuario)
     rol = Rol.objects.get(pk=id_rol)

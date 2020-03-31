@@ -5,7 +5,7 @@ from administracion import views
 app_name = 'administracion'
 urlpatterns = [
 
-    # URL DE PAO vamo a ver si me sale
+    # URL DE PAO
     path('roles/', views.Rol, name = 'roles' ),
     path('proyectos/<int:id_proyecto>/roles/crear/',views.crear_rol, name='crearRol'),
     path('proyectos/<int:id_proyecto>/usuario/<int:id_usuario>/roles', views.ver_roles_usuario, name='verRolesUsuario'),
