@@ -60,21 +60,14 @@ class Fase(models.Model):
 class TipoItem(models.Model):
     """
     Esta clase representa los tipos de items
-
-    :param nombre: Se almacena el nombre del tipo de item
-    :type string
-    :param descripcion: Descripcion del tipo de item
-    :type string
-    :param prefijo: Prefijo para mostrarse en todos los items instanciados de esta plantilla
-    :type string
-    :param proyecto: Proyecto asociado al Tipo de Item
-    :type Proyecto
-
     """
-
+    #: Se almacena el nombre del tipo de item
     nombre = models.CharField(max_length=200)
+    #: Descripcion del tipo de item
     descripcion = models.CharField(max_length=800)
+    #: Prefijo para mostrarse en todos los items instanciados de esta plantilla
     prefijo = models.CharField(max_length=5)
+    #: Proyecto asociado al Tipo de Item
     proyecto = models.ManyToManyField('Proyecto')
 
     def __str__(self):
@@ -85,16 +78,12 @@ class PlantillaAtributo(models.Model):
     """
     Esta clase representa las plantilla de atributos usada por el tipo de item
 
-    :param nombre: Se almacena el nombre del tipo de item
-    :type string
-    :param tipo: Tipo del item a ser instanciado
-    :type string
-    :param proyecto: TipoItem asociado a la plantilla
-    :type TipoItem
-
     """
+    #: Se almacena el nombre del tipo de item
     nombre = models.CharField(max_length=200)
+    #: Tipo del item a ser instanciado
     tipo = models.CharField(max_length=100)
+    #: TipoItem asociado a la plantilla
     tipo_item = models.ForeignKey(TipoItem, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -104,26 +93,26 @@ class PlantillaAtributo(models.Model):
 class Rol(models.Model):
     """
     Clase que representa los roles de los usuarios en los proyectos
-    :param nombre: Nombre a ser asignado al Rol
-    :param proyecto: Proyecto asociado
-    :param crear_item: Items del proyecto
-    :param modificar_item: Cambios realizados a los items del proyecto
-    :param desactivar_item: Dejar inactivo un item
-    :param aprobar_item: Confirmar que el item es correcto
-    :param reversionar_item: Cambiar version de un item
-    :param crear_relaciones_ph:
-    :param crear_relaciones_as:
-    :param borrar_relaciones:
     """
+    #: Nombre a ser asignado al Rol
     nombre = models.CharField(max_length=150, default='null')
+    #: Proyecto asociado
     proyecto = models.ForeignKey(Proyecto, on_delete=models.CASCADE, null=True)
+    #: Items del proyecto
     crear_item = models.BooleanField(default=False)
+    #: Cambios realizados a los items del proyecto
     modificar_item = models.BooleanField(default=False)
+    #: Dejar inactivo un item
     desactivar_item = models.BooleanField(default=False)
+    #: Confirmar que el item es correcto
     aprobar_item = models.BooleanField(default=False)
+    #: Cambiar version de un item
     reversionar_item = models.BooleanField(default=False)
+    #:
     crear_relaciones_ph = models.BooleanField(default=False)
+    #:
     crear_relaciones_as = models.BooleanField(default=False)
+    #:
     borrar_relaciones = models.BooleanField(default=False)
 
     def __str__(self):
@@ -131,17 +120,16 @@ class Rol(models.Model):
 
 
 class UsuarioxRol(models.Model):
-    """ Clase en la cual se definen los roles del usuario
-
-    :param usuario: Usuario al cual le corresponde dicho rol
-    :param rol: Rol del usuario
-    :param fase: Fase del proyecto al cual esta asociado el usuario
-    :param activo: 
     """
-
+    Clase en la cual se definen los roles del usuario
+    """
+    #: Usuario al cual le corresponde dicho rol
     usuario = models.ForeignKey('login.Usuario', on_delete=models.CASCADE)
+    #: Rol del usuario
     rol = models.ForeignKey(Rol, on_delete=models.CASCADE)
+    #: Fase del proyecto al cual esta asociado el usuario
     fase = models.ForeignKey(Fase, on_delete=models.CASCADE)
+    #:
     activo = models.BooleanField(default=True)
 
     def __str__(self):
