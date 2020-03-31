@@ -7,6 +7,9 @@ from django.db import models
 
 
 # Create your models here.
+from administracion.models import Proyecto
+
+
 class Usuario(AbstractUser):
     """
     Clase que representa al usuario en la base de datos local que extiende del
@@ -28,3 +31,14 @@ class Usuario(AbstractUser):
         "Gerente",
         default=False
     )
+
+    def es_participante(self):
+        """
+        Metodo que comprueba que el usuario participa o no de algun proyecto
+
+        :return: retorna True si forma participa y False en caso contrario
+        """
+        if Proyecto.objects.filter(participantes=self.id).count() == 0:
+            return False
+        else:
+            return True

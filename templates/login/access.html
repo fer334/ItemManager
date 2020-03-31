@@ -28,31 +28,37 @@
                             <td>
                                 <label> {{ usuario.email }}</label>
                             </td>
+                            {% if usuario.es_participante %}
+                                <td colspan="2">
+                                <h6 class="text">Usuario participante</h6>
+                                </td>
+                            {% else %}
+                                <td>
+                                    <input name={{usuario.id}}
+                                           type="checkbox"
+                                           value=True
+                                           {% if usuario.is_active%}
+                                               checked
+                                           {% endif %}
+                                    >
+                                </td>
+                                <td>
+                                    <input name="g{{usuario.id}}"
+                                           type="checkbox"
+                                           value=True
+                                           {% if usuario.is_gerente%}
+                                               checked
+                                           {% endif %}
+                                    >
+                                </td>
+                            {% endif %}
                             <td>
-                                <input name={{usuario.id}}
-                                       type="checkbox"
-                                       value=True
-                                       {% if usuario.is_active%}
-                                           checked
-                                       {% endif %}
-                                >
-                            </td>
-                            <td>
-                                <input name="g{{usuario.id}}"
-                                       type="checkbox"
-                                       value=True
-                                       {% if usuario.is_gerente%}
-                                           checked
-                                       {% endif %}
-                                >
-                            </td>
-                            <td>
-                                <button type="button"
+                                <a type="button"
                                         class="btn btn-primary"
-                                        href={% url 'login:userUpdate' usuario%}
-                                        btn-lg btn-block>
+                                        href={% url 'login:userUpdate' usuario %}
+                                        >
                                         Editar
-                                </button>
+                                </a>
                             </td>
                         </tr>
                     {% endfor %}
