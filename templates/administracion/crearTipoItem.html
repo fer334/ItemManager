@@ -20,9 +20,7 @@
             </div>
             <div>
                 <button type="submit" class="btn btn-primary">Crear</button>
-                o
-                <a href="{% url 'administracion:importarTipoItem' id_proyecto %}" class="btn btn-primary">Importar</a>
-                <a href="{% url 'administracion:verProyecto' id_proyecto %}" class="btn btn-secondary float-right">Volver al proyecto</a>
+                <a href="{% url 'administracion:tipoItemPorProyecto' id_proyecto %}" class="btn btn-secondary float-right">Volver a administracion de tipos</a>
             </div>
 
         </form>

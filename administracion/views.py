@@ -374,8 +374,10 @@ def desactivar_tipo_item(request, id_proyecto, id_tipo):
     :return: redirecciona a la vista de administracion del tipo de item
     """
     tipo_item = TipoItem.objects.get(pk=id_tipo)
-    TipoItem.proyecto.remove(tipo_item)
+    proyecto = Proyecto.objects.get(pk=id_proyecto)
+    tipo_item.proyecto.remove(proyecto)
     return redirect('administracion:tipoItemPorProyecto', id_proyecto=id_proyecto)
+
 
 def confirmar_tipo_import(request, id_proyecto, id_tipo):
     """
