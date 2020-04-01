@@ -226,7 +226,7 @@ def estado_proyecto(request, id_proyecto):
         proyecto.save()
         return HttpResponseRedirect(reverse('administracion:estadoProyecto', args=[id_proyecto]))
 
-    return render(request, 'administracion/estadoProyecto.html',
+    return render(request, 'administracion/estadoProyecto2.html',
                   {'proyecto': proyecto, 'habilitadofase': habilitadofase, 'habilitadocomite':habilitadocomite,
                    'estado': estado})
 
@@ -520,7 +520,6 @@ def crear_rol(request, id_proyecto):
     :param id_proyecto: identificador del proyecto
     :return: redirecciona a los permisos de acceso si el proyecto  es cancelado, finalizado o en ejecucion, deriva a un acceso denegado sino redirecciona primeramente a verProyecto si el metodo corresponde a 'POST' y luego va al formulario correspondiente al rol y si es valido crean los roles con sus respectivos permisos y atributos, y retorna al verProyecto, luego va de al formulario para crear el nuevo rol y por ultmo redirecciona a crearRol.html
     """
-
     proyecto = Proyecto.objects.get(pk=id_proyecto)
     if proyecto.estado == 'cancelado' or proyecto.estado == 'finalizado':
         return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto]))
@@ -549,6 +548,12 @@ def crear_rol(request, id_proyecto):
 
 
 def administrar_roles(request, id_proyecto):
+    """
+    Vista que muestra los datos y acciones relacionadas a los roles
+    :param request: objeto tipo diccionario que permite acceder a datos
+    :param id_proyecto:  identificador del proyecto
+    :return: render de la vista de administracion de roles
+    """
     proyecto = Proyecto.objects.get(pk=id_proyecto)
     return render(request, 'administracion/administrarRoles.html', {'proyecto': proyecto})
 
@@ -562,7 +567,6 @@ def desactivar_rol_proyecto(request, id_proyecto, id_rol):
     :param id_rol: identificador del rol
     :return: redirecciona a la vista de administracion de roles
     """
-
     rol = Rol.objects.get(pk=id_rol)
     proyecto = Proyecto.objects.get(pk=id_proyecto)
     if proyecto.estado == 'iniciado' and rol.usuarioxrol_set.all().count() == 0:

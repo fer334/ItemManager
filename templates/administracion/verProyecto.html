@@ -1,113 +1,113 @@
 {% extends 'login/loginHeader.html' %}
 {% block content %}
-    <div class="container">
-        <h2 class="text-center pt-3 mb-3">{{ proyecto.nombre }}</h2>
-        <div class="row">
-            <table class="table table-hover col-sm-12">
-                <tbody>
-                    <tr class="table-primary">
-                        <td>Estado: </td><td>{{estado}}</td>
-                    </tr>
-                    <tr class="table-default">
-                        <td>Fecha de Inicio: </td><td>{{proyecto.fecha_inicio}}</td>
-                    </tr>
-                    <tr class="table-primary">
-                        <td>Gerente del Proyecto </td><td>{{gerente}}</td>
-                    </tr>
-                    <tr class="table-default">
-                        <td>Miembros del Comité</td>
-                        <td>
-                            <ul>
-                                {% for miembro in proyecto.comite.all %}
-                                    <li>{{ miembro }}</li>
-                                {% endfor %}
-                            </ul>
-                        </td>
-                    </tr><tr class="table-primary">
-                        <td>Participantes</td>
-                        <td>
-                            <ul>
-                                {% for participante in proyecto.participantes.all %}
-                                    <li>{{ participante }}</li>
-                                {% endfor %}
-                            </ul>
-                        </td>
-                    </tr>
-                    <tr class="table-default">
-                        <td>Tipos de Item</td>
-                        <td>
-                            <ul>
-                                {% for tipoItem in tipo_item %}
-                                    <li>{{ tipoItem.nombre }}</li>
-                                {% endfor %}
-                            </ul>
-                        </td>
-                    </tr>
-                    <tr class="table-primary">
-                        <td>Fases</td>
-                        <td>
-                            <ul>
-                                {% for fase in fases %}
-                                    {% if fase.nombre == '' %}
-                                        <li>Nombre Indefinido</li>
-                                    {% else %}
-                                        <li>{{ fase.nombre }}</li>
-                                    {% endif %}
-                                {% endfor %}
-                            </ul>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        <div class="mt-5">
-            {% if proyecto.estado != 'cancelado' %}
-                <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="false">
-                    Acciones
-                </button>
-                <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                    {% if proyecto.estado == 'iniciado' %}
+    <div class="container h-100">
+        <div class="shadow-lg p-3 mb-5 bg-white rounded mt-5">
+            <h2 class="text-center pt-3 mb-3">{{ proyecto.nombre }}</h2>
+                <table class="table">
+                    <tbody>
+                        <tr class="">
+                            <td>Estado </td><td>{{estado}}</td>
+                        </tr>
+                        <tr class="">
+                            <td>Fecha de Inicio </td><td>{{proyecto.fecha_inicio}}</td>
+                        </tr>
+                        <tr class="table">
+                            <td>Gerente del Proyecto </td><td>{{gerente}}</td>
+                        </tr>
+                        <tr class="">
+                            <td>Miembros del Comité</td>
+                            <td>
+                                <ul>
+                                    {% for miembro in proyecto.comite.all %}
+                                        <li>{{ miembro }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </td>
+                        </tr><tr class="">
+                            <td>Participantes</td>
+                            <td>
+                                <ul>
+                                    {% for participante in proyecto.participantes.all %}
+                                        <li>{{ participante }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr class="">
+                            <td>Tipos de Item</td>
+                            <td>
+                                <ul>
+                                    {% for tipoItem in tipo_item %}
+                                        <li>{{ tipoItem.nombre }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr class="">
+                            <td>Fases</td>
+                            <td>
+                                <ul>
+                                    {% for fase in fases %}
+                                        {% if fase.nombre == '' %}
+                                            <li>Nombre Indefinido</li>
+                                        {% else %}
+                                            <li>{{ fase.nombre }}</li>
+                                        {% endif %}
+                                    {% endfor %}
+                                </ul>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="mt-5">
+                {% if proyecto.estado != 'cancelado' %}
+                    <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">
+                        Acciones
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                        {% if proyecto.estado == 'iniciado' %}
+                                <a class="list-group-item dropdown-item"
+                                   href="{% url 'administracion:tipoItemPorProyecto' proyecto.id %}" role="button">
+                                    Administrar Tipo de Item
+                                </a>
+                            {% else %}
+                                <a class="list-group-item dropdown-item disabled" role="button">
+                                    Administrar Tipo de Item <h6 style="color: #f57900">(solo en estado iniciado)</h6>
+                                </a>
+                            {% endif %}
                             <a class="list-group-item dropdown-item"
-                               href="{% url 'administracion:tipoItemPorProyecto' proyecto.id %}" role="button">
-                                Administrar Tipo de Item
+                               href="{% url 'administracion:administrarParticipantes' proyecto.id %}" role="button">
+                                Administrar Participantes
                             </a>
-                        {% else %}
-                            <a class="list-group-item dropdown-item disabled" role="button">
-                                Administrar Tipo de Item <h6 style="color: #f57900">(solo en estado iniciado)</h6>
+                            <a class="list-group-item dropdown-item {% if  proyecto.estado == 'finalizado' %}disabled{% endif %}"
+                               href="{% url 'administracion:administrarComite' proyecto.id %}" role="button">
+                                Administrar Miembros del Comité
                             </a>
-                        {% endif %}
-                        <a class="list-group-item dropdown-item"
-                           href="{% url 'administracion:administrarParticipantes' proyecto.id %}" role="button">
-                            Administrar Participantes
-                        </a>
-                        <a class="list-group-item dropdown-item {% if  proyecto.estado == 'finalizado' %}disabled{% endif %}"
-                           href="{% url 'administracion:administrarComite' proyecto.id %}" role="button">
-                            Administrar Miembros del Comité
-                        </a>
-                        <a class="list-group-item dropdown-item {% if  proyecto.estado == 'finalizado' %}disabled{% endif %}"
-                           href="{% url 'administracion:estadoProyecto' proyecto.id %}" role="button">
-                            Modificar Estado del Proyecto
-                        </a>
-                        <a class="list-group-item dropdown-item {% if  proyecto.estado == 'finalizado' %}disabled{% endif %}"
-                           href="{% url 'administracion:editarProyecto' proyecto.id %}" role="button">
-                            Modificar datos del Proyecto
-                        </a>
-                        <a class="list-group-item dropdown-item {% if  proyecto.estado == 'finalizado' %}disabled{% endif %}"
-                           href="{% url 'administracion:administrarFasesProyecto' proyecto.id %}" role="button">
-                            Administrar Fases del Proyecto
-                        </a>
-                        <a class="list-group-item dropdown-item"
-                           href="{% url 'administracion:administrarRoles' proyecto.id %}" role="button">
-                            Administrar roles
-                        </a>
-                </div>
-            {% else %}
-                <h5 style="color: #c60f0f">Proyecto Cancelado: No se permiten acciones</h5>
-            {% endif %}
-            <a class="btn btn-primary float-right" href="{% url 'administracion:proyectos' 'todos'%}" role="button">
-                Volver a Lista de Proyectos
-            </a>
-        </div>
+                            <a class="list-group-item dropdown-item {% if  proyecto.estado == 'finalizado' %}disabled{% endif %}"
+                               href="{% url 'administracion:estadoProyecto' proyecto.id %}" role="button">
+                                Modificar Estado del Proyecto
+                            </a>
+                            <a class="list-group-item dropdown-item {% if  proyecto.estado == 'finalizado' %}disabled{% endif %}"
+                               href="{% url 'administracion:editarProyecto' proyecto.id %}" role="button">
+                                Modificar datos del Proyecto
+                            </a>
+                            <a class="list-group-item dropdown-item {% if  proyecto.estado == 'finalizado' %}disabled{% endif %}"
+                               href="{% url 'administracion:administrarFasesProyecto' proyecto.id %}" role="button">
+                                Administrar Fases del Proyecto
+                            </a>
+                            <a class="list-group-item dropdown-item"
+                               href="{% url 'administracion:administrarRoles' proyecto.id %}" role="button">
+                                Administrar roles
+                            </a>
+                    </div>
+                {% else %}
+                    <h5 style="color: #c60f0f">Proyecto Cancelado: No se permiten acciones</h5>
+                {% endif %}
+                <a class="btn btn-primary float-right" href="{% url 'administracion:proyectos' 'todos'%}" role="button">
+                    Volver a Lista de Proyectos
+                </a>
+            </div>
         </div>
     </div>
 {% endblock %}

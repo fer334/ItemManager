@@ -6,20 +6,18 @@
             <h4>Estado actual: {{estado}}</h4>
         <h3 class="text-center pt-3 mb-3">Nuevo Estado:</h3>
         {% if habilitadofase == False or habilitadocomite == False %}
-            <h6 style="color: #c4a000">CONSEJOS:</h6>
-            <h6 style="color: #c4a000">
             {% if habilitadofase == False %}
-                <li> Debe Definir los nombres de las
+                <div class="alert alert-warning"> Debe Definir los nombres de las
                         <a href="{% url 'administracion:administrarFasesProyecto' proyecto.id %}" style="color: #8f5902">fases</a>
                         antes de poder pasar a estado de ejecución
-                    </li>
+                </div>
             {% endif %}
             {% if habilitadocomite == False %}
-                    <li>
+                    <div class="alert alert-warning">
                         Debe asignar a los miembros del
                         <a href="{% url 'administracion:administrarComite' proyecto.id %}" style="color: #8f5902">comité</a>
                         antes de poder pasar a estado de ejecución
-                    </li>
+                    </div>
             {% endif %}
             </h6>
         {% endif %}
@@ -52,15 +50,24 @@
                     </div>
                 </div>
             </div>
-
-            <div class="mt-5">
-                <button type="submit" class="btn btn-primary"
-                    {% if proyecto.estado == 'cancelado' or proyecto.estado == 'finalizado'%}
-                        disabled=""
-                    {% endif %}>Modificar
-                </button>
-                <a class="btn btn-primary float-right" href="{% url 'administracion:verProyecto' proyecto.id %}" role="button">Volver atrás</a>
-            </div>
         </form>
+        <div class="mt-5">
+            {% if proyecto.estado == 'iniciado' %}
+                <a href="#" class="btn btn-primary">Pasar a en ejecucion</a>
+                <a href="#" class="btn btn-danger">Pasar a cancelado</a>
+            {% endif %}
+            {% if proyecto.estado == 'en ejecucion' %}
+                <a href="#" class="btn btn-primary">Pasar a finalizado</a>
+                <a href="#" class="btn btn-danger">Pasar a cancelado</a>
+            {% endif %}
+        </div>
+        <div class="mt-5">
+            <button type="submit" class="btn btn-primary"
+                {% if proyecto.estado == 'cancelado' or proyecto.estado == 'finalizado'%}
+                    disabled=""
+                {% endif %}>Modificar
+            </button>
+            <a class="btn btn-primary float-right" href="{% url 'administracion:verProyecto' proyecto.id %}" role="button">Volver atrás</a>
+        </div>
     </div>
 {% endblock %}
