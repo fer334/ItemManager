@@ -25,8 +25,35 @@ class ActiveAccountMiddleware:
             if True not in [request.user.is_active, request.user.is_superuser]:
                 if request.path not in [
                     reverse('login:index'),
+                    reverse('login:AccesoDenegado'),
                     reverse('login:logout')
                 ]:
-                    return redirect('login:index')
+                    return redirect('login:AccesoDenegado')
+        response = self.get_response(request)
+        return response
+
+
+class GerenteAccountMiddleware:
+    """
+    Account access middleware.
+
+    Mediador para solicitudes que involucren a las cuentas gerentes.
+    """
+
+    def __init__(self, get_response):
+        """Inicializador del Middleware."""
+        self.get_response = get_response
+
+    def __call__(self, request):
+        """
+        Código que se ejecutará para cada request antes de que se llame a la vista.
+        """
+
+        if not request.user.is_anonymous:
+            if not request.user.is_gerente:
+                if request.path in [
+                    reverse('administracion:crearProyecto')
+                ]:
+                    return redirect('login:AccesoDenegado')
         response = self.get_response(request)
         return response
