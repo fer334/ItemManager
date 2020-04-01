@@ -32,6 +32,23 @@
                                 <td colspan="2">
                                 <h6 class="text">Usuario participante</h6>
                                 </td>
+                                <input name={{usuario.id}}
+                                       type="checkbox"
+                                       value=True
+                                       hidden="true"
+                                       {% if usuario.is_active%}
+                                           checked
+                                       {% endif %}
+                                >
+                                <input name="g{{usuario.id}}"
+                                       type="checkbox"
+                                       value=True
+                                       hidden="true"
+                                       {% if usuario.is_gerente%}
+                                           checked
+                                       {% endif %}
+                                >
+
                             {% else %}
                                 <td>
                                     <input name={{usuario.id}}

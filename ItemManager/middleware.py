@@ -50,7 +50,7 @@ class GerenteAccountMiddleware:
         """
 
         if not request.user.is_anonymous:
-            if not request.user.is_gerente:
+            if not request.user.is_gerente and not request.user.is_superuser:
                 username = request.user.username
                 if request.path not in [
                     reverse('login:index'),
