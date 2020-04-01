@@ -48,7 +48,11 @@
                         <td>
                             <ul>
                                 {% for fase in fases %}
-                                    <li>{{ fase.nombre }}</li>
+                                    {% if fase.nombre == '' %}
+                                        <li>Nombre Indefinido</li>
+                                    {% else %}
+                                        <li>{{ fase.nombre }}</li>
+                                    {% endif %}
                                 {% endfor %}
                             </ul>
                         </td>
@@ -99,6 +103,9 @@
             {% else %}
                 <h5 style="color: #c60f0f">Proyecto Cancelado: No se permiten acciones</h5>
             {% endif %}
+            <a class="btn btn-primary" href="{% url 'administracion:proyectos' 'todos'%}" role="button">
+                    Volver a Lista de Proyectos
+            </a>
         </div>
 
     </div>
