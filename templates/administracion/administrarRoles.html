@@ -1,0 +1,49 @@
+{% extends 'login/loginHeader.html' %}
+{% block content %}
+    <div class="container">
+        <h1 class="text-center pt-3 mb-5">Administración de Roles - {{ proyecto.nombre }}</h1>
+            {% if mensaje_error %}
+            <div class="alert alert-danger">
+                {{ mensaje_error }}
+            </div>
+            {% endif %}
+        <table class="table table-hover col-sm-12">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Permisos</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for rol in proyecto.rol_set.all %}
+                    {% if rol.activo %}
+                        <tr>
+                            <td>{{ rol.nombre }}</td>
+                            <td>
+                                <ul class="list">
+                                    {% for permiso in rol.get_permisos %}
+                                        <li>{{permiso}}</li>
+                                    {% endfor %}
+                                </ul>
+                            </td>
+                            <td>
+                                <a
+                                {% if proyecto.estado == 'iniciado' %}
+                                    href="{% url 'administracion:desactivarRol' proyecto.id rol.id %}" class="btn btn-danger"
+                                {% else %}
+                                    href="{% url '#' %}" class="btn btn-secondary"
+                                {% endif %}
+                                >Desactivar rol</a>
+                            </td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="mt-5">
+            <a href="{% url 'administracion:crearRol' proyecto.id %}" class="btn btn-primary">Agregar rol</a>
+            <a class="btn btn-primary float-right" href="{% url 'administracion:verProyecto' proyecto.id %}">Volver a datos del proyecto {{ proyecto.nombre }}</a>
+        </div>
+    </div>
+{% endblock %}
