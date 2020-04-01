@@ -2,6 +2,11 @@
 {% block content %}
     <div class="container">
         <h1 class="text-center pt-3 mb-5">Administración de Tipos de item - {{ proyecto.nombre }}</h1>
+            {% if mensaje_error %}
+            <div class="alert alert-danger">
+                {{ mensaje_error }}
+            </div>
+            {% endif %}
         <table class="table table-hover col-sm-12">
             <thead>
                 <tr>
@@ -18,9 +23,15 @@
                         <td>{{ tipo_item.nombre }}</td>
                         <td>{{ tipo_item.descripcion }}</td>
                         <td>
-                            <a href="{% url 'administracion:editarTipoItem' proyecto.id tipo_item.id %}" class="btn btn-secondary">Editar</a>
-                            <a href="{% url 'administracion:verTipoItem' proyecto.id tipo_item.id %}" class="btn btn-secondary">Editar atributos</a>
-                            <a href="{% url 'administracion:desactivarTipoItem' proyecto.id tipo_item.id %}" class="btn btn-secondary">Desactivar</a>
+                            <a
+                            {% if tipo_item.proyecto.all.count > 1 %}
+                                href="#" class="btn btn-secondary"
+                            {% else %}
+                                href="{% url 'administracion:editarTipoItem' proyecto.id tipo_item.id %}" class="btn btn-info"
+                            {% endif %}
+                            >Editar</a>
+                            <a href="{% url 'administracion:verTipoItem' proyecto.id tipo_item.id %}" class="btn btn-info">Editar atributos</a>
+                            <a href="{% url 'administracion:desactivarTipoItem' proyecto.id tipo_item.id %}" class="btn btn-info">Desactivar</a>
                         </td>
                     </tr>
                 {% endfor %}
