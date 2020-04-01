@@ -18,7 +18,10 @@
                     {% for miembro in proyecto.comite.all %}
                     <tr>
                         <td>{{ miembro }}</td>
-                        <td><a class="btn btn-danger" href="{% url 'administracion:desasignarUsuario' proyecto.id miembro.id 'comite' %}">Quitar del comite</a></td>
+                        <td><a class="btn btn-danger {% if proyecto.estado == 'en ejecucion' %}disabled{% endif %}"
+                               href="{% url 'administracion:desasignarUsuario' proyecto.id miembro.id 'comite' %}">
+                            Quitar del comite
+                        </a></td>
                     </tr>
                     {% endfor %}
                 </tbody>

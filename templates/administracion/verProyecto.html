@@ -103,10 +103,10 @@
             {% else %}
                 <h5 style="color: #c60f0f">Proyecto Cancelado: No se permiten acciones</h5>
             {% endif %}
-            <a class="btn btn-primary" href="{% url 'administracion:proyectos' 'todos'%}" role="button">
-                    Volver a Lista de Proyectos
-            </a>
         </div>
+        <a class="btn btn-primary float-right" href="{% url 'administracion:proyectos' 'todos'%}" role="button">
+            Volver a Lista de Proyectos
+        </a>
 
     </div>
 {% endblock %}
