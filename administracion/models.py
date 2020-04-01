@@ -37,7 +37,19 @@ class Proyecto(models.Model):
         :param id_usuario: identificar unico del usuario del que se desea saber si es parte del comité
         :return: retorna True si forma parte y False en caso contrario
         """
-        for usuario in self.comite:
+        for usuario in self.comite.all():
+            if usuario.id == id_usuario:
+                return True
+        return False
+
+    def es_participante(self, id_usuario):
+        """
+        función booleana para saber si un usuario es participante del proyecto
+
+        :param id_usuario: identificador único del usuario el cual se quiere saber si es participante del proyecto
+        :return: True si es participante y False en caso contrario
+        """
+        for usuario in self.participantes.all():
             if usuario.id == id_usuario:
                 return True
         return False
@@ -47,13 +59,13 @@ class Fase(models.Model):
     """
     Esta clase representa las fases
     """
-    #: nombre: Se almacena el nombre de la fase
+    #: Se almacena el nombre de la fase
     nombre = models.CharField(max_length=200, null=False)
-    #: descripcion: Descripcion de la fase
+    #: Descripcion de la fase
     descripcion = models.CharField(max_length=400, null=True)
-    #: estado: Estado de la fase, iniciada, cerrada etc.
+    #: Estado de la fase, iniciada, cerrada etc.
     estado = models.CharField(max_length=200, default='abierta')
-    #: proyecto: Proyecto asociado a la fase
+    #: Proyecto asociado a la fase
     proyecto = models.ForeignKey(Proyecto, on_delete=models.CASCADE)
 
 

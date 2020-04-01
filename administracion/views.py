@@ -42,21 +42,33 @@ def index_administracion(request):
 def proyectos(request, filtro):
     """
     Vista que despliega la lista de proyectos con su estado actual, también permite filtrar
-    los proyectos según estado
+    los proyectos según estado, además solo muestra los proyectos donde participa el usuario que hizo el request
 
     :param request: objeto tipo diccionario que permite acceder a datos
     :param filtro: este parámetro indica el estado según se filtrarán los proyectos. Si el valor es 'todos' no se aplicará ningún filtro
     :return: objeto que se encarga de renderear proyectos.html
     :rtype: render
     """
+    # lista final de proyectos con filtros de estado aplicados
     lista_proyectos = []
+    # lista con los proyectos en los que participa el usuario
+    lista_proyectos_usuario = []
+    # lista sin ningún filtro de todos los proyectos del sistema
     lista_todos_proyectos = Proyecto.objects.all()
+
+    # mostrar solo en los que el usuario participa
+    for proye in lista_todos_proyectos:
+        if proye.es_participante(request.user.id):
+            lista_proyectos_usuario.append(proye)
+
+    # filtrar según estado
     if filtro == 'todos':
-        lista_proyectos = lista_todos_proyectos
+        lista_proyectos = lista_proyectos_usuario
     else:
-        for proyecto in lista_todos_proyectos:
+        for proyecto in lista_proyectos_usuario:
             if proyecto.estado == filtro:
                 lista_proyectos.append(proyecto)
+
     return render(request, 'administracion/proyectos.html', {'lista_proyectos': lista_proyectos, 'filtro': filtro})
 
 
