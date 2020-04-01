@@ -127,8 +127,16 @@ def ver_proyecto(request, id_proyecto):
     gerente = Usuario.objects.get(pk=proyecto.gerente)
     tipo_item = proyecto.tipoitem_set.all()
     fases = proyecto.fase_set.all().order_by('id')
+    estados_posibles = {
+        'iniciado': 'Iniciado',
+        'en ejecucion': 'En Ejecución',
+        'finalizado': 'Finalizado',
+        'cancelado': 'Cancelado',
+    }
+    estado = estados_posibles.get(proyecto.estado)
+
     return render(request, 'administracion/verProyecto.html',
-                  {'proyecto': proyecto, 'gerente': gerente, 'tipo_item': tipo_item, 'fases': fases})
+                  {'proyecto': proyecto, 'gerente': gerente, 'tipo_item': tipo_item, 'fases': fases, 'estado':estado})
 
 
 def administrar_participantes(request, id_proyecto):
@@ -190,6 +198,14 @@ def estado_proyecto(request, id_proyecto):
     """
     proyecto = Proyecto.objects.get(pk=id_proyecto)
     habilitado = True
+    estados_posibles = {
+        'iniciado': 'Iniciado',
+        'en ejecucion': 'En Ejecución',
+        'finalizado': 'Finalizado',
+        'cancelado': 'Cancelado',
+    }
+    estado = estados_posibles.get(proyecto.estado)
+
     lista_fases = proyecto.fase_set.all()
     for fase in lista_fases:
         if fase.nombre.find('Nombre Indefinido') != -1:
@@ -200,7 +216,8 @@ def estado_proyecto(request, id_proyecto):
         proyecto.save()
         return HttpResponseRedirect(reverse('administracion:estadoProyecto', args=[id_proyecto]))
 
-    return render(request, 'administracion/estadoProyecto.html', {'proyecto': proyecto, 'habilitado': habilitado})
+    return render(request, 'administracion/estadoProyecto.html',
+                  {'proyecto': proyecto, 'habilitado': habilitado, 'estado': estado})
 
 
 def administrar_fases_del_proyecto(request, id_proyecto):
