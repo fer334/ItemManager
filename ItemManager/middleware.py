@@ -51,8 +51,13 @@ class GerenteAccountMiddleware:
 
         if not request.user.is_anonymous:
             if not request.user.is_gerente:
-                if request.path in [
-                    reverse('administracion:crearProyecto')
+                username = request.user.username
+                if request.path not in [
+                    reverse('login:index'),
+                    reverse('login:AccesoDenegado'),
+                    reverse('login:logout'),
+                    reverse('login:userUpdate', args=[username]),
+                    # reverse('login:userUpdate', kwargs={'name': username}),
                 ]:
                     return redirect('login:AccesoDenegado')
         response = self.get_response(request)
