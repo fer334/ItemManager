@@ -330,8 +330,10 @@ def editar_tipo(request, id_proyecto, id_tipo):
     proyecto = Proyecto.objects.get(pk=id_proyecto)
     tipo = TipoItem.objects.get(pk=id_tipo)
     if proyecto.estado == 'cancelado' or proyecto.estado == 'finalizado':
-        return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto]))
+        return redirect('administracion:accesoDenegado', id_proyecto=id_proyecto)
     else:
+        if tipo.proyecto.all().count() > 1:
+            return redirect('administracion:accesoDenegado', id_proyecto=id_proyecto)
         if request.method == 'POST':
             form = EditarTipoItemForm(request.POST)
             if form.is_valid():
