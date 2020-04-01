@@ -14,18 +14,27 @@ from administracion.forms import ProyectoForm, RolForm, EditarTipoItemForm
 import datetime
 
 
-def acceso_denegado(request, id_proyecto):
+def acceso_denegado(request, id_proyecto, caso):
     """
     vista que se encarga de desplegar la página de acceso denegado si es que se intenta ingresar
     a un url no permitido.
 
+    :param caso: El caso es la clave para seleccionar el mensaje adecuado a desplegar
     :param request: objeto tipo diccionario que permite acceder a datos
     :param id_proyecto: identificador unico del proyecto
     :return: objeto que se encarga de renderear accesoDenegado.html
     :rtype: render
     """
     proyecto = Proyecto.objects.get(pk=id_proyecto)
-    return render(request, 'administracion/accesoDenegado.html', {'proyecto': proyecto})
+    posibles_casos = {
+        'estado': 'No se permite el ingreso a esta URL porque el proyecto: '+proyecto.nombre+'  '
+                  'tiene estado actual: '+proyecto.estado,
+        'gerente': 'El usuario actual no puede acceder a esta URL porque no es el Gerente del Proyecto actual',
+        'tiimportado': 'No se puede editar este tipo de ítem porque se utiliza en otros proyectos'
+    }
+    mensaje = posibles_casos.get(caso)
+
+    return render(request, 'administracion/accesoDenegado.html', {'proyecto': proyecto, 'mensaje': mensaje})
 
 
 def index_administracion(request):
@@ -140,7 +149,7 @@ def ver_proyecto(request, id_proyecto):
     estado = estados_posibles.get(proyecto.estado)
 
     return render(request, 'administracion/verProyecto.html',
-                  {'proyecto': proyecto, 'gerente': gerente, 'tipo_item': tipo_item, 'fases': fases, 'estado':estado})
+                  {'proyecto': proyecto, 'gerente': gerente, 'tipo_item': tipo_item, 'fases': fases, 'estado': estado})
 
 
 def administrar_participantes(request, id_proyecto):
@@ -155,7 +164,9 @@ def administrar_participantes(request, id_proyecto):
     """
     proyecto = Proyecto.objects.get(pk=id_proyecto)
     if proyecto.estado == 'cancelado':
-        return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto]))
+        return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto, 'estado']))
+    elif proyecto.gerente != request.user.id:
+        return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto, 'gerente']))
     else:
         lista_usuarios = Usuario.objects.all()
         if request.method == 'POST':
@@ -178,7 +189,9 @@ def editar_proyecto(request, id_proyecto):
     """
     proyecto = Proyecto.objects.get(pk=id_proyecto)
     if proyecto.estado == 'cancelado' or proyecto.estado == 'finalizado':
-        return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto]))
+        return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto, 'estado']))
+    elif proyecto.gerente != request.user.id:
+        return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto, 'gerente']))
     else:
         if request.method == 'POST':
             nombre = request.POST['nombre']
@@ -202,33 +215,36 @@ def estado_proyecto(request, id_proyecto):
     :rtype: render, redirect
     """
     proyecto = Proyecto.objects.get(pk=id_proyecto)
-    habilitadofase = True
-    habilitadocomite = True
-    estados_posibles = {
-        'iniciado': 'Iniciado',
-        'en ejecucion': 'En Ejecución',
-        'finalizado': 'Finalizado',
-        'cancelado': 'Cancelado',
-    }
-    estado = estados_posibles.get(proyecto.estado)
+    if proyecto.gerente != request.user.id:
+        return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto, 'gerente']))
+    else:
+        habilitadofase = True
+        habilitadocomite = True
+        estados_posibles = {
+            'iniciado': 'Iniciado',
+            'en ejecucion': 'En Ejecución',
+            'finalizado': 'Finalizado',
+            'cancelado': 'Cancelado',
+        }
+        estado = estados_posibles.get(proyecto.estado)
 
-    lista_fases = proyecto.fase_set.all()
-    for fase in lista_fases:
-        if fase.nombre == '':
-            habilitadofase = False
+        lista_fases = proyecto.fase_set.all()
+        for fase in lista_fases:
+            if fase.nombre == '':
+                habilitadofase = False
 
-    if proyecto.comite.count() != proyecto.cant_comite:
-        habilitadocomite = False
+        if proyecto.comite.count() != proyecto.cant_comite:
+            habilitadocomite = False
 
-    if request.method == 'POST':
-        estado = request.POST['estado']
-        proyecto.estado = estado
-        proyecto.save()
-        return HttpResponseRedirect(reverse('administracion:estadoProyecto', args=[id_proyecto]))
+        if request.method == 'POST':
+            estado = request.POST['estado']
+            proyecto.estado = estado
+            proyecto.save()
+            return HttpResponseRedirect(reverse('administracion:estadoProyecto', args=[id_proyecto]))
 
-    return render(request, 'administracion/estadoProyecto.html',
-                  {'proyecto': proyecto, 'habilitadofase': habilitadofase, 'habilitadocomite':habilitadocomite,
-                   'estado': estado})
+        return render(request, 'administracion/estadoProyecto.html',
+                      {'proyecto': proyecto, 'habilitadofase': habilitadofase, 'habilitadocomite': habilitadocomite,
+                       'estado': estado})
 
 
 def administrar_fases_del_proyecto(request, id_proyecto):
@@ -242,7 +258,9 @@ def administrar_fases_del_proyecto(request, id_proyecto):
     """
     proyecto = Proyecto.objects.get(pk=id_proyecto)
     if proyecto.estado == 'cancelado' or proyecto.estado == 'finalizado':
-        return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto]))
+        return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto, 'estado']))
+    elif proyecto.gerente != request.user.id:
+        return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto, 'gerente']))
     else:
         fases = proyecto.fase_set.all().order_by('id')
         if request.method == 'POST':
@@ -274,7 +292,9 @@ def administrar_comite(request, id_proyecto):
     """
     proyecto = Proyecto.objects.get(pk=id_proyecto)
     if proyecto.estado == 'cancelado' or proyecto.estado == 'finalizado':
-        return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto]))
+        return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto, 'estado']))
+    elif proyecto.gerente != request.user.id:
+        return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto, 'gerente']))
     else:
         if request.method == 'POST':
             id_usuario = request.POST['miembro_comite']
@@ -338,7 +358,9 @@ def importar_tipo(request, id_proyecto, id_tipo):
     tipo_item = TipoItem.objects.get(pk=id_tipo)
     proyecto = Proyecto.objects.get(pk=id_proyecto)
     if proyecto.estado == 'cancelado' or proyecto.estado == 'finalizado' or proyecto.estado == 'en ejecución':
-        return redirect('administracion:accesoDenegado', id_proyecto=id_proyecto)
+        return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto, 'estado']))
+    elif proyecto.gerente != request.user.id:
+        return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto, 'gerente']))
     tipo_item.proyecto.add(proyecto)
     return redirect('administracion:tipoItemPorProyecto', id_proyecto=id_proyecto)
 
@@ -353,7 +375,9 @@ def crear_tipo(request, id_proyecto):
     """
     proyecto = Proyecto.objects.get(pk=id_proyecto)
     if proyecto.estado == 'cancelado' or proyecto.estado == 'finalizado' or proyecto.estado == 'en ejecución':
-        return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto]))
+        return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto, 'estado']))
+    elif proyecto.gerente != request.user.id:
+        return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto, 'gerente']))
     else:
         return render(request, 'administracion/crearTipoItem.html', {'id_proyecto': id_proyecto})
 
@@ -361,6 +385,8 @@ def crear_tipo(request, id_proyecto):
 def editar_tipo(request, id_proyecto, id_tipo):
     """
     Vista en la cual se editan los tipos de item
+
+    :param id_tipo: id del tipo de ítem a editar
     :param request: objeto tipo diccionario que permite acceder a datos
     :param id_proyecto:identificador del proyecto
     :return: redirecciona a los permisos de acceso si el tipo de item es usado en mas de un proyecto o si el proyecto
@@ -369,10 +395,12 @@ def editar_tipo(request, id_proyecto, id_tipo):
     proyecto = Proyecto.objects.get(pk=id_proyecto)
     tipo = TipoItem.objects.get(pk=id_tipo)
     if proyecto.estado == 'cancelado' or proyecto.estado == 'finalizado':
-        return redirect('administracion:tipoItemPorProyecto', id_proyecto=id_proyecto)
+        return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto, 'estado']))
+    elif proyecto.gerente != request.user.id:
+        return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto, 'gerente']))
     else:
         if tipo.proyecto.all().count() > 1:
-            return redirect('administracion:accesoDenegado', id_proyecto=id_proyecto)
+            return redirect('administracion:accesoDenegado', id_proyecto=id_proyecto, caso='tiimportado')
         if request.method == 'POST':
             form = EditarTipoItemForm(request.POST)
             if form.is_valid():
@@ -399,7 +427,9 @@ def ver_tipo(request, id_proyecto, id_tipo):
     """
     obj_proyecto = Proyecto.objects.get(pk=id_proyecto)
     if obj_proyecto.estado == 'cancelado' or obj_proyecto.estado == 'finalizado':
-        return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto]))
+        return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto, 'estado']))
+    elif obj_proyecto.gerente != request.user.id:
+        return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto, 'gerente']))
     else:
         obj_tipo_item = TipoItem.objects.get(pk=id_tipo)
         return render(request, 'administracion/verTipoItem.html',
@@ -432,8 +462,11 @@ def confirmar_tipo_import(request, id_proyecto, id_tipo):
     :return: redirecciona a los permisos de acceso si el proyecto  es cancelado, finalizado o en ejecucion, deriva a un acceso denegado sino redirecciona al url verTipoItemParaImport.html para ver que tipos de items importar.
     """
     obj_proyecto = Proyecto.objects.get(pk=id_proyecto)
-    if obj_proyecto.estado == 'cancelado' or obj_proyecto.estado == 'finalizado' or obj_proyecto.estado == 'en ejecución':
-        return redirect('administracion:accesoDenegado', args=[id_proyecto])
+    if obj_proyecto.estado == 'cancelado' or obj_proyecto.estado == 'finalizado' or \
+            obj_proyecto.estado == 'en ejecución':
+        return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto, 'estado']))
+    elif obj_proyecto.gerente != request.user.id:
+        return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto, 'gerente']))
     else:
         obj_tipo_item = TipoItem.objects.get(pk=id_tipo)
         return render(request, 'administracion/verTipoItemParaImport.html',
@@ -450,7 +483,9 @@ def ver_tipo_por_proyecto(request, id_proyecto):
     """
     proyecto = Proyecto.objects.get(pk=id_proyecto)
     if proyecto.estado == 'cancelado' or proyecto.estado == 'finalizado':
-        return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto]))
+        return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto, 'estado']))
+    elif proyecto.gerente != request.user.id:
+        return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto, 'gerente']))
     else:
         tipo_item = proyecto.tipoitem_set.all()
         return render(request, 'administracion/administrarTipoItem.html', {
@@ -469,7 +504,9 @@ def registrar_tipoitem_en_base(request, id_proyecto):
     """
     proyecto = Proyecto.objects.get(pk=id_proyecto)
     if proyecto.estado == 'cancelado' or proyecto.estado == 'finalizado' or proyecto.estado == 'en ejecución':
-        return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto]))
+        return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto, 'estado']))
+    elif proyecto.gerente != request.user.id:
+        return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto, 'gerente']))
     else:
         nombre = request.POST['nombre']
         descripcion = request.POST['descripcion']
@@ -523,7 +560,9 @@ def crear_rol(request, id_proyecto):
 
     proyecto = Proyecto.objects.get(pk=id_proyecto)
     if proyecto.estado == 'cancelado' or proyecto.estado == 'finalizado':
-        return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto]))
+        return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto, 'estado']))
+    elif proyecto.gerente != request.user.id:
+        return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto, 'gerente']))
     else:
         if request.method == 'POST':
             form = RolForm(request.POST)
@@ -550,7 +589,10 @@ def crear_rol(request, id_proyecto):
 
 def administrar_roles(request, id_proyecto):
     proyecto = Proyecto.objects.get(pk=id_proyecto)
-    return render(request, 'administracion/administrarRoles.html', {'proyecto': proyecto})
+    if proyecto.gerente != request.user.id:
+        return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto, 'gerente']))
+    else:
+        return render(request, 'administracion/administrarRoles.html', {'proyecto': proyecto})
 
 
 def desactivar_rol_proyecto(request, id_proyecto, id_rol):
@@ -582,7 +624,9 @@ def ver_roles_usuario(request, id_proyecto, id_usuario):
     """
     proyecto = Proyecto.objects.get(pk=id_proyecto)
     if proyecto.estado == 'cancelado' or proyecto.estado == 'finalizado':
-        return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto]))
+        return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto, 'estado']))
+    elif proyecto.gerente != request.user.id:
+        return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto, 'gerente']))
     else:
         participante = Usuario.objects.get(pk=id_usuario)
         lista_roles = [UsuarioxRol.objects.filter(fase=fase, usuario=participante, activo=True) for fase
