@@ -42,7 +42,8 @@
                     </div>
                     <div class="custom-control custom-radio">
                       <input type="radio" id="customRadio3" name="estado" class="custom-control-input" value="finalizado"
-                             {% if proyecto.estado == 'finalizado' %}checked="" {% endif %}>
+                             {% if proyecto.estado == 'finalizado' %}checked="" {% endif %}
+                             {% if proyecto.estado != 'en ejecucion' %}disabled=""{% endif %}>
                       <label class="custom-control-label" for="customRadio3">Finalizado</label>
                     </div>
                     <div class="custom-control custom-radio">
