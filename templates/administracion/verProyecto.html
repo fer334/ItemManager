@@ -59,6 +59,7 @@
                     </tr>
                 </tbody>
             </table>
+        <div class="mt-5">
             {% if proyecto.estado != 'cancelado' %}
                 <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false">
@@ -95,7 +96,7 @@
                            href="{% url 'administracion:administrarFasesProyecto' proyecto.id %}" role="button">
                             Administrar Fases del Proyecto
                         </a>
-                        <a class="list-group-item dropdown-item {% if  proyecto.estado == 'finalizado' %}disabled{% endif %}"
+                        <a class="list-group-item dropdown-item"
                            href="{% url 'administracion:administrarRoles' proyecto.id %}" role="button">
                             Administrar roles
                         </a>
@@ -103,11 +104,11 @@
             {% else %}
                 <h5 style="color: #c60f0f">Proyecto Cancelado: No se permiten acciones</h5>
             {% endif %}
+            <a class="btn btn-primary float-right" href="{% url 'administracion:proyectos' 'todos'%}" role="button">
+                Volver a Lista de Proyectos
+            </a>
         </div>
-        <a class="btn btn-primary float-right" href="{% url 'administracion:proyectos' 'todos'%}" role="button">
-            Volver a Lista de Proyectos
-        </a>
-
+        </div>
     </div>
 {% endblock %}
 

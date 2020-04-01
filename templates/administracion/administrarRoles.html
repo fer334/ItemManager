@@ -32,7 +32,7 @@
                                 {% if proyecto.estado == 'iniciado' %}
                                     href="{% url 'administracion:desactivarRol' proyecto.id rol.id %}" class="btn btn-danger"
                                 {% else %}
-                                    href="{% url '#' %}" class="btn btn-secondary"
+                                    href="#" class="btn btn-secondary"
                                 {% endif %}
                                 >Desactivar rol</a>
                             </td>
@@ -42,7 +42,8 @@
             </tbody>
         </table>
         <div class="mt-5">
-            <a href="{% url 'administracion:crearRol' proyecto.id %}" class="btn btn-primary">Agregar rol</a>
+            <a href="{% url 'administracion:crearRol' proyecto.id %}"
+               class="btn btn-primary{% if proyecto.estado == 'finalizado' %} disabled{% endif %}">Agregar rol</a>
             <a class="btn btn-primary float-right" href="{% url 'administracion:verProyecto' proyecto.id %}">Volver a datos del proyecto {{ proyecto.nombre }}</a>
         </div>
     </div>
