@@ -348,10 +348,12 @@ def editar_tipo(request, id_proyecto, id_tipo):
             if form.is_valid():
                 nombre = form.cleaned_data['nombre']
                 prefijo = form.cleaned_data['prefijo']
+                descripcion = form.cleaned_data['descripcion']
                 tipo.nombre = nombre
                 tipo.prefijo = prefijo
+                tipo.descripcion = descripcion
                 tipo.save()
-                return HttpResponseRedirect(reverse('administracion:verProyecto', args=(id_proyecto,)))
+                return HttpResponseRedirect(reverse('administracion:tipoItemPorProyecto', args=(id_proyecto,)))
         form = EditarTipoItemForm()
         return render(request, 'administracion/editarTipoItem.html', {'form': form})
 

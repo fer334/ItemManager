@@ -17,7 +17,10 @@
                         <td>{{ tipo_item.prefijo }}</td>
                         <td>{{ tipo_item.nombre }}</td>
                         <td>{{ tipo_item.descripcion }}</td>
-                        <td><a href="{% url 'administracion:editarTipoItem' proyecto.id tipo_item.id %}" class="btn btn-secondary">Editar</a></td>
+                        <td>
+                            <a href="{% url 'administracion:editarTipoItem' proyecto.id tipo_item.id %}" class="btn btn-secondary">Editar</a>
+                            <a href="{% url 'administracion:verTipoItem' proyecto.id tipo_item.id %}" class="btn btn-secondary">Editar atributos</a>
+                        </td>
                     </tr>
                 {% endfor %}
             </tbody>
