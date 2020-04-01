@@ -9,7 +9,7 @@ from django.urls import reverse
 from administracion.models import TipoItem, Proyecto, PlantillaAtributo, Rol, Fase, UsuarioxRol
 from login.models import Usuario
 # Forms
-from administracion.forms import ProyectoForm, ParticipanteForm, RolForm
+from administracion.forms import ProyectoForm, RolForm
 # Python
 import datetime
 
@@ -276,8 +276,6 @@ def mostrar_tipo_import(request, id_proyecto):
     """
     Vista que en la cual se muestra los tipos de item del proyecto
 
-    :param tipo_item_proyecto_actual: Tipo de item que posee el proyecto
-    :param tipo_items: tipos de items del
     :return: redirecciona al url imṕortarTipoItem.html
     """
 
@@ -295,8 +293,6 @@ def importar_tipo(request, id_proyecto, id_tipo):
     :param request: objeto tipo diccionario que permite acceder a datos
     :param id_proyecto: Identificador del proyecto
     :param id_tipo: identificador del tipo de item
-    :param tipo_item: tipo de item correspondiente al proyecto
-    :param proyecto: proyecto asociado
     :return: redireccion a los permisos de acceso, en este caso si el proyecto es cancelado, finalizado o en ejecucion, deriva a un acceso denegado sino a verProyecto.
     """
     tipo_item = TipoItem.objects.get(pk=id_tipo)
@@ -314,7 +310,6 @@ def crear_tipo(request, id_proyecto):
 
     :param request:  objeto tipo diccionario que permite acceder a datos
     :param id_proyecto: identificador del proyecto
-    :param proyecto: proyecto asociado
     :return: redirecciona a los permisos de acceso si el proyecto  es cancelado, finalizado o en ejecucion, deriva a un acceso denegado sino redirecciona a crearTipoItem.html mediante el id_proyecto.
     """
     proyecto = Proyecto.objects.get(pk=id_proyecto)
@@ -331,7 +326,6 @@ def ver_tipo(request, id_proyecto, id_tipo):
     :param request: objeto tipo diccionario que permite acceder a datos
     :param id_proyecto: identificador del proyecto
     :param id_tipo: identificador del tipo de item
-    :param obj_proyecto: objeto de tipo proyecto
     :return: redirecciona a los permisos de acceso si el proyecto  es cancelado, finalizado o en ejecucion, deriva a un acceso denegado sino redirecciona al url verTipoItem.html
     """
     obj_proyecto = Proyecto.objects.get(pk=id_proyecto)
@@ -350,7 +344,6 @@ def confirmar_tipo_import(request, id_proyecto, id_tipo):
     :param request: objeto tipo diccionario que permite acceder a datos
     :param id_proyecto: identificador del proyecto
     :param id_tipo: identificador del tipo de item
-    :param obj_proyecto: objeto tipo proyecto
     :return: redirecciona a los permisos de acceso si el proyecto  es cancelado, finalizado o en ejecucion, deriva a un acceso denegado sino redirecciona al url verTipoItemParaImport.html para ver que tipos de items importar.
     """
     obj_proyecto = Proyecto.objects.get(pk=id_proyecto)
@@ -368,7 +361,6 @@ def ver_tipo_por_proyecto(request, id_proyecto):
 
     :param request: objeto tipo diccionario que permite acceder a datos
     :param id_proyecto: identificador del proyecto
-    :param proyecto: proyecto asociado
     :return: redirecciona a los permisos de acceso si el proyecto  es cancelado, finalizado o en ejecucion, deriva a un acceso denegado sino redirecciona al url tipoItemTest.html
     """
     proyecto = Proyecto.objects.get(pk=id_proyecto)
@@ -385,7 +377,6 @@ def registrar_tipoitem_en_base(request, id_proyecto):
 
     :param request: objeto tipo diccionario que permite acceder a datos
     :param id_proyecto: identificador del proyecto
-    :param proyecto: proyecto asociado
     :return: redirecciona a los permisos de acceso si el proyecto  es cancelado, finalizado o en ejecucion, deriva a un acceso denegado sino redirecciona a verTipoItem.
     """
     proyecto = Proyecto.objects.get(pk=id_proyecto)
@@ -404,6 +395,7 @@ def registrar_tipoitem_en_base(request, id_proyecto):
 def crear_atributo(request, id_proyecto, id_tipo):
     """
     Vista en la cual se permite crear los atributos de los tipos de item del proyecto
+
     :param request: objeto tipo diccionario que permite acceder a datos
     :param id_proyecto: identificador del proyecto
     :param id_tipo: identificador del tipo de item
