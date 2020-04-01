@@ -3,7 +3,7 @@
 {% block content %}
     <div class="container">
         <h1 class="text-center pt-3 mb-3 pb-3" >Administrar Comité del Proyecto</h1>
-
+        <h5 style="color: #0c5460">El comité requiere {{ proyecto.cant_comite }} miembros en total</h5>
         {% if not proyecto.comite.all.count  %}
             <div class="alert alert-warning">No se ha definido ningún miembro para el comité</div>
         {% else %}

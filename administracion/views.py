@@ -189,7 +189,8 @@ def editar_proyecto(request, id_proyecto):
 
 def estado_proyecto(request, id_proyecto):
     """
-    vista que permite seleccionar y cambiar el estado de un proyecto
+    vista que permite seleccionar y cambiar el estado de un proyecto. Bloquea el paso a estado de ejecución si las
+    fases no están definidas o el comité no está completo
 
     :param request: objeto tipo diccionario que permite acceder a datos
     :param id_proyecto: id del proyecto el cual se desea administrar su estado
@@ -197,7 +198,8 @@ def estado_proyecto(request, id_proyecto):
     :rtype: render, redirect
     """
     proyecto = Proyecto.objects.get(pk=id_proyecto)
-    habilitado = True
+    habilitadofase = True
+    habilitadocomite = True
     estados_posibles = {
         'iniciado': 'Iniciado',
         'en ejecucion': 'En Ejecución',
@@ -208,8 +210,12 @@ def estado_proyecto(request, id_proyecto):
 
     lista_fases = proyecto.fase_set.all()
     for fase in lista_fases:
-        if fase.nombre.find('Nombre Indefinido') != -1:
-            habilitado = False
+        if fase.nombre == '':
+            habilitadofase = False
+
+    if proyecto.comite.count() != proyecto.cant_comite:
+        habilitadocomite = False
+
     if request.method == 'POST':
         estado = request.POST['estado']
         proyecto.estado = estado
@@ -217,7 +223,8 @@ def estado_proyecto(request, id_proyecto):
         return HttpResponseRedirect(reverse('administracion:estadoProyecto', args=[id_proyecto]))
 
     return render(request, 'administracion/estadoProyecto.html',
-                  {'proyecto': proyecto, 'habilitado': habilitado, 'estado': estado})
+                  {'proyecto': proyecto, 'habilitadofase': habilitadofase, 'habilitadocomite':habilitadocomite,
+                   'estado': estado})
 
 
 def administrar_fases_del_proyecto(request, id_proyecto):

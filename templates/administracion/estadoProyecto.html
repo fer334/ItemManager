@@ -3,17 +3,28 @@
 {% block content %}
     <div class="container">
         <h3 class="text-center pt-3 mb-3">Estado Actual de {{ proyecto.nombre }}:</h3>
-        <p align="center">
             <h4>{{estado}}</h4>
-        </p>
         <br>
         <h3 class="text-center pt-3 mb-3">Nuevo Estado:</h3>
-        {% if habilitado == False %}
-            <h6 style="color: #c4a000">CONSEJO: Debe Definir los nombres de las
-                <a href="{% url 'administracion:administrarFasesProyecto' proyecto.id %}" style="color: #8f5902">fases</a>
-                antes de poder pasar a estado de ejecución
+        {% if habilitadofase == False or habilitadocomite == False %}
+            <h6 style="color: #c4a000">CONSEJOS:</h6>
+            <h6 style="color: #c4a000">
+            {% if habilitadofase == False %}
+                <li> Debe Definir los nombres de las
+                        <a href="{% url 'administracion:administrarFasesProyecto' proyecto.id %}" style="color: #8f5902">fases</a>
+                        antes de poder pasar a estado de ejecución
+                    </li>
+            {% endif %}
+            {% if habilitadocomite == False %}
+                    <li>
+                        Debe asignar a los miembros del
+                        <a href="{% url 'administracion:administrarComite' proyecto.id %}" style="color: #8f5902">comité</a>
+                        antes de poder pasar a estado de ejecución
+                    </li>
+            {% endif %}
             </h6>
         {% endif %}
+
         <form class="pt-3" METHOD="post" ACTION="{% url 'administracion:estadoProyecto' proyecto.id %}">
             {% csrf_token %}
             <div class="form-row">
@@ -26,7 +37,7 @@
                     <div class="custom-control custom-radio">
                         <input type="radio" id="customRadio2" name="estado" class="custom-control-input" value="en ejecucion"
                                {% if proyecto.estado == 'en ejecucion' %}checked="" {% endif %}
-                                {% if habilitado == False %}disabled=""{% endif %}>
+                                {% if habilitadofase == False or habilitadocomite == False %}disabled=""{% endif %}>
                         <label class="custom-control-label" for="customRadio2">En Ejecución</label>
                     </div>
                     <div class="custom-control custom-radio">
