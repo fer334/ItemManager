@@ -503,9 +503,32 @@ def crear_rol(request, id_proyecto):
                                 crear_relaciones_as=crear_relaciones_as, crear_relaciones_ph=crear_relaciones_ph,
                                 borrar_relaciones=borrar_relaciones, proyecto=proyecto)
                 nuevo_rol.save()
-                return HttpResponseRedirect(reverse('administracion:verProyecto', args=(id_proyecto,)))
+                return redirect('administracion:administrarRoles', id_proyecto=id_proyecto)
         form = RolForm()
         return render(request, 'administracion/crearRol.html', {'form': form})
+
+
+def administrar_roles(request, id_proyecto):
+    proyecto = Proyecto.objects.get(pk=id_proyecto)
+    return render(request, 'administracion/administrarRoles.html', {'proyecto': proyecto})
+
+
+def desactivar_rol_proyecto(request, id_proyecto, id_rol):
+    """
+    Vista que desactiva loroels del proyecto recibido, solo lo hace si el proyecto aun no esta iniciado y
+    si no tiene usuarios con ese rol
+    :param request: objeto tipo diccionario que permite acceder a datos
+    :param id_proyecto: identificador del proyecto
+    :param id_rol: identificador del rol
+    :return: redirecciona a la vista de administracion de roles
+    """
+
+    rol = Rol.objects.get(pk=id_rol)
+    proyecto = Proyecto.objects.get(pk=id_proyecto)
+    if proyecto.estado == 'iniciado' and rol.usuarioxrol_set.all().count() == 0:
+        rol.activo = False
+
+    return redirect('administracion:administrarRoles', id_proyecto=id_proyecto)
 
 
 def ver_roles_usuario(request, id_proyecto, id_usuario):

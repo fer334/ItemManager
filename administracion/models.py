@@ -114,6 +114,23 @@ class Rol(models.Model):
     crear_relaciones_as = models.BooleanField(default=False)
     #:
     borrar_relaciones = models.BooleanField(default=False)
+    activo = models.BooleanField(default=True)
+
+    def get_permisos(self):
+        """
+        Metodo que colecta los permisos activos
+        :return: una lista de permisos activos
+        """
+        permisos = []
+        permisos = permisos + (['Crear Item'] if self.crear_item else [])
+        permisos = permisos + (['Modificar Item'] if self.modificar_item else [])
+        permisos = permisos + (['Desactivar Item'] if self.desactivar_item else [])
+        permisos = permisos + (['Aprobar Item'] if self.aprobar_item else [])
+        permisos = permisos + (['Reversionar Item'] if self.reversionar_item else [])
+        permisos = permisos + (['Crear Relaciones Padre Hijo'] if self.crear_relaciones_ph else [])
+        permisos = permisos + (['Crear Relaciones Antecesor Sucesor'] if self.crear_relaciones_as else [])
+        permisos = permisos + (['Borrar Relaciones'] if self.borrar_relaciones else [])
+        return permisos
 
     def __str__(self):
         return (self.nombre)

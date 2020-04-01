@@ -92,8 +92,8 @@
                             Administrar Fases del Proyecto
                         </a>
                         <a class="list-group-item dropdown-item {% if  proyecto.estado == 'finalizado' %}disabled{% endif %}"
-                           href="{% url 'administracion:crearRol' proyecto.id %}" role="button">
-                            Crear Rol
+                           href="{% url 'administracion:administrarRoles' proyecto.id %}" role="button">
+                            Administrar roles
                         </a>
                 </div>
             {% else %}
