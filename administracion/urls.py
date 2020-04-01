@@ -6,7 +6,6 @@ app_name = 'administracion'
 urlpatterns = [
 
     # URL DE PAO
-    path('roles/', views.Rol, name = 'roles' ),
     path('proyectos/<int:id_proyecto>/roles/crear/',views.crear_rol, name='crearRol'),
     path('proyectos/<int:id_proyecto>/usuario/<int:id_usuario>/roles', views.ver_roles_usuario, name='verRolesUsuario'),
     path('fases/<int:id_fase>/usuario/<int:id_usuario>/roles/<int:id_rol>', views.desasignar_rol_al_usuario, name='desasignarRol'),
@@ -26,13 +25,14 @@ urlpatterns = [
     path('proyectos/<int:id_proyecto>/accesodenegado', views.acceso_denegado, name='accesoDenegado'),
     # URLs de DAVID
     path('tipo/todos', views.mostrar_tipo_item, name='tipoItem'),
-    path('<int:id_proyecto>/tipo/showForImport', views.mostrar_tipo_import, name='importarTipoItem'),
-    path('<int:id_proyecto>/tipo/<int:id_tipo>/mostrarImport', views.confirmar_tipo_import, name='confirmarImportarTipoItem'),
-    path('<int:id_proyecto>/tipo/<int:id_tipo>/import', views.importar_tipo, name='importarTipoItemAProyecto'),
-    path('<int:id_proyecto>/tipo/', views.ver_tipo_por_proyecto, name='tipoItemPorProyecto'),
-    path('<int:id_proyecto>/tipo/crear/', views.crear_tipo, name='crearTipoItem'),
-    path('<int:id_proyecto>/tipo/registrarEnBase', views.registrar_tipoitem_en_base, name='registrarEnBase'),
-    path('<int:id_proyecto>/tipo/<int:id_tipo>', views.ver_tipo, name='verTipoItem'),
-    path('<int:id_proyecto>/tipo/<int:id_tipo>/atributo/crear', views.crear_atributo, name='crearAtributo'),
-    path('<int:id_proyecto>/tipo/<int:id_tipo>/atributo/<int:id_atributo>/quitar/', views.quitar_atributo, name='quitarAtributo'),
+    path('proyectos/<int:id_proyecto>/tipo/showForImport', views.mostrar_tipo_import, name='importarTipoItem'),
+    path('proyectos/<int:id_proyecto>/tipo/<int:id_tipo>/mostrarImport', views.confirmar_tipo_import, name='confirmarImportarTipoItem'),
+    path('proyectos/<int:id_proyecto>/tipo/<int:id_tipo>/import', views.importar_tipo, name='importarTipoItemAProyecto'),
+    path('proyectos/<int:id_proyecto>/tipo/', views.ver_tipo_por_proyecto, name='tipoItemPorProyecto'),
+    path('proyectos/<int:id_proyecto>/tipo/crear/', views.crear_tipo, name='crearTipoItem'),
+    path('proyectos/<int:id_proyecto>/tipo/<int:id_tipo>/editar/', views.editar_tipo, name='editarTipoItem'),
+    path('proyectos/<int:id_proyecto>/tipo/registrarEnBase', views.registrar_tipoitem_en_base, name='registrarEnBase'),
+    path('proyectos/<int:id_proyecto>/tipo/<int:id_tipo>', views.ver_tipo, name='verTipoItem'),
+    path('proyectos/<int:id_proyecto>/tipo/<int:id_tipo>/atributo/crear', views.crear_atributo, name='crearAtributo'),
+    path('proyectos/<int:id_proyecto>/tipo/<int:id_tipo>/atributo/<int:id_atributo>/quitar/', views.quitar_atributo, name='quitarAtributo'),
 ]

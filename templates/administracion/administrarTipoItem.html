@@ -1,0 +1,30 @@
+{% extends 'login/loginHeader.html' %}
+{% block content %}
+    <div class="container">
+        <h1 class="text-center pt-3 mb-5">Administración de Tipos de item - {{ proyecto.nombre }}</h1>
+        <table class="table table-hover col-sm-12">
+            <thead>
+                <tr>
+                    <th>Prefijo</th>
+                    <th>Nombre</th>
+                    <th>Descripcion</th>
+                    <th>Accion</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for tipo_item in proyecto.tipoitem_set.all %}
+                    <tr>
+                        <td>{{ tipo_item.prefijo }}</td>
+                        <td>{{ tipo_item.nombre }}</td>
+                        <td>{{ tipo_item.descripcion }}</td>
+                        <td><a href="{% url 'administracion:editarTipoItem' proyecto.id tipo_item.id %}" class="btn btn-secondary">Editar</a></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="mt-5">
+            <a href="{% url 'administracion:crearTipoItem' proyecto.id %}" class="btn btn-primary">Agregar tipo de item</a>
+            <a class="btn btn-primary float-right" href="{% url 'administracion:verProyecto' proyecto.id %}">Volver a datos del proyecto {{ proyecto.nombre }}</a>
+        </div>
+    </div>
+{% endblock %}

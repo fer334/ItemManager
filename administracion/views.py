@@ -9,7 +9,7 @@ from django.urls import reverse
 from administracion.models import TipoItem, Proyecto, PlantillaAtributo, Rol, Fase, UsuarioxRol
 from login.models import Usuario
 # Forms
-from administracion.forms import ProyectoForm, ParticipanteForm, RolForm
+from administracion.forms import ProyectoForm, ParticipanteForm, RolForm, EditarTipoItemForm
 # Python
 import datetime
 
@@ -330,6 +330,32 @@ def crear_tipo(request, id_proyecto):
         return render(request, 'administracion/crearTipoItem.html', {'id_proyecto': id_proyecto})
 
 
+def editar_tipo(request, id_proyecto, id_tipo):
+    """
+    Vista en la cual se editan los tipos de item
+    :param request: objeto tipo diccionario que permite acceder a datos
+    :param id_proyecto:identificador del proyecto
+    :return: redirecciona a los permisos de acceso si el tipo de item es usado en mas de un proyecto o si el proyecto
+     ya inicio
+     """
+    proyecto = Proyecto.objects.get(pk=id_proyecto)
+    tipo = TipoItem.objects.get(pk=id_tipo)
+    if proyecto.estado == 'cancelado' or proyecto.estado == 'finalizado':
+        return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto]))
+    else:
+        if request.method == 'POST':
+            form = EditarTipoItemForm(request.POST)
+            if form.is_valid():
+                nombre = form.cleaned_data['nombre']
+                prefijo = form.cleaned_data['prefijo']
+                tipo.nombre = nombre
+                tipo.prefijo = prefijo
+                tipo.save()
+                return HttpResponseRedirect(reverse('administracion:verProyecto', args=(id_proyecto,)))
+        form = EditarTipoItemForm()
+        return render(request, 'administracion/editarTipoItem.html', {'form': form})
+
+
 def ver_tipo(request, id_proyecto, id_tipo):
     """
     Vista en la cual se ve los tipos de items del proyecto
@@ -386,7 +412,10 @@ def ver_tipo_por_proyecto(request, id_proyecto):
         return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto]))
     else:
         tipo_item = proyecto.tipoitem_set.all()
-        return render(request, 'administracion/tipoItemTest.html', {'lista_tipoitem': tipo_item})
+        return render(request, 'administracion/administrarTipoItem.html', {
+            'lista_tipoitem': tipo_item,
+            'proyecto': proyecto
+        })
 
 
 def registrar_tipoitem_en_base(request, id_proyecto):
