@@ -6,7 +6,7 @@
         <table class="table">
             <thead class="thead-dark">
                 <tr>
-                    <th scope="col">Fase</th>
+                    <th scope="col" colspan="2">Fase</th>
                     <th scope="col">Rol</th>
                     <th scope="col">Accion</th>
                 </tr>
@@ -14,6 +14,7 @@
             <tbody>
                 {% for fase, rol_x_fase in listaRol %}
                     <tr>
+                        <th>{{forloop.counter}}</th>
                         <th>{{ fase.nombre }}</th>
                         <td>
                             <ul class="list-unstyled">

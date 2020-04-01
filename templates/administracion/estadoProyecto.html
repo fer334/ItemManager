@@ -41,14 +41,15 @@
                     </div>
                 </div>
             </div>
-            <p align="right">
+
+            <div class="mt-5">
                 <button type="submit" class="btn btn-primary"
                         {% if proyecto.estado == 'cancelado' or proyecto.estado == 'finalizado'%}
                             disabled=""
                         {% endif %}>Modificar
                 </button>
-            </p>
-            <a class="btn btn-primary" href="{% url 'administracion:verProyecto' proyecto.id %}" role="button">Volver atrás</a>
+                <a class="btn btn-primary float-right" href="{% url 'administracion:verProyecto' proyecto.id %}" role="button">Volver atrás</a>
+            </div>
         </form>
     </div>
 {% endblock %}

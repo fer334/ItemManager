@@ -3,13 +3,13 @@ Modulo se detalla la logica para las vistas que serán utilizadas por la app
 """
 # Django
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse
 # Models
 from administracion.models import TipoItem, Proyecto, PlantillaAtributo, Rol, Fase, UsuarioxRol
 from login.models import Usuario
 # Forms
-from administracion.forms import ProyectoForm, RolForm
+from administracion.forms import ProyectoForm, RolForm, EditarTipoItemForm
 # Python
 import datetime
 
@@ -298,10 +298,9 @@ def importar_tipo(request, id_proyecto, id_tipo):
     tipo_item = TipoItem.objects.get(pk=id_tipo)
     proyecto = Proyecto.objects.get(pk=id_proyecto)
     if proyecto.estado == 'cancelado' or proyecto.estado == 'finalizado' or proyecto.estado == 'en ejecución':
-        return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto]))
-    else:
-        tipo_item.proyecto.add(proyecto)
-        return HttpResponseRedirect(reverse('administracion:verProyecto', args=(id_proyecto,)))
+        return redirect('administracion:accesoDenegado', id_proyecto=id_proyecto)
+    tipo_item.proyecto.add(proyecto)
+    return redirect('administracion:tipoItemPorProyecto', id_proyecto=id_proyecto)
 
 
 def crear_tipo(request, id_proyecto):
@@ -317,6 +316,36 @@ def crear_tipo(request, id_proyecto):
         return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto]))
     else:
         return render(request, 'administracion/crearTipoItem.html', {'id_proyecto': id_proyecto})
+
+
+def editar_tipo(request, id_proyecto, id_tipo):
+    """
+    Vista en la cual se editan los tipos de item
+    :param request: objeto tipo diccionario que permite acceder a datos
+    :param id_proyecto:identificador del proyecto
+    :return: redirecciona a los permisos de acceso si el tipo de item es usado en mas de un proyecto o si el proyecto
+     ya inicio
+     """
+    proyecto = Proyecto.objects.get(pk=id_proyecto)
+    tipo = TipoItem.objects.get(pk=id_tipo)
+    if proyecto.estado == 'cancelado' or proyecto.estado == 'finalizado':
+        return redirect('administracion:tipoItemPorProyecto', id_proyecto=id_proyecto)
+    else:
+        if tipo.proyecto.all().count() > 1:
+            return redirect('administracion:accesoDenegado', id_proyecto=id_proyecto)
+        if request.method == 'POST':
+            form = EditarTipoItemForm(request.POST)
+            if form.is_valid():
+                nombre = form.cleaned_data['nombre']
+                prefijo = form.cleaned_data['prefijo']
+                descripcion = form.cleaned_data['descripcion']
+                tipo.nombre = nombre
+                tipo.prefijo = prefijo
+                tipo.descripcion = descripcion
+                tipo.save()
+                return redirect('administracion:tipoItemPorProyecto', id_proyecto=id_proyecto)
+        form = EditarTipoItemForm()
+        return render(request, 'administracion/editarTipoItem.html', {'form': form})
 
 
 def ver_tipo(request, id_proyecto, id_tipo):
@@ -337,6 +366,22 @@ def ver_tipo(request, id_proyecto, id_tipo):
                       {'proyecto': obj_proyecto, 'tipo_item': obj_tipo_item})
 
 
+def desactivar_tipo_item(request, id_proyecto, id_tipo):
+    """
+    Vista que desactiva los tipos de item del proyecto recibido, solo lo hace si el proyecto aun no esta iniciado
+    :param request: objeto tipo diccionario que permite acceder a datos
+    :param id_proyecto: identificador del proyecto
+    :param id_tipo: identificador del tipo de item
+    :return: redirecciona a la vista de administracion del tipo de item
+    """
+
+    tipo_item = TipoItem.objects.get(pk=id_tipo)
+    proyecto = Proyecto.objects.get(pk=id_proyecto)
+    if proyecto.estado == 'iniciado':
+        tipo_item.proyecto.remove(proyecto)
+    return redirect('administracion:tipoItemPorProyecto', id_proyecto=id_proyecto)
+
+
 def confirmar_tipo_import(request, id_proyecto, id_tipo):
     """
     Vista en la cual se confirma el tipo de item a utilizar
@@ -348,7 +393,7 @@ def confirmar_tipo_import(request, id_proyecto, id_tipo):
     """
     obj_proyecto = Proyecto.objects.get(pk=id_proyecto)
     if obj_proyecto.estado == 'cancelado' or obj_proyecto.estado == 'finalizado' or obj_proyecto.estado == 'en ejecución':
-        return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto]))
+        return redirect('administracion:accesoDenegado', args=[id_proyecto])
     else:
         obj_tipo_item = TipoItem.objects.get(pk=id_tipo)
         return render(request, 'administracion/verTipoItemParaImport.html',
@@ -368,7 +413,10 @@ def ver_tipo_por_proyecto(request, id_proyecto):
         return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto]))
     else:
         tipo_item = proyecto.tipoitem_set.all()
-        return render(request, 'administracion/tipoItemTest.html', {'lista_tipoitem': tipo_item})
+        return render(request, 'administracion/administrarTipoItem.html', {
+            'lista_tipoitem': tipo_item,
+            'proyecto': proyecto
+        })
 
 
 def registrar_tipoitem_en_base(request, id_proyecto):
@@ -455,9 +503,32 @@ def crear_rol(request, id_proyecto):
                                 crear_relaciones_as=crear_relaciones_as, crear_relaciones_ph=crear_relaciones_ph,
                                 borrar_relaciones=borrar_relaciones, proyecto=proyecto)
                 nuevo_rol.save()
-                return HttpResponseRedirect(reverse('administracion:verProyecto', args=(id_proyecto,)))
+                return redirect('administracion:administrarRoles', id_proyecto=id_proyecto)
         form = RolForm()
         return render(request, 'administracion/crearRol.html', {'form': form})
+
+
+def administrar_roles(request, id_proyecto):
+    proyecto = Proyecto.objects.get(pk=id_proyecto)
+    return render(request, 'administracion/administrarRoles.html', {'proyecto': proyecto})
+
+
+def desactivar_rol_proyecto(request, id_proyecto, id_rol):
+    """
+    Vista que desactiva loroels del proyecto recibido, solo lo hace si el proyecto aun no esta iniciado y
+    si no tiene usuarios con ese rol
+    :param request: objeto tipo diccionario que permite acceder a datos
+    :param id_proyecto: identificador del proyecto
+    :param id_rol: identificador del rol
+    :return: redirecciona a la vista de administracion de roles
+    """
+
+    rol = Rol.objects.get(pk=id_rol)
+    proyecto = Proyecto.objects.get(pk=id_proyecto)
+    if proyecto.estado == 'iniciado' and rol.usuarioxrol_set.all().count() == 0:
+        rol.activo = False
+
+    return redirect('administracion:administrarRoles', id_proyecto=id_proyecto)
 
 
 def ver_roles_usuario(request, id_proyecto, id_usuario):

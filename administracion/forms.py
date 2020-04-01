@@ -70,3 +70,12 @@ class ParticipanteForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super(ParticipanteForm, self).__init__(*args, **kwargs)
         self.fields['participantes'].choices = [('', '')] + [(x.id, x.username) for x in Usuario.objects.all()]
+
+
+class EditarTipoItemForm(forms.Form):
+    """Formulario pra edicion de tipos de item"""
+    nombre = forms.CharField(required=True, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    prefijo = forms.CharField(required=True, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    descripcion = forms.CharField(required=True, widget=forms.Textarea(attrs={'class': 'form-control', 'rows': '3'}))
+    def __init__(self, *args, **kwargs):
+        super(EditarTipoItemForm, self).__init__(*args, **kwargs)
