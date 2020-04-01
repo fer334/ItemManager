@@ -298,10 +298,9 @@ def importar_tipo(request, id_proyecto, id_tipo):
     tipo_item = TipoItem.objects.get(pk=id_tipo)
     proyecto = Proyecto.objects.get(pk=id_proyecto)
     if proyecto.estado == 'cancelado' or proyecto.estado == 'finalizado' or proyecto.estado == 'en ejecución':
-        return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto]))
-    else:
-        tipo_item.proyecto.add(proyecto)
-        return HttpResponseRedirect(reverse('administracion:verProyecto', args=(id_proyecto,)))
+        return redirect('administracion:accesoDenegado', id_proyecto=id_proyecto)
+    tipo_item.proyecto.add(proyecto)
+    return redirect('administracion:tipoItemPorProyecto', id_proyecto=id_proyecto)
 
 
 def crear_tipo(request, id_proyecto):
@@ -369,15 +368,17 @@ def ver_tipo(request, id_proyecto, id_tipo):
 
 def desactivar_tipo_item(request, id_proyecto, id_tipo):
     """
-    Vista que desactiva los tipos de item del proyecto recibido
+    Vista que desactiva los tipos de item del proyecto recibido, solo lo hace si el proyecto aun no esta iniciado
     :param request: objeto tipo diccionario que permite acceder a datos
     :param id_proyecto: identificador del proyecto
     :param id_tipo: identificador del tipo de item
     :return: redirecciona a la vista de administracion del tipo de item
     """
+
     tipo_item = TipoItem.objects.get(pk=id_tipo)
     proyecto = Proyecto.objects.get(pk=id_proyecto)
-    tipo_item.proyecto.remove(proyecto)
+    if proyecto.estado == 'iniciado':
+        tipo_item.proyecto.remove(proyecto)
     return redirect('administracion:tipoItemPorProyecto', id_proyecto=id_proyecto)
 
 
@@ -392,7 +393,7 @@ def confirmar_tipo_import(request, id_proyecto, id_tipo):
     """
     obj_proyecto = Proyecto.objects.get(pk=id_proyecto)
     if obj_proyecto.estado == 'cancelado' or obj_proyecto.estado == 'finalizado' or obj_proyecto.estado == 'en ejecución':
-        return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto]))
+        return redirect('administracion:accesoDenegado', args=[id_proyecto])
     else:
         obj_tipo_item = TipoItem.objects.get(pk=id_tipo)
         return render(request, 'administracion/verTipoItemParaImport.html',
