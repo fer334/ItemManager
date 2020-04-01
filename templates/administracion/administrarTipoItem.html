@@ -20,6 +20,7 @@
                         <td>
                             <a href="{% url 'administracion:editarTipoItem' proyecto.id tipo_item.id %}" class="btn btn-secondary">Editar</a>
                             <a href="{% url 'administracion:verTipoItem' proyecto.id tipo_item.id %}" class="btn btn-secondary">Editar atributos</a>
+                            <a href="{% url 'administracion:desactivarTipoItem' proyecto.id tipo_item.id %}" class="btn btn-secondary">Desactivar</a>
                         </td>
                     </tr>
                 {% endfor %}

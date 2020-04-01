@@ -15,7 +15,7 @@
                         <td>Gerente del Proyecto </td><td>{{gerente}}</td>
                     </tr>
                     <tr class="table-default">
-                        <th>Miembros del Comité</th>
+                        <td>Miembros del Comité</td>
                         <td>
                             <ul>
                                 {% for miembro in proyecto.comite.all %}
@@ -24,7 +24,7 @@
                             </ul>
                         </td>
                     </tr><tr class="table-primary">
-                        <th>Participantes</th>
+                        <td>Participantes</td>
                         <td>
                             <ul>
                                 {% for participante in proyecto.participantes.all %}
@@ -34,7 +34,7 @@
                         </td>
                     </tr>
                     <tr class="table-default">
-                        <th>Tipos de Item</th>
+                        <td>Tipos de Item</td>
                         <td>
                             <ul>
                                 {% for tipoItem in tipo_item %}
@@ -44,7 +44,7 @@
                         </td>
                     </tr>
                     <tr class="table-primary">
-                        <th>Fases</th>
+                        <td>Fases</td>
                         <td>
                             <ul>
                                 {% for fase in fases %}
@@ -68,7 +68,7 @@
                             </a>
                         {% else %}
                             <a class="list-group-item dropdown-item disabled" role="button">
-                                Añadir Tipo de Item <h6 style="color: #f57900">(solo en estado iniciado)</h6>
+                                Administrar Tipo de Item <h6 style="color: #f57900">(solo en estado iniciado)</h6>
                             </a>
                         {% endif %}
                         <a class="list-group-item dropdown-item"

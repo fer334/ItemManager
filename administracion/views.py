@@ -3,7 +3,7 @@ Modulo se detalla la logica para las vistas que serán utilizadas por la app
 """
 # Django
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse
 # Models
 from administracion.models import TipoItem, Proyecto, PlantillaAtributo, Rol, Fase, UsuarioxRol
@@ -364,6 +364,18 @@ def ver_tipo(request, id_proyecto, id_tipo):
         return render(request, 'administracion/verTipoItem.html',
                       {'proyecto': obj_proyecto, 'tipo_item': obj_tipo_item})
 
+
+def desactivar_tipo_item(request, id_proyecto, id_tipo):
+    """
+    Vista que desactiva los tipos de item del proyecto recibido
+    :param request: objeto tipo diccionario que permite acceder a datos
+    :param id_proyecto: identificador del proyecto
+    :param id_tipo: identificador del tipo de item
+    :return: redirecciona a la vista de administracion del tipo de item
+    """
+    tipo_item = TipoItem.objects.get(pk=id_tipo)
+    TipoItem.proyecto.remove(tipo_item)
+    return redirect('administracion:tipoItemPorProyecto', id_proyecto=id_proyecto)
 
 def confirmar_tipo_import(request, id_proyecto, id_tipo):
     """
