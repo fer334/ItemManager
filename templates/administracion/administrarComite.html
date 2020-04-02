@@ -40,14 +40,14 @@
                 {% endfor %}
             </select>
             <div class="mt-3">
-                <a class="btn btn-primary" href="{% url 'administracion:verProyecto' proyecto.id %}" role="button">
+                <a class="btn btn-primary  float-right" href="{% url 'administracion:verProyecto' proyecto.id %}" role="button">
                     Volver a detalles de {{ proyecto.nombre }}
                 </a>
-                <button type="submit" class="btn btn-primary float-right"
+                <button type="submit" class="btn btn-primary"
                             {% if proyecto.cant_comite <= proyecto.comite.count %}
                                 disabled=""
                             {% endif %}
-                            align="right">Añadir al Proyecto
+                            align="right">Añadir al comite
                 </button>
             </div>
         </form>

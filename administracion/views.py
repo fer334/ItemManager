@@ -150,7 +150,7 @@ def ver_proyecto(request, id_proyecto):
     estado = estados_posibles.get(proyecto.estado)
     habilitadofase = True
     habilitadocomite = True
-
+    habilitadotipo = True
     lista_fases = proyecto.fase_set.all()
     for fase in lista_fases:
         if fase.nombre == '':
@@ -158,9 +158,12 @@ def ver_proyecto(request, id_proyecto):
 
     if proyecto.comite.count() != proyecto.cant_comite:
         habilitadocomite = False
+
+    if proyecto.tipoitem_set.all().count() == 0:
+        habilitadotipo = False
     return render(request, 'administracion/verProyecto.html',
                   {'proyecto': proyecto, 'gerente': gerente, 'tipo_item': tipo_item, 'fases': fases, 'estado': estado,
-                   'habilitadofase':habilitadofase, 'habilitadocomite': habilitadocomite})
+                   'habilitadofase':habilitadofase, 'habilitadocomite': habilitadocomite, 'habilitadotipo': habilitadotipo})
 
 
 def administrar_participantes(request, id_proyecto):

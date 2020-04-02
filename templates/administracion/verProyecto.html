@@ -99,9 +99,9 @@
                     </div>
                     {% if proyecto.estado == 'iniciado' %}
                         <a
-                            {% if habilitadofase == False or habilitadocomite == False %}
+                            {% if habilitadofase == False or habilitadocomite == False or habilitadotipo == False %}
                                 href="#"     class="btn btn-secondary" onclick="{
-                                    document.querySelector('#msj').innerHTML='Debe definir comite y fases primero';
+                                    document.querySelector('#msj').innerHTML='Debe definir fases tipos de item y comite primero';
                                     document.querySelector('#msj').classList='alert alert-warning mt-3'};"
                             {% else %}
                                 href="{% url 'administracion:estadoProyecto2' proyecto.id 'en ejecucion' %}" class="btn btn-primary"
@@ -123,6 +123,7 @@
                     </a>
                 </div>
                 <div id="msj">
+
                 </div>
             </div>
         </div>
