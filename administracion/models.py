@@ -111,9 +111,9 @@ class Rol(models.Model):
     :param desactivar_item: Dejar inactivo un item
     :param aprobar_item: Confirmar que el item es correcto
     :param reversionar_item: Cambiar version de un item
-    :param crear_relaciones_ph:
-    :param crear_relaciones_as:
-    :param borrar_relaciones:
+    :param crear_relaciones_ph: Se crean relaciones padre e hijo
+    :param crear_relaciones_as: Se crean relaciones antecesor y sucesor
+    :param borrar_relaciones: Borra las relaciones existentes entre items
     """
     nombre = models.CharField(max_length=150, default='null')
     proyecto = models.ForeignKey(Proyecto, on_delete=models.CASCADE, null=True)
@@ -136,7 +136,7 @@ class UsuarioxRol(models.Model):
     :param usuario: Usuario al cual le corresponde dicho rol
     :param rol: Rol del usuario
     :param fase: Fase del proyecto al cual esta asociado el usuario
-    :param activo: 
+    :param activo: Sirve para hacer relaciones varios a varios
     """
 
     usuario = models.ForeignKey('login.Usuario', on_delete=models.CASCADE)
