@@ -27,8 +27,8 @@ def acceso_denegado(request, id_proyecto, caso):
     """
     proyecto = Proyecto.objects.get(pk=id_proyecto)
     posibles_casos = {
-        'estado': 'No se permite el ingreso a esta URL porque el proyecto: '+proyecto.nombre+'  '
-                  'tiene estado actual: '+proyecto.estado,
+        'estado': 'No se permite el ingreso a esta URL porque el proyecto: ' + proyecto.nombre + '  '
+                                                                                                 'tiene estado actual: ' + proyecto.estado,
         'gerente': 'El usuario actual no puede acceder a esta URL porque no es el Gerente del Proyecto actual',
         'tiimportado': 'No se puede editar este tipo de ítem porque se utiliza en otros proyectos'
     }
@@ -73,7 +73,7 @@ def index_administracion(request, filtro):
                 lista_proyectos.append(proyecto)
 
     return render(request, 'administracion/proyectos.html', {'lista_proyectos': lista_proyectos, 'filtro': filtro})
-    #return render(request, 'administracion/indexAdmin.html')
+    # return render(request, 'administracion/indexAdmin.html')
 
 
 def proyectos(request, filtro):
@@ -146,7 +146,7 @@ def crear_proyecto(request):
             nuevo_proyecto.participantes.add(participante)
             # creamos la cantidad de fases para este proyecto
             for x in range(0, nuevo_proyecto.numero_fases):
-                nueva_fase = Fase(nombre='', descripcion='añadir descripción...', proyecto=nuevo_proyecto)
+                nueva_fase = Fase(nombre='', descripcion='', proyecto=nuevo_proyecto)
                 nueva_fase.save()
             return HttpResponseRedirect(reverse('administracion:verProyecto', args=[nuevo_proyecto.id]))
     else:
@@ -191,7 +191,8 @@ def ver_proyecto(request, id_proyecto):
         habilitadotipo = False
     return render(request, 'administracion/verProyecto.html',
                   {'proyecto': proyecto, 'gerente': gerente, 'tipo_item': tipo_item, 'fases': fases, 'estado': estado,
-                   'habilitadofase':habilitadofase, 'habilitadocomite': habilitadocomite, 'habilitadotipo': habilitadotipo})
+                   'habilitadofase': habilitadofase, 'habilitadocomite': habilitadocomite,
+                   'habilitadotipo': habilitadotipo})
 
 
 def administrar_participantes(request, id_proyecto):
@@ -285,9 +286,8 @@ def estado_proyecto(request, id_proyecto):
             return HttpResponseRedirect(reverse('administracion:estadoProyecto', args=[id_proyecto]))
 
     return render(request, 'administracion/estadoProyecto.html',
-                  {'proyecto': proyecto, 'habilitadofase': habilitadofase, 'habilitadocomite':habilitadocomite,
+                  {'proyecto': proyecto, 'habilitadofase': habilitadofase, 'habilitadocomite': habilitadocomite,
                    'estado': estado})
-
 
 
 def estado_proyectov2(request, id_proyecto, estado):
