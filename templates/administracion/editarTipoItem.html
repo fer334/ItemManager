@@ -1,0 +1,28 @@
+{% extends 'login/loginHeader.html' %}
+{% block content %}
+    <div class="container">
+        <h1 class="text-center pt-3 mb-3">Editar tipo de item</h1>
+        <form class="pt-3" METHOD="post">
+            {% csrf_token %}
+            <div class="form-row">
+                <div class="form-group col-sm-12 col-md-8">
+                    <label for="id_nombre">Nombre</label>
+                    {{ form.nombre }}
+                </div>
+                <div class="form-group col-sm-12 col-md-4">
+                    <label for="id_prefijo">Prefijo</label>
+                    {{ form.prefijo }}
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="id_descripcion">Descripcion</label>
+                {{ form.descripcion }}
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-primary btn-block">Confirmar cambios</button>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}

@@ -3,24 +3,21 @@
     <div class="container">
         <h1 class="text-center pt-3 mb-3">Proyectos:</h1>
             <div class="list-group">
-                {% if not lista_proyectos.count %}
-                    <div class="alert alert-warning mt-3 col-sm-12 col-lg-6">Aún no hay Proyectos. ¡Cree su primer Proyecto!</div>
-                {% else %}
-                    <div class="dropdown">
+                <div class="dropdown">
                         <div class="col-sm-12 col-md-6 col-lg-3 float-right">
                             <button class="btn btn-secondary btn-block dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Filtro Por Estado: {{ filtro }}
                             </button>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <a class="dropdown-item" href="{% url 'administracion:proyectos' 'todos' %}">Ninguno</a>
+                                <a class="dropdown-item" href="{% url 'administracion:proyectos' 'todos' %}">Todos</a>
                                 <a class="dropdown-item" href="{% url 'administracion:proyectos' 'iniciado'%}">Iniciado</a>
                                 <a class="dropdown-item" href="{% url 'administracion:proyectos' 'en ejecucion'%}">En ejecución</a>
                                 <a class="dropdown-item" href="{% url 'administracion:proyectos' 'finalizado'%}">Finalizado</a>
                                 <a class="dropdown-item" href="{% url 'administracion:proyectos' 'cancelado'%}">Cancelado</a>
                             </div>
                         </div>
-
                     </div>
+                {% if lista_proyectos %}
                     <table class="table table-hover col-sm-12 mt-3">
                         <tbody>
                             {% for proyecto in lista_proyectos %}
@@ -33,6 +30,8 @@
                             {% endfor %}
                         </tbody>
                     </table>
+                {% else %}
+                    <div class="alert alert-warning mt-3 col-sm-12 col-lg-4">No hay Proyectos en esta categoría.</div>
                 {% endif %}
             </div>
         <a class="btn btn-primary mt-3" href="{% url 'administracion:crearProyecto' %}" role="button">Crear nuevo Proyecto</a>

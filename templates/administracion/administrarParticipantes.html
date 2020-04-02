@@ -45,16 +45,16 @@
                     {% endif %}
                 {% endfor %}
             </select>
-
-            <a class="btn btn-primary" href="{% url 'administracion:verProyecto' proyecto.id %}" role="button">
-                Volver a detalles de {{ proyecto.nombre }}
-            </a>
-            <button type="submit" class="btn btn-primary float-right"
-                    {% if  proyecto.estado == 'finalizado' %}disabled=""{% endif %}
-                        align="right">
-                Añadir al Proyecto
-            </button>
-
+            <div class="mt-3">
+                <a class="btn btn-primary float-right" href="{% url 'administracion:verProyecto' proyecto.id %}" role="button">
+                    Volver a detalles de {{ proyecto.nombre }}
+                </a>
+                <button type="submit" class="btn btn-primary "
+                        {% if  proyecto.estado == 'finalizado' %}disabled=""{% endif %}
+                            align="right">
+                    Añadir al Proyecto
+                </button>
+            </div>
         </form>
     </div>
 {% endblock %}

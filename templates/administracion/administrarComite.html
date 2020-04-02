@@ -3,7 +3,7 @@
 {% block content %}
     <div class="container">
         <h1 class="text-center pt-3 mb-3 pb-3" >Administrar Comité del Proyecto</h1>
-
+        <h5 style="color: #0c5460">El comité requiere {{ proyecto.cant_comite }} miembros en total</h5>
         {% if not proyecto.comite.all.count  %}
             <div class="alert alert-warning">No se ha definido ningún miembro para el comité</div>
         {% else %}
@@ -18,7 +18,10 @@
                     {% for miembro in proyecto.comite.all %}
                     <tr>
                         <td>{{ miembro }}</td>
-                        <td><a class="btn btn-danger" href="{% url 'administracion:desasignarUsuario' proyecto.id miembro.id 'comite' %}">Quitar del comite</a></td>
+                        <td><a class="btn btn-danger {% if proyecto.estado == 'en ejecucion' %}disabled{% endif %}"
+                               href="{% url 'administracion:desasignarUsuario' proyecto.id miembro.id 'comite' %}">
+                            Quitar del comite
+                        </a></td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -37,14 +40,14 @@
                 {% endfor %}
             </select>
             <div class="mt-3">
-                <a class="btn btn-primary" href="{% url 'administracion:verProyecto' proyecto.id %}" role="button">
+                <a class="btn btn-primary  float-right" href="{% url 'administracion:verProyecto' proyecto.id %}" role="button">
                     Volver a detalles de {{ proyecto.nombre }}
                 </a>
-                <button type="submit" class="btn btn-primary float-right"
+                <button type="submit" class="btn btn-primary"
                             {% if proyecto.cant_comite <= proyecto.comite.count %}
                                 disabled=""
                             {% endif %}
-                            align="right">Añadir al Proyecto
+                            align="right">Añadir al comite
                 </button>
             </div>
         </form>

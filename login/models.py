@@ -2,11 +2,14 @@
 Mapeador objeto-relacional en el que es posible definir la estructura de la base de datos utilizando código Python.
 """
 from django.contrib.auth.models import AbstractUser
-from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.db import models
 
 
 # Create your models here.
+from django.db.models import Q
+from administracion.models import Proyecto
+
+
 class Usuario(AbstractUser):
     """
     Clase que representa al usuario en la base de datos local que extiende del
@@ -28,3 +31,17 @@ class Usuario(AbstractUser):
         "Gerente",
         default=False
     )
+
+    def es_participante(self):
+        """
+        Metodo que comprueba que el usuario participa o no de algun proyecto
+        que ha iniciado o que esta en estado de en ejecucion
+
+        :return: retorna True si forma participa y False en caso contrario
+        """
+
+        consulta = Q(estado='iniciado') | Q(estado='en ejecucion')
+        if Proyecto.objects.filter(consulta, participantes=self.id).count() == 0:
+            return False
+        else:
+            return True
