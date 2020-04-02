@@ -37,15 +37,43 @@ def acceso_denegado(request, id_proyecto, caso):
     return render(request, 'administracion/accesoDenegado.html', {'proyecto': proyecto, 'mensaje': mensaje})
 
 
-def index_administracion(request):
+def index_administracion(request, filtro):
     """
-    vista que despliega el menú del módulo de administración
+    Vista que despliega la lista de proyectos con su estado actual, también permite filtrar los proyectos según estado,
+    además solo muestra los proyectos de los cuales es gerente el usuario que hizo el request
 
     :param request: objeto tipo diccionario que permite acceder a datos
-    :return: objeto que se encarga de renderear indexAdmin.html
+    :param filtro: este parámetro indica el estado según se filtrarán los proyectos. Si el valor es 'todos' no se aplicará ningún filtro
+    :return: objeto que se encarga de renderear proyectos.html
     :rtype: render
     """
-    return render(request, 'administracion/indexAdmin.html')
+    # lista final de proyectos con filtros de estado aplicados
+    lista_proyectos = []
+    # lista con los proyectos en los que es gerente el usuario
+    lista_proyectos_usuario = []
+    # lista sin ningún filtro de todos los proyectos del sistema
+    lista_todos_proyectos = Proyecto.objects.all()
+
+    """
+    # mostrar solo en los que el usuario participa
+    for proye in lista_todos_proyectos:
+        if proye.es_participante(request.user.id):
+            lista_proyectos_usuario.append(proye)
+    """
+    for proye in lista_todos_proyectos:
+        if proye.gerente == request.user.id:
+            lista_proyectos_usuario.append(proye)
+
+    # filtrar según estado
+    if filtro == 'todos':
+        lista_proyectos = lista_proyectos_usuario
+    else:
+        for proyecto in lista_proyectos_usuario:
+            if proyecto.estado == filtro:
+                lista_proyectos.append(proyecto)
+
+    return render(request, 'administracion/proyectos.html', {'lista_proyectos': lista_proyectos, 'filtro': filtro})
+    #return render(request, 'administracion/indexAdmin.html')
 
 
 def proyectos(request, filtro):
