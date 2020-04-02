@@ -307,9 +307,9 @@ def estado_proyectov2(request, id_proyecto, estado):
         if estado == 'iniciado' or estado == 'en ejecucion' or estado == 'finalizado' or estado == 'cancelado':
             proyecto.estado = estado
             proyecto.save()
-            return HttpResponseRedirect(reverse('administracion:verProyecto', args=[id_proyecto]))
+            return redirect('administracion:verProyecto', id_proyecto=id_proyecto)
 
-    return HttpResponseRedirect(reverse('administracion:verProyecto', args=[id_proyecto]))
+    return redirect('administracion:verProyecto', id_proyecto=id_proyecto)
 
 
 def administrar_fases_del_proyecto(request, id_proyecto):
