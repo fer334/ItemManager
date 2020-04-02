@@ -6,23 +6,30 @@ from django.utils import timezone
 import pytest
 
 
+@pytest.mark.django_db
 class TestViews(TestCase):
 
-    @pytest.mark.django_db
     def test_crear_proyecto(self):
         """
-        Prueba en la cual se prueba que existe el url crearProyecto y que se crea el proyecto
+        Prueba en la cual se confirma que existe el url crearProyecto y que se crea el proyecto
 
-        :return:
+        :return: el primer self.assertEqual() comprueba que existe el url
         """
+
+        proyecto_X = Proyecto(nombre='proyecto_x', fecha_inicio=timezone.now().date(), numero_fases=5, cant_comite=3,
+                              gerente=1)
+        response = self.client.post(reverse('administracion:crearProyecto'))
+        resp = self.client.post(reverse('administracion:verProyecto'))
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(proyecto_X.nombre, resp.content)
+
         """  userTest = Usuario.objects.create(id.,username='usertest', email='test@mail.com', password='contrasenha').save()
 
         #proyecto_X = {
          #   'nombre': 'proyecto_x', 'fecha_inicio': '2020-04-02', 'numero_fases': 5, 'cant_comite': 3,
           #  'gerente': 1}
 
-        proyecto_X = Proyecto(nombre='proyecto_x', fecha_inicio=timezone.now().date(), numero_fases=5, cant_comite=3,
-                             gerente= 'localId')
+        
         path = reverse('administracion:crearProyecto')
         request = RequestFactory().get(path)
         response = self.client.post(path)
@@ -35,5 +42,22 @@ class TestViews(TestCase):
         #                      gerente=1)
         # proyecto_X.save()
 
-        response = self.client.post(reverse('administracion:crearProyecto'))
-        self.assertEqual(response.status_code, 200)
+
+    def test_proyectos(self):
+            assert False
+
+
+    def test_ver_proyecto(self):
+        assert False
+
+
+    def test_estado_proyecto(self):
+        assert False
+
+
+    def test_index_administracion(self):
+        assert False
+
+
+def test_editar_proyecto():
+    assert False
