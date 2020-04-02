@@ -6,7 +6,7 @@ from django.urls import reverse, resolve
 
 class TestUrls:
     """
-    Clase para realizar pruebas sobre los urls de la aplicacion login
+    Clase para realizar pruebas sobre los urls del proyecto ItemManager
     """
 
     def test_index_url(self):

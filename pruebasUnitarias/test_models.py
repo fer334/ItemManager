@@ -8,7 +8,7 @@ import pytest
 @pytest.mark.django_db
 class TestModels:
     """
-    Esta clase se utiliza para probar las clases que implementan o utilizan modelos django en la aplicacion login
+    Esta clase se utiliza para probar las clases que implementan o utilizan modelos django en el proyecto ItemManager
     """
 
     def test_usr(self):
