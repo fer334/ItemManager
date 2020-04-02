@@ -59,7 +59,7 @@
                         </tr>
                     </tbody>
                 </table>
-                <div class="mt-5">
+                <div class="mt-5 pb-3">
                 {% if proyecto.estado != 'cancelado' %}
                     <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown"
                             aria-haspopup="true" aria-expanded="false">
@@ -85,7 +85,7 @@
                                 Administrar Miembros del Comité
                             </a>
                             <a class="list-group-item dropdown-item {% if  proyecto.estado == 'finalizado' %}disabled{% endif %}"
-                               href="{% url 'administracion:estadoProyecto' proyecto.id %}" role="button">
+                               href="{% url 'administracion:estadoProyecto2' proyecto.id ' ' %}" role="button">
                                 Modificar Estado del Proyecto
                             </a>
                             <a class="list-group-item dropdown-item {% if  proyecto.estado == 'finalizado' %}disabled{% endif %}"
@@ -101,12 +101,33 @@
                                 Administrar roles
                             </a>
                     </div>
+                    {% if proyecto.estado == 'iniciado' %}
+                        <a
+                            {% if habilitadofase == False or habilitadocomite == False %}
+                                href="#"     class="btn btn-secondary" onclick="{
+                                    document.querySelector('#msj').innerHTML='Debe definir comite y fases primero';
+                                    document.querySelector('#msj').classList='alert alert-warning mt-3'};"
+                            {% else %}
+                                href="{% url 'administracion:estadoProyecto2' proyecto.id 'en ejecucion' %}" class="btn btn-primary"
+                            {% endif %}
+                        >Pasar a en ejecucion</a>
+                        <a href="{% url 'administracion:estadoProyecto2' proyecto.id 'cancelado' %}" class="btn btn-danger">Pasar a cancelado</a>
+                    {% elif proyecto.estado == 'en ejecucion' %}
+                        <a href="{% url 'administracion:estadoProyecto2' proyecto.id 'finalizado' %}" class="btn btn-primary">Pasar a finalizado</a>
+                        <a href="{% url 'administracion:estadoProyecto2' proyecto.id 'cancelado' %}" class="btn btn-danger">Pasar a cancelado</a>
+                    {% endif %}
                 {% else %}
-                    <h5 style="color: #c60f0f">Proyecto Cancelado: No se permiten acciones</h5>
+                    <div class="d-inline-block">
+                        <h5 class="alert alert-warning">Proyecto Cancelado: No se permiten acciones</h5>
+                    </div>
                 {% endif %}
-                <a class="btn btn-primary float-right" href="{% url 'administracion:proyectos' 'todos'%}" role="button">
-                    Volver a Lista de Proyectos
-                </a>
+                <div class="float-right">
+                    <a class="btn btn-primary" href="{% url 'administracion:proyectos' 'todos'%}" role="button">
+                        Volver a Lista de Proyectos
+                    </a>
+                </div>
+                <div id="msj">
+                </div>
             </div>
         </div>
     </div>

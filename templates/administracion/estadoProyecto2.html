@@ -15,58 +15,27 @@
             {% if habilitadocomite == False %}
                     <div class="alert alert-warning">
                         Debe asignar a los miembros del
-                        <a href="{% url 'administracion:administrarComite' proyecto.id %}" style="color: #8f5902">comité</a>
+                        <a href="{% url 'administracion:administrarComite' proyecto.id %}" class="text-primary">comité</a>
                         antes de poder pasar a estado de ejecución
                     </div>
             {% endif %}
             </h6>
         {% endif %}
-
-        <form class="pt-3" METHOD="post" ACTION="{% url 'administracion:estadoProyecto' proyecto.id %}">
-            {% csrf_token %}
-            <div class="form-row">
-                <div class="form-group col-sm-12 col-md-8">
-                    <div class="custom-control custom-radio">
-                      <input type="radio" id="customRadio1" name="estado" class="custom-control-input" value="iniciado"
-                             {% if proyecto.estado == 'iniciado' %}checked="" {% endif %}>
-                      <label class="custom-control-label" for="customRadio1">Iniciado</label>
-                    </div>
-                    <div class="custom-control custom-radio">
-                        <input type="radio" id="customRadio2" name="estado" class="custom-control-input" value="en ejecucion"
-                               {% if proyecto.estado == 'en ejecucion' %}checked="" {% endif %}
-                                {% if habilitadofase == False or habilitadocomite == False %}disabled=""{% endif %}>
-                        <label class="custom-control-label" for="customRadio2">En Ejecución</label>
-                    </div>
-                    <div class="custom-control custom-radio">
-                      <input type="radio" id="customRadio3" name="estado" class="custom-control-input" value="finalizado"
-                             {% if proyecto.estado == 'finalizado' %}checked="" {% endif %}
-                             {% if proyecto.estado != 'en ejecucion' %}disabled=""{% endif %}>
-                      <label class="custom-control-label" for="customRadio3">Finalizado</label>
-                    </div>
-                    <div class="custom-control custom-radio">
-                      <input type="radio" id="customRadio4" name="estado" class="custom-control-input" value="cancelado"
-                             {% if proyecto.estado == 'cancelado' %}checked="" {% endif %}>
-                      <label class="custom-control-label" for="customRadio4">Cancelado</label>
-                    </div>
-                </div>
-            </div>
-        </form>
         <div class="mt-5">
             {% if proyecto.estado == 'iniciado' %}
-                <a href="#" class="btn btn-primary">Pasar a en ejecucion</a>
-                <a href="#" class="btn btn-danger">Pasar a cancelado</a>
+                <a
+                    {% if habilitadofase == False or habilitadocomite == False %}
+                        href="{% url 'administracion:estadoProyecto2' proyecto.id 'en ejecucion' %}" class="btn btn-secondary"
+                    {% else %}
+                        href="#" class="btn btn-primary"
+                    {% endif %}
+                >Pasar a en ejecucion</a>
+                <a href="{% url 'administracion:estadoProyecto2' proyecto.id 'cancelado' %}" class="btn btn-danger">Pasar a cancelado</a>
             {% endif %}
             {% if proyecto.estado == 'en ejecucion' %}
-                <a href="#" class="btn btn-primary">Pasar a finalizado</a>
-                <a href="#" class="btn btn-danger">Pasar a cancelado</a>
+                <a href="{% url 'administracion:estadoProyecto2' proyecto.id 'finalizado' %}" class="btn btn-primary">Pasar a finalizado</a>
+                <a href="{% url 'administracion:estadoProyecto2' proyecto.id 'cancelado' %}" class="btn btn-danger">Pasar a cancelado</a>
             {% endif %}
-        </div>
-        <div class="mt-5">
-            <button type="submit" class="btn btn-primary"
-                {% if proyecto.estado == 'cancelado' or proyecto.estado == 'finalizado'%}
-                    disabled=""
-                {% endif %}>Modificar
-            </button>
             <a class="btn btn-primary float-right" href="{% url 'administracion:verProyecto' proyecto.id %}" role="button">Volver atrás</a>
         </div>
     </div>

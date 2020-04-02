@@ -136,6 +136,7 @@ def ver_proyecto(request, id_proyecto):
     :return: objeto que renderea verProyecto.html
     :rtype: render
     """
+
     proyecto = Proyecto.objects.get(pk=id_proyecto)
     gerente = Usuario.objects.get(pk=proyecto.gerente)
     tipo_item = proyecto.tipoitem_set.all()
@@ -147,9 +148,19 @@ def ver_proyecto(request, id_proyecto):
         'cancelado': 'Cancelado',
     }
     estado = estados_posibles.get(proyecto.estado)
+    habilitadofase = True
+    habilitadocomite = True
 
+    lista_fases = proyecto.fase_set.all()
+    for fase in lista_fases:
+        if fase.nombre == '':
+            habilitadofase = False
+
+    if proyecto.comite.count() != proyecto.cant_comite:
+        habilitadocomite = False
     return render(request, 'administracion/verProyecto.html',
-                  {'proyecto': proyecto, 'gerente': gerente, 'tipo_item': tipo_item, 'fases': fases, 'estado': estado})
+                  {'proyecto': proyecto, 'gerente': gerente, 'tipo_item': tipo_item, 'fases': fases, 'estado': estado,
+                   'habilitadofase':habilitadofase, 'habilitadocomite': habilitadocomite})
 
 
 def administrar_participantes(request, id_proyecto):
@@ -245,6 +256,29 @@ def estado_proyecto(request, id_proyecto):
     return render(request, 'administracion/estadoProyecto.html',
                   {'proyecto': proyecto, 'habilitadofase': habilitadofase, 'habilitadocomite':habilitadocomite,
                    'estado': estado})
+
+
+
+def estado_proyectov2(request, id_proyecto, estado):
+    """
+    vista que permite seleccionar y cambiar el estado de un proyecto. Bloquea el paso a estado de ejecución si las
+    fases no están definidas o el comité no está completo
+
+    :param request: objeto tipo diccionario que permite acceder a datos
+    :param id_proyecto: id del proyecto el cual se desea administrar su estado
+    :return: objeto que renderea estadoProyecto.html o redireccion al mismo html
+    :rtype: render, redirect
+    """
+    proyecto = Proyecto.objects.get(pk=id_proyecto)
+    if proyecto.gerente != request.user.id:
+        return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto, 'gerente']))
+    else:
+        if estado == 'iniciado' or estado == 'en ejecucion' or estado == 'finalizado' or estado == 'cancelado':
+            proyecto.estado = estado
+            proyecto.save()
+            return HttpResponseRedirect(reverse('administracion:verProyecto', args=[id_proyecto]))
+
+    return HttpResponseRedirect(reverse('administracion:verProyecto', args=[id_proyecto]))
 
 
 def administrar_fases_del_proyecto(request, id_proyecto):
@@ -615,6 +649,7 @@ def desactivar_rol_proyecto(request, id_proyecto, id_rol):
     proyecto = Proyecto.objects.get(pk=id_proyecto)
     if proyecto.estado == 'iniciado' and rol.usuarioxrol_set.all().count() == 0:
         rol.activo = False
+        rol.save()
 
     return redirect('administracion:administrarRoles', id_proyecto=id_proyecto)
 
