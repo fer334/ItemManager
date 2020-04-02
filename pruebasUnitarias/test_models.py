@@ -1,7 +1,7 @@
 """
 Modulo para hacer test sobre el modulo models.py
 """
-from .models import Usuario
+from login.models import Usuario
 import pytest
 
 
@@ -13,6 +13,7 @@ class TestModels:
 
     def test_usr(self):
         """
+        CU 05: crear usuarios. Iteración 1
         Se probará la creación de un usuario con la implementacion Usuario
 
         :return: los asserts devuelven true si el usuario fue correctamente creado
