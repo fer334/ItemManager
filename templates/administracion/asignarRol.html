@@ -3,8 +3,7 @@
     <div class="container">
         <h3 class="pt-3 mb-3 pb-3 text-center">Participante {{ participante.username }}</h3>
 
-
-        {% if not roles_disponibles.count  %}
+        {% if not roles_disponibles  %}
             <div class="alert alert-warning">No hay roles para asignar</div>
         {% else %}
             <p>Seleccione el rol a asignar</p>
