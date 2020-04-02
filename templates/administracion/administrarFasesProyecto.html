@@ -3,22 +3,6 @@
 {% block content %}
     <div class="container">
         <h3 class="text-center pt-3 mb-3">Fases de {{ proyecto.nombre }}:</h3>
-       <!--  por si se necesite ver la lista de fases actuales
-        <table class="table table-hover">
-          <tbody>
-            <tr class="table-primary">
-                <td>Núm</td><td>Nombre</td><td>Descripción</td>
-            </tr>
-            {for fase in fases %} aca falta un % al comienzo
-            <tr class="table-default">
-              <td>{ fase.id }} </td> aca falta un {
-                <td>{fase.nombre }}</td> aca falta un {
-                <td>{ fase.descripcion }}</td> aca falta un {
-            </tr>
-            { endfor %} aca falta un % al comienzo
-          </tbody>
-         </table>
-         -->
             <div class="form-row justify-content-center">
                 <div class="form-group col-sm-12 col-md-8">
                     <table class="table table-hover">
@@ -48,7 +32,11 @@
                                            id="inputDesc"
                                            name="d{{ fase.id }}"
                                            type="text"
-                                           value="{{ fase.descripcion }}"
+                                           {% if fase.descripcion == '' %}
+                                            placeholder="añadir descripción..."
+                                           {% else %}
+                                            value="{{ fase.descripcion }}"
+                                           {% endif %}
                                     >
                                 </td>
                             </tr>

@@ -1,18 +1,19 @@
 """
 Modulo para hacer test sobre el modulo models.py
 """
-from .models import Usuario
+from login.models import Usuario
 import pytest
 
 
 @pytest.mark.django_db
 class TestModels:
     """
-    Esta clase se utiliza para probar las clases que implementan o utilizan modelos django en la aplicacion login
+    Esta clase se utiliza para probar las clases que implementan o utilizan modelos django en el proyecto ItemManager
     """
 
     def test_usr(self):
         """
+        CU 05: crear usuarios. Iteración 1
         Se probará la creación de un usuario con la implementacion Usuario
 
         :return: los asserts devuelven true si el usuario fue correctamente creado
