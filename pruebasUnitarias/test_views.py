@@ -7,8 +7,8 @@ from login.views import index
 from django.contrib.auth.models import AnonymousUser
 from login.models import Usuario
 from django.utils import timezone
-from administracion.models import Proyecto
-from administracion.views import crear_proyecto, administrar_participantes
+from administracion.models import Proyecto, Fase, Rol, UsuarioxRol
+from administracion.views import crear_proyecto, administrar_participantes, registrar_rol_por_fase, asignar_rol_por_fase, desasignar_rol_al_usuario
 import pytest
 from django.test import TestCase
 
@@ -29,6 +29,8 @@ class TestViews(TestCase):
             username='testusuario', email='estoes@unaprueba.com', password='password')
         cls.proyecto = Proyecto.objects.create(nombre='proyectoTestGeneral', fecha_inicio=timezone.now().date(),
                                                numero_fases=5, cant_comite=3, gerente=cls.usuario.id)
+        cls.fase = Fase.objects.create(nombre='Fase de prueba', proyecto=cls.proyecto)
+        cls.rol = Rol.objects.create(nombre='Rol de prueba', proyecto=cls.proyecto)
 
     def test_index_usuario_no_autenticado(self):
         """
@@ -105,3 +107,29 @@ class TestViews(TestCase):
         administrar_participantes(request, self.proyecto.id)
         assert self.proyecto.participantes.get(username='participante1').id == partipante.id, \
             'participante no fue añadido al proyecto'
+
+    def test_registrar_rol_por_fase(self):
+        """
+        CU 25: Asignar rol x fase a usuario. Iteración 2
+        Este test comprueba que un cierto rol sea asignado a un participante
+
+        :return: el assert comprueba que en el proyecto exista un participante cuyo id sea igual al nombre del participante que se añadió a proyecto
+        """
+        path = reverse('administracion:asignarRol', args=[self.fase.id, self.usuario.id])
+        request = RequestFactory().get(path)
+        request.user = self.usuario
+        response = asignar_rol_por_fase(request, self.fase.id, self.usuario.id)
+        assert response.status_code == 200, 'La prueba falló porque no se pudo mostrar la vista de asignacion'
+        request = RequestFactory()
+        request.user = self.usuario
+        registrar_rol_por_fase(request, self.fase.id, self.usuario.id, self.rol.id)
+        assert UsuarioxRol.objects.filter(fase=self.fase, rol=self.rol, usuario=self.usuario), \
+            "La prueba falló porque No se asigno rol"
+
+    def test_desasignar_rol_al_usuario(self):
+        request = RequestFactory()
+        request.user = self.usuario
+        uxr = UsuarioxRol.objects.create(usuario=self.usuario, fase=self.fase, rol=self.rol)
+        assert True
+        #desasignar_rol_al_usuario(request, self.fase.id, self.usuario.id, self.rol.id)
+        #self.assertEquals(uxr.activo, False, "La prueba falló no se pudo desasignar el rol")
