@@ -9,6 +9,8 @@ from login.models import Usuario
 from django.utils import timezone
 from administracion.models import Proyecto, Fase, Rol, UsuarioxRol, TipoItem
 from administracion.views import crear_proyecto, administrar_participantes, registrar_rol_por_fase, asignar_rol_por_fase, desasignar_rol_al_usuario, administrar_comite, importar_tipo, confirmar_tipo_import, mostrar_tipo_import, administrar_fases_del_proyecto, estado_proyectov2, eliminar_participante_y_comite
+from administracion.models import Proyecto
+from administracion.views import crear_proyecto, proyectos, estado_proyecto, estado_proyectov2, editar_proyecto
 import pytest
 from django.test import TestCase
 
@@ -268,3 +270,67 @@ class TestViews(TestCase):
         lista_fases = p.fase_set.all()
         self.assertNotEqual(lista_fases, [], 'No se ha creado ninguna fase')
         self.assertEqual(lista_fases.count(), p.numero_fases, 'No se ha creado el número correcto de fases')
+
+    def test_verificar_proyecto(self):
+        """
+        CU 10: Crear Proyectos. Iteración 2
+        Se verifica que el proyecto es creado correctamente y que tambien el url redirecciona a donde debe ir
+
+        :return: el primer assert indica que el proyecto fue creado correctamente, envia un mensaje en casocontrario,
+        y el segundo que el url redirecciona correctamente
+        """
+        ppp = Proyecto.objects.create(nombre='ppp', fecha_inicio=timezone.now().date(),
+                                                    numero_fases=5, cant_comite=3, gerente=self.usuario.id)
+        response = self.client.post(reverse('administracion:crearProyecto'))
+        self.assertEqual(ppp.nombre,'ppp', 'indica que el proyecto no creado' )
+        self.assertEqual(response.status_code, 200)
+
+    def test_proyectos(self):
+        """
+        CU 11: Listar proyectos por estado. Iteración 2
+        Se listan los proyectos segun su estado actual, los cuales pueden ser iniciado, en ejecucion, finalizado o
+        cancelado o por defecto todos, si no se hizo ningun filtro.
+
+        :return: Retorna que se realiza correctamente el filtro
+        """
+        proyecto = Proyecto.objects.create(nombre='proyecto_T', fecha_inicio=timezone.now().date(),
+                                          numero_fases=5, cant_comite=3, gerente= self.usuario.id)
+        proy = Proyecto.objects.create(nombre='proyecto_x', fecha_inicio=timezone.now().date(),
+
+                                          numero_fases=5, cant_comite=3, gerente= self.usuario.id)
+        request =RequestFactory()
+        request.user =self.usuario
+        resp = proyectos(request,'todos')
+        assert resp.status_code == 200
+
+    def test_estado_proyecto_cancelado(self):
+        """
+        CU 12: Gestionar estados del proyecto. Iteración 2
+        Gestión correcta del estado del proyecto, en este estado se pasa algun proyecto a estado de cancelado
+
+        :return: Se verifica que el cambio de estado se realizo correctamente, envia un mensaje en caso contrario
+        """
+        pl = Proyecto.objects.create(nombre='proyecto_turu', fecha_inicio=timezone.now().date(),
+                                                    numero_fases=5, cant_comite=3, gerente=self.usuario.id)
+        request = RequestFactory()
+        request.user = self.usuario
+        estado_proyectov2(request, pl.id, 'cancelado')
+        pl = Proyecto.objects.get(pk=pl.id)
+        self.assertEqual(pl.estado, 'cancelado', 'no se logro cambiar de estado')
+
+    def test_estado_proyecto_en_ejecucion(self):
+        """
+        CU 13: Modificar el estado del proyecto a en ejecución. Iteración 2
+        Se modifica el estado del proyecto de iniciado a en ejecucion.
+
+        :return: Se verifica que el cambio de estado se realizo correctamente, envia un mensaje en caso contrario
+        """
+        proyecto_iniciado = Proyecto.objects.create(nombre='proyectoEnEjecucion', fecha_inicio=timezone.now().date(),
+                                                    numero_fases=5, cant_comite=3, gerente=self.usuario.id)
+        request = RequestFactory()
+        request.user = self.usuario
+        estado_proyectov2(request, proyecto_iniciado.id, 'en ejecucion')
+        proyecto_iniciado = Proyecto.objects.get(pk=proyecto_iniciado.id)
+        self.assertEqual(proyecto_iniciado.estado, 'en ejecucion', 'el proyecto cambio de estado')
+
+
