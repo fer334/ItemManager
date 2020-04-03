@@ -7,11 +7,8 @@ from login.views import index
 from django.contrib.auth.models import AnonymousUser
 from login.models import Usuario
 from django.utils import timezone
-from administracion.models import Proyecto, Fase
-from administracion.views import crear_proyecto, administrar_participantes, estado_proyectov2, \
-    eliminar_participante_y_comite
 from administracion.models import Proyecto, Fase, Rol, UsuarioxRol, TipoItem
-from administracion.views import crear_proyecto, administrar_participantes, registrar_rol_por_fase, asignar_rol_por_fase, desasignar_rol_al_usuario, administrar_comite, importar_tipo, confirmar_tipo_import, mostrar_tipo_import, administrar_fases_del_proyecto
+from administracion.views import estado_proyectov2, eliminar_participante_y_comite, crear_proyecto, administrar_participantes, registrar_rol_por_fase, asignar_rol_por_fase, desasignar_rol_al_usuario, administrar_comite, importar_tipo, confirmar_tipo_import, mostrar_tipo_import, administrar_fases_del_proyecto
 import pytest
 from django.test import TestCase
 
@@ -113,17 +110,17 @@ class TestViews(TestCase):
 
     def test_desasignar_rol_al_usuario(self):
         """
-                CU 24: Desasignar rol x fase a usuario. Iteración 2
-                Este test comprueba que un cierto rol sea desasignado a un participante
+        CU 24: Desasignar rol x fase a usuario. Iteración 2
+        Este test comprueba que un cierto rol sea desasignado a un participante
 
-                :return: el assert comprueba que el objeto rol por fase quede desactivo
-                """
+        :return: el assert comprueba que el objeto rol por fase quede desactivo
+        """
         request = RequestFactory()
         request.user = self.usuario
         uxr = UsuarioxRol.objects.create(usuario=self.usuario, fase=self.fase, rol=self.rol)
         desasignar_rol_al_usuario(request, self.fase.id, self.usuario.id, self.rol.id)
         uxr = UsuarioxRol.objects.get(usuario=self.usuario, fase=self.fase, rol=self.rol)
-        self.assertEquals(uxr.activo, False, "La prueba falló no se pudo desasignar el rol")
+        self.assertEqual(uxr.activo, False, "La prueba falló no se pudo desasignar el rol")
 
     def test_registrar_rol_por_fase(self):
         """
@@ -145,7 +142,7 @@ class TestViews(TestCase):
 
     def test_administrar_comite(self):
             """
-            CU 26: Crear comite de aprobacion de cambios
+            CU 26: Crear comite de aprobacion de cambios. Iteracion 2
             Este test comprueba que un participante sea efectivamente añadido al comite de un proyecto
 
             :return: el assert comprueba que en el proyecto exista un participante cuyo id sea igual al nombre del participante que se añadió a proyecto
@@ -162,7 +159,7 @@ class TestViews(TestCase):
 
     def test_importar_tipo(self):
         """
-        CU 32: Crear tipo de item
+        CU 32: Crear tipo de item. Iteracion 2
         Este test comprueba que un participante sea efectivamente añadido al comite de un proyecto
 
         :return: el assert comprueba que en el proyecto exista un participante cuyo id sea igual al nombre del participante que se añadió a proyecto
@@ -179,7 +176,7 @@ class TestViews(TestCase):
 
     def test_administrar_fases_del_proyecto(self):
         """
-        CU 19: Editar fases
+        CU 19: Editar fases. Iteracion 2
         Este test comprueba que se editen correctamente las propiedades de la fase
         :return: el assert comprueba que las propiedades hayan cambiado
         """
@@ -205,7 +202,7 @@ class TestViews(TestCase):
         estado_proyectov2(request, proyecto_iniciado.id, 'finalizado')
         # sincronizamos el objeto con los nuevos cambios
         proyecto_iniciado = Proyecto.objects.get(pk=proyecto_iniciado.id)
-        self.assertEquals(proyecto_iniciado.estado, 'finalizado', 'el estado del proyecto cambió a finalizado y '
+        self.assertEqual(proyecto_iniciado.estado, 'finalizado', 'el estado del proyecto cambió a finalizado y '
                                                                   'no debía cambiar de estado')
 
     """
@@ -257,4 +254,4 @@ class TestViews(TestCase):
         p = Proyecto.objects.get(nombre='proyectoFases')
         lista_fases = p.fase_set.all()
         self.assertNotEqual(lista_fases, [], 'No se ha creado ninguna fase')
-        self.assertEquals(lista_fases.count(), p.numero_fases, 'No se ha creado el número correcto de fases')
+        self.assertEqual(lista_fases.count(), p.numero_fases, 'No se ha creado el número correcto de fases')
