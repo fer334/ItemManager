@@ -31,6 +31,7 @@ class TestModels(TestCase):
     def test_Proyecto(self):
         """
         CU 10: Crear Proyectos. Iteración 2
+
         Se prueban que los proyectos se crean correctamente.
         :return: Las afirmaciones devuelven true  si fueron creados correctamente, false en
         caso contrario.
@@ -43,7 +44,8 @@ class TestModels(TestCase):
 
     def test_Fase(self):
         """
-        CU 18: Crear Fase. Iteración 2
+        CU 18: Crear Fase. Iteración 2.
+
         Se prueban que las fases se crean correctamente.
         :return: Las afirmaciones devuelven si la creacion fue realizada correctamente, envia un mensaje en caso
         contrario.
@@ -60,6 +62,7 @@ class TestModels(TestCase):
     def test_tipo_item(self):
         """
         CU 29:	Crear tipo de item. Iteración 2
+
         Se prueban que los tipos de item se crean correctamente.
         :return: La afirmacion devuelve si la creacion fue realizada correctamente, envia un mensaje en caso
         contrario
@@ -77,6 +80,7 @@ class TestModels(TestCase):
     def test_plantilla_atributo(self):
         """
         Plantilla que ayuda a los tipos de item.
+
         :return: Demuestra que funciona el modelo
         """
         tipo_item_X = TipoItem(nombre='alfan',
@@ -90,6 +94,7 @@ class TestModels(TestCase):
     def test_rol(self):
         """
         CU 22:	Crear rol. Iteración 2
+
         Se prueban que crean los roles correctamente.
         :return: Las afirmaciones devuelven correctamente los parametros, envia un mensaje en caso contrario
         """

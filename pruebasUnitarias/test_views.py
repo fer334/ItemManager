@@ -259,9 +259,10 @@ class TestViews(TestCase):
 
     def test_crear_fases(self):
         """
-        CU 16: crear fase. Iteración 2
+        CU 18: crear fase. Iteración 2
         Nuestra implementación permite la creación automática de la cantidad de fases que se defina al crear un proyecto
         en numero_fases. Este test verifica que se creen las fases y la cantidad correcta definida al crear proyecto
+
         :return: el primer assert retorna True si la lista de fases no está vacía y el segundo retorna True si la cantidad correcta de fases fue creada
         """
         path = reverse('administracion:crearProyecto')
