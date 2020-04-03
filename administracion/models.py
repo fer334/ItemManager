@@ -93,10 +93,12 @@ class PlantillaAtributo(models.Model):
     """
     #: Se almacena el nombre del tipo de item
     nombre = models.CharField(max_length=200)
-    #: Tipo del item a ser instanciado
+    #: Tipo del atributo a ser instanciado
     tipo = models.CharField(max_length=100)
     #: TipoItem asociado a la plantilla
     tipo_item = models.ForeignKey(TipoItem, on_delete=models.CASCADE)
+    #: Atributo que indica si completar el atributo es requerido
+    es_requerido = models.BooleanField(default=False)
 
     def __str__(self):
         return self.nombre
