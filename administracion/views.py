@@ -306,9 +306,10 @@ def estado_proyectov2(request, id_proyecto, estado):
         return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto, 'gerente']))
     else:
         if estado == 'iniciado' or estado == 'en ejecucion' or estado == 'finalizado' or estado == 'cancelado':
-            proyecto.estado = estado
-            proyecto.save()
-            return HttpResponseRedirect(reverse('administracion:verProyecto', args=[id_proyecto]))
+            if not(estado == 'finalizado' and proyecto.estado != 'en ejecucion'):
+                proyecto.estado = estado
+                proyecto.save()
+                return HttpResponseRedirect(reverse('administracion:verProyecto', args=[id_proyecto]))
 
     return HttpResponseRedirect(reverse('administracion:verProyecto', args=[id_proyecto]))
 
