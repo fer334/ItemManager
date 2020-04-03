@@ -98,19 +98,19 @@
                             </a>
                     </div>
                     {% if proyecto.estado == 'iniciado' %}
-                        <a
+                        <button
                             {% if habilitadofase == False or habilitadocomite == False or habilitadotipo == False %}
-                                href="#"     class="btn btn-secondary" onclick="{
+                                class="btn btn-secondary" onclick="{
                                     document.querySelector('#msj').innerHTML='Debe definir fases tipos de item y comite primero';
                                     document.querySelector('#msj').classList='alert alert-warning mt-3'};"
                             {% else %}
-                                href="{% url 'administracion:estadoProyecto2' proyecto.id 'en ejecucion' %}" class="btn btn-primary"
+                                onclick="show_modal('{% url 'administracion:estadoProyecto2' proyecto.id 'en ejecucion' %}')" class="btn btn-primary"
                             {% endif %}
-                        >Pasar a en ejecucion</a>
-                        <a href="{% url 'administracion:estadoProyecto2' proyecto.id 'cancelado' %}" class="btn btn-danger">Pasar a cancelado</a>
+                        >Pasar a en ejecucion</button>
+                        <button onclick="show_modal('{% url 'administracion:estadoProyecto2' proyecto.id 'cancelado' %}')" class="btn btn-danger">Pasar a cancelado</button>
                     {% elif proyecto.estado == 'en ejecucion' %}
-                        <a href="{% url 'administracion:estadoProyecto2' proyecto.id 'finalizado' %}" class="btn btn-primary">Pasar a finalizado</a>
-                        <a href="{% url 'administracion:estadoProyecto2' proyecto.id 'cancelado' %}" class="btn btn-danger">Pasar a cancelado</a>
+                        <button onclick="show_modal('{% url 'administracion:estadoProyecto2' proyecto.id 'finalizado' %}')" class="btn btn-primary">Pasar a finalizado</button>
+                        <button onclick="show_modal('{% url 'administracion:estadoProyecto2' proyecto.id 'cancelado' %}')" class="btn btn-danger">Pasar a cancelado</button>
                     {% endif %}
                 {% else %}
                     <div class="d-inline-block">
@@ -128,6 +128,29 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="confirmacion" role="dialog">
+        <div class="modal-dialog modal-lg bg-white" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">Estas seguro de que desea cambiar el estado del proyecto?</h3>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <a class="btn btn-success" id="botonConfirmar" href="">Confirmar</a>
+                    <button type="button" class="btn btn-danger float-right" data-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        //var $ = jQuery.noConflict();
+        function show_modal( url ){
+            $('#botonConfirmar').attr('href',url)
+            $('#confirmacion').modal('show');
+        }
+    </script>
 {% endblock %}
 
 

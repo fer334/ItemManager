@@ -554,8 +554,9 @@ def crear_atributo(request, id_proyecto, id_tipo):
     """
     nombre = request.POST['nombre']
     tipo = request.POST['tipo']
+    is_required = True if request.POST.get('required') else False
     tipo_item = TipoItem.objects.get(pk=id_tipo)
-    atributo = PlantillaAtributo(nombre=nombre, tipo=tipo, tipo_item=tipo_item)
+    atributo = PlantillaAtributo(nombre=nombre, tipo=tipo, tipo_item=tipo_item, es_requerido=is_required)
     atributo.save()
     return HttpResponseRedirect(reverse('administracion:verTipoItem', args=(id_proyecto, tipo_item.id)))
 
