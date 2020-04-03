@@ -7,8 +7,9 @@ from login.views import index
 from django.contrib.auth.models import AnonymousUser
 from login.models import Usuario
 from django.utils import timezone
-from administracion.models import Proyecto
-from administracion.views import crear_proyecto, administrar_participantes
+from administracion.models import Proyecto, Fase
+from administracion.views import crear_proyecto, administrar_participantes, estado_proyectov2, \
+    eliminar_participante_y_comite
 import pytest
 from django.test import TestCase
 
@@ -89,7 +90,7 @@ class TestViews(TestCase):
 
     def test_administrar_participantes(self):
         """
-        CU 06: crear Usuario de Proyecto. Iteración 2
+        CU 06: crear Usuario de Proyecto y CU 16: administrar participantes del proyecto. Iteración 2
         Este test comprueba que un participante sea efectivamente añadido a un proyecto
 
         :return: el assert comprueba que en el proyecto exista un participante cuyo id sea igual al nombre del participante que se añadió a proyecto
@@ -105,3 +106,65 @@ class TestViews(TestCase):
         administrar_participantes(request, self.proyecto.id)
         assert self.proyecto.participantes.get(username='participante1').id == partipante.id, \
             'participante no fue añadido al proyecto'
+
+    def test_estado_proyecto_iniciado_finalizado(self):
+        proyecto_iniciado = Proyecto.objects.create(nombre='proyectoIniciado', fecha_inicio=timezone.now().date(),
+                                                    numero_fases=5, cant_comite=3, gerente=self.usuario.id)
+        request = RequestFactory()
+        request.user = self.usuario
+        estado_proyectov2(request, proyecto_iniciado.id, 'finalizado')
+        # sincronizamos el objeto con los nuevos cambios
+        proyecto_iniciado = Proyecto.objects.get(pk=proyecto_iniciado.id)
+        self.assertEquals(proyecto_iniciado.estado, 'finalizado', 'el estado del proyecto cambió a finalizado y '
+                                                                  'no debía cambiar de estado')
+
+    """
+    def test_estado_proyecto_ejecucion_finalizado(self):
+        proyecto_ejecucion = Proyecto.objects.create(nombre='proyectoEjec', fecha_inicio=timezone.now().date(),
+                                                     estado='en ejecucion', numero_fases=5, cant_comite=3,
+                                                     gerente=self.usuario.id)
+        path = reverse('administracion:estadoProyecto', args=[proyecto_ejecucion.id])
+        request = RequestFactory().post(path, {'estado': 'finalizado'})
+        request.user = self.usuario
+        estado_proyectov2(request, proyecto_ejecucion.id)
+        self.assertEqual(proyecto_ejecucion.estado, 'finalizado', 'el estado del proyecto cambió a finalizado y '
+                                                                  'no debía cambiar')
+"""
+
+    def test_eliminar_participante(self):
+        """
+        CU 16: Administrar Participantes del Proyecto. iteración 2
+        Esta prueba primeramente añade un usuario al proyecto y luego lo desasigna del mismo
+
+        :return: el assert comprueba que el usuario no sea participante del proyecto, en caso de ser retorna false
+        """
+        partipante = Usuario.objects.create_user(username='participante2',
+                                                 email='estoes@otraprueba.com', password='password')
+        # asignamos al path la vista administrar_participantes
+        path = reverse('administracion:administrarParticipantes', args=[self.proyecto.id])
+        request = RequestFactory().post(path, {'participante': partipante.id})
+        request.user = self.usuario
+        # añadimos al participante al proyecto
+        administrar_participantes(request, self.proyecto.id)
+        # eliminamos al participante del proyecto
+        path2 = reverse('administracion:desasignarUsuario', args=[self.proyecto.id, partipante.id, 'participante'])
+        request = RequestFactory().get(path2)
+        eliminar_participante_y_comite(request, self.proyecto.id, partipante.id, 'participante')
+        self.assertNotIn(partipante, self.proyecto.participantes.all(), 'participante no fue quitado del proyecto')
+
+    def test_crear_fases(self):
+        """
+        CU 16: crear fase. Iteración 2
+        Nuestra implementación permite la creación automática de la cantidad de fases que se defina al crear un proyecto
+        en numero_fases. Este test verifica que se creen las fases y la cantidad correcta definida al crear proyecto
+        :return: el primer assert retorna True si la lista de fases no está vacía y el segundo retorna True si la cantidad correcta de fases fue creada
+        """
+        path = reverse('administracion:crearProyecto')
+        request = RequestFactory().post(path, {'nombre': 'proyectoFases', 'fecha_inicio': timezone.now().date(),
+                                               'numero_fases': 3, 'cant_comite': 3})
+        request.user = self.usuario
+        crear_proyecto(request)
+        p = Proyecto.objects.get(nombre='proyectoFases')
+        lista_fases = p.fase_set.all()
+        self.assertNotEqual(lista_fases, [], 'No se ha creado ninguna fase')
+        self.assertEquals(lista_fases.count(), p.numero_fases, 'No se ha creado el número correcto de fases')
