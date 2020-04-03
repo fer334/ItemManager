@@ -29,8 +29,18 @@ class ActiveAccountMiddleware:
                     reverse('login:logout')
                 ]:
                     return redirect('login:AccesoDenegado')
+        else:
+            if request.path not in [
+                reverse('login:index'),
+                reverse('login:AccesoDenegado'),
+                reverse('login:logout'),
+                reverse('login:register'),
+                reverse('login:login'),
+            ]:
+                return redirect('login:AccesoDenegado')
         response = self.get_response(request)
         return response
+
 
 
 class GerenteAccountMiddleware:
