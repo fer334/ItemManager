@@ -91,8 +91,8 @@ class TestViews(TestCase):
         response = crear_proyecto(request)
         # asignamos a p el proyecto que se creó
         p = Proyecto.objects.get(nombre='proyectoTest')
-        self.assertEqual(response.status_code,302, 'No se redirecciona a verProyecto, eso implica que el proyecto no '
-                                                   'se creó')
+        self.assertEqual(response.status_code, 302, 'No se redirecciona a verProyecto, eso implica que el proyecto no '
+                                                    'se creó')
         self.assertEqual(p.gerente, request.user.id, 'El gerente no es el usuario que hizo el request')
 
     def test_administrar_participantes(self):
@@ -160,7 +160,8 @@ class TestViews(TestCase):
         request = RequestFactory().post(path, {'miembro_comite': participante.id})
         request.user = self.usuario
         administrar_comite(request, self.proyecto.id)
-        self.assertIn(participante, self.proyecto.comite.all(), "La prueba fallo por que no se pudo asignar a un miembro del comite")
+        self.assertIn(participante, self.proyecto.comite.all(),
+                      "La prueba fallo por que no se pudo asignar a un miembro del comite")
 
     def test_importar_tipo(self):
         """
@@ -173,11 +174,14 @@ class TestViews(TestCase):
         request.user = self.usuario
         tipo_a_importar = TipoItem.objects.create()
         response = confirmar_tipo_import(request, self.proyecto.id, tipo_a_importar.id)
-        self.assertEqual(response.status_code, 200, 'La prueba falló porque no se pudo mostrar la vista con la lista de tipos de item')
+        self.assertEqual(response.status_code, 200,
+                         'La prueba falló porque no se pudo mostrar la vista con la lista de tipos de item')
         response = mostrar_tipo_import(request, self.proyecto.id)
-        self.assertEqual(response.status_code, 200, 'La prueba falló porque no se pudo mostrar la vista del tipo de item a importar')
+        self.assertEqual(response.status_code, 200,
+                         'La prueba falló porque no se pudo mostrar la vista del tipo de item a importar')
         importar_tipo(request, self.proyecto.id, tipo_a_importar.id)
-        self.assertIn(tipo_a_importar, self.proyecto.tipoitem_set.all(),"La prueba fallo por que no se pudo importar el tipo de item")
+        self.assertIn(tipo_a_importar, self.proyecto.tipoitem_set.all(),
+                      "La prueba fallo por que no se pudo importar el tipo de item")
 
     def test_administrar_fases_del_proyecto(self):
         """
@@ -188,16 +192,15 @@ class TestViews(TestCase):
         path = reverse('administracion:administrarFasesProyecto', args=[self.proyecto.id])
         nuevo_nombre = 'Fase Prueba Editado'
         nueva_descripcion = 'Descripcion editada'
-        fase_nueva = Fase.objects.create(nombre='Fase inicial', proyecto=self.proyecto, descripcion='Descripcion inicial')
-        request = RequestFactory().post(path, {f'{fase_nueva.id}': [nuevo_nombre], f'd{fase_nueva.id}': [nueva_descripcion]})
+        fase_nueva = Fase.objects.create(nombre='Fase inicial', proyecto=self.proyecto,
+                                         descripcion='Descripcion inicial')
+        request = RequestFactory().post(path,
+                                        {f'{fase_nueva.id}': [nuevo_nombre], f'd{fase_nueva.id}': [nueva_descripcion]})
         request.user = self.usuario
         administrar_fases_del_proyecto(request, self.proyecto.id)
         fase_nueva = Fase.objects.get(pk=fase_nueva.id)
         self.assertEqual(fase_nueva.nombre, nuevo_nombre, "No se pudo cambiar el nombre de la fase")
         self.assertEqual(fase_nueva.descripcion, nueva_descripcion, "No se pudo cambiar la descripcion de la fase")
-
-
-
 
     def test_estado_proyecto_iniciado_finalizado(self):
         """
@@ -282,9 +285,9 @@ class TestViews(TestCase):
         :return: el primer assert indica que el proyecto fue creado correctamente, envia un mensaje en casocontrario, y el segundo que el url redirecciona correctamente
         """
         ppp = Proyecto.objects.create(nombre='ppp', fecha_inicio=timezone.now().date(),
-                                                    numero_fases=5, cant_comite=3, gerente=self.usuario.id)
+                                      numero_fases=5, cant_comite=3, gerente=self.usuario.id)
         response = self.client.post(reverse('administracion:crearProyecto'))
-        self.assertEqual(ppp.nombre,'ppp', 'indica que el proyecto no creado' )
+        self.assertEqual(ppp.nombre, 'ppp', 'indica que el proyecto no creado')
         self.assertEqual(response.status_code, 200)
 
     def test_proyectos(self):
@@ -296,13 +299,12 @@ class TestViews(TestCase):
         :return: Retorna que se realiza correctamente el filtro
         """
         proyecto = Proyecto.objects.create(nombre='proyecto_T', fecha_inicio=timezone.now().date(),
-                                          numero_fases=5, cant_comite=3, gerente= self.usuario.id)
+                                           numero_fases=5, cant_comite=3, gerente=self.usuario.id)
         proy = Proyecto.objects.create(nombre='proyecto_x', fecha_inicio=timezone.now().date(),
-
-                                          numero_fases=5, cant_comite=3, gerente= self.usuario.id)
-        request =RequestFactory()
-        request.user =self.usuario
-        resp = proyectos(request,'todos')
+                                       numero_fases=5, cant_comite=3, gerente=self.usuario.id)
+        request = RequestFactory()
+        request.user = self.usuario
+        resp = proyectos(request, 'todos')
         assert resp.status_code == 200
 
     def test_estado_proyecto_cancelado(self):
@@ -313,7 +315,7 @@ class TestViews(TestCase):
         :return: Se verifica que el cambio de estado se realizo correctamente, envia un mensaje en caso contrario
         """
         pl = Proyecto.objects.create(nombre='proyecto_turu', fecha_inicio=timezone.now().date(),
-                                                    numero_fases=5, cant_comite=3, gerente=self.usuario.id)
+                                     numero_fases=5, cant_comite=3, gerente=self.usuario.id)
         request = RequestFactory()
         request.user = self.usuario
         estado_proyectov2(request, pl.id, 'cancelado')
@@ -351,7 +353,7 @@ class TestViews(TestCase):
         # creamos un request de tipo post al que asignamos el path y los datos del proyecto a crear
         request = RequestFactory().post(path, {
             'username': 'AdminPrueba',
-            'email': 'admin'+aux+'@admin.com',
+            'email': 'admin' + aux + '@admin.com',
             'password': 'admin123',
             'pass_confirmation': 'admin123',
             'first_name': 'Juan',
