@@ -1,17 +1,14 @@
 """
 Modulo para hacer test sobre el modulo views.py
 """
-from django.test import RequestFactory, Client
+from django.test import RequestFactory
 from django.urls import reverse
 from login.views import index
 from django.contrib.auth.models import AnonymousUser
 from login.models import Usuario
 from django.utils import timezone
-from administracion.models import Proyecto, Fase
-from administracion.views import crear_proyecto, administrar_participantes, estado_proyectov2, \
-    eliminar_participante_y_comite
 from administracion.models import Proyecto, Fase, Rol, UsuarioxRol, TipoItem
-from administracion.views import crear_proyecto, administrar_participantes, registrar_rol_por_fase, asignar_rol_por_fase, desasignar_rol_al_usuario, administrar_comite, importar_tipo, confirmar_tipo_import, mostrar_tipo_import, administrar_fases_del_proyecto
+from administracion.views import crear_proyecto, administrar_participantes, registrar_rol_por_fase, asignar_rol_por_fase, desasignar_rol_al_usuario, administrar_comite, importar_tipo, confirmar_tipo_import, mostrar_tipo_import, administrar_fases_del_proyecto, estado_proyectov2, eliminar_participante_y_comite
 import pytest
 from django.test import TestCase
 
@@ -123,7 +120,7 @@ class TestViews(TestCase):
         uxr = UsuarioxRol.objects.create(usuario=self.usuario, fase=self.fase, rol=self.rol)
         desasignar_rol_al_usuario(request, self.fase.id, self.usuario.id, self.rol.id)
         uxr = UsuarioxRol.objects.get(usuario=self.usuario, fase=self.fase, rol=self.rol)
-        self.assertEquals(uxr.activo, False, "La prueba falló no se pudo desasignar el rol")
+        self.assertEqual(uxr.activo, False, "La prueba falló no se pudo desasignar el rol")
 
     def test_registrar_rol_por_fase(self):
         """
