@@ -14,7 +14,6 @@ urlpatterns = [
     path('fases/<int:id_fase>/usuario/<int:id_usuario>', views.asignar_rol_por_fase, name='asignarRol'),
     path('fases/<int:id_fase>/usuario/<int:id_usuario>/rol/<int:id_rol>', views.registrar_rol_por_fase, name='registrarRolPorFase'),
     # URLs DE MATI
-    path('moduloadmin/<str:filtro>', views.index_administracion, name='indexAdmin'),
     path('proyectos/<str:filtro>', views.proyectos, name='proyectos'),
     path('proyectos/crear/', views.crear_proyecto, name='crearProyecto'),
     path('proyectos/<int:id_proyecto>/', views.ver_proyecto, name='verProyecto'),

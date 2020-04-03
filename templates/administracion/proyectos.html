@@ -34,6 +34,11 @@
                     <div class="alert alert-warning mt-3 col-sm-12 col-lg-4">No hay Proyectos en esta categoría.</div>
                 {% endif %}
             </div>
-        <a class="btn btn-primary mt-3" href="{% url 'administracion:crearProyecto' %}" role="button">Crear nuevo Proyecto</a>
+            <div class="mt-3">
+                <a class="btn btn-primary" href="{% url 'administracion:crearProyecto' %}" role="button">Crear nuevo Proyecto</a>
+                <a href="{% url 'login:index' %}" class="btn btn-primary float-right">Volver a ver proyectos</a>
+            </div>
+
+
     </div>
 {% endblock %}
