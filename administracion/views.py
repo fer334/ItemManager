@@ -256,6 +256,7 @@ def estado_proyectov2(request, id_proyecto, estado):
     vista que permite seleccionar y cambiar el estado de un proyecto. Bloquea el paso a estado de ejecución si las
     fases no están definidas o el comité no está completo
 
+    :param estado: estado nuevo a asignar
     :param request: objeto tipo diccionario que permite acceder a datos
     :param id_proyecto: id del proyecto el cual se desea administrar su estado
     :return: objeto que renderea estadoProyecto.html o redireccion al mismo html
