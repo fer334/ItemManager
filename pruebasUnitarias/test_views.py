@@ -341,12 +341,17 @@ class TestViews(TestCase):
 
         :return: True si se crea correctamente el usuario administrador
         """
+
+        # variable auxiliar para email random para arreglar el error de
+        # email repetido en la bd de firebase
+        aux = str(timezone.now()).split(' ')[1].split('.')[1].split('+')[0]
+
         # primero definimos la direccion del view a probar en el test
         path = reverse('login:register')
         # creamos un request de tipo post al que asignamos el path y los datos del proyecto a crear
         request = RequestFactory().post(path, {
             'username': 'AdminPrueba',
-            'email': 'admin3@admin.com',
+            'email': 'admin'+aux+'@admin.com',
             'password': 'admin123',
             'pass_confirmation': 'admin123',
             'first_name': 'Juan',
