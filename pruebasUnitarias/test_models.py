@@ -3,10 +3,11 @@ Modulo para hacer test sobre el modulo models.py
 """
 from login.models import Usuario
 import pytest
+from django.test import TestCase
 
 
 @pytest.mark.django_db
-class TestModels:
+class TestModels(TestCase):
     """
     Esta clase se utiliza para probar las clases que implementan o utilizan modelos django en el proyecto ItemManager
     """
@@ -20,7 +21,7 @@ class TestModels:
         """
         usuario = Usuario.objects.create_user(username="prueba", email="prueba@mail.com", password="contraseña")
 
-        assert usuario.username == 'prueba'
-        assert usuario.email == 'prueba@mail.com'
+        self.assertEqual(usuario.username, 'prueba', 'Proyecto no fue creado correctamente')
+        self.assertEqual(usuario.email, 'prueba@mail.com', 'Proyecto no fue creado correctamente')
         # obs: la contraseña estará encriptada por lo que no será igual a la guardada
-        assert usuario.password != 'contraseña', "falla porque esta encriptado"
+        self.assertNotEqual(usuario.password, 'contraseña', "falla porque esta encriptado")

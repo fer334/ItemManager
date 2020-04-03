@@ -65,7 +65,7 @@ class TestViews(TestCase):
 
         response = index(request)
 
-        assert response.status_code == 200, 'La prueba falló porque el usuario no fue registrado'
+        self.assertEqual(response.status_code, 200, 'La prueba falló porque el usuario no fue registrado')
 
     def test_crear_proyecto(self):
         """
@@ -89,8 +89,9 @@ class TestViews(TestCase):
         response = crear_proyecto(request)
         # asignamos a p el proyecto que se creó
         p = Proyecto.objects.get(nombre='proyectoTest')
-        assert response.status_code == 302, 'No se redirecciona a verProyecto, eso implica que el proyecto no se creó'
-        assert p.gerente == request.user.id, 'El gerente no es el usuario que hizo el request'
+        self.assertEqual(response.status_code,302, 'No se redirecciona a verProyecto, eso implica que el proyecto no '
+                                                   'se creó')
+        self.assertEqual(p.gerente, request.user.id, 'El gerente no es el usuario que hizo el request')
 
     def test_administrar_participantes(self):
         """
@@ -108,8 +109,7 @@ class TestViews(TestCase):
         request.user = self.usuario
         # llamamos a la vista a ser probada
         administrar_participantes(request, self.proyecto.id)
-        assert self.proyecto.participantes.get(username='participante1').id == partipante.id, \
-            'participante no fue añadido al proyecto'
+        self.assertIn(partipante, self.proyecto.participantes.all(), 'participante no fue añadido al proyecto')
 
     def test_desasignar_rol_al_usuario(self):
         """
@@ -198,6 +198,14 @@ class TestViews(TestCase):
 
 
     def test_estado_proyecto_iniciado_finalizado(self):
+        """
+        CU 14: modificar estado del proyecto a finalizado. Iteración 2
+        En este test probamos cambiar el estado del proyecto de iniciado a finalizado. Algo que no se permite ya
+        que solo puede cambiarse al estado finalizado si el estado actual del proyecto es en ejecución por lo que
+        el assert verifica que el cambio de estado no suceda
+
+        :return: el assert retorna True si el estado del proyecto no cambia a finalizado
+        """
         proyecto_iniciado = Proyecto.objects.create(nombre='proyectoIniciado', fecha_inicio=timezone.now().date(),
                                                     numero_fases=5, cant_comite=3, gerente=self.usuario.id)
         request = RequestFactory()
@@ -205,21 +213,26 @@ class TestViews(TestCase):
         estado_proyectov2(request, proyecto_iniciado.id, 'finalizado')
         # sincronizamos el objeto con los nuevos cambios
         proyecto_iniciado = Proyecto.objects.get(pk=proyecto_iniciado.id)
-        self.assertEquals(proyecto_iniciado.estado, 'finalizado', 'el estado del proyecto cambió a finalizado y '
-                                                                  'no debía cambiar de estado')
+        self.assertNotEqual(proyecto_iniciado.estado, 'finalizado', 'el estado del proyecto cambió a finalizado y '
+                                                                    'no debía cambiar de estado')
 
-    """
     def test_estado_proyecto_ejecucion_finalizado(self):
-        proyecto_ejecucion = Proyecto.objects.create(nombre='proyectoEjec', fecha_inicio=timezone.now().date(),
+        """
+        CU 14: modificar estado del proyecto a finalizado. Iteración 2
+        En este test probamos cambiar el estado del proyecto de iniciado a finalizado. Algo que solo se permite si el
+        estado actual del proyecto es en ejecución por lo que el assert verifica que el cambio de estado suceda
+
+        :return: el assert retorna True si el estado del proyecto cambia a finalizado
+        """
+        proyecto_ejecucion = Proyecto.objects.create(nombre='proyectoEjecucion', fecha_inicio=timezone.now().date(),
                                                      estado='en ejecucion', numero_fases=5, cant_comite=3,
                                                      gerente=self.usuario.id)
-        path = reverse('administracion:estadoProyecto', args=[proyecto_ejecucion.id])
-        request = RequestFactory().post(path, {'estado': 'finalizado'})
+        request = RequestFactory()
         request.user = self.usuario
-        estado_proyectov2(request, proyecto_ejecucion.id)
-        self.assertEqual(proyecto_ejecucion.estado, 'finalizado', 'el estado del proyecto cambió a finalizado y '
-                                                                  'no debía cambiar')
-"""
+        estado_proyectov2(request, proyecto_ejecucion.id, 'finalizado')
+        # sincronizamos el objeto con los nuevos cambios
+        proyecto_ejecucion = Proyecto.objects.get(pk=proyecto_ejecucion.id)
+        self.assertEqual(proyecto_ejecucion.estado, 'finalizado', 'el estado del proyecto no cambió a finalizado')
 
     def test_eliminar_participante(self):
         """
@@ -257,4 +270,4 @@ class TestViews(TestCase):
         p = Proyecto.objects.get(nombre='proyectoFases')
         lista_fases = p.fase_set.all()
         self.assertNotEqual(lista_fases, [], 'No se ha creado ninguna fase')
-        self.assertEquals(lista_fases.count(), p.numero_fases, 'No se ha creado el número correcto de fases')
+        self.assertEqual(lista_fases.count(), p.numero_fases, 'No se ha creado el número correcto de fases')
