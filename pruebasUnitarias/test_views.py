@@ -7,8 +7,8 @@ from login.views import index
 from django.contrib.auth.models import AnonymousUser
 from login.models import Usuario
 from django.utils import timezone
-from administracion.models import Proyecto, Fase, Rol, UsuarioxRol
-from administracion.views import crear_proyecto, administrar_participantes, registrar_rol_por_fase, asignar_rol_por_fase, desasignar_rol_al_usuario
+from administracion.models import Proyecto, Fase, Rol, UsuarioxRol, TipoItem
+from administracion.views import crear_proyecto, administrar_participantes, registrar_rol_por_fase, asignar_rol_por_fase, desasignar_rol_al_usuario, administrar_comite, importar_tipo, confirmar_tipo_import, mostrar_tipo_import, administrar_fases_del_proyecto
 import pytest
 from django.test import TestCase
 
@@ -108,12 +108,26 @@ class TestViews(TestCase):
         assert self.proyecto.participantes.get(username='participante1').id == partipante.id, \
             'participante no fue añadido al proyecto'
 
+    def test_desasignar_rol_al_usuario(self):
+        """
+                CU 24: Desasignar rol x fase a usuario. Iteración 2
+                Este test comprueba que un cierto rol sea desasignado a un participante
+
+                :return: el assert comprueba que el objeto rol por fase quede desactivo
+                """
+        request = RequestFactory()
+        request.user = self.usuario
+        uxr = UsuarioxRol.objects.create(usuario=self.usuario, fase=self.fase, rol=self.rol)
+        desasignar_rol_al_usuario(request, self.fase.id, self.usuario.id, self.rol.id)
+        uxr = UsuarioxRol.objects.get(usuario=self.usuario, fase=self.fase, rol=self.rol)
+        self.assertEquals(uxr.activo, False, "La prueba falló no se pudo desasignar el rol")
+
     def test_registrar_rol_por_fase(self):
         """
         CU 25: Asignar rol x fase a usuario. Iteración 2
         Este test comprueba que un cierto rol sea asignado a un participante
 
-        :return: el assert comprueba que en el proyecto exista un participante cuyo id sea igual al nombre del participante que se añadió a proyecto
+        :return: el assert comprueba que se cree el objeto rol por fase que representa la asignacion
         """
         path = reverse('administracion:asignarRol', args=[self.fase.id, self.usuario.id])
         request = RequestFactory().get(path)
@@ -126,10 +140,56 @@ class TestViews(TestCase):
         assert UsuarioxRol.objects.filter(fase=self.fase, rol=self.rol, usuario=self.usuario), \
             "La prueba falló porque No se asigno rol"
 
-    def test_desasignar_rol_al_usuario(self):
+    def test_administrar_comite(self):
+            """
+            CU 26: Crear comite de aprobacion de cambios
+            Este test comprueba que un participante sea efectivamente añadido al comite de un proyecto
+
+            :return: el assert comprueba que en el proyecto exista un participante cuyo id sea igual al nombre del participante que se añadió a proyecto
+            """
+            # creamos un usuario participante para el proyecto
+            participante = Usuario.objects.create_user(
+                username='participante1', email='estoes@otraprueba.com', password='password')
+            # asignamos al path la vista administrar_comite
+            path = reverse('administracion:administrarComite', args=[self.proyecto.id])
+            request = RequestFactory().post(path, {'miembro_comite': participante.id})
+            request.user = self.usuario
+            administrar_comite(request, self.proyecto.id)
+            self.assertIn(participante, self.proyecto.comite.all(), "La prueba fallo por que no se pudo asignar a un miembro del comite")
+
+    def test_importar_tipo(self):
+        """
+        CU 32: Crear tipo de item
+        Este test comprueba que un participante sea efectivamente añadido al comite de un proyecto
+
+        :return: el assert comprueba que en el proyecto exista un participante cuyo id sea igual al nombre del participante que se añadió a proyecto
+        """
         request = RequestFactory()
         request.user = self.usuario
-        uxr = UsuarioxRol.objects.create(usuario=self.usuario, fase=self.fase, rol=self.rol)
-        assert True
-        #desasignar_rol_al_usuario(request, self.fase.id, self.usuario.id, self.rol.id)
-        #self.assertEquals(uxr.activo, False, "La prueba falló no se pudo desasignar el rol")
+        tipo_a_importar = TipoItem.objects.create()
+        response = confirmar_tipo_import(request, self.proyecto.id, tipo_a_importar.id)
+        self.assertEqual(response.status_code, 200, 'La prueba falló porque no se pudo mostrar la vista con la lista de tipos de item')
+        response = mostrar_tipo_import(request, self.proyecto.id)
+        self.assertEqual(response.status_code, 200, 'La prueba falló porque no se pudo mostrar la vista del tipo de item a importar')
+        importar_tipo(request, self.proyecto.id, tipo_a_importar.id)
+        self.assertIn(tipo_a_importar, self.proyecto.tipoitem_set.all(),"La prueba fallo por que no se pudo importar el tipo de item")
+
+    def test_administrar_fases_del_proyecto(self):
+        """
+        CU 19: Editar fases
+        Este test comprueba que se editen correctamente las propiedades de la fase
+        :return: el assert comprueba que las propiedades hayan cambiado
+        """
+        path = reverse('administracion:administrarFasesProyecto', args=[self.proyecto.id])
+        nuevo_nombre = 'Fase Prueba Editado'
+        nueva_descripcion = 'Descripcion editada'
+        fase_nueva = Fase.objects.create(nombre='Fase inicial', proyecto=self.proyecto, descripcion='Descripcion inicial')
+        request = RequestFactory().post(path, {f'{fase_nueva.id}': [nuevo_nombre], f'd{fase_nueva.id}': [nueva_descripcion]})
+        request.user = self.usuario
+        administrar_fases_del_proyecto(request, self.proyecto.id)
+        fase_nueva = Fase.objects.get(pk=fase_nueva.id)
+        self.assertEqual(fase_nueva.nombre, nuevo_nombre, "No se pudo cambiar el nombre de la fase")
+        self.assertEqual(fase_nueva.descripcion, nueva_descripcion, "No se pudo cambiar la descripcion de la fase")
+
+
+
