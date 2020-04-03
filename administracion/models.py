@@ -14,6 +14,12 @@ class Proyecto(models.Model):
     nombre = models.CharField(max_length=200, null=False)
     #: fecha en la que el proyecto comienza
     fecha_inicio = models.DateField(auto_now=False, auto_now_add=False)
+    #: fecha y hora en la que el proyecto pasa a estado de ejecución
+    fecha_ejecucion = models.DateTimeField(auto_now=False, auto_now_add=False, null=True)
+    #: fecha y hora en la que el proyecto pasa a finalizado
+    fecha_finalizado = models.DateTimeField(auto_now=False, auto_now_add=False, null=True)
+    #: fecha y hoar en la que el proyecto pasa a cancelado
+    fecha_cancelado = models.DateTimeField(auto_now=False, auto_now_add=False, null=True)
     #: estado actual del proyecto, puede variar entre iniciado, en ejecución, cancelado, finalizado
     estado = models.CharField(max_length=200, default='iniciado')
     #: cantidad de fases que tiene el proyecto

@@ -5,6 +5,7 @@ Modulo se detalla la logica para las vistas que serán utilizadas por la app
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse
+from django.utils import timezone
 # Models
 from administracion.models import TipoItem, Proyecto, PlantillaAtributo, Rol, Fase, UsuarioxRol
 from login.models import Usuario
@@ -268,7 +269,16 @@ def estado_proyectov2(request, id_proyecto, estado):
     else:
         if estado == 'iniciado' or estado == 'en ejecucion' or estado == 'finalizado' or estado == 'cancelado':
             if not(estado == 'finalizado' and proyecto.estado != 'en ejecucion'):
+                # se modifica el estado
                 proyecto.estado = estado
+                # se añade la fecha de modificación
+                if estado == 'en ejecucion':
+                    proyecto.fecha_ejecucion = timezone.now()
+                elif estado == 'finalizado':
+                    proyecto.fecha_finalizado = timezone.now()
+                elif estado == 'cancelado':
+                    proyecto.fecha_cancelado = timezone.now()
+                # se guardan cambios en la base de datos
                 proyecto.save()
                 return HttpResponseRedirect(reverse('administracion:verProyecto', args=[id_proyecto]))
 
