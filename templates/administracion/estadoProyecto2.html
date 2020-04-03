@@ -1,0 +1,42 @@
+{% extends 'login/loginHeader.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="container">
+        <h3 class="text-center pt-3 mb-3">{{ proyecto.nombre }}:</h3>
+            <h4>Estado actual: {{estado}}</h4>
+        <h3 class="text-center pt-3 mb-3">Nuevo Estado:</h3>
+        {% if habilitadofase == False or habilitadocomite == False %}
+            {% if habilitadofase == False %}
+                <div class="alert alert-warning"> Debe Definir los nombres de las
+                        <a href="{% url 'administracion:administrarFasesProyecto' proyecto.id %}" style="color: #8f5902">fases</a>
+                        antes de poder pasar a estado de ejecución
+                </div>
+            {% endif %}
+            {% if habilitadocomite == False %}
+                    <div class="alert alert-warning">
+                        Debe asignar a los miembros del
+                        <a href="{% url 'administracion:administrarComite' proyecto.id %}" class="text-primary">comité</a>
+                        antes de poder pasar a estado de ejecución
+                    </div>
+            {% endif %}
+            </h6>
+        {% endif %}
+        <div class="mt-5">
+            {% if proyecto.estado == 'iniciado' %}
+                <a
+                    {% if habilitadofase == False or habilitadocomite == False %}
+                        href="{% url 'administracion:estadoProyecto2' proyecto.id 'en ejecucion' %}" class="btn btn-secondary"
+                    {% else %}
+                        href="#" class="btn btn-primary"
+                    {% endif %}
+                >Pasar a en ejecucion</a>
+                <a href="{% url 'administracion:estadoProyecto2' proyecto.id 'cancelado' %}" class="btn btn-danger">Pasar a cancelado</a>
+            {% endif %}
+            {% if proyecto.estado == 'en ejecucion' %}
+                <a href="{% url 'administracion:estadoProyecto2' proyecto.id 'finalizado' %}" class="btn btn-primary">Pasar a finalizado</a>
+                <a href="{% url 'administracion:estadoProyecto2' proyecto.id 'cancelado' %}" class="btn btn-danger">Pasar a cancelado</a>
+            {% endif %}
+            <a class="btn btn-primary float-right" href="{% url 'administracion:verProyecto' proyecto.id %}" role="button">Volver atrás</a>
+        </div>
+    </div>
+{% endblock %}

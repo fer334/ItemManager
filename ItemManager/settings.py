@@ -61,6 +61,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'ItemManager.middleware.ActiveAccountMiddleware',
+    'ItemManager.middleware.GerenteAccountMiddleware',
 ]
 
 ROOT_URLCONF = 'ItemManager.urls'
@@ -147,6 +148,7 @@ AUTHENTICATION_BACKENDS = {
     'django.contrib.auth.backends.ModelBackend',
     'login.LoginBackEnd.LoginBackEnd'
 }
+
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 

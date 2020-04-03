@@ -12,13 +12,16 @@ Sistema de gestion de Items
    :toctree: _autosummary
 
    login.models
+   login.forms
    login.views
    login.LoginBackEnd
    login.Register
    login.test_models
    login.test_urls
+   login.test_views
    administracion.models
-
+   administracion.views
+   administracion.forms
 
 Indices and tables
 ==================

@@ -1,16 +1,11 @@
 """
-En este modulo se detalla la logica para las vistas que serán utilizadas por la app
+Modulo se detalla la logica para las vistas que serán utilizadas por la app
 """
 # Django
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.contrib import auth
-from django.views.generic import TemplateView
-from django.http import HttpResponse
-
-# RegisterBackend
-from login.Register import crear_usuario
 
 # Forms
 from login.forms import RegisterForm, UpdateUserForm
@@ -22,8 +17,11 @@ from login.models import Usuario
 @login_required
 def index(request):
     """
-    Funcion que solo muestra el index, validando antes si el usuario inicio sesion
+    Método que muestra el index, validando antes si el usuario inició sesión
 
+    :param request: objeto tipo diccionario que permite acceder a datos
+    :return: objeto que se encarga de renderar admin.html, index.html o no_active.html
+    :rtype: render
     """
     if request.user.is_superuser:
         return render(request, 'login/admin.html')
@@ -37,8 +35,10 @@ def user_login(request):
     """
     Vista que se encarga de loguear al usuario
 
-    :param POST[email]: Email del usuario
-    :param POST[password]: Contraseña del usuario
+    :param request: objeto tipo diccionario que permite acceder a datos
+    :return: objeto que se encarga de renderar login.html
+    :return: redirección a la vista index
+    :rtype: render, redirect
     """
 
     if request.method == 'POST':
@@ -59,8 +59,11 @@ def user_login(request):
 
 def logout(request):
     """
-    Funcion que se encarga de cerrar la sesion del usuario
+    Función que se encarga de cerrar la sesión del usuario
 
+    :param request: objeto tipo diccionario que permite acceder a datos
+    :return: redireccion a la vista login
+    :rtype: redirect
     """
     auth.logout(request)
     return redirect('login:login')
@@ -69,11 +72,23 @@ def logout(request):
 def admin(request):
     """
     Vista que solo sera visible para el administrador
+
+    :param request: objeto tipo diccionario que permite acceder a datos
+    :return: objeto que se encarga de renderar admin.html
+    :rtype: render
     """
     return render(request, 'login/admin.html')
 
 
 def users_access(request):
+    """
+    Vista para modificar el acceso de los usuarios al sistema, ademas hacer a un
+    usuario gerente
+
+    :param request: objeto tipo diccionario que permite acceder a datos
+    :return: objeto que se encarga de renderar access.html
+    :rtype: render
+    """
     usuarios = Usuario.objects.order_by('id'). \
         exclude(is_superuser=True)
 
@@ -109,12 +124,11 @@ def users_access(request):
 
 def user_register(request):
     """
-    Vista que se encarga de registrar al usuario, espera un POST Request
+    Vista que se encarga de registrar a un usuario
 
-    :param request:
-    :param POST[email]: Email del usuario nuevo
-    :param POST[password]: Contraseña del usuario nuevo
-    :param POST[username]: Nombre del usuario nuevo
+    :param request: objeto tipo diccionario que permite acceder a datos
+    :return: objeto que se encarga de renderar register.html
+    :rtype: render
     """
 
     if request.method == "POST":
@@ -129,10 +143,13 @@ def user_register(request):
 
 def user_update(request, name):
     """
-    Vista encargada de la modificacion de datos
-    de los usuarios
-    """
+    Vista encargada de la modificacion de datos de los usuarios
 
+    :param request: objeto tipo diccionario que permite acceder a datos
+    :param name: nombre del usuario a modificar
+    :return: objeto que se encarga de renderar user_update.html
+    :rtype: render
+    """
     instance = Usuario.objects.get(username=name)
     if request.method == 'POST':
         form = UpdateUserForm(

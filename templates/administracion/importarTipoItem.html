@@ -4,9 +4,9 @@
         <h3 class="mb-3">Seleccione el tipo item a importar</h3>
 
         <div class="list-group col-sm-12 col-md-6">
-            {% if not lista_tipoitem.count %}
-                <div class="alert alert-danger">No hay tipos de item disponibles para importar</div>
-                <a class="btn btn-primary" href="{% url 'administracion:crearTipoItem' id_proyecto %}">Volver</a>
+            {% if not lista_tipoitem %}
+                <div class="alert alert-warning">No hay tipos de item disponibles para importar</div>
+                <a class="btn btn-primary" href="{% url 'administracion:tipoItemPorProyecto' id_proyecto %}">Volver</a>
             {% else %}
                 {% for tipo_item in lista_tipoitem %}
                     <a href="{% url 'administracion:confirmarImportarTipoItem' id_proyecto tipo_item.id %}" class="list-group-item list-group-item-action"> {{ tipo_item.nombre }}({{ tipo_item.prefijo }})</a>

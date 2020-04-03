@@ -13,7 +13,7 @@ login.models
 
 .. autosummary::
 
-  usr
+  Usuario
 
 
 

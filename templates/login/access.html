@@ -28,31 +28,54 @@
                             <td>
                                 <label> {{ usuario.email }}</label>
                             </td>
-                            <td>
+                            {% if usuario.es_participante %}
+                                <td colspan="2">
+                                <h6 class="text">Usuario participante</h6>
+                                </td>
                                 <input name={{usuario.id}}
                                        type="checkbox"
                                        value=True
+                                       hidden="true"
                                        {% if usuario.is_active%}
                                            checked
                                        {% endif %}
                                 >
-                            </td>
-                            <td>
                                 <input name="g{{usuario.id}}"
                                        type="checkbox"
                                        value=True
+                                       hidden="true"
                                        {% if usuario.is_gerente%}
                                            checked
                                        {% endif %}
                                 >
-                            </td>
+
+                            {% else %}
+                                <td>
+                                    <input name={{usuario.id}}
+                                           type="checkbox"
+                                           value=True
+                                           {% if usuario.is_active%}
+                                               checked
+                                           {% endif %}
+                                    >
+                                </td>
+                                <td>
+                                    <input name="g{{usuario.id}}"
+                                           type="checkbox"
+                                           value=True
+                                           {% if usuario.is_gerente%}
+                                               checked
+                                           {% endif %}
+                                    >
+                                </td>
+                            {% endif %}
                             <td>
-                                <button type="button"
+                                <a type="button"
                                         class="btn btn-primary"
-                                        href={% url 'login:userUpdate' usuario%}
-                                        btn-lg btn-block>
+                                        href={% url 'login:userUpdate' usuario %}
+                                        >
                                         Editar
-                                </button>
+                                </a>
                             </td>
                         </tr>
                     {% endfor %}
@@ -110,6 +133,25 @@
                                             El campo gerente se refiere a que un usuario tiene los permisos de
                                             gerente, si este campo esta activo, el usuario podra tendra la
                                             posibilidad de crear nuevos proyectos dentro del sistema.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-header" role="tab" id="HeaderUsuarioParticipate">
+                                        <h5 class="mb-0">
+                                            <a data-toggle="collapse" data-parent="#accordianId"
+                                               href="#contenidoUsuarioParticipante" aria-expanded="true"
+                                               aria-controls="contenidoUsuarioParticipante">
+                                                Usuario Participante
+                                            </a>
+                                        </h5>
+                                    </div>
+                                    <div id="contenidoUsuarioParticipante" class="collapse in" role="tabpanel"
+                                         aria-labelledby="HeaderUsuarioParticipate">
+                                        <div class="card-body">
+                                            Indica que ese usuario ya participa dentro de algun proyecto, por
+                                            tanto, su cuenta no puede ser desactivada mientras que el proyecto
+                                            este aun en ejecucion
                                         </div>
                                     </div>
                                 </div>
