@@ -118,9 +118,7 @@
                     {% if proyecto.estado == 'iniciado' %}
                         <button
                             {% if habilitadofase == False or habilitadocomite == False or habilitadotipo == False %}
-                                href="#"     class="btn btn-secondary" onclick="{
-                                    document.querySelector('#msj').innerHTML='Debe definir {% if habilitadofase == False %}nombres de las fases{% endif %}{% if habilitadofase == False and habilitadocomite == False %},{% endif %}{% if proyecto.comite.count < proyecto.cant_comite %}los miembros del comité {% endif %}{% if habilitadocomite == False and habilitadotipo == False %}y{% endif %} {% if habilitadotipo == False %}aunque sea un tipo de ítem{% endif %} primero';
-                                    document.querySelector('#msj').classList='alert alert-warning mt-3'};"
+                                class="btn btn-secondary" onclick="show_alert('Debe definir {% if habilitadofase == False %}nombres de las fases{% endif %}{% if habilitadofase == False and habilitadocomite == False %}, {% endif %}{% if proyecto.comite.count < proyecto.cant_comite %}los miembros del comité {% endif %}{% if habilitadocomite == False and habilitadotipo == False %}y{% endif %} {% if habilitadotipo == False %}aunque sea un tipo de ítem{% endif %}')"
                             {% else %}
                                 onclick="show_modal('{% url 'administracion:estadoProyecto2' proyecto.id 'en ejecucion' %}')" class="btn btn-primary"
                             {% endif %}
@@ -147,7 +145,7 @@
         </div>
     </div>
     <div class="modal fade" id="confirmacion" role="dialog">
-        <div class="modal-dialog modal-lg bg-white" role="document">
+        <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h3 class="modal-title">Estas seguro de que desea cambiar el estado del proyecto?</h3>
@@ -167,6 +165,10 @@
         function show_modal( url ){
             $('#botonConfirmar').attr('href',url)
             $('#confirmacion').modal('show');
+        }
+        function show_alert(msj) {
+            document.querySelector('#msj').innerHTML=msj;
+            document.querySelector('#msj').classList='alert alert-warning mt-3'
         }
     </script>
 {% endblock %}
