@@ -1,0 +1,14 @@
+{% extends 'login/loginHeader.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="container">
+        <h1 class="text-center pt-3 mb-3">Creación De Item</h1>
+        <form class="pt-3" METHOD="post" ACTION="{% url 'desarrollo:crearItem' proyecto.id tipo.id %}">
+            {% csrf_token %}
+            {{ form|crispy}}
+            <p align="right">
+                <button type="submit" class="btn btn-primary" align="right">Crear Item</button>
+            </p>
+        </form>
+    </div>
+{% endblock %}
