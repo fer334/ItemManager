@@ -73,7 +73,8 @@ class Fase(models.Model):
     estado = models.CharField(max_length=200, default='abierta')
     #: Proyecto asociado a la fase
     proyecto = models.ForeignKey(Proyecto, on_delete=models.CASCADE)
-
+    class Meta:
+        ordering = ['id']
 
 class TipoItem(models.Model):
     """

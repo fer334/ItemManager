@@ -45,7 +45,7 @@ def proyectos(request, filtro):
 
     :param request: objeto tipo diccionario que permite acceder a datos
     :param filtro: este parámetro indica el estado según se filtrarán los proyectos. Si el valor es 'todos' no se aplicará ningún filtro
-    :return: objeto que se encarga de renderear proyectos.html
+    :return: objeto que se encarga de renderear proyecto_ver_todos.html
     :rtype: render
     """
     # lista final de proyectos con filtros de estado aplicados

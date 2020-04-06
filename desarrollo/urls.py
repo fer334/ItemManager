@@ -5,5 +5,7 @@ from desarrollo import views
 app_name = 'desarrollo'
 urlpatterns = [
     # URLs de Mati
-    path()
+    # URLs de David
+    path('desarrollo/<str:filtro>', views.index, name='indexDesarrollo'),
+    path('desarrollo/proyecto/<int:id_proyecto>', views.ver_proyecto, name='verProyecto'),
 ]
