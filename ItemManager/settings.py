@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'login',
     'administracion',
+    'desarrollo',
 ]
 
 SITE = 1
