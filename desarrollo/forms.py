@@ -6,4 +6,3 @@ class ItemForm(forms.ModelForm):
     class Meta:
         model = Item
         fields = ('nombre', 'complejidad', 'descripcion')
-
