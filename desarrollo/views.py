@@ -2,35 +2,40 @@ from django.shortcuts import render
 
 # Create your views here.
 from django.shortcuts import render, redirect
-from administracion.models import Proyecto
 from django.urls import reverse
-
 from desarrollo.models import Item, AtributoParticular
-from administracion.models import  Proyecto, TipoItem
+from administracion.models import Proyecto, TipoItem, Fase
 from desarrollo.forms import ItemForm
 
 
 # Create your views here.
 
-def crear_item(request, id_proyecto, id_tipo):
-    proyecto = Proyecto.objects.get(pk=id_proyecto)
+def crear_item(request, id_fase, id_tipo):
+    fase = Fase.objects.get(pk=id_fase)
     tipo = TipoItem.objects.get(pk=id_tipo)
-    plantilla_atr = tipo.plantillaatributo_set.all()
+    plantilla_atr = tipo.plantillaatributo_set.all().order_by('id')
+
     if request.method == "POST":
         form = ItemForm(request.POST)
-        nuevo_item = Item(nombre=tipo.prefijo, tipo_item=tipo, proyecto=proyecto)
-        # primero creamos los atributos del ítem
-        for atr in plantilla_atr:
-            nuevo_atributo = AtributoParticular(item=nuevo_item, nombre=atr.nombre, tipo=atr.tipo,
-                                                es_requerido=atr.es_requerido)
-            nuevo_atributo.save()
         if form.is_valid():
-            form.save()
+            # creamos el ítem
+            nombre = form.cleaned_data['nombre']
+            complejidad = form.cleaned_data['complejidad']
+            descripcion = form.cleaned_data['descripcion']
+            nuevo_item = Item(nombre=nombre, complejidad=complejidad, descripcion=descripcion, tipo_item=tipo,
+                              fase=fase)
+            nuevo_item.save()
+            # luego creamos los atributos del ítem
+            for atr in plantilla_atr:
+                valor = request.POST[atr.nombre]
+                nuevo_atributo = AtributoParticular(item=nuevo_item, nombre=atr.nombre, tipo=atr.tipo, valor=valor)
+                nuevo_atributo.save()
+
             return redirect('login:index')
     else:
         form = ItemForm()
 
-    return render(request, 'desarrollo/crearItem.html', {'proyecto': proyecto, 'tipo': tipo, 'form': form,
+    return render(request, 'desarrollo/crearItem.html', {'fase': fase, 'tipo': tipo, 'form': form,
                                                          'plantilla_atr': plantilla_atr})
 
 
@@ -82,5 +87,5 @@ def ver_proyecto(request, id_proyecto):
     :return: objeto que renderea verProyecto.html
     :rtype: render
     """
-    proyecto = Proyecto.objects.get(pk= id_proyecto)
+    proyecto = Proyecto.objects.get(pk=id_proyecto)
     return render(request, 'desarrollo/proyecto_ver_unico.html', {'proyecto': proyecto})

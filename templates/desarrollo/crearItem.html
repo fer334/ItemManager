@@ -3,12 +3,28 @@
 {% block content %}
     <div class="container">
         <h1 class="text-center pt-3 mb-3">Creación De Item</h1>
-        <form class="pt-3" METHOD="post" ACTION="{% url 'desarrollo:crearItem' proyecto.id tipo.id %}">
+        <form class="pt-3" METHOD="post" ACTION="#"><!--ACTION="{ url 'desarrollo:crearItem' fase.id tipo.id %}">-->
             {% csrf_token %}
             {{ form|crispy}}
-            <p align="right">
-                <button type="submit" class="btn btn-primary" align="right">Crear Item</button>
-            </p>
+            <div class="form-row">
+                <div class="form-group col-sm-12 col-md-8">
+                    Atributos Particulares:
+                </div>
+                {% for atributo in plantilla_atr %}
+                    <div class="form-group col-sm-12 col-md-8">
+                        <label>{{  atributo.nombre}} ({{ atributo.tipo }})</label>
+                        <input type="{% if atributo.tipo == 'date' %}date{% else %}text{% endif %}"
+                               class="form-control" name="{{atributo.nombre}}"
+                               {% if atributo.es_requerido %}required=""{% endif %}>
+
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-primary btn-block">Crear Ítem</button>
+                </div>
+            </div>
         </form>
     </div>
 {% endblock %}
