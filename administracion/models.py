@@ -76,6 +76,7 @@ class Fase(models.Model):
     class Meta:
         ordering = ['id']
 
+
 class TipoItem(models.Model):
     """
     Esta clase representa los tipos de items
@@ -135,6 +136,7 @@ class Rol(models.Model):
     crear_relaciones_as = models.BooleanField(default=False)
     #:
     borrar_relaciones = models.BooleanField(default=False)
+    #:
     activo = models.BooleanField(default=True)
 
     def get_permisos(self):
