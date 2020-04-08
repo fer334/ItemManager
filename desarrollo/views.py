@@ -38,7 +38,7 @@ def crear_item(request, id_fase, id_tipo):
     else:
         form = ItemForm()
 
-    return render(request, 'desarrollo/crearItem.html', {'fase': fase, 'tipo': tipo, 'form': form,
+    return render(request, 'desarrollo/item_crear.html', {'fase': fase, 'tipo': tipo, 'form': form,
                                                          'plantilla_atr': plantilla_atr})
 
 
