@@ -1,3 +1,4 @@
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 
 # Create your views here.
@@ -12,6 +13,7 @@ from desarrollo.forms import ItemForm
 
 def crear_item(request, id_fase, id_tipo):
     fase = Fase.objects.get(pk=id_fase)
+    proyecto = fase.proyecto
     tipo = TipoItem.objects.get(pk=id_tipo)
     plantilla_atr = tipo.plantillaatributo_set.all().order_by('id')
 
@@ -30,8 +32,7 @@ def crear_item(request, id_fase, id_tipo):
                 valor = request.POST[atr.nombre]
                 nuevo_atributo = AtributoParticular(item=nuevo_item, nombre=atr.nombre, tipo=atr.tipo, valor=valor)
                 nuevo_atributo.save()
-
-            return redirect('login:index')
+            return HttpResponseRedirect(reverse('desarrollo:verProyecto', args=[proyecto.id]))
     else:
         form = ItemForm()
 
@@ -56,14 +57,9 @@ def index(request, filtro):
     # lista sin ningún filtro de todos los proyectos del sistema
     lista_todos_proyectos = Proyecto.objects.all()
 
-    """
     # mostrar solo en los que el usuario participa
     for proye in lista_todos_proyectos:
         if proye.es_participante(request.user.id):
-            lista_proyectos_usuario.append(proye)
-    """
-    for proye in lista_todos_proyectos:
-        if proye.gerente == request.user.id:
             lista_proyectos_usuario.append(proye)
 
     # filtrar según estado
@@ -88,4 +84,9 @@ def ver_proyecto(request, id_proyecto):
     :rtype: render
     """
     proyecto = Proyecto.objects.get(pk=id_proyecto)
-    return render(request, 'desarrollo/proyecto_ver_unico.html', {'proyecto': proyecto})
+    # lista de tipos de ítem del proyecto
+    lista_tipos = TipoItem.objects.all().filter(proyecto=proyecto)
+    # lista de items
+    lista_items = Item.objects.all()
+    return render(request, 'desarrollo/proyecto_ver_unico.html', {'proyecto': proyecto, 'lista_tipos': lista_tipos,
+                                                                  'lista_items': lista_items})
