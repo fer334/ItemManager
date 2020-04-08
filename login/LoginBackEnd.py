@@ -4,20 +4,9 @@ Clase creada para gestionar el Login del usuario
 from urllib.error import HTTPError
 
 from django.contrib.auth.backends import BaseBackend
-import pyrebase
 from .models import Usuario
+from ItemManager.firebaseConfig import firebase
 
-config = {
-    'apiKey': "AIzaSyCqhDwOP5cTSm58BV7gnkFnF4qz-26OWI8",
-    'authDomain': "itemmanager-77211.firebaseapp.com",
-    'databaseURL': "https://itemmanager-77211.firebaseio.com",
-    'projectId': "itemmanager-77211",
-    'storageBucket': "itemmanager-77211.appspot.com",
-    'messagingSenderId': "972002011767",
-    'appId': "1:972002011767:web:fe16134c99f6a8d6a3f472",
-    'measurementId': "G-R78XM8ZQD3"
-  };
-firebase = pyrebase.initialize_app( config )
 authfb = firebase.auth()
 
 
@@ -40,7 +29,7 @@ class LoginBackEnd(BaseBackend):
         try:
             userfb = authfb.sign_in_with_email_and_password(email, password)
             try:
-                user = Usuario.objects.get( localId=userfb['localId'] )
+                user = Usuario.objects.get(localId=userfb['localId'])
             except Usuario.DoesNotExist:
                 return None
             return user

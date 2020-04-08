@@ -8,4 +8,5 @@ urlpatterns = [
     # URLs de David
     path('desarrollo/<str:filtro>', views.index, name='indexDesarrollo'),
     path('desarrollo/proyecto/<int:id_proyecto>', views.ver_proyecto, name='verProyecto'),
+    path('desarrollo/proyecto/<int:id_proyecto>/item/<int:id_item>/adjuntar', views.adjuntar_archivo, name='adjuntarArchivo'),
 ]

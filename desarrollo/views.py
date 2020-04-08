@@ -2,8 +2,11 @@ from django.shortcuts import render
 
 # Create your views here.
 from django.shortcuts import render, redirect
+from .SubirArchivos import handle_uploaded_file
 from administracion.models import Proyecto
 from django.urls import reverse
+from .forms import ItemForm, GeeksForm
+from login.LoginBackEnd import firebase
 
 
 def index(request, filtro):
@@ -54,5 +57,19 @@ def ver_proyecto(request, id_proyecto):
     :return: objeto que renderea verProyecto.html
     :rtype: render
     """
-    proyecto = Proyecto.objects.get(pk= id_proyecto)
+    proyecto = Proyecto.objects.get(pk=id_proyecto)
     return render(request, 'desarrollo/proyecto_ver_unico.html', {'proyecto': proyecto})
+
+
+def adjuntar_archivo(request, id_proyecto, id_item):
+    context = {}
+    if request.POST:
+        form = ItemForm(request.POST, request.FILES)
+        if form.is_valid():
+            handle_uploaded_file(request.FILES['archivo_adjunto'], id_proyecto)
+    else:
+        form = ItemForm()
+    context['form'] = form
+    return render(request, "desarrollo/adjuntar_archivo.html", context)
+
+
