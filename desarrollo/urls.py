@@ -9,4 +9,7 @@ urlpatterns = [
     # URLs de David
     path('desarrollo/<str:filtro>', views.index, name='indexDesarrollo'),
     path('desarrollo/proyecto/<int:id_proyecto>', views.ver_proyecto, name='verProyecto'),
+    # URLs de Paola
+    # path('desarrollo/<int:id_item>', views.solicitud_aprobacion, name='solicitudAprobacionItem'),
+    path('fases/int:<id_fase>/items/int:<id_item>/desactivar', views.desactivar_item, name='desactivarItem'),
 ]

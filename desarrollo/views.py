@@ -1,14 +1,12 @@
 from django.shortcuts import render
 
-# Create your views here.
+
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from desarrollo.models import Item, AtributoParticular
 from administracion.models import Proyecto, TipoItem, Fase
 from desarrollo.forms import ItemForm
 
-
-# Create your views here.
 
 def crear_item(request, id_fase, id_tipo):
     fase = Fase.objects.get(pk=id_fase)
@@ -89,3 +87,23 @@ def ver_proyecto(request, id_proyecto):
     """
     proyecto = Proyecto.objects.get(pk=id_proyecto)
     return render(request, 'desarrollo/proyecto_ver_unico.html', {'proyecto': proyecto})
+
+
+def solicitud_aprobacion(request, id_item):
+    item = Item.objects.get(pk=id_item)
+    if item.estado == 'en desarrollo':
+        item.estado = 'pendiente de aprobacion'
+    return render(request,'desarrollo/solicitar_aprobacion.html')
+
+
+def aprobar_item(request,id_fase_,id_item):
+    item = Item.objects.get(pk=id_item)
+    fase = Fase.objects.get(pk= id_fase_)
+
+def desactivar_item(request, id_item, id_fase):
+    item = Item.objects.get(pk=id_item)
+    fase = Fase.objects.get(pk=id_fase)
+    if item.estado == 'en desarrollo':
+        item.estado ='desactivado'
+        item.fase.remove(fase)
+    return redirect('desarrollo:desactivarItem')
