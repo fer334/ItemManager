@@ -3,8 +3,6 @@ from django.shortcuts import render
 # Create your views here.
 from django.shortcuts import render, redirect
 from .SubirArchivos import handle_uploaded_file
-from administracion.models import Proyecto
-from django.urls import reverse
 from desarrollo.models import Item, AtributoParticular
 from administracion.models import Proyecto, TipoItem, Fase
 from desarrollo.forms import ItemForm
@@ -18,7 +16,7 @@ def crear_item(request, id_fase, id_tipo):
     plantilla_atr = tipo.plantillaatributo_set.all().order_by('id')
 
     if request.method == "POST":
-        form = ItemForm(request.POST)
+        form = ItemForm(request.POST, request.FILES)
         if form.is_valid():
             # creamos el ítem
             nombre = form.cleaned_data['nombre']
@@ -29,11 +27,14 @@ def crear_item(request, id_fase, id_tipo):
             nuevo_item.save()
             # luego creamos los atributos del ítem
             for atr in plantilla_atr:
-                valor = request.POST[atr.nombre]
+                if atr.tipo == 'file':
+                    valor = handle_uploaded_file(request.FILES[atr.nombre], fase.proyecto.id, request.user)
+                else:
+                    valor = request.POST[atr.nombre]
                 nuevo_atributo = AtributoParticular(item=nuevo_item, nombre=atr.nombre, tipo=atr.tipo, valor=valor)
                 nuevo_atributo.save()
 
-            return redirect('login:index')
+            return redirect('desarrollo:verProyecto', id_proyecto= fase.proyecto.id)
     else:
         form = ItemForm()
 
@@ -99,9 +100,10 @@ def adjuntar_archivo(request, id_proyecto, id_item):
         form = ItemForm(request.POST, request.FILES)
         if form.is_valid():
             url = handle_uploaded_file(request.FILES['archivo_adjunto'], id_proyecto, request.user)
+            print(url)
     else:
         form = ItemForm()
     context['form'] = form
-    return render(request, "desarrollo/adjuntar_archivo.html", context)
+    return render(request, "desarrollo/item_adjuntar_archivo.html", context)
 
 
