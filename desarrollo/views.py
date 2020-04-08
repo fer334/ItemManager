@@ -5,8 +5,40 @@ from django.shortcuts import render, redirect
 from .SubirArchivos import handle_uploaded_file
 from administracion.models import Proyecto
 from django.urls import reverse
-from .forms import ItemForm, GeeksForm
-from login.LoginBackEnd import firebase
+from desarrollo.models import Item, AtributoParticular
+from administracion.models import Proyecto, TipoItem, Fase
+from desarrollo.forms import ItemForm
+
+
+# Create your views here.
+
+def crear_item(request, id_fase, id_tipo):
+    fase = Fase.objects.get(pk=id_fase)
+    tipo = TipoItem.objects.get(pk=id_tipo)
+    plantilla_atr = tipo.plantillaatributo_set.all().order_by('id')
+
+    if request.method == "POST":
+        form = ItemForm(request.POST)
+        if form.is_valid():
+            # creamos el ítem
+            nombre = form.cleaned_data['nombre']
+            complejidad = form.cleaned_data['complejidad']
+            descripcion = form.cleaned_data['descripcion']
+            nuevo_item = Item(nombre=nombre, complejidad=complejidad, descripcion=descripcion, tipo_item=tipo,
+                              fase=fase)
+            nuevo_item.save()
+            # luego creamos los atributos del ítem
+            for atr in plantilla_atr:
+                valor = request.POST[atr.nombre]
+                nuevo_atributo = AtributoParticular(item=nuevo_item, nombre=atr.nombre, tipo=atr.tipo, valor=valor)
+                nuevo_atributo.save()
+
+            return redirect('login:index')
+    else:
+        form = ItemForm()
+
+    return render(request, 'desarrollo/crearItem.html', {'fase': fase, 'tipo': tipo, 'form': form,
+                                                         'plantilla_atr': plantilla_atr})
 
 
 def index(request, filtro):
