@@ -66,7 +66,7 @@ def adjuntar_archivo(request, id_proyecto, id_item):
     if request.POST:
         form = ItemForm(request.POST, request.FILES)
         if form.is_valid():
-            handle_uploaded_file(request.FILES['archivo_adjunto'], id_proyecto)
+            url = handle_uploaded_file(request.FILES['archivo_adjunto'], id_proyecto, request.user)
     else:
         form = ItemForm()
     context['form'] = form

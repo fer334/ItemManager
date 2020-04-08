@@ -28,8 +28,11 @@ class LoginBackEnd(BaseBackend):
         """
         try:
             userfb = authfb.sign_in_with_email_and_password(email, password)
+            print(userfb)
             try:
                 user = Usuario.objects.get(localId=userfb['localId'])
+                request.session.idToken = userfb['idToken']
+                user.id_token = userfb['idToken']
             except Usuario.DoesNotExist:
                 return None
             return user
@@ -38,7 +41,6 @@ class LoginBackEnd(BaseBackend):
             print( repr(err) )
             """
             return None
-
 
     def get_user(self, user_id):
         """
