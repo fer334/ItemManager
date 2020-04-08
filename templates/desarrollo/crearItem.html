@@ -13,10 +13,9 @@
                 {% for atributo in plantilla_atr %}
                     <div class="form-group col-sm-12 col-md-8">
                         <label>{{  atributo.nombre}} ({{ atributo.tipo }})</label>
-                        <input type="{% if atributo.tipo == 'date' %}date{% else %}text{% endif %}"
+                        <input type="{{atributo.tipo}}"
                                class="form-control" name="{{atributo.nombre}}"
                                {% if atributo.es_requerido %}required=""{% endif %}>
-
                     </div>
                 {% endfor %}
             </div>
