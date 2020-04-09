@@ -13,7 +13,38 @@
             <tbody>
                 <tr class="">
                     {% for fase in proyecto.fase_set.all %}
-                        <td class="justify-content-center"><a href="#" class="btn btn-primary">Asignar tipo item</a></td>
+                        <td class="justify-content-center">
+                            <div class="dropdown">
+                                <button type="button" class="btn btn-secondary dropdown-toggle" id="dropdownMenuButton"
+                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Asignar item
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <a class="dropdown-item" href="#" style="color: #4e555b">
+                                        (seleccione tipo)
+                                    </a>
+                                    {% for tipo in lista_tipos %}
+                                        <a class="dropdown-item" href="{% url 'desarrollo:crearItem' fase.id tipo.id %}"
+                                           role="button">
+                                            {{ tipo.nombre }}
+                                        </a>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="list-group pt-2">
+                                <ul>
+                                    {% for item in lista_items %}
+                                        {% if item.fase == fase %}
+                                            <li class="list-group">
+                                                <a class="align-baseline" href="{% url 'desarrollo:verItem' item.id %}" >
+                                                   {{ item.tipo_item.prefijo }}_{{ item.nombre }}
+                                                </a>
+                                            </li>
+                                        {% endif %}
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </td>
                     {% endfor %}
                 </tr>
             </tbody>

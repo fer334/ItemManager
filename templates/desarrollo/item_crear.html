@@ -3,6 +3,8 @@
 {% block content %}
     <div class="container">
         <h1 class="text-center pt-3 mb-3">Creación De Item</h1>
+        <h5 style="color: #005cbf" class="text-center pt-0 mb-3">Tipo: [{{ tipo.nombre }}]</h5>
+        <form class="pt-3" METHOD="post" ACTION="#"><!--ACTION="{ url 'desarrollo:crearItem' fase.id tipo.id %}">-->
         <form class="pt-3" METHOD="post" ACTION="#" enctype="multipart/form-data"><!--ACTION="{ url 'desarrollo:crearItem' fase.id tipo.id %}">-->
             {% csrf_token %}
             {{ form|crispy}}
