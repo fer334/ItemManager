@@ -101,10 +101,9 @@ def ver_proyecto(request, id_proyecto):
     # lista de items
     lista_items = Item.objects.all()
     # filtro de tipos de items que aún no fueron usados (para todas las fases)
-    items_usados = []
+    tipos_de_items_usados = []
     for fase in proyecto.fase_set.all():
-        items_usados = items_usados + list(fase.item_set.all())
-    tipos_de_items_usados = [obj.tipo_item for obj in items_usados]
+        tipos_de_items_usados = tipos_de_items_usados + list(fase.tipos_item.all())
     lista_tipos = [tipo_restante for tipo_restante in proyecto.tipoitem_set.all() if
                    tipo_restante not in tipos_de_items_usados]
 
