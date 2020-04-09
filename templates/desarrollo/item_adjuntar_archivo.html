@@ -1,0 +1,11 @@
+{% extends 'login/loginHeader.html' %}
+{% block content %}
+    <div class="container">
+        <h2 class="text-center pt-3 pb-3">Adjuntar archivos</h2>
+        <form class="" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit">
+        </form>
+    </div>
+{% endblock %}

@@ -1,4 +1,3 @@
-from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from administracion.models import Fase
 
@@ -9,8 +8,7 @@ class Item(models.Model):
     nombre = models.CharField(max_length=200, null=False)
     estado = models.CharField(max_length=100, default='en desarrollo', null=False)
     version = models.PositiveIntegerField(null=False, default=1)
-    complejidad = models.PositiveIntegerField(default=5, null=False,
-                                              validators=[MinValueValidator(1), MaxValueValidator(10)])
+    complejidad = models.PositiveIntegerField(default=5, null=False)
     descripcion = models.CharField(max_length=200, null=True)
     tipo_item = models.ForeignKey('administracion.TipoItem', on_delete=models.CASCADE)
     fase = models.ForeignKey('administracion.fase', on_delete=models.CASCADE, default=None)
