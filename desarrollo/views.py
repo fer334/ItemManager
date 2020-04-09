@@ -26,7 +26,7 @@ def crear_item(request, id_fase, id_tipo):
             nuevo_item.save()
             # luego creamos los atributos del ítem
             for atr in plantilla_atr:
-                if atr.tipo == 'file':
+                if atr.tipo == 'file' and request.FILES:
                     valor = handle_uploaded_file(request.FILES[atr.nombre], fase.proyecto.id, request.user)
                 else:
                     valor = request.POST[atr.nombre]
@@ -104,5 +104,3 @@ def adjuntar_archivo(request, id_proyecto, id_item):
         form = ItemForm()
     context['form'] = form
     return render(request, "desarrollo/item_adjuntar_archivo.html", context)
-
-
