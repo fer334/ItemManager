@@ -61,22 +61,6 @@ class Proyecto(models.Model):
         return False
 
 
-class Fase(models.Model):
-    """
-    Esta clase representa las fases
-    """
-    #: Se almacena el nombre de la fase
-    nombre = models.CharField(max_length=200, null=False)
-    #: Descripcion de la fase
-    descripcion = models.CharField(max_length=400, null=True)
-    #: Estado de la fase, iniciada, cerrada etc.
-    estado = models.CharField(max_length=200, default='abierta')
-    #: Proyecto asociado a la fase
-    proyecto = models.ForeignKey(Proyecto, on_delete=models.CASCADE)
-    class Meta:
-        ordering = ['id']
-
-
 class TipoItem(models.Model):
     """
     Esta clase representa los tipos de items
@@ -110,6 +94,25 @@ class PlantillaAtributo(models.Model):
 
     def __str__(self):
         return self.nombre
+
+
+class Fase(models.Model):
+    """
+    Esta clase representa las fases
+    """
+    #: Se almacena el nombre de la fase
+    nombre = models.CharField(max_length=200, null=False)
+    #: Descripcion de la fase
+    descripcion = models.CharField(max_length=400, null=True)
+    #: Estado de la fase, iniciada, cerrada etc.
+    estado = models.CharField(max_length=200, default='abierta')
+    #: Proyecto asociado a la fase
+    proyecto = models.ForeignKey('Proyecto', on_delete=models.CASCADE)
+    #: lista de tipos de ítem
+    tipos_item = models.ManyToManyField('TipoItem', null=True)
+
+    class Meta:
+        ordering = ['id']
 
 
 class Rol(models.Model):
@@ -156,7 +159,7 @@ class Rol(models.Model):
         return permisos
 
     def __str__(self):
-        return (self.nombre)
+        return self.nombre
 
 
 class UsuarioxRol(models.Model):

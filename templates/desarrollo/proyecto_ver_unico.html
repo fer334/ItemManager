@@ -23,6 +23,13 @@
                                     <a class="dropdown-item" href="#" style="color: #4e555b">
                                         (seleccione tipo)
                                     </a>
+                                    {% for tipoitem in proyecto.tipoitem_set.all %}
+                                        {% if tipoitem in fase.tipos_item.all %}
+                                            <a class="dropdown-item" role="button"
+                                               href="{% url 'desarrollo:crearItem' fase.id tipoitem.id %}"  >
+                                                {{ tipoitem.nombre }}</a>
+                                        {% endif %}
+                                    {% endfor %}
                                     {% for tipo in lista_tipos %}
                                         <a class="dropdown-item" href="{% url 'desarrollo:crearItem' fase.id tipo.id %}"
                                            role="button">

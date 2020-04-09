@@ -13,7 +13,6 @@ from desarrollo.forms import ItemForm
 
 def crear_item(request, id_fase, id_tipo):
     fase = Fase.objects.get(pk=id_fase)
-    proyecto = fase.proyecto
     tipo = TipoItem.objects.get(pk=id_tipo)
     plantilla_atr = tipo.plantillaatributo_set.all().order_by('id')
     if request.method == "POST":
@@ -26,6 +25,9 @@ def crear_item(request, id_fase, id_tipo):
             nuevo_item = Item(nombre=nombre, complejidad=complejidad, descripcion=descripcion, tipo_item=tipo,
                               fase=fase)
             nuevo_item.save()
+            # vinculamos el tipo a la fase
+            if tipo not in fase.tipos_item.all():
+                fase.tipos_item.add(tipo)
             # luego creamos los atributos del ítem
             for atr in plantilla_atr:
                 if atr.tipo == 'file' and request.FILES:
@@ -35,12 +37,12 @@ def crear_item(request, id_fase, id_tipo):
                 nuevo_atributo = AtributoParticular(item=nuevo_item, nombre=atr.nombre, tipo=atr.tipo, valor=valor)
                 nuevo_atributo.save()
 
-            return redirect('desarrollo:verProyecto', id_proyecto= fase.proyecto.id)
+            return redirect('desarrollo:verProyecto', id_proyecto=fase.proyecto.id)
     else:
         form = ItemForm()
 
     return render(request, 'desarrollo/item_crear.html', {'fase': fase, 'tipo': tipo, 'form': form,
-                                                         'plantilla_atr': plantilla_atr})
+                                                          'plantilla_atr': plantilla_atr})
 
 
 def ver_item(request, id_item):
@@ -96,10 +98,9 @@ def ver_proyecto(request, id_proyecto):
     :rtype: render
     """
     proyecto = Proyecto.objects.get(pk=id_proyecto)
-    # lista_tipos = TipoItem.objects.filter(proyecto=proyecto)
     # lista de items
     lista_items = Item.objects.all()
-    # filtro de tipos de items que aún no fueron usados
+    # filtro de tipos de items que aún no fueron usados (para todas las fases)
     items_usados = []
     for fase in proyecto.fase_set.all():
         items_usados = items_usados + list(fase.item_set.all())
