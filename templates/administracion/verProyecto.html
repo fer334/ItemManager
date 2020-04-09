@@ -115,7 +115,7 @@
                     {% if proyecto.estado == 'iniciado' %}
                         <button
                             {% if habilitadofase == False or habilitadocomite == False or habilitadotipo == False %}
-                                class="btn btn-secondary" onclick="show_alert('Debe definir {% if habilitadofase == False %}nombres de las fases{% endif %}{% if habilitadofase == False and habilitadocomite == False %}, {% endif %}{% if proyecto.comite.count < proyecto.cant_comite %}los miembros del comité {% endif %}{% if habilitadocomite == False and habilitadotipo == False %}y{% endif %} {% if habilitadotipo == False %}aunque sea un tipo de ítem{% endif %}')"
+                                class="btn btn-secondary" onclick="show_alert('Debe definir {% if habilitadofase == False %}nombres de las fases{% endif %}{% if habilitadofase == False and habilitadocomite == False %}, {% endif %}{% if proyecto.comite.count < proyecto.cant_comite %}los miembros del comité {% endif %}{% if habilitadocomite == False and habilitadotipo == False %}y{% endif %} {% if habilitadotipo == False %}aunque sea {{ proyecto.numero_fases }} tipos de ítem{% endif %}')"
                             {% else %}
                                 onclick="show_modal('{% url 'administracion:estadoProyecto2' proyecto.id 'en ejecucion' %}')" class="btn btn-primary"
                             {% endif %}
