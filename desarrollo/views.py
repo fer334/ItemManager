@@ -14,7 +14,6 @@ def crear_item(request, id_fase, id_tipo):
     fase = Fase.objects.get(pk=id_fase)
     tipo = TipoItem.objects.get(pk=id_tipo)
     plantilla_atr = tipo.plantillaatributo_set.all().order_by('id')
-
     if request.method == "POST":
         form = ItemForm(request.POST, request.FILES)
         if form.is_valid():

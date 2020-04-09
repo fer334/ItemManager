@@ -3,7 +3,7 @@
 {% block content %}
     <div class="container">
         <h1 class="text-center pt-3 mb-3">Creación De Item</h1>
-        <form class="pt-3" METHOD="post" ACTION="#" enctype="multipart/form-data"><!--ACTION="{ url 'desarrollo:crearItem' fase.id tipo.id %}">-->
+        <form class="pt-3" METHOD="post" enctype="multipart/form-data"><!--ACTION="{ url 'desarrollo:crearItem' fase.id tipo.id %}">-->
             {% csrf_token %}
             {{ form|crispy}}
             <div class="form-row">
