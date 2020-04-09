@@ -40,6 +40,15 @@ def crear_item(request, id_fase, id_tipo):
                                                          'plantilla_atr': plantilla_atr})
 
 
+def ver_item(request, id_item):
+    item = Item.objects.get(pk=id_item)
+    lista_atributos = AtributoParticular.objects.filter(item=item)
+    fase = item.fase
+    proyecto = fase.proyecto
+    return render(request, 'desarrollo/item_ver.html', {'item': item, 'lista_atributos': lista_atributos, 'fase': fase,
+                                                        'proyecto': proyecto})
+
+
 def index(request, filtro):
     """
     Vista que despliega la lista de proyectos con su estado actual, también permite filtrar los proyectos según estado,
@@ -84,9 +93,16 @@ def ver_proyecto(request, id_proyecto):
     :rtype: render
     """
     proyecto = Proyecto.objects.get(pk=id_proyecto)
-    # lista de tipos de ítem del proyecto
-    lista_tipos = TipoItem.objects.all().filter(proyecto=proyecto)
+    # lista_tipos = TipoItem.objects.filter(proyecto=proyecto)
     # lista de items
     lista_items = Item.objects.all()
+    # filtro de tipos de items que aún no fueron usados
+    items_usados = []
+    for fase in proyecto.fase_set.all():
+        items_usados = items_usados + list(fase.item_set.all())
+    tipos_de_items_usados = [obj.tipo_item for obj in items_usados]
+    lista_tipos = [tipo_restante for tipo_restante in proyecto.tipoitem_set.all() if
+                   tipo_restante not in tipos_de_items_usados]
+
     return render(request, 'desarrollo/proyecto_ver_unico.html', {'proyecto': proyecto, 'lista_tipos': lista_tipos,
                                                                   'lista_items': lista_items})
