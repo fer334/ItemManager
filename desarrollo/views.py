@@ -106,9 +106,14 @@ def ver_proyecto(request, id_proyecto):
         tipos_de_items_usados = tipos_de_items_usados + list(fase.tipos_item.all())
     lista_tipos = [tipo_restante for tipo_restante in proyecto.tipoitem_set.all() if
                    tipo_restante not in tipos_de_items_usados]
+    # condición para mostrar las opciones de aprobación de ítem: o es gerente del proyecto o tiene rol de aprobador
+    es_aprobador = False
+    if request.user.id == proyecto.gerente or True == True:
+        es_aprobador = True
 
     return render(request, 'desarrollo/proyecto_ver_unico.html', {'proyecto': proyecto, 'lista_tipos': lista_tipos,
-                                                                  'lista_items': lista_items})
+                                                                  'lista_items': lista_items,
+                                                                  'es_aprobador': es_aprobador})
 
 
 def adjuntar_archivo(request, id_proyecto, id_item):

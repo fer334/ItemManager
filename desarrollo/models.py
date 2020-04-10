@@ -11,7 +11,7 @@ class Item(models.Model):
     complejidad = models.PositiveIntegerField(default=5, null=False)
     descripcion = models.CharField(max_length=200, null=True)
     tipo_item = models.ForeignKey('administracion.TipoItem', on_delete=models.CASCADE)
-    fase = models.ForeignKey('administracion.fase', on_delete=models.CASCADE, default=None)
+    fase = models.ForeignKey('administracion.Fase', on_delete=models.CASCADE, default=None)
     antecesores = models.ManyToManyField('desarrollo.Item', default=None, related_name='item_desarrollo_antecesores')
     sucesores = models.ManyToManyField('desarrollo.Item', default=None, related_name='item_desarrollo_sucesores')
     padres = models.ManyToManyField('desarrollo.Item', default=None, related_name='item_desarrollo_padres')
