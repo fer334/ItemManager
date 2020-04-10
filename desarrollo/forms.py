@@ -1,8 +1,14 @@
+"""
+Formularios para la aplicacion administración
+"""
 from django import forms
 from desarrollo.models import Item, AtributoParticular
 
 
 class ItemForm(forms.ModelForm):
+    """
+    Formulario para la creación de ítems
+    """
     class Meta:
         model = Item
         fields = ('nombre', 'complejidad', 'descripcion')

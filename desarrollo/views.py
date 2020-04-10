@@ -1,7 +1,6 @@
-from django.http import HttpResponseRedirect
-from django.shortcuts import render
-
-# Create your views here.
+"""
+Modulo se detalla la logica para las vistas que serán utilizadas por la app
+"""
 from django.shortcuts import render, redirect
 from .SubirArchivos import handle_uploaded_file
 from desarrollo.models import Item, AtributoParticular
@@ -12,6 +11,17 @@ from desarrollo.forms import ItemForm
 # Create your views here.
 
 def crear_item(request, id_fase, id_tipo):
+    """
+    Esta vista se encarga de crear un ítem con sus atributos particulares en una fase, utiliza un form para los
+    atributos comunes del ítem y luego con el ítem ya creado crea sus atributos particulares. También se encarga de
+    vincular el tipo del ítem creado a la fase.
+
+    :param request: objeto tipo diccionario que permite acceder a datos
+    :param id_fase: identificador de la fase en la cual será creado el ítem
+    :param id_tipo: identificar del tipo del ítem
+    :return: objeto que se encarga de renderear item_crear.html o redireccion a proyecto_ver_unico.html en caso de POST
+    :rtype: render, redirect
+    """
     fase = Fase.objects.get(pk=id_fase)
     tipo = TipoItem.objects.get(pk=id_tipo)
     plantilla_atr = tipo.plantillaatributo_set.all().order_by('id')
@@ -46,6 +56,15 @@ def crear_item(request, id_fase, id_tipo):
 
 
 def ver_item(request, id_item):
+    """
+    vista que se encarga de mostrar un ítem con todos sus datos, atributos comunes y particulares y proyecto y fase
+    a la que pertenece
+
+    :param request: objeto tipo diccionario que permite acceder a datos
+    :param id_item: identificador del ítem a mostrar
+    :return: objeto que se encarga de renderear item_ver.html
+    :rtype: render
+    """
     item = Item.objects.get(pk=id_item)
     lista_atributos = AtributoParticular.objects.filter(item=item)
     fase = item.fase
