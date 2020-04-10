@@ -3,43 +3,68 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-sm-12 col-md-8 col-lg-8 ">
-                <div class="col-lg-12 p-3">
-                    <h3>{{item.tipo_item.prefijo}}_{{item.nombre}} </h3>
-                </div>
-                <ul class="list-group pb-3">
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        Tipo: {{ item.tipo_item.nombre }}</li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        Proyecto: {{ proyecto.nombre }}</li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        Fase: {{ fase.nombre }}</li>
+                <h3 class="text-center mt-3 mb-5">{{item.tipo_item.prefijo}}_{{item.nombre}} </h3>
+                <table class="table">
+                    <tbody>
+                        <tr class="">
+                            <th rowspan="4" class="text-center align-middle h5">Item</th>
+                        </tr>
+                        <tr>
 
-                </ul>
-                <div class="lg-12 mb-3">
-                    <h5>Atributos comunes</h5>
+                            <td>Proyecto</td>
+                            <td>{{ proyecto.nombre }}</td>
+                        </tr>
+                        <tr>
+                            <td>Fase</td>
+                            <td>{{ fase.nombre }}</td>
+                        </tr>
+                        <tr>
+                            <td>Tipo de item</td>
+                            <td>{{ item.tipo_item.nombre }}</td>
+                        </tr>
+                        <tr>
+                            <th rowspan="5" class="text-center align-middle h5">Atributos particulares</th>
+                        </tr>
+                        <tr>
+                            <td>Nombre</td>
+                            <td>{{ item.nombre }}</td>
+                        </tr>
+                        <tr>
+                            <td>Complejidad</td>
+                            <td>{{ item.complejidad }}</td>
+                        </tr>
+                        <tr>
+                            <td>Version</td>
+                            <td>{{ item.version }}</td>
+                        </tr>
+                        <tr>
+                            <td>Descripcion</td>
+                            <td>{{ item.descripcion }}</td>
+                        </tr>
+                        <tr>
+                            <th rowspan="{{lista_atributos.count|add:1}}" class="text-center align-middle h5">Atributos particulares</th>
+                        </tr>
+                        {% for atributo in lista_atributos %}
+                            <tr>
+                                <td>{{ atributo.nombre }}</td>
+                                <td>
+                                    {% if atributo.tipo == 'file' %}
+                                        <a href="{{ atributo.valor }}" target="_blank">Archivo</a>
+                                    {% else %}
+                                        {{ atributo.valor }}
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <div class="col-sm-12 mt-4">
+                    <a href="{% url 'desarrollo:verProyecto' proyecto.id %}" class="btn btn-primary float-right">Volver atrás</a>
                 </div>
-                <ul class="list-group pb-3">
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        Nombre: {{ item.nombre }}</li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        Complejidad: {{ item.complejidad }}</li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        Version: {{ item.version }}</li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        Descripcion: {{ item.descripcion }}</li>
-                </ul>
-                <div class="lg-12 mb-3">
-                    <h5>Atributos Particulares:</h5>
-                </div>
-                <ul class="list-group pb-3">
-                    {% for atributo in lista_atributos %}
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        {{ atributo.nombre }}({{ atributo.tipo }}): {{ atributo.valor }}</li>
-                    {% endfor %}
-                </ul>
             </div>
+
         </div>
-        <a href="{% url 'desarrollo:verProyecto' proyecto.id %}" class="btn btn-block btn-primary">Volver atrás</a>
+
     </div>
 
 {% endblock %}
