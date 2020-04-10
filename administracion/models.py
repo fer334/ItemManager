@@ -142,7 +142,16 @@ class Rol(models.Model):
     #:
     activo = models.BooleanField(default=True)
 
-    def get_permisos(self):
+    CREAR_ITEM = 'CREAR_ITEM'
+    MODIFICAR_ITEM = 'MODIFICAR_ITEM'
+    DESACTIVAR_ITEM = 'DESACTIVAR_ITEM'
+    APROBAR_ITEM = 'APROBAR_ITEM'
+    REVERSIONAR_ITEM = 'REVERSIONAR_ITEM'
+    CREAR_RELACIONES_PH = 'CREAR_RELACIONES_PH'
+    CREAR_RELACIONES_AS = 'CREAR_RELACIONES_AS'
+    BORRAR_RELACIONES = 'BORRAR_RELACIONES'
+
+    def get_permisos_clean(self):
         """
         Metodo que colecta los permisos activos
         :return: una lista de permisos activos
@@ -176,4 +185,4 @@ class UsuarioxRol(models.Model):
     activo = models.BooleanField(default=True)
 
     def __str__(self):
-        return self.id
+        return f'{self.usuario.username} es {self.rol.nombre} en {self.fase.nombre} - {self.activo}'
