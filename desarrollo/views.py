@@ -4,8 +4,9 @@ Modulo se detalla la logica para las vistas que serán utilizadas por la app
 from django.shortcuts import render, redirect
 from .SubirArchivos import handle_uploaded_file
 from desarrollo.models import Item, AtributoParticular
-from administracion.models import Proyecto, TipoItem, Fase
+from administracion.models import Proyecto, TipoItem, Fase, Rol
 from desarrollo.forms import ItemForm
+from desarrollo.getPermisos import has_permiso
 
 
 # Create your views here.
@@ -125,10 +126,15 @@ def ver_proyecto(request, id_proyecto):
         tipos_de_items_usados = tipos_de_items_usados + list(fase.tipos_item.all())
     lista_tipos = [tipo_restante for tipo_restante in proyecto.tipoitem_set.all() if
                    tipo_restante not in tipos_de_items_usados]
-    # condición para mostrar las opciones de aprobación de ítem: o es gerente del proyecto o tiene rol de aprobador
+    # condición para mostrar las opciones de aprobación de ítem
+    # si es gerente del proyecto
     es_aprobador = False
-    if request.user.id == proyecto.gerente or True == True:
+    if request.user.id == proyecto.gerente:
         es_aprobador = True
+    # o si el usuario tiene el permiso de aprobador
+    for fases in proyecto.fase_set.all():
+        if has_permiso(fases, request.user, Rol.APROBAR_ITEM):
+            es_aprobador = True
 
     return render(request, 'desarrollo/proyecto_ver_unico.html', {'proyecto': proyecto, 'lista_tipos': lista_tipos,
                                                                   'lista_items': lista_items,

@@ -26,6 +26,13 @@ class Item(models.Model):
     tipo_item = models.ForeignKey('administracion.TipoItem', on_delete=models.CASCADE)
     #: fase del proyecto en la que se crea el ítem
     fase = models.ForeignKey('administracion.Fase', on_delete=models.CASCADE, default=None)
+    # constantes del modelo
+    ESTADO_DESARROLLO = 'En Desarrollo'
+    ESTADO_PENDIENTE = 'Pendiente de Aprobacion'
+    ESTADO_APROBADO = 'Aprobado'
+    ESTADO_REVISION = 'En Revision'
+    ESTADO_LINEABASE = 'En Linea Base'
+    ESTADO_DESACTIVADO = 'Desactivado'
 
     def __str__(self):
         return self.nombre
