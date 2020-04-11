@@ -75,6 +75,15 @@ def ver_item(request, id_item):
 
 
 def menu_aprobacion(request, id_proyecto):
+    """
+    Vista que se encarga de mostrar un menú en el cual se permite administrar los ítems pendientes de aprobación
+    si se tiene los permisos adecuados
+
+    :param request:  objeto tipo diccionario que permite acceder a datos
+    :param id_proyecto: identificador del proyecto sobre el cual se administraran los ítems
+    :return: objeto que renderea item_menu_aprobacion.html
+    :rtype: render
+    """
     proyecto = Proyecto.objects.get(pk=id_proyecto)
     lista_items = Item.objects.all()
     # lista de fases en las que el usuario tiene permisos de aprobador
