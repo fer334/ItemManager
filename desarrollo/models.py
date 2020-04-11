@@ -27,7 +27,7 @@ class Item(models.Model):
     #: fase del proyecto en la que se crea el ítem
     fase = models.ForeignKey('administracion.Fase', on_delete=models.CASCADE, default=None)
     # constantes del modelo
-    ESTADO_DESARROLLO = 'En Desarrollo'
+    ESTADO_DESARROLLO = 'en desarrollo'
     ESTADO_PENDIENTE = 'Pendiente de Aprobacion'
     ESTADO_APROBADO = 'Aprobado'
     ESTADO_REVISION = 'En Revision'

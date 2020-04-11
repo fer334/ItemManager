@@ -74,6 +74,24 @@ def ver_item(request, id_item):
                                                         'proyecto': proyecto})
 
 
+def menu_aprobacion(request, id_proyecto):
+    proyecto = Proyecto.objects.get(pk=id_proyecto)
+    lista_items = Item.objects.all()
+    # lista de fases en las que el usuario tiene permisos de aprobador
+    lista_fases = []
+    # si es gerente tendrá permisos en todas las fases
+    if request.user.id == proyecto.gerente:
+        lista_fases = proyecto.fase_set.all()
+    # si no es gerente verificamos en que fases tiene permisos
+    else:
+        for fase in proyecto.fase_set.all():
+            if has_permiso(fase, request.user, Rol.APROBAR_ITEM):
+                lista_fases.append(fase)
+    return render(request, 'desarrollo/item_menu_aprobacion.html', {'proyecto': proyecto, 'lista_items': lista_items,
+                                                                    'estado': Item.ESTADO_DESARROLLO,
+                                                                    'lista_fases': lista_fases })
+
+
 def index(request, filtro):
     """
     Vista que despliega la lista de proyectos con su estado actual, también permite filtrar los proyectos según estado,

@@ -3,7 +3,7 @@
     <div class="container">
         <h1 class="text-center pt-3 mb-5">{{ proyecto.nombre }}</h1>
         <div class="btn float-right">
-            <a class="btn btn-info" href="#"
+            <a class="btn btn-info" href="{% url 'desarrollo:menuAprobacion' proyecto.id %}"
                {% if es_aprobador == False %}disabled=""{% endif %} style="color: white">Aprobar items</a>
         </div>
         <table class="table table-bordered">
