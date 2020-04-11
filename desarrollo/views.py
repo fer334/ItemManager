@@ -110,7 +110,7 @@ def solicitud_aprobacion(request, id_item):
     item = Item.objects.get(pk=id_item)
     if item.estado == 'en desarrollo':
         item.estado = 'pendiente de aprobacion'
-    return render(request,'desarrollo/solicitar_aprobacion.html')
+    return render(request,'desarrollo/item_solicitar_aprobacion.html')
 
 
 def aprobar_item(request,id_item, id_proyecto):
