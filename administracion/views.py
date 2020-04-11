@@ -149,7 +149,7 @@ def ver_proyecto(request, id_proyecto):
     if proyecto.comite.count() != proyecto.cant_comite:
         habilitadocomite = False
 
-    if proyecto.tipoitem_set.all().count() == 0:
+    if proyecto.tipoitem_set.all().count() < proyecto.numero_fases:
         habilitadotipo = False
     return render(request, 'administracion/verProyecto.html',
                   {'proyecto': proyecto, 'gerente': gerente, 'tipo_item': tipo_item, 'fases': fases, 'estado': estado,

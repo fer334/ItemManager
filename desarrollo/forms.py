@@ -1,8 +1,14 @@
+"""
+Formularios para la aplicacion administración
+"""
 from django import forms
 from desarrollo.models import Item, AtributoParticular
 
 
 class ItemForm(forms.ModelForm):
+    """
+    Formulario para la creación de ítems
+    """
     class Meta:
         model = Item
         fields = ('nombre', 'complejidad', 'descripcion')
@@ -30,13 +36,5 @@ class ItemForm(forms.ModelForm):
         if complejidad > 10 or complejidad < 1:
             raise forms.ValidationError('Tiene que estar en el rango de [1,10].')
         return complejidad
-
-    class ItemFormDave(forms.Form):
-        """Formulario para la creación de items"""
-
-        def __init__(self, *args, **kwargs):
-            super(ItemForm, self).__init__(*args, **kwargs)
-
-        archivo_adjunto = forms.FileField(required=False, widget=forms.FileInput(attrs={'class': ''}))
 
 

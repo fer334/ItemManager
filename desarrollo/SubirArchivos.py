@@ -14,12 +14,12 @@ def generar_nombre(nombre):
     return nombre
 
 
-def handle_uploaded_file(f, id_proyecto, user):
-    final_storage_path = f'{id_proyecto}/{generar_nombre(f)}'
-    final_path = f'{TEMP_FILES_DIR}/{generar_nombre(f)}'
+def handle_uploaded_file(archivo, id_proyecto, user):
+    final_storage_path = f'{id_proyecto}/{generar_nombre(archivo)}'
+    final_path = f'{TEMP_FILES_DIR}/{generar_nombre(archivo)}'
     user_obj = Usuario.objects.get(username=user)
     with open(final_path, 'wb+') as destination:
-        for chunk in f.chunks():
+        for chunk in archivo.chunks():
             destination.write(chunk)
         storage = firebase.storage()
         storage.child(final_storage_path).put(final_path)

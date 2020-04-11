@@ -1,13 +1,28 @@
-
-
+"""
+Modulo se detalla la logica para las vistas que serán utilizadas por la app
+"""
 from django.shortcuts import render, redirect
 from .SubirArchivos import handle_uploaded_file
 from desarrollo.models import Item, AtributoParticular
-from administracion.models import Proyecto, TipoItem, Fase
+from administracion.models import Proyecto, TipoItem, Fase, Rol
 from desarrollo.forms import ItemForm
+from desarrollo.getPermisos import has_permiso
 
+
+# Create your views here.
 
 def crear_item(request, id_fase, id_tipo):
+    """
+    Esta vista se encarga de crear un ítem con sus atributos particulares en una fase, utiliza un form para los
+    atributos comunes del ítem y luego con el ítem ya creado crea sus atributos particulares. También se encarga de
+    vincular el tipo del ítem creado a la fase.
+
+    :param request: objeto tipo diccionario que permite acceder a datos
+    :param id_fase: identificador de la fase en la cual será creado el ítem
+    :param id_tipo: identificar del tipo del ítem
+    :return: objeto que se encarga de renderear item_crear.html o redireccion a proyecto_ver_unico.html en caso de POST
+    :rtype: render, redirect
+    """
     fase = Fase.objects.get(pk=id_fase)
     tipo = TipoItem.objects.get(pk=id_tipo)
     plantilla_atr = tipo.plantillaatributo_set.all().order_by('id')
@@ -22,21 +37,70 @@ def crear_item(request, id_fase, id_tipo):
             nuevo_item = Item(nombre=nombre, complejidad=complejidad, descripcion=descripcion, tipo_item=tipo,
                               fase=fase)
             nuevo_item.save()
+            # vinculamos el tipo a la fase
+            if tipo not in fase.tipos_item.all():
+                fase.tipos_item.add(tipo)
             # luego creamos los atributos del ítem
             for atr in plantilla_atr:
-                if atr.tipo == 'file':
+                if atr.tipo == 'file' and request.FILES:
                     valor = handle_uploaded_file(request.FILES[atr.nombre], fase.proyecto.id, request.user)
                 else:
                     valor = request.POST[atr.nombre]
                 nuevo_atributo = AtributoParticular(item=nuevo_item, nombre=atr.nombre, tipo=atr.tipo, valor=valor)
                 nuevo_atributo.save()
 
-            return redirect('desarrollo:verProyecto', id_proyecto= fase.proyecto.id)
+            return redirect('desarrollo:verProyecto', id_proyecto=fase.proyecto.id)
     else:
         form = ItemForm()
 
     return render(request, 'desarrollo/item_crear.html', {'fase': fase, 'tipo': tipo, 'form': form,
-                                                         'plantilla_atr': plantilla_atr})
+                                                          'plantilla_atr': plantilla_atr})
+
+
+def ver_item(request, id_item):
+    """
+    vista que se encarga de mostrar un ítem con todos sus datos, atributos comunes y particulares y proyecto y fase
+    a la que pertenece
+
+    :param request: objeto tipo diccionario que permite acceder a datos
+    :param id_item: identificador del ítem a mostrar
+    :return: objeto que se encarga de renderear item_ver.html
+    :rtype: render
+    """
+    item = Item.objects.get(pk=id_item)
+    lista_atributos = AtributoParticular.objects.filter(item=item)
+    fase = item.fase
+    proyecto = fase.proyecto
+    return render(request, 'desarrollo/item_ver.html', {'item': item, 'lista_atributos': lista_atributos, 'fase': fase,
+                                                        'proyecto': proyecto})
+
+
+def menu_aprobacion(request, id_proyecto):
+    """
+    Vista que se encarga de mostrar un menú en el cual se permite administrar los ítems pendientes de aprobación
+    si se tiene los permisos adecuados
+
+    :param request:  objeto tipo diccionario que permite acceder a datos
+    :param id_proyecto: identificador del proyecto sobre el cual se administraran los ítems
+    :return: objeto que renderea item_menu_aprobacion.html
+    :rtype: render
+    """
+    proyecto = Proyecto.objects.get(pk=id_proyecto)
+    lista_items = Item.objects.all()
+    # lista de fases en las que el usuario tiene permisos de aprobador
+    lista_fases = []
+    # si es gerente tendrá permisos en todas las fases
+    if request.user.id == proyecto.gerente:
+        lista_fases = proyecto.fase_set.all()
+    # si no es gerente verificamos en que fases tiene permisos
+    else:
+        for fase in proyecto.fase_set.all():
+            if has_permiso(fase, request.user, Rol.APROBAR_ITEM):
+                print(fase.id)
+                lista_fases.append(fase)
+    return render(request, 'desarrollo/item_menu_aprobacion.html', {'proyecto': proyecto, 'lista_items': lista_items,
+                                                                    'estado': Item.ESTADO_DESARROLLO,
+                                                                    'lista_fases': lista_fases})
 
 
 def index(request, filtro):
@@ -56,14 +120,9 @@ def index(request, filtro):
     # lista sin ningún filtro de todos los proyectos del sistema
     lista_todos_proyectos = Proyecto.objects.all()
 
-    """
     # mostrar solo en los que el usuario participa
     for proye in lista_todos_proyectos:
         if proye.es_participante(request.user.id):
-            lista_proyectos_usuario.append(proye)
-    """
-    for proye in lista_todos_proyectos:
-        if proye.gerente == request.user.id:
             lista_proyectos_usuario.append(proye)
 
     # filtrar según estado
@@ -88,7 +147,27 @@ def ver_proyecto(request, id_proyecto):
     :rtype: render
     """
     proyecto = Proyecto.objects.get(pk=id_proyecto)
-    return render(request, 'desarrollo/proyecto_ver_unico.html', {'proyecto': proyecto})
+    # lista de items
+    lista_items = Item.objects.all()
+    # filtro de tipos de items que aún no fueron usados (para todas las fases)
+    tipos_de_items_usados = []
+    for fase in proyecto.fase_set.all():
+        tipos_de_items_usados = tipos_de_items_usados + list(fase.tipos_item.all())
+    lista_tipos = [tipo_restante for tipo_restante in proyecto.tipoitem_set.all() if
+                   tipo_restante not in tipos_de_items_usados]
+    # condición para mostrar las opciones de aprobación de ítem
+    # si es gerente del proyecto
+    es_aprobador = False
+    if request.user.id == proyecto.gerente:
+        es_aprobador = True
+    # o si el usuario tiene el permiso de aprobador
+    for fases in proyecto.fase_set.all():
+        if has_permiso(fases, request.user, Rol.APROBAR_ITEM):
+            es_aprobador = True
+
+    return render(request, 'desarrollo/proyecto_ver_unico.html', {'proyecto': proyecto, 'lista_tipos': lista_tipos,
+                                                                  'lista_items': lista_items,
+                                                                  'es_aprobador': es_aprobador})
 
 
 def adjuntar_archivo(request, id_proyecto, id_item):

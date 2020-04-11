@@ -61,22 +61,6 @@ class Proyecto(models.Model):
         return False
 
 
-class Fase(models.Model):
-    """
-    Esta clase representa las fases
-    """
-    #: Se almacena el nombre de la fase
-    nombre = models.CharField(max_length=200, null=False)
-    #: Descripcion de la fase
-    descripcion = models.CharField(max_length=400, null=True)
-    #: Estado de la fase, iniciada, cerrada etc.
-    estado = models.CharField(max_length=200, default='abierta')
-    #: Proyecto asociado a la fase
-    proyecto = models.ForeignKey(Proyecto, on_delete=models.CASCADE)
-    class Meta:
-        ordering = ['id']
-
-
 class TipoItem(models.Model):
     """
     Esta clase representa los tipos de items
@@ -112,6 +96,25 @@ class PlantillaAtributo(models.Model):
         return self.nombre
 
 
+class Fase(models.Model):
+    """
+    Esta clase representa las fases
+    """
+    #: Se almacena el nombre de la fase
+    nombre = models.CharField(max_length=200, null=False)
+    #: Descripcion de la fase
+    descripcion = models.CharField(max_length=400, null=True)
+    #: Estado de la fase, iniciada, cerrada etc.
+    estado = models.CharField(max_length=200, default='abierta')
+    #: Proyecto asociado a la fase
+    proyecto = models.ForeignKey('Proyecto', on_delete=models.CASCADE)
+    #: lista de tipos de ítem
+    tipos_item = models.ManyToManyField('TipoItem', null=True)
+
+    class Meta:
+        ordering = ['id']
+
+
 class Rol(models.Model):
     """
     Clase que representa los roles de los usuarios en los proyectos
@@ -139,7 +142,16 @@ class Rol(models.Model):
     #:
     activo = models.BooleanField(default=True)
 
-    def get_permisos(self):
+    CREAR_ITEM = 'CREAR_ITEM'
+    MODIFICAR_ITEM = 'MODIFICAR_ITEM'
+    DESACTIVAR_ITEM = 'DESACTIVAR_ITEM'
+    APROBAR_ITEM = 'APROBAR_ITEM'
+    REVERSIONAR_ITEM = 'REVERSIONAR_ITEM'
+    CREAR_RELACIONES_PH = 'CREAR_RELACIONES_PH'
+    CREAR_RELACIONES_AS = 'CREAR_RELACIONES_AS'
+    BORRAR_RELACIONES = 'BORRAR_RELACIONES'
+
+    def get_permisos_clean(self):
         """
         Metodo que colecta los permisos activos
         :return: una lista de permisos activos
@@ -156,7 +168,7 @@ class Rol(models.Model):
         return permisos
 
     def __str__(self):
-        return (self.nombre)
+        return self.nombre
 
 
 class UsuarioxRol(models.Model):
@@ -173,4 +185,4 @@ class UsuarioxRol(models.Model):
     activo = models.BooleanField(default=True)
 
     def __str__(self):
-        return self.id
+        return f'{self.usuario.username} es {self.rol.nombre} en {self.fase.nombre} - {self.activo}'

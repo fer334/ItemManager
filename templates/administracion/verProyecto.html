@@ -1,6 +1,5 @@
 {% extends 'login/loginHeader.html' %}
 {% block content %}
-{% load tz %}
     <div class="container h-100">
         <div class="shadow-lg p-3 mb-5 bg-white rounded mt-5">
             <h2 class="text-center pt-3 mb-3">{{ proyecto.nombre }}</h2>
@@ -22,13 +21,11 @@
                             <td>Fecha de Finalización</td><td>{{proyecto.fecha_finalizado}}</td>
                         </tr>
                         {% endif %}
-                        {% localtime on %}
                         {% if proyecto.fecha_cancelado %}
                         <tr class="">
                             <td>Fecha de Cancelación </td><td>{{proyecto.fecha_cancelado}}</td>
                         </tr>
                         {% endif %}
-                        {% endlocaltime %}
                         <tr class="table">
                             <td>Gerente del Proyecto </td><td>{{gerente}}</td>
                         </tr>
@@ -118,7 +115,7 @@
                     {% if proyecto.estado == 'iniciado' %}
                         <button
                             {% if habilitadofase == False or habilitadocomite == False or habilitadotipo == False %}
-                                class="btn btn-secondary" onclick="show_alert('Debe definir {% if habilitadofase == False %}nombres de las fases{% endif %}{% if habilitadofase == False and habilitadocomite == False %}, {% endif %}{% if proyecto.comite.count < proyecto.cant_comite %}los miembros del comité {% endif %}{% if habilitadocomite == False and habilitadotipo == False %}y{% endif %} {% if habilitadotipo == False %}aunque sea un tipo de ítem{% endif %}')"
+                                class="btn btn-secondary" onclick="show_alert('Debe definir {% if habilitadofase == False %}nombres de las fases{% endif %}{% if habilitadofase == False and habilitadocomite == False %}, {% endif %}{% if proyecto.comite.count < proyecto.cant_comite %}los miembros del comité {% endif %}{% if habilitadocomite == False and habilitadotipo == False %}y{% endif %} {% if habilitadotipo == False %}aunque sea {{ proyecto.numero_fases }} tipos de ítem{% endif %}')"
                             {% else %}
                                 onclick="show_modal('{% url 'administracion:estadoProyecto2' proyecto.id 'en ejecucion' %}')" class="btn btn-primary"
                             {% endif %}
