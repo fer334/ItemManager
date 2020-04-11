@@ -116,7 +116,7 @@ def solicitud_aprobacion(request, id_item):
 def aprobar_item(request,id_item, id_proyecto):
     item = Item.objects.get(pk=id_item)
     proyecto = Proyecto.objects.get(pk= id_proyecto)
-    if proyecto.gerente.rol == 'Aprobador' or proyecto.participante.rol == 'Aprobador' and item.estado == 'pendiente de aprobacion':
+    if item.estado == 'pendiente de aprobacion':
        item.estado = 'aprobado'
     return render(request,'desarrollo/item_aprobar.html')
 
