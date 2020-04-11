@@ -7,8 +7,8 @@
                 <table class="table table-active">
                     <thead class="thead-light">
                         <tr>
-                            {% for fase in proyecto.fase_set.all %}
-                                <th class="">{{ fase.nombre }}</th>
+                            {% for fase in lista_fases %}
+                                <th class="">Fase: {{ fase.nombre }}</th>
                             {% endfor %}
                         </tr>
                     </thead>
