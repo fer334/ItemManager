@@ -5,6 +5,16 @@
         <div class="btn float-right">
             <a class="btn btn-info" href="{% url 'desarrollo:menuAprobacion' proyecto.id %}"
                {% if es_aprobador == False %}disabled=""{% endif %} style="color: white">Aprobar items</a>
+            <a class="btn btn-info"
+               href="{% url 'desarrollo:relacionar' proyecto.id %}"
+               style="color: white">
+                Relacionar Items
+            </a>
+            <a class="btn btn-info"
+               href="{% url 'desarrollo:desactivarRelacion' proyecto.id %}"
+               style="color: white">
+                Desactivar relaciones entre items
+            </a>
         </div>
         <table class="table table-bordered">
             <thead class="thead-dark">

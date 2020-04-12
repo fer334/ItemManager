@@ -72,7 +72,7 @@ class Relacion(models.Model):
         default=None,
         help_text='Relacion padre o antecesor',
         blank=False,
-        related_name='item_desarrollo_izquierda',
+        related_name='item_desarrollo_inicio',
         on_delete=models.DO_NOTHING,
     )
 
@@ -82,9 +82,14 @@ class Relacion(models.Model):
         default=None,
         help_text='Relacion hijo o sucesor',
         blank=False,
-        related_name='item_desarrollo_derecha',
+        related_name='item_desarrollo_fin',
         on_delete=models.DO_NOTHING,
 
+    )
+
+    #: Atributo que nos dice si la relacion ha sido borrada
+    is_active = models.BooleanField(
+        default=True,
     )
 
     def __str__(self):
@@ -98,6 +103,4 @@ class Relacion(models.Model):
 
         :return:
         """
-        print(self.inicio.fase)
-        print(self.inicio.fase_id)
         return self.inicio.fase.id == self.fin.fase.id
