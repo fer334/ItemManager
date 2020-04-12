@@ -53,3 +53,51 @@ class AtributoParticular(models.Model):
 
     def __str__(self):
         return self.nombre
+
+# Posible implementacion de versionamiento
+'''
+class Version(models.Model):
+    item = models.OneToOneField('desarrollo.Item')
+    relacion = models.OneToOneField('desarrollo.Relacion')
+'''
+
+
+class Relacion(models.Model):
+    """
+    Clase que representa las relaciones entre items
+    """
+    #: Atributo que contiene al item donde comienza la relacion
+    inicio = models.ForeignKey(
+        'desarrollo.Item',
+        default=None,
+        help_text='Relacion padre o antecesor',
+        blank=False,
+        related_name='item_desarrollo_izquierda',
+        on_delete=models.DO_NOTHING,
+    )
+
+    #: Atributo que contiene al item donde termina la relacion
+    fin = models.ForeignKey(
+        'desarrollo.Item',
+        default=None,
+        help_text='Relacion hijo o sucesor',
+        blank=False,
+        related_name='item_desarrollo_derecha',
+        on_delete=models.DO_NOTHING,
+
+    )
+
+    def __str__(self):
+        return self.inicio.nombre + "-" + self.fin.nombre
+
+    def es_relacion_padrehijo(self):
+        """
+        Metodo de clase que verifica el tipo de relacion de este item que puede
+        ser de padre-hijo para items de la misma fase o antecesor-sucesor para
+        items de diferentes fases
+
+        :return:
+        """
+        print(self.inicio.fase)
+        print(self.inicio.fase_id)
+        return self.inicio.fase.id == self.fin.fase.id

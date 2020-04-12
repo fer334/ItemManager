@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect
 from .SubirArchivos import handle_uploaded_file
 from desarrollo.models import Item, AtributoParticular
 from administracion.models import Proyecto, TipoItem, Fase, Rol
-from desarrollo.forms import ItemForm
+from desarrollo.forms import ItemForm, RelacionForm
 from desarrollo.getPermisos import has_permiso
 
 
@@ -180,3 +180,14 @@ def adjuntar_archivo(request, id_proyecto, id_item):
         form = ItemForm()
     context['form'] = form
     return render(request, "desarrollo/item_adjuntar_archivo.html", context)
+
+
+def relacionar_item(request):
+    if request.method == "POST":
+        form = RelacionForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('desarrollo:verProyecto', 1)
+    else:
+        form = RelacionForm()
+    return render(request, "desarrollo/relacionar.html", {'form': form})
