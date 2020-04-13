@@ -23,10 +23,13 @@ class ActiveAccountMiddleware:
         Código que se ejecutará para cada request antes de que se llame a la vista.
         """
         if request.path == '/':
+            # Al inicio cualquiera puede entrar pues se verifica antes si esta
+            # logueado o si es un usuario sin cuenta activa
             pass
+
         elif not request.user.is_anonymous:
             # esta logueado
-            puede_entrar = "/accesoDenegado|/inicio|/logout"
+            puede_entrar = "/accesoDenegado|/logout"
 
             # Cualquier usuario puede entrar modificar su username
             if request.path == reverse('login:userUpdate', args=[request.user]):
@@ -71,7 +74,7 @@ class ActiveAccountMiddleware:
             # No esta logueado
 
             # Puede entrar a:
-            puede_entrar = "/login|/register|/accesoDenegado|/inicio"
+            puede_entrar = "/login|/register|/accesoDenegado"
 
             if not bool(re.match(puede_entrar, request.path)):
                 # Si no es alguno de esos
@@ -79,5 +82,6 @@ class ActiveAccountMiddleware:
                     'login:AccesoDenegado',
                     # {"message": "No haz iniciado sesion en el sistema"}
                 )
+
         response = self.get_response(request)
         return response
