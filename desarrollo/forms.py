@@ -41,7 +41,7 @@ class ItemForm(forms.ModelForm):
 
 class RelacionForm(forms.ModelForm):
     """
-    Formulario para la creacion de relaciones
+    Formulario para la creacion de relaciones entre items
     """
     class Meta:
         model = Relacion

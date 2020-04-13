@@ -183,6 +183,17 @@ def adjuntar_archivo(request, id_proyecto, id_item):
 
 
 def relacionar_item(request, id_proyecto):
+    """
+    Metodo que se encarga de renderizar la vista relacionar items,
+    recibe como parametro dos atributos, el request que es comun entre todas las
+    vistas y el id_proyecto que tiene el numero identificador del proyecto donde
+    se encuentran los items a relacionar
+
+    :param request: objeto tipo diccionario que permite acceder a datos
+    :param id_proyecto: identificador unico por proyecto
+    :return: objeto que renderea relacionar.html
+    :rtype: render
+    """
     if request.method == "POST":
         form = RelacionForm(request.POST)
         if form.is_valid():
@@ -202,6 +213,17 @@ def relacionar_item(request, id_proyecto):
 
 
 def desactivar_relacion_item(request, id_proyecto):
+    """
+    Metodo que se encarga de renderizar la vista desactivar relacion de items,
+    recibe como parametro dos atributos, el request que es comun entre todas las
+    vistas y el id_proyecto que tiene el numero identificador del proyecto donde
+    se encuentran las relaciones que se van a desactivar
+
+    :param request: objeto tipo diccionario que permite acceder a datos
+    :param id_proyecto: identificador unico por proyecto
+    :return: objeto que renderea item_des_relacion.html
+    :rtype: render
+    """
     relaciones = Relacion.objects.filter(
         is_active=True,
         inicio__fase__proyecto_id=id_proyecto,
