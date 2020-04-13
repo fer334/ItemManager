@@ -3,9 +3,9 @@ Modulo se detalla la logica para las vistas que serán utilizadas por la app
 """
 from django.shortcuts import render, redirect
 from .SubirArchivos import handle_uploaded_file
-from desarrollo.models import Item, AtributoParticular
+from desarrollo.models import Item, AtributoParticular, Relacion
 from administracion.models import Proyecto, TipoItem, Fase, Rol
-from desarrollo.forms import ItemForm
+from desarrollo.forms import ItemForm, RelacionForm
 from desarrollo.getPermisos import has_permiso
 
 
@@ -180,3 +180,62 @@ def adjuntar_archivo(request, id_proyecto, id_item):
         form = ItemForm()
     context['form'] = form
     return render(request, "desarrollo/item_adjuntar_archivo.html", context)
+
+
+def relacionar_item(request, id_proyecto):
+    """
+    Metodo que se encarga de renderizar la vista relacionar items,
+    recibe como parametro dos atributos, el request que es comun entre todas las
+    vistas y el id_proyecto que tiene el numero identificador del proyecto donde
+    se encuentran los items a relacionar
+
+    :param request: objeto tipo diccionario que permite acceder a datos
+    :param id_proyecto: identificador unico por proyecto
+    :return: objeto que renderea relacionar.html
+    :rtype: render
+    """
+    if request.method == "POST":
+        form = RelacionForm(request.POST)
+        if form.is_valid():
+            form.save()
+            proyecto = form.cleaned_data['inicio'].fase.proyecto
+            return redirect('desarrollo:verProyecto', proyecto.id)
+    else:
+        form = RelacionForm()
+
+        form.fields["inicio"].queryset = Item.objects.filter(
+            fase__proyecto_id=id_proyecto,
+        )
+        form.fields["fin"].queryset = Item.objects.filter(
+            fase__proyecto_id=id_proyecto,
+        )
+    return render(request, "desarrollo/relacionar.html", {'form': form})
+
+
+def desactivar_relacion_item(request, id_proyecto):
+    """
+    Metodo que se encarga de renderizar la vista desactivar relacion de items,
+    recibe como parametro dos atributos, el request que es comun entre todas las
+    vistas y el id_proyecto que tiene el numero identificador del proyecto donde
+    se encuentran las relaciones que se van a desactivar
+
+    :param request: objeto tipo diccionario que permite acceder a datos
+    :param id_proyecto: identificador unico por proyecto
+    :return: objeto que renderea item_des_relacion.html
+    :rtype: render
+    """
+    relaciones = Relacion.objects.filter(
+        is_active=True,
+        inicio__fase__proyecto_id=id_proyecto,
+        fin__fase__proyecto_id=id_proyecto,
+    )
+    if request.method == "POST":
+        for clave, valor in request.POST.items():
+            if valor == "desactivar":
+                relacion = Relacion.objects.get(id=clave)
+                relacion.is_active = False
+                relacion.save()
+                break
+    content = {'relaciones': relaciones, 'id_proyecto': id_proyecto}
+    return render(request, 'desarrollo/item_des_relacion.html', content)
+

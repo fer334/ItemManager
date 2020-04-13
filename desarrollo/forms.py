@@ -2,13 +2,14 @@
 Formularios para la aplicacion administración
 """
 from django import forms
-from desarrollo.models import Item, AtributoParticular
+from desarrollo.models import Item, AtributoParticular, Relacion
 
 
 class ItemForm(forms.ModelForm):
     """
     Formulario para la creación de ítems
     """
+
     class Meta:
         model = Item
         fields = ('nombre', 'complejidad', 'descripcion')
@@ -37,4 +38,30 @@ class ItemForm(forms.ModelForm):
             raise forms.ValidationError('Tiene que estar en el rango de [1,10].')
         return complejidad
 
+
+class RelacionForm(forms.ModelForm):
+    """
+    Formulario para la creacion de relaciones entre items
+    """
+    class Meta:
+        model = Relacion
+        fields = ('inicio', 'fin')
+
+    def clean(self):
+        """
+        Verifica los datos del formulario.
+
+        :return: los datos limpiados
+        """
+        data = super().clean()
+        inicio = data['inicio']
+        fin = data['fin']
+
+        # no se puede relacionar a si mismo
+        if inicio.id == fin.id:
+            raise forms.ValidationError('No se puede relacionar un item a si mismo')
+        elif inicio.fase.id + 1 != fin.fase.id:
+            raise forms.ValidationError('Solo se puede relacionar con la fase inmediata')
+
+        return data
 

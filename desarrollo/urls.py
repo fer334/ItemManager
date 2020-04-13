@@ -12,4 +12,8 @@ urlpatterns = [
     path('desarrollo/<str:filtro>', views.index, name='indexDesarrollo'),
     path('desarrollo/proyecto/<int:id_proyecto>', views.ver_proyecto, name='verProyecto'),
     path('desarrollo/proyecto/<int:id_proyecto>/item/<int:id_item>/adjuntar', views.adjuntar_archivo, name='adjuntarArchivo'),
+    # URLs de Fer
+    path('desarrollo/proyecto/<int:id_proyecto>/relacionar', views.relacionar_item, name='relacionar'),
+    path('desarrollo/proyecto/<int:id_proyecto>/desactivar_relacion', views.desactivar_relacion_item, name='desactivarRelacion'),
+
 ]
