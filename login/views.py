@@ -94,7 +94,6 @@ def users_access(request):
 
     if request.method == 'POST':
         usuarios = request.POST
-        print(usuarios)
         Usuario.objects.update(is_active=False)
         Usuario.objects.update(is_gerente=False)
         for id_usuario, valor in usuarios.items():

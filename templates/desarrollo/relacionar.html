@@ -1,0 +1,20 @@
+{% extends 'login/loginHeader.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="container">
+        <h1 class="text-center pt-3 mb-3">Relacionar Items</h1>
+        <form class="pt-3" method="post">
+            {% csrf_token %}
+            {{ form|crispy }}
+
+            <div class="row">
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-primary btn-block">Crear Relacion</button>
+                </div>
+            </div>
+            <button type="button" class="btn btn-primary m-1 float-right" onclick="history.back()">
+                Volver
+            </button>
+        </form>
+    </div>
+{% endblock %}
