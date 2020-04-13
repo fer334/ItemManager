@@ -183,27 +183,33 @@ def adjuntar_archivo(request, id_proyecto, id_item):
     return render(request, "desarrollo/item_adjuntar_archivo.html", context)
 
 
-
-
 def solicitud_aprobacion(request, id_item):
     item = Item.objects.get(pk=id_item)
-    if item.estado == 'en desarrollo':
-        item.estado = 'pendiente de aprobacion'
-    return render(request,'desarrollo/item_solicitar_aprobacion.html')
+    if item.estado == Item.ESTADO_DESARROLLO:
+        item.estado = Item.ESTADO_PENDIENTE
+    return render(request,'desarrollo/item_ver.html')
 
 
 def aprobar_item(request,id_item, id_proyecto):
     item = Item.objects.get(pk=id_item)
     proyecto = Proyecto.objects.get(pk= id_proyecto)
-    if item.estado == 'pendiente de aprobacion':
-       item.estado = 'aprobado'
-    return render(request,'desarrollo/item_aprobar.html')
+    if item.estado == Item.ESTADO_PENDIENTE:
+       item.estado = Item.ESTADO_APROBADO
+    return render(request,'desarrollo/item_menu_aprobacion.html')
+
+
+def desaprobar_item(request,id_item, id_proyecto):
+    item = Item.objects.get(pk=id_item)
+    proyecto = Proyecto.objects.get(pk= id_proyecto)
+    if item.estado == Item.ESTADO_PENDIENTE:
+       item.estado = Item.ESTADO_DESARROLLO
+    return render(request,'desarrollo/item_menu_aprobacion.html')
 
 
 def desactivar_item(request, id_item, id_fase):
     item = Item.objects.get(pk=id_item)
     fase = Fase.objects.get(pk=id_fase)
-    if item.estado == 'en desarrollo':
-        item.estado ='desactivado'
+    if item.estado == Item.ESTADO_DESARROLLO:
+        item.estado = Item.ESTADO_DESACTIVADO
         item.fase.remove(fase)
-    return render(request, 'desarrollo/item_desactivar.html')
+    return render(request, 'desarrollo/item_ver.html')
