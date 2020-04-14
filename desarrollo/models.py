@@ -25,7 +25,7 @@ class Item(models.Model):
     #: tipo que tendrá el ítem, de eso dependen sus atributos particulares
     tipo_item = models.ForeignKey('administracion.TipoItem', on_delete=models.CASCADE)
     #: fase del proyecto en la que se crea el ítem
-    fase = models.ForeignKey('administracion.Fase', on_delete=models.CASCADE, default=None)
+    fase = models.ForeignKey('administracion.Fase', on_delete=models.CASCADE, default=None, null=True)
     # constantes del modelo
     ESTADO_DESARROLLO = 'en desarrollo'
     ESTADO_PENDIENTE = 'Pendiente de Aprobacion'

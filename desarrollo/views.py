@@ -276,6 +276,6 @@ def desactivar_item(request, id_item):
     fase = Fase.objects.get(pk=item.fase_id)
     if item.estado == Item.ESTADO_DESARROLLO:
         item.estado = Item.ESTADO_DESACTIVADO
-        fase.delete(item)
+        item.fase = None
         item.save()
     return redirect('desarrollo:verItem', id_item)
