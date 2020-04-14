@@ -15,9 +15,9 @@ urlpatterns = [
     # URLs de Fer
     path('desarrollo/proyecto/<int:id_proyecto>/relacionar', views.relacionar_item, name='relacionar'),
     path('desarrollo/proyecto/<int:id_proyecto>/desactivar_relacion', views.desactivar_relacion_item, name='desactivarRelacion'),
-    #URLs de Pao
+    # URLs de Pao
     path('desarrollo/item/<int:id_item>/solicitar', views.solicitud_aprobacion, name='solicitarAprobacion'),
-    path('desarrollo/fase/<int:id_fase/item/<id_item>/desactivar', views.desactivar_item, name='desactivarItem'),
+    path('desarrollo/item/<int:id_item>/desactivar', views.desactivar_item, name='desactivarItem'),
     path('desarrollo/item/<int:id_item>/aprobar', views.aprobar_item, name='aprobarItem'),
     path('desarrollo/item/<int:id_item>/desaprobar', views.desaprobar_item, name='desaprobarItem'),
 ]

@@ -96,10 +96,9 @@ def menu_aprobacion(request, id_proyecto):
     else:
         for fase in proyecto.fase_set.all():
             if has_permiso(fase, request.user, Rol.APROBAR_ITEM):
-                print(fase.id)
                 lista_fases.append(fase)
     return render(request, 'desarrollo/item_menu_aprobacion.html', {'proyecto': proyecto, 'lista_items': lista_items,
-                                                                    'estado': Item.ESTADO_DESARROLLO,
+                                                                    'estado': Item.ESTADO_PENDIENTE,
                                                                     'lista_fases': lista_fases})
 
 
@@ -252,27 +251,31 @@ def solicitud_aprobacion(request, id_item):
     item = Item.objects.get(pk=id_item)
     if item.estado == Item.ESTADO_DESARROLLO:
         item.estado = Item.ESTADO_PENDIENTE
+        item.save()
     return redirect('desarrollo:verItem', id_item=id_item)
 
 
-def aprobar_item(request,id_item):
+def aprobar_item(request, id_item):
     item = Item.objects.get(pk=id_item)
     if item.estado == Item.ESTADO_PENDIENTE:
-       item.estado = Item.ESTADO_APROBADO
-    return render(request,'desarrollo/item_menu_aprobacion.html')
+        item.estado = Item.ESTADO_APROBADO
+        item.save()
+    return redirect('desarrollo:menuAprobacion', item.fase.proyecto_id)
 
 
-def desaprobar_item(request,id_item):
+def desaprobar_item(request, id_item):
     item = Item.objects.get(pk=id_item)
     if item.estado == Item.ESTADO_PENDIENTE:
-       item.estado = Item.ESTADO_DESARROLLO
-    return render(request,'desarrollo/item_menu_aprobacion.html')
+        item.estado = Item.ESTADO_DESARROLLO
+        item.save()
+    return redirect('desarrollo:menuAprobacion', item.fase.proyecto_id)
 
 
-def desactivar_item(request, id_item, id_fase):
+def desactivar_item(request, id_item):
     item = Item.objects.get(pk=id_item)
-    fase = Fase.objects.get(pk=id_fase)
+    fase = Fase.objects.get(pk=item.fase_id)
     if item.estado == Item.ESTADO_DESARROLLO:
         item.estado = Item.ESTADO_DESACTIVADO
-        item.fase.remove(fase)
-    return render(request,'desarrollo/item_ver.html')
+        fase.delete(item)
+        item.save()
+    return redirect('desarrollo:verItem', id_item)
