@@ -2,6 +2,7 @@
 Modulo se detalla la logica para las vistas que serán utilizadas por la app
 """
 from django.shortcuts import render, redirect
+from django.http import HttpResponseRedirect
 from .SubirArchivos import handle_uploaded_file
 from desarrollo.models import Item, AtributoParticular, Relacion
 from administracion.models import Proyecto, TipoItem, Fase, Rol
@@ -240,25 +241,29 @@ def desactivar_relacion_item(request, id_proyecto):
     return render(request, 'desarrollo/item_des_relacion.html', content)
 
 
-
 def solicitud_aprobacion(request, id_item):
+    """
+    Vista en la cual se realiza la solicitud de aprobacion de items, el mismo
+    debe estar en desarrollo para pasarlo a pendiente de aprobacion.
+    :param request:
+    :param id_item:
+    :return:
+    """
     item = Item.objects.get(pk=id_item)
     if item.estado == Item.ESTADO_DESARROLLO:
         item.estado = Item.ESTADO_PENDIENTE
-    return render(request,'desarrollo/item_ver.html')
+    return redirect('desarrollo:verItem', id_item=id_item)
 
 
-def aprobar_item(request,id_item, id_proyecto):
+def aprobar_item(request,id_item):
     item = Item.objects.get(pk=id_item)
-    proyecto = Proyecto.objects.get(pk= id_proyecto)
     if item.estado == Item.ESTADO_PENDIENTE:
        item.estado = Item.ESTADO_APROBADO
     return render(request,'desarrollo/item_menu_aprobacion.html')
 
 
-def desaprobar_item(request,id_item, id_proyecto):
+def desaprobar_item(request,id_item):
     item = Item.objects.get(pk=id_item)
-    proyecto = Proyecto.objects.get(pk= id_proyecto)
     if item.estado == Item.ESTADO_PENDIENTE:
        item.estado = Item.ESTADO_DESARROLLO
     return render(request,'desarrollo/item_menu_aprobacion.html')
@@ -270,4 +275,4 @@ def desactivar_item(request, id_item, id_fase):
     if item.estado == Item.ESTADO_DESARROLLO:
         item.estado = Item.ESTADO_DESACTIVADO
         item.fase.remove(fase)
-    return render(request, 'desarrollo/item_ver.html')
+    return render(request,'desarrollo/item_ver.html')

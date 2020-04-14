@@ -25,10 +25,10 @@
                                                             <a class="align-baseline" href="{% url 'desarrollo:verItem' item.id %}" >
                                                                {{ item.tipo_item.prefijo }}_{{ item.nombre }}
                                                             </a>
-                                                            <a class="btn btn-success" href="#" >
+                                                            <a class="btn btn-success" href="{% url 'desarrollo:aprobarItem' item.id %}" >
                                                                Aprobar
                                                             </a>
-                                                            <a class="btn btn-danger" href="#" >
+                                                            <a class="btn btn-danger" href="{% url 'desarrollo:desaprobarItem' item.id %}" >
                                                                Desaprobar
                                                             </a>
                                                         </li>
