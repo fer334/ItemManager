@@ -5,8 +5,6 @@ from django.db import models
 from administracion.models import Fase
 
 
-# Create your models here.
-
 class Item(models.Model):
     """
     clase que representa a los ítems que son instanciados a partir de un tipo de ítem
