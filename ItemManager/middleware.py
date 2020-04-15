@@ -6,6 +6,8 @@ import re
 from django.shortcuts import redirect
 from django.urls import reverse
 
+from administracion.models import Proyecto
+
 
 class ActiveAccountMiddleware:
     """
@@ -82,6 +84,49 @@ class ActiveAccountMiddleware:
                     'login:AccesoDenegado',
                     # {"message": "No haz iniciado sesion en el sistema"}
                 )
+
+        response = self.get_response(request)
+        return response
+
+
+class ProyectoMiddleware:
+    """
+    Middleware Proyectos
+
+    Clase encargada de ser mediador para las solicitudes de request, y a la vez
+    hace validaciones sobre los proyectos
+    """
+
+    def __init__(self, get_response):
+        """Inicializador del Middleware."""
+        self.get_response = get_response
+
+    def __call__(self, request):
+        """
+        Código que se ejecutará para cada request antes de que se llame a la vista.
+        """
+
+        path = request.path
+
+        if bool(re.match("(.*)/proyectos/[0-9]+/", path)):
+
+            # url ejemplo /desarrollo/proyectos/12/tipo
+            id_proyecto = path.split("/")[3]
+
+            # No permitir entrar a urls estado denegado ni a url la vista ver
+            # proyecto
+            if not bool(re.match("(.*)/accesodenegado/estado", path)) \
+                    and not bool(re.match("^(.*)/proyectos/[0-9]+/$", path)):
+
+                # url ejemplo /administracion/
+                obj_proyecto = Proyecto.objects.get(pk=id_proyecto)
+                if obj_proyecto.estado == Proyecto.ESTADO_CANCELADO\
+                        or obj_proyecto.estado == Proyecto.ESTADO_FINALIZADO:
+
+                    return redirect(
+                        'administracion:accesoDenegado',
+                        id_proyecto=id_proyecto, caso='estado'
+                    )
 
         response = self.get_response(request)
         return response
