@@ -464,14 +464,9 @@ def ver_tipo(request, id_proyecto, id_tipo):
     :return: redirecciona a los permisos de acceso si el proyecto  es cancelado, finalizado o en ejecucion, deriva a un acceso denegado sino redirecciona al url verTipoItem.html
     """
     obj_proyecto = Proyecto.objects.get(pk=id_proyecto)
-    if obj_proyecto.estado == 'cancelado' or obj_proyecto.estado == 'finalizado':
-        return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto, 'estado']))
-    elif obj_proyecto.gerente != request.user.id:
-        return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto, 'gerente']))
-    else:
-        obj_tipo_item = TipoItem.objects.get(pk=id_tipo)
-        return render(request, 'administracion/verTipoItem.html',
-                      {'proyecto': obj_proyecto, 'tipo_item': obj_tipo_item})
+    obj_tipo_item = TipoItem.objects.get(pk=id_tipo)
+    return render(request, 'administracion/verTipoItem.html',
+                  {'proyecto': obj_proyecto, 'tipo_item': obj_tipo_item})
 
 
 def desactivar_tipo_item(request, id_proyecto, id_tipo):

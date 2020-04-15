@@ -33,6 +33,12 @@ class Proyecto(models.Model):
     #: equipo de usuarios que participa en el proyecto
     participantes = models.ManyToManyField('login.Usuario', related_name='usuario_login_participante')
 
+    ESTADO_CANCELADO = 'cancelado'
+    ESTADO_INICIADO = 'iniciado'
+    ESTADO_EN_EJECUCION = 'en ejecucion'
+    ESTADO_FINALIZADO = 'finalizado'
+
+
     def __str__(self):
         return self.nombre
 
