@@ -5,8 +5,8 @@ from desarrollo import views
 app_name = 'desarrollo'
 urlpatterns = [
     # URLs de Mati
-    path('desarrollo/<int:id_fase>/<int:id_tipo>', views.crear_item, name='crearItem'),
-    path('desarrollo/<int:id_item>', views.ver_item, name='verItem'),
+    path('desarrollo/items/crear/<int:id_fase>/<int:id_tipo>', views.crear_item, name='crearItem'),
+    path('desarrollo/items/<int:id_item>', views.ver_item, name='verItem'),
     path('desarrollo/proyectos/<int:id_proyecto>/aprobacion', views.menu_aprobacion, name='menuAprobacion'),
     # URLs de David
     path('desarrollo/<str:filtro>', views.index, name='indexDesarrollo'),

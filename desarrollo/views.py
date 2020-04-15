@@ -132,7 +132,9 @@ def index(request, filtro):
             if proyecto.estado == filtro:
                 lista_proyectos.append(proyecto)
 
-    return render(request, 'desarrollo/proyecto_ver_todos.html', {'lista_proyectos': lista_proyectos, 'filtro': filtro})
+    return render(request, 'desarrollo/proyecto_ver_todos.html', {'lista_proyectos': lista_proyectos, 'filtro': filtro,
+                                                                  'cancelado': Proyecto.ESTADO_CANCELADO,
+                                                                  'ejecucion': Proyecto.ESTADO_EN_EJECUCION})
 
 
 def ver_proyecto(request, id_proyecto):
@@ -166,6 +168,7 @@ def ver_proyecto(request, id_proyecto):
 
     return render(request, 'desarrollo/proyecto_ver_unico.html', {'proyecto': proyecto, 'lista_tipos': lista_tipos,
                                                                   'lista_items': lista_items,
+                                                                  'estado': Proyecto.ESTADO_EN_EJECUCION,
                                                                   'es_aprobador': es_aprobador})
 
 
@@ -238,4 +241,3 @@ def desactivar_relacion_item(request, id_proyecto):
                 break
     content = {'relaciones': relaciones, 'id_proyecto': id_proyecto}
     return render(request, 'desarrollo/item_des_relacion.html', content)
-

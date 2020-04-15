@@ -137,11 +137,18 @@ class EstadoProyectoMiddleware:
                             id_proyecto=id_proyecto, caso='estado')
                 # if para estado en ejecucion
                 elif obj_proyecto.estado == Proyecto.ESTADO_EN_EJECUCION:
+                    # vistas a las que no se puede acceder en este estado
                     if request.path in [
                         reverse('administracion:importarTipoItem', args=[id_proyecto]),
                         reverse('administracion:crearTipoItem', args=[id_proyecto]),
                         reverse('administracion:registrarEnBase', args=[id_proyecto])] \
                             or bool(re.match("^(.*)/proyectos/[0-9]+/(.*)mostrarImport(.*)", path)):
+                        return redirect('administracion:accesoDenegado',
+                                        id_proyecto=id_proyecto, caso='estado')
+                # if para estado iniciado
+                elif obj_proyecto.estado == Proyecto.ESTADO_INICIADO:
+                    # si se encuentra en módulo de desarrollo bloquear acceso
+                    if bool(re.match("^(.*)/desarrollo/(.*)", path)):
                         return redirect('administracion:accesoDenegado',
                                         id_proyecto=id_proyecto, caso='estado')
 
