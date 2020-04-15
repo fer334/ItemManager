@@ -89,7 +89,7 @@ class ActiveAccountMiddleware:
         return response
 
 
-class ProyectoMiddleware:
+class EstadoProyectoMiddleware:
     """
     Middleware Proyectos
 
@@ -120,16 +120,30 @@ class ProyectoMiddleware:
 
                 # url ejemplo /administracion/
                 obj_proyecto = Proyecto.objects.get(pk=id_proyecto)
-                if obj_proyecto.estado == Proyecto.ESTADO_CANCELADO \
-                        or obj_proyecto.estado == Proyecto.ESTADO_FINALIZADO:
-                    # para el view administrar participantes si el proyecto está en finalizado no se debe
+                # if para estado del proyecto cancelado
+                if obj_proyecto.estado == Proyecto.ESTADO_CANCELADO:
+                    return redirect(
+                        'administracion:accesoDenegado',
+                        id_proyecto=id_proyecto, caso='estado'
+                    )
+                # if para estado finalizado
+                elif obj_proyecto.estado == Proyecto.ESTADO_FINALIZADO:
+                    # para el view administrar participantes y ver roles si el proyecto está en finalizado no se debe
                     # redireccionar a acceso denegado
                     if not (bool(re.match("^(.*)/proyectos/[0-9]+/participantes(.*)", path))
-                            and obj_proyecto.estado == Proyecto.ESTADO_FINALIZADO):
+                            or bool(re.match("^(.*)/proyectos/[0-9]+/roles(.*)", path))):
                         return redirect(
                             'administracion:accesoDenegado',
-                            id_proyecto=id_proyecto, caso='estado'
-                        )
+                            id_proyecto=id_proyecto, caso='estado')
+                # if para estado en ejecucion
+                elif obj_proyecto.estado == Proyecto.ESTADO_EN_EJECUCION:
+                    if request.path in [
+                        reverse('administracion:importarTipoItem', args=[id_proyecto]),
+                        reverse('administracion:crearTipoItem', args=[id_proyecto]),
+                        reverse('administracion:registrarEnBase', args=[id_proyecto])] \
+                            or bool(re.match("^(.*)/proyectos/[0-9]+/(.*)mostrarImport(.*)", path)):
+                        return redirect('administracion:accesoDenegado',
+                                        id_proyecto=id_proyecto, caso='estado')
 
         response = self.get_response(request)
         return response
