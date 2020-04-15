@@ -16,8 +16,8 @@ urlpatterns = [
     path('desarrollo/proyectos/<int:id_proyecto>/relacionar', views.relacionar_item, name='relacionar'),
     path('desarrollo/proyectos/<int:id_proyecto>/desactivar_relacion', views.desactivar_relacion_item, name='desactivarRelacion'),
     # URLs de Pao
-    path('desarrollo/item/<int:id_item>/solicitar', views.solicitud_aprobacion, name='solicitarAprobacion'),
-    path('desarrollo/item/<int:id_item>/desactivar', views.desactivar_item, name='desactivarItem'),
-    path('desarrollo/item/<int:id_item>/aprobar', views.aprobar_item, name='aprobarItem'),
-    path('desarrollo/item/<int:id_item>/desaprobar', views.desaprobar_item, name='desaprobarItem'),
+    path('desarrollo/items/<int:id_item>/solicitar', views.solicitud_aprobacion, name='solicitarAprobacion'),
+    path('desarrollo/items/<int:id_item>/desactivar', views.desactivar_item, name='desactivarItem'),
+    path('desarrollo/items/<int:id_item>/aprobar', views.aprobar_item, name='aprobarItem'),
+    path('desarrollo/items/<int:id_item>/desaprobar', views.desaprobar_item, name='desaprobarItem'),
 ]

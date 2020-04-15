@@ -2,7 +2,6 @@
 Modulo se detalla la logica para las vistas que serán utilizadas por la app
 """
 from django.shortcuts import render, redirect
-from django.http import HttpResponseRedirect
 from .SubirArchivos import handle_uploaded_file
 from desarrollo.models import Item, AtributoParticular, Relacion
 from administracion.models import Proyecto, TipoItem, Fase, Rol
