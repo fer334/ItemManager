@@ -17,7 +17,8 @@ from administracion.views import crear_proyecto, administrar_participantes, regi
 
 from administracion.views import estado_proyectov2, eliminar_participante_y_comite, crear_proyecto, \
     administrar_participantes, registrar_rol_por_fase, asignar_rol_por_fase, desasignar_rol_al_usuario, \
-    administrar_comite, importar_tipo, confirmar_tipo_import, mostrar_tipo_import, administrar_fases_del_proyecto
+    administrar_comite, importar_tipo, confirmar_tipo_import, mostrar_tipo_import, administrar_fases_del_proyecto, \
+    desactivar_tipo_item, editar_tipo
 
 from desarrollo.models import Item
 from desarrollo.views import solicitud_aprobacion, aprobar_item, desaprobar_item, desactivar_item
@@ -296,7 +297,7 @@ class TestViews(TestCase):
                                       numero_fases=5, cant_comite=3, gerente=self.usuario.id)
         response = self.client.post(reverse('administracion:crearProyecto'))
         self.assertEqual(ppp.nombre, 'ppp', 'indica que el proyecto no creado')
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 302)
 
     def test_proyectos(self):
         """
@@ -469,8 +470,7 @@ class TestViews(TestCase):
         request = RequestFactory()
         request.user = self.usuario
         estado_proyectov2(request, proyecto_cancelado.id, 'cancelado')
-        # sincronizamos el objeto con los nuevos cambios
-        proyecto_cancelado = Proyecto.objects.get(pk=proyecto_cancelado.id)
+        # sincronizamos el objeto con los nuevos cambios        proyecto_cancelado = Proyecto.objects.get(pk=proyecto_cancelado.id)
         self.assertEqual(proyecto_cancelado.estado, 'cancelado', 'El estado no puede cambiar a cancelado')
 
     def test_desactivar_tipo_item(self):
@@ -478,7 +478,7 @@ class TestViews(TestCase):
         CU 31: Desactivar tipo de item
         :return: Passed en caso de que el tipo item quede fuera de la lista de los tipo items del proyecto
         """
-        #se asigna el tipo al proyecto:
+        # se asigna el tipo al proyecto:
         self.tipo.proyecto.add(self.proyecto)
         request = RequestFactory()
         request.user = self.usuario
@@ -507,10 +507,6 @@ class TestViews(TestCase):
         self.assertEqual(NOMBRE_EDITADO, tipo_editado.nombre, "No se edito el nombre")
         self.assertEqual(PREFIJO_EDITADO, tipo_editado.prefijo, "No se edito el prefijo")
         self.assertEqual(DESCRIPCION_EDITADA, tipo_editado.descripcion, "No se edito la descripcion")
-
-
-
-
 
     def test_solicitud_aprobacion(self):
         """
