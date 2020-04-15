@@ -115,7 +115,7 @@ class Fase(models.Model):
     #: Proyecto asociado a la fase
     proyecto = models.ForeignKey('Proyecto', on_delete=models.CASCADE)
     #: lista de tipos de ítem
-    tipos_item = models.ManyToManyField('TipoItem', null=True)
+    tipos_item = models.ManyToManyField('TipoItem', blank=True)
 
     class Meta:
         ordering = ['id']

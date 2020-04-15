@@ -10,13 +10,10 @@ from django.test import TestCase
 from login.views import index, user_register, users_access, user_update
 from login.models import Usuario
 from administracion.models import Proyecto, Fase, Rol, UsuarioxRol, TipoItem
-from administracion.views import crear_proyecto, administrar_participantes, registrar_rol_por_fase, \
-    asignar_rol_por_fase, desasignar_rol_al_usuario, administrar_comite, importar_tipo, confirmar_tipo_import, \
-    mostrar_tipo_import, administrar_fases_del_proyecto, eliminar_participante_y_comite, crear_rol, \
-    proyectos, estado_proyectov2
-
-from administracion.views import estado_proyectov2, eliminar_participante_y_comite, crear_proyecto, \
+from administracion.views import crear_rol, proyectos, desactivar_tipo_item, editar_tipo, estado_proyectov2, \
+    eliminar_participante_y_comite, crear_proyecto, \
     administrar_participantes, registrar_rol_por_fase, asignar_rol_por_fase, desasignar_rol_al_usuario, \
+    administrar_comite, importar_tipo, confirmar_tipo_import, mostrar_tipo_import, administrar_fases_del_proyecto
     administrar_comite, importar_tipo, confirmar_tipo_import, mostrar_tipo_import, administrar_fases_del_proyecto, \
     desactivar_tipo_item, editar_tipo
 
@@ -227,7 +224,7 @@ class TestViews(TestCase):
         # sincronizamos el objeto con los nuevos cambios
         proyecto_iniciado = Proyecto.objects.get(pk=proyecto_iniciado.id)
         self.assertEqual(proyecto_iniciado.estado, 'finalizado', 'el estado del proyecto cambió a finalizado y '
-                                                                  'no debía cambiar de estado')
+                                                                 'no debía cambiar de estado')
 
     def test_estado_proyecto_ejecucion_finalizado(self):
         """
@@ -291,7 +288,7 @@ class TestViews(TestCase):
         CU 10: Crear Proyectos. Iteración 2
         Se verifica que el proyecto es creado correctamente y que tambien el url redirecciona a donde debe ir
 
-        :return: el primer assert indica que el proyecto fue creado correctamente, envia un mensaje en caso contrario, y el segundo que el url redirecciona correctamente
+        :return: el primer assert indica que el proyecto fue creado correctamente, envia un mensaje en casocontrario, y el segundo que el url redirecciona correctamente
         """
         ppp = Proyecto.objects.create(nombre='ppp', fecha_inicio=timezone.now().date(),
                                       numero_fases=5, cant_comite=3, gerente=self.usuario.id)
@@ -470,9 +467,11 @@ class TestViews(TestCase):
         request = RequestFactory()
         request.user = self.usuario
         estado_proyectov2(request, proyecto_cancelado.id, 'cancelado')
-        # sincronizamos el objeto con los nuevos cambios        proyecto_cancelado = Proyecto.objects.get(pk=proyecto_cancelado.id)
+        # sincronizamos el objeto con los nuevos cambios
+        proyecto_cancelado = Proyecto.objects.get(pk=proyecto_cancelado.id)
         self.assertEqual(proyecto_cancelado.estado, 'cancelado', 'El estado no puede cambiar a cancelado')
 
+<<<<<<<<< Temporary merge branch 1
     def test_desactivar_tipo_item(self):
         """
         CU 31: Desactivar tipo de item
@@ -508,6 +507,10 @@ class TestViews(TestCase):
         self.assertEqual(PREFIJO_EDITADO, tipo_editado.prefijo, "No se edito el prefijo")
         self.assertEqual(DESCRIPCION_EDITADA, tipo_editado.descripcion, "No se edito la descripcion")
 
+
+
+
+=========
     def test_solicitud_aprobacion(self):
         """
         CU 38: Solicitar aprobación de ítems. Iteracion 3
@@ -592,3 +595,4 @@ class TestViews(TestCase):
         desactivar_item(request, id_item=cu_40.id)
         cu_40 = Item.objects.get(pk=cu_40.id)
         self.assertEqual(cu_40.estado, 'Desactivado', "No se puede realizar la accion")
+>>>>>>>>> Temporary merge branch 2

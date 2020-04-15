@@ -89,12 +89,12 @@ class ActiveAccountMiddleware:
         return response
 
 
-class ProyectoMiddleware:
+class EstadoProyectoMiddleware:
     """
-    Middleware Proyectos
+    Middleware Estados Proyectos
 
     Clase encargada de ser mediador para las solicitudes de request, y a la vez
-    hace validaciones sobre los proyectos
+    hace validaciones sobre los estados de los proyectos
     """
 
     def __init__(self, get_response):
@@ -120,13 +120,37 @@ class ProyectoMiddleware:
 
                 # url ejemplo /administracion/
                 obj_proyecto = Proyecto.objects.get(pk=id_proyecto)
-                if obj_proyecto.estado == Proyecto.ESTADO_CANCELADO\
-                        or obj_proyecto.estado == Proyecto.ESTADO_FINALIZADO:
-
+                # if para estado del proyecto cancelado
+                if obj_proyecto.estado == Proyecto.ESTADO_CANCELADO:
                     return redirect(
                         'administracion:accesoDenegado',
                         id_proyecto=id_proyecto, caso='estado'
                     )
+                # if para estado finalizado
+                elif obj_proyecto.estado == Proyecto.ESTADO_FINALIZADO:
+                    # para el view administrar participantes y ver roles si el proyecto está en finalizado no se debe
+                    # redireccionar a acceso denegado
+                    if not (bool(re.match("^(.*)/proyectos/[0-9]+/participantes(.*)", path))
+                            or bool(re.match("^(.*)/proyectos/[0-9]+/roles(.*)", path))):
+                        return redirect(
+                            'administracion:accesoDenegado',
+                            id_proyecto=id_proyecto, caso='estado')
+                # if para estado en ejecucion
+                elif obj_proyecto.estado == Proyecto.ESTADO_EN_EJECUCION:
+                    # vistas a las que no se puede acceder en este estado
+                    if request.path in [
+                        reverse('administracion:importarTipoItem', args=[id_proyecto]),
+                        reverse('administracion:crearTipoItem', args=[id_proyecto]),
+                        reverse('administracion:registrarEnBase', args=[id_proyecto])] \
+                            or bool(re.match("^(.*)/proyectos/[0-9]+/(.*)mostrarImport(.*)", path)):
+                        return redirect('administracion:accesoDenegado',
+                                        id_proyecto=id_proyecto, caso='estado')
+                # if para estado iniciado
+                elif obj_proyecto.estado == Proyecto.ESTADO_INICIADO:
+                    # si se encuentra en módulo de desarrollo bloquear acceso
+                    if bool(re.match("^(.*)/desarrollo/(.*)", path)):
+                        return redirect('administracion:accesoDenegado',
+                                        id_proyecto=id_proyecto, caso='estado')
 
         response = self.get_response(request)
         return response
