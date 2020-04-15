@@ -120,13 +120,16 @@ class ProyectoMiddleware:
 
                 # url ejemplo /administracion/
                 obj_proyecto = Proyecto.objects.get(pk=id_proyecto)
-                if obj_proyecto.estado == Proyecto.ESTADO_CANCELADO\
+                if obj_proyecto.estado == Proyecto.ESTADO_CANCELADO \
                         or obj_proyecto.estado == Proyecto.ESTADO_FINALIZADO:
-
-                    return redirect(
-                        'administracion:accesoDenegado',
-                        id_proyecto=id_proyecto, caso='estado'
-                    )
+                    # para el view administrar participantes si el proyecto está en finalizado no se debe
+                    # redireccionar a acceso denegado
+                    if not (bool(re.match("^(.*)/proyectos/[0-9]+/participantes(.*)", path))
+                            and obj_proyecto.estado == Proyecto.ESTADO_FINALIZADO):
+                        return redirect(
+                            'administracion:accesoDenegado',
+                            id_proyecto=id_proyecto, caso='estado'
+                        )
 
         response = self.get_response(request)
         return response
