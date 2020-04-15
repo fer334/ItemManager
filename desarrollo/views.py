@@ -2,6 +2,7 @@
 Modulo se detalla la logica para las vistas que serán utilizadas por la app
 """
 from django.shortcuts import render, redirect
+from django.http import HttpResponseRedirect
 from .SubirArchivos import handle_uploaded_file
 from desarrollo.models import Item, AtributoParticular, Relacion
 from administracion.models import Proyecto, TipoItem, Fase, Rol
@@ -241,3 +242,66 @@ def desactivar_relacion_item(request, id_proyecto):
                 break
     content = {'relaciones': relaciones, 'id_proyecto': id_proyecto}
     return render(request, 'desarrollo/item_des_relacion.html', content)
+
+
+def solicitud_aprobacion(request, id_item):
+    """
+    Vista en la cual se realiza la solicitud de aprobacion de items, el mismo
+    debe estar en desarrollo para pasarlo a pendiente de aprobacion
+    :param request: objeto tipo diccionario que permite acceder a datos
+    :param id_item: identificador del item en cuestion
+    :return: redirecciona a los detalles del item
+    """
+    item = Item.objects.get(pk=id_item)
+    if item.estado == Item.ESTADO_DESARROLLO:
+        item.estado = Item.ESTADO_PENDIENTE
+        item.save()
+    return redirect('desarrollo:verItem', id_item=id_item)
+
+
+def aprobar_item(request, id_item):
+    """
+    Vista en la cual se aprueban los items, el mismo pasa pendiente de
+    aprobacion a aprobado
+    :param request: objeto tipo diccionario que permite acceder a datos
+    :param id_item: identificador del item en cuestion
+    :return: redirecciona al menu de aprobacion del item
+    """
+    item = Item.objects.get(pk=id_item)
+    if item.estado == Item.ESTADO_PENDIENTE:
+        item.estado = Item.ESTADO_APROBADO
+        item.save()
+    return redirect('desarrollo:menuAprobacion', item.fase.proyecto_id)
+
+
+def desaprobar_item(request, id_item):
+    """
+    Vista en la cual se desaprueban los items, el mismo pasa pendiente de
+    aprobacion a en desarrollo en caso de ser desaprobado
+    :param request: objeto tipo diccionario que permite acceder a datos
+    :param id_item: identificador del item en cuestion
+    :return: redirecciona al menu de aprobacion del item
+    """
+    item = Item.objects.get(pk=id_item)
+    if item.estado == Item.ESTADO_PENDIENTE:
+        item.estado = Item.ESTADO_DESARROLLO
+        item.save()
+    return redirect('desarrollo:menuAprobacion', item.fase.proyecto_id)
+
+
+def desactivar_item(request, id_item):
+    """
+    Vista en la cual se desactivan los items, el mismo debe estar en desarrollo para
+    poder desactivarlo y una vez echo simplemente se quedan especificados en los
+    detalles del item
+    :param request: objeto tipo diccionario que permite acceder a datos
+    :param id_item: identificador del item en cuestion
+    :return: redirecciona a los detalles del item
+    """
+    item = Item.objects.get(pk=id_item)
+    fase = Fase.objects.get(pk=item.fase_id)
+    if item.estado == Item.ESTADO_DESARROLLO:
+        item.estado = Item.ESTADO_DESACTIVADO
+        item.save()
+        item.fase_id = None
+    return redirect('desarrollo:verItem', id_item)

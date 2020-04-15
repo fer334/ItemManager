@@ -5,8 +5,6 @@ from django.db import models
 from administracion.models import Fase
 
 
-# Create your models here.
-
 class Item(models.Model):
     """
     clase que representa a los ítems que son instanciados a partir de un tipo de ítem
@@ -25,7 +23,7 @@ class Item(models.Model):
     #: tipo que tendrá el ítem, de eso dependen sus atributos particulares
     tipo_item = models.ForeignKey('administracion.TipoItem', on_delete=models.CASCADE)
     #: fase del proyecto en la que se crea el ítem
-    fase = models.ForeignKey('administracion.Fase', on_delete=models.CASCADE, default=None)
+    fase = models.ForeignKey('administracion.Fase', on_delete=models.CASCADE, default=None, null=True)
     # constantes del modelo
     ESTADO_DESARROLLO = 'En Desarrollo'
     ESTADO_PENDIENTE = 'Pendiente de Aprobacion'
