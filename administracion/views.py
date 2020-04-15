@@ -193,9 +193,7 @@ def editar_proyecto(request, id_proyecto):
     :rtype: render
     """
     proyecto = Proyecto.objects.get(pk=id_proyecto)
-    if proyecto.estado == 'cancelado' or proyecto.estado == 'finalizado':
-        return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto, 'estado']))
-    elif proyecto.gerente != request.user.id:
+    if proyecto.gerente != request.user.id:
         return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto, 'gerente']))
     else:
         if request.method == 'POST':
@@ -295,9 +293,7 @@ def administrar_fases_del_proyecto(request, id_proyecto):
     :rtype: render, redirect
     """
     proyecto = Proyecto.objects.get(pk=id_proyecto)
-    if proyecto.estado == 'cancelado' or proyecto.estado == 'finalizado':
-        return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto, 'estado']))
-    elif proyecto.gerente != request.user.id:
+    if proyecto.gerente != request.user.id:
         return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto, 'gerente']))
     else:
         fases = proyecto.fase_set.all().order_by('id')
@@ -329,9 +325,7 @@ def administrar_comite(request, id_proyecto):
     :rtype: render, redirect
     """
     proyecto = Proyecto.objects.get(pk=id_proyecto)
-    if proyecto.estado == 'cancelado' or proyecto.estado == 'finalizado':
-        return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto, 'estado']))
-    elif proyecto.gerente != request.user.id:
+    if proyecto.gerente != request.user.id:
         return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto, 'gerente']))
     else:
         if request.method == 'POST':
@@ -432,9 +426,7 @@ def editar_tipo(request, id_proyecto, id_tipo):
      """
     proyecto = Proyecto.objects.get(pk=id_proyecto)
     tipo = TipoItem.objects.get(pk=id_tipo)
-    if proyecto.estado == 'cancelado' or proyecto.estado == 'finalizado':
-        return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto, 'estado']))
-    elif proyecto.gerente != request.user.id:
+    if proyecto.gerente != request.user.id:
         return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto, 'gerente']))
     else:
         if tipo.proyecto.all().count() > 1:
@@ -515,9 +507,7 @@ def ver_tipo_por_proyecto(request, id_proyecto):
     :return: redirecciona a los permisos de acceso si el proyecto  es cancelado, finalizado o en ejecucion, deriva a un acceso denegado sino redirecciona al url tipoItemTest.html
     """
     proyecto = Proyecto.objects.get(pk=id_proyecto)
-    if proyecto.estado == 'cancelado' or proyecto.estado == 'finalizado':
-        return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto, 'estado']))
-    elif proyecto.gerente != request.user.id:
+    if proyecto.gerente != request.user.id:
         return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto, 'gerente']))
     else:
         tipo_item = proyecto.tipoitem_set.all()
@@ -593,9 +583,7 @@ def crear_rol(request, id_proyecto):
     """
 
     proyecto = Proyecto.objects.get(pk=id_proyecto)
-    if proyecto.estado == 'cancelado' or proyecto.estado == 'finalizado':
-        return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto, 'estado']))
-    elif proyecto.gerente != request.user.id:
+    if proyecto.gerente != request.user.id:
         return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto, 'gerente']))
     else:
         if request.method == 'POST':
@@ -664,9 +652,7 @@ def ver_roles_usuario(request, id_proyecto, id_usuario):
     :return: redirecciona redirecciona a los permisos de acceso si el proyecto  es cancelado, finalizado o en ejecucion, deriva a un acceso denegado sino redirecciona a verDetallesRol.html en donde se ven los detalles de cada, con los proyectos, participantes y los roles que les corresponden.
     """
     proyecto = Proyecto.objects.get(pk=id_proyecto)
-    if proyecto.estado == 'cancelado' or proyecto.estado == 'finalizado':
-        return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto, 'estado']))
-    elif proyecto.gerente != request.user.id:
+    if proyecto.gerente != request.user.id:
         return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto, 'gerente']))
     else:
         participante = Usuario.objects.get(pk=id_usuario)
