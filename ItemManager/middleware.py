@@ -91,10 +91,10 @@ class ActiveAccountMiddleware:
 
 class EstadoProyectoMiddleware:
     """
-    Middleware Proyectos
+    Middleware Estados Proyectos
 
     Clase encargada de ser mediador para las solicitudes de request, y a la vez
-    hace validaciones sobre los proyectos
+    hace validaciones sobre los estados de los proyectos
     """
 
     def __init__(self, get_response):

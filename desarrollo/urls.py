@@ -5,7 +5,7 @@ from desarrollo import views
 app_name = 'desarrollo'
 urlpatterns = [
     # URLs de Mati
-    path('desarrollo/items/crear/<int:id_fase>/<int:id_tipo>', views.crear_item, name='crearItem'),
+    path('desarrollo/fase/<int:id_fase>/tipo/<int:id_tipo>/items/crear', views.crear_item, name='crearItem'),
     path('desarrollo/items/<int:id_item>', views.ver_item, name='verItem'),
     path('desarrollo/proyectos/<int:id_proyecto>/aprobacion', views.menu_aprobacion, name='menuAprobacion'),
     # URLs de David

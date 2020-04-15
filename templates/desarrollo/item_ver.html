@@ -67,7 +67,7 @@
                 <div class="col-sm-12 mt-4">
                     <a href="{% url 'desarrollo:verProyecto' proyecto.id %}" class="btn btn-primary float-right">Volver atrás</a>
                 </div>
-                {% if item.estado == 'en desarrollo' %}
+                {% if item.estado == desarrollo %}
                     <a class="btn btn-warning" href="{% url 'desarrollo:solicitarAprobacion' item.id %}" >Solicitar Aprobación</a>
                     <a class="btn btn-danger" href="{% url 'desarrollo:desactivarItem' item.id %}">Desactivar Ítem</a>
                 {% endif %}

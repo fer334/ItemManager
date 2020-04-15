@@ -71,7 +71,7 @@ def ver_item(request, id_item):
     fase = item.fase
     proyecto = fase.proyecto
     return render(request, 'desarrollo/item_ver.html', {'item': item, 'lista_atributos': lista_atributos, 'fase': fase,
-                                                        'proyecto': proyecto})
+                                                        'proyecto': proyecto, 'desarrollo': Item.ESTADO_DESARROLLO})
 
 
 def menu_aprobacion(request, id_proyecto):
@@ -98,7 +98,7 @@ def menu_aprobacion(request, id_proyecto):
                 print(fase.id)
                 lista_fases.append(fase)
     return render(request, 'desarrollo/item_menu_aprobacion.html', {'proyecto': proyecto, 'lista_items': lista_items,
-                                                                    'estado': Item.ESTADO_DESARROLLO,
+                                                                    'estado': Item.ESTADO_PENDIENTE,
                                                                     'lista_fases': lista_fases})
 
 
@@ -293,14 +293,14 @@ def desactivar_item(request, id_item):
     Vista en la cual se desactivan los items, el mismo debe estar en desarrollo para
     poder desactivarlo y una vez echo simplemente se quedan especificados en los
     detalles del item
+
     :param request: objeto tipo diccionario que permite acceder a datos
     :param id_item: identificador del item en cuestion
     :return: redirecciona a los detalles del item
     """
     item = Item.objects.get(pk=id_item)
-    fase = Fase.objects.get(pk=item.fase_id)
     if item.estado == Item.ESTADO_DESARROLLO:
         item.estado = Item.ESTADO_DESACTIVADO
+        item.fase = None
         item.save()
-        item.fase_id = None
     return redirect('desarrollo:verItem', id_item)
