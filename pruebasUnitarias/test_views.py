@@ -15,7 +15,10 @@ from administracion.views import crear_proyecto, administrar_participantes, regi
     mostrar_tipo_import, administrar_fases_del_proyecto, eliminar_participante_y_comite, crear_rol, \
     proyectos, estado_proyectov2
 
-from administracion.views import estado_proyectov2, eliminar_participante_y_comite, crear_proyecto, administrar_participantes, registrar_rol_por_fase, asignar_rol_por_fase, desasignar_rol_al_usuario, administrar_comite, importar_tipo, confirmar_tipo_import, mostrar_tipo_import, administrar_fases_del_proyecto
+from administracion.views import estado_proyectov2, eliminar_participante_y_comite, crear_proyecto, \
+    administrar_participantes, registrar_rol_por_fase, asignar_rol_por_fase, desasignar_rol_al_usuario, \
+    administrar_comite, importar_tipo, confirmar_tipo_import, mostrar_tipo_import, administrar_fases_del_proyecto, \
+    desactivar_tipo_item, editar_tipo
 import pytest
 
 
@@ -37,6 +40,7 @@ class TestViews(TestCase):
                                                numero_fases=5, cant_comite=3, gerente=cls.usuario.id)
         cls.fase = Fase.objects.create(nombre='Fase de prueba', proyecto=cls.proyecto)
         cls.rol = Rol.objects.create(nombre='Rol de prueba', proyecto=cls.proyecto)
+        cls.tipo = TipoItem.objects.create(nombre='Tipo de item de prueba', prefijo='TIP')
 
     def test_index_usuario_no_autenticado(self):
         """
@@ -466,3 +470,42 @@ class TestViews(TestCase):
         # sincronizamos el objeto con los nuevos cambios
         proyecto_cancelado = Proyecto.objects.get(pk=proyecto_cancelado.id)
         self.assertEqual(proyecto_cancelado.estado, 'cancelado', 'El estado no puede cambiar a cancelado')
+
+    def test_desactivar_tipo_item(self):
+        """
+        CU 31: Desactivar tipo de item
+        :return: Passed en caso de que el tipo item quede fuera de la lista de los tipo items del proyecto
+        """
+        #se asigna el tipo al proyecto:
+        self.tipo.proyecto.add(self.proyecto)
+        request = RequestFactory()
+        request.user = self.usuario
+        desactivar_tipo_item(request, self.proyecto.id, self.tipo.id)
+        self.assertNotIn(self.tipo, self.proyecto.tipoitem_set.all(), "El proyecto sigue con el tipo de item activo")
+
+    def test_editar_tipo(self):
+        """
+        CU 30: Editar el tipo de item
+        :return: Passed en caso de que el tipo item quede con los valores cambiados
+        """
+        # se asigna el tipo al proyecto:
+        self.tipo.proyecto.add(self.proyecto)
+        NOMBRE_EDITADO = 'nombre nuevo'
+        PREFIJO_EDITADO = 'PRE'
+        DESCRIPCION_EDITADA = 'descripcion nueva'
+        path = reverse('administracion:editarTipoItem', args=[self.proyecto.id, self.tipo.id])
+        request = RequestFactory().post(path, {
+            'nombre': NOMBRE_EDITADO,
+            'prefijo': PREFIJO_EDITADO,
+            'descripcion': DESCRIPCION_EDITADA
+        })
+        request.user = self.usuario
+        editar_tipo(request, self.proyecto.id, self.tipo.id)
+        tipo_editado = TipoItem.objects.get(pk=self.tipo.id)
+        self.assertEqual(NOMBRE_EDITADO, tipo_editado.nombre, "No se edito el nombre")
+        self.assertEqual(PREFIJO_EDITADO, tipo_editado.prefijo, "No se edito el prefijo")
+        self.assertEqual(DESCRIPCION_EDITADA, tipo_editado.descripcion, "No se edito la descripcion")
+
+
+
+
