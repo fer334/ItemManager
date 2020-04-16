@@ -72,7 +72,8 @@ def ver_item(request, id_proyecto, id_item):
     fase = item.fase
     proyecto = Proyecto.objects.get(pk=id_proyecto)
     return render(request, 'desarrollo/item_ver.html', {'item': item, 'lista_atributos': lista_atributos, 'fase': fase,
-                                                        'proyecto': proyecto, 'desarrollo': Item.ESTADO_DESARROLLO})
+                                                        'proyecto': proyecto, 'desarrollo': Item.ESTADO_DESARROLLO,
+                                                        'estado': Proyecto.ESTADO_EN_EJECUCION})
 
 
 def menu_aprobacion(request, id_proyecto):
