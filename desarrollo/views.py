@@ -56,11 +56,12 @@ def crear_item(request, id_fase, id_tipo):
                                                           'plantilla_atr': plantilla_atr})
 
 
-def ver_item(request, id_item):
+def ver_item(request, id_proyecto, id_item):
     """
     vista que se encarga de mostrar un ítem con todos sus datos, atributos comunes y particulares y proyecto y fase
     a la que pertenece
 
+    :param id_proyecto: identificador del proyecto
     :param request: objeto tipo diccionario que permite acceder a datos
     :param id_item: identificador del ítem a mostrar
     :return: objeto que se encarga de renderear item_ver.html
@@ -69,7 +70,7 @@ def ver_item(request, id_item):
     item = Item.objects.get(pk=id_item)
     lista_atributos = AtributoParticular.objects.filter(item=item)
     fase = item.fase
-    proyecto = fase.proyecto
+    proyecto = Proyecto.objects.get(pk=id_proyecto)
     return render(request, 'desarrollo/item_ver.html', {'item': item, 'lista_atributos': lista_atributos, 'fase': fase,
                                                         'proyecto': proyecto, 'desarrollo': Item.ESTADO_DESARROLLO})
 
@@ -288,7 +289,7 @@ def desaprobar_item(request, id_item):
     return redirect('desarrollo:menuAprobacion', item.fase.proyecto_id)
 
 
-def desactivar_item(request, id_item):
+def desactivar_item(request,id_proyecto, id_item):
     """
     Vista en la cual se desactivan los items, el mismo debe estar en desarrollo para
     poder desactivarlo y una vez echo simplemente se quedan especificados en los
@@ -303,4 +304,4 @@ def desactivar_item(request, id_item):
         item.estado = Item.ESTADO_DESACTIVADO
         item.fase = None
         item.save()
-    return redirect('desarrollo:verItem', id_item)
+    return redirect('desarrollo:verItem', id_proyecto, id_item)
