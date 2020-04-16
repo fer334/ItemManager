@@ -39,7 +39,7 @@
                                     </a>
                                     {% for tipoitem in proyecto.tipoitem_set.all %}
                                         {% if tipoitem in fase.tipos_item.all %}
-                                            <a class="dropdown-item" role="button"
+                                            <a class="dropdown-item {% if proyecto.estado != estado %}disabled{% endif %}" role="button"
                                                href="{% url 'desarrollo:crearItem' fase.id tipoitem.id %}"  >
                                                 {{ tipoitem.nombre }}</a>
                                         {% endif %}

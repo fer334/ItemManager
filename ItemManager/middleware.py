@@ -7,6 +7,7 @@ from django.shortcuts import redirect
 from django.urls import reverse
 
 from administracion.models import Proyecto
+from desarrollo.models import Item
 from login.models import Usuario
 
 
@@ -108,7 +109,7 @@ class EstadoProyectoMiddleware:
         """
 
         path = request.path
-
+        # para URLs con el id del proyecto en ellos
         if bool(re.match("(.*)/proyectos/[0-9]+/", path)):
 
             # url ejemplo /desarrollo/proyectos/12/tipo
@@ -119,7 +120,7 @@ class EstadoProyectoMiddleware:
 
             # Permitir entrar a accesodenegado y a proyectos/1/
             if not bool(re.match("(.*)/accesodenegado/", path))\
-                    or not bool(re.match("^(.*)/proyectos/[0-9]+/$", path)):
+                    and not bool(re.match("^(.*)/proyectos/[0-9]+/$", path)):
 
                 # No permitir si el usuario actual es distinto al gerente del proyecto
                 if request.user.id != user_proyect.id:
@@ -138,7 +139,8 @@ class EstadoProyectoMiddleware:
                     # para el view administrar participantes y ver roles si el proyecto está en finalizado no se debe
                     # redireccionar a acceso denegado
                     if not (bool(re.match("^(.*)/proyectos/[0-9]+/participantes(.*)", path))
-                            or bool(re.match("^(.*)/proyectos/[0-9]+/roles(.*)", path))):
+                            or bool(re.match("^(.*)/proyectos/[0-9]+/roles(.*)", path))
+                            or bool(re.match("^(.*)/proyectos/[0-9]+/items/[0-9]+", path))):
                         return redirect(
                             'administracion:accesoDenegado',
                             id_proyecto=id_proyecto, caso='estado')
@@ -158,6 +160,15 @@ class EstadoProyectoMiddleware:
                     if bool(re.match("^(.*)/desarrollo/(.*)", path)):
                         return redirect('administracion:accesoDenegado',
                                         id_proyecto=id_proyecto, caso='estado')
+        # para URLs con el id del ítem en ellos
+        elif bool(re.match("(.*)/items/[0-9]+/", path)):
+            id_item = path.split("/")[3]
+            item = Item.objects.get(pk=id_item)
+            fase = item.fase
+            proyecto = fase.proyecto
+            if proyecto.estado != Proyecto.ESTADO_EN_EJECUCION:
+                return redirect('administracion:accesoDenegado',
+                                id_proyecto=proyecto.id, caso='estado')
 
         response = self.get_response(request)
         return response
