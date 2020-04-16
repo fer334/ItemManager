@@ -45,7 +45,7 @@
                                         {% endif %}
                                     {% endfor %}
                                     {% for tipo in lista_tipos %}
-                                        <a class="dropdown-item" href="{% url 'desarrollo:crearItem' fase.id tipo.id %}"
+                                        <a class="dropdown-item {% if proyecto.estado != estado %}disabled{% endif %}" href="{% url 'desarrollo:crearItem' fase.id tipo.id %}"
                                            role="button">
                                             {{ tipo.nombre }}
                                         </a>
@@ -57,7 +57,8 @@
                                     {% for item in lista_items %}
                                         {% if item.fase == fase %}
                                             <li class="list-group">
-                                                <a class="align-baseline" href="{% url 'desarrollo:verItem' item.id %}" >
+                                                <a class="align-baseline"
+                                                   href="{% url 'desarrollo:verItem' item.id %}" >
                                                    {{ item.tipo_item.prefijo }}_{{ item.nombre }}
                                                 </a>
                                             </li>

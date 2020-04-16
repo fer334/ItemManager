@@ -17,7 +17,7 @@
                         <td>{{ participante }}</td>
                         <td>
                             {% if participante.id != proyecto.gerente %}
-                                <a class="btn btn-danger"
+                                <a class="btn btn-danger {% if proyecto.estado == 'en ejecucion' %}disabled{% endif %}"
                                    href="{% url 'administracion:desasignarUsuario' proyecto.id participante.id 'participante' %}">
                                     Quitar participante
                                 </a>

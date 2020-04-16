@@ -71,7 +71,7 @@ def ver_item(request, id_item):
     fase = item.fase
     proyecto = fase.proyecto
     return render(request, 'desarrollo/item_ver.html', {'item': item, 'lista_atributos': lista_atributos, 'fase': fase,
-                                                        'proyecto': proyecto})
+                                                        'proyecto': proyecto, 'desarrollo': Item.ESTADO_DESARROLLO})
 
 
 def menu_aprobacion(request, id_proyecto):
@@ -98,7 +98,7 @@ def menu_aprobacion(request, id_proyecto):
                 print(fase.id)
                 lista_fases.append(fase)
     return render(request, 'desarrollo/item_menu_aprobacion.html', {'proyecto': proyecto, 'lista_items': lista_items,
-                                                                    'estado': Item.ESTADO_DESARROLLO,
+                                                                    'estado': Item.ESTADO_PENDIENTE,
                                                                     'lista_fases': lista_fases})
 
 
@@ -132,7 +132,9 @@ def index(request, filtro):
             if proyecto.estado == filtro:
                 lista_proyectos.append(proyecto)
 
-    return render(request, 'desarrollo/proyecto_ver_todos.html', {'lista_proyectos': lista_proyectos, 'filtro': filtro})
+    return render(request, 'desarrollo/proyecto_ver_todos.html', {'lista_proyectos': lista_proyectos, 'filtro': filtro,
+                                                                  'cancelado': Proyecto.ESTADO_CANCELADO,
+                                                                  'ejecucion': Proyecto.ESTADO_EN_EJECUCION})
 
 
 def ver_proyecto(request, id_proyecto):
@@ -166,6 +168,7 @@ def ver_proyecto(request, id_proyecto):
 
     return render(request, 'desarrollo/proyecto_ver_unico.html', {'proyecto': proyecto, 'lista_tipos': lista_tipos,
                                                                   'lista_items': lista_items,
+                                                                  'estado': Proyecto.ESTADO_EN_EJECUCION,
                                                                   'es_aprobador': es_aprobador})
 
 
@@ -239,3 +242,65 @@ def desactivar_relacion_item(request, id_proyecto):
     content = {'relaciones': relaciones, 'id_proyecto': id_proyecto}
     return render(request, 'desarrollo/item_des_relacion.html', content)
 
+
+def solicitud_aprobacion(request, id_item):
+    """
+    Vista en la cual se realiza la solicitud de aprobacion de items, el mismo
+    debe estar en desarrollo para pasarlo a pendiente de aprobacion
+    :param request: objeto tipo diccionario que permite acceder a datos
+    :param id_item: identificador del item en cuestion
+    :return: redirecciona a los detalles del item
+    """
+    item = Item.objects.get(pk=id_item)
+    if item.estado == Item.ESTADO_DESARROLLO:
+        item.estado = Item.ESTADO_PENDIENTE
+        item.save()
+    return redirect('desarrollo:verItem', id_item=id_item)
+
+
+def aprobar_item(request, id_item):
+    """
+    Vista en la cual se aprueban los items, el mismo pasa pendiente de
+    aprobacion a aprobado
+    :param request: objeto tipo diccionario que permite acceder a datos
+    :param id_item: identificador del item en cuestion
+    :return: redirecciona al menu de aprobacion del item
+    """
+    item = Item.objects.get(pk=id_item)
+    if item.estado == Item.ESTADO_PENDIENTE:
+        item.estado = Item.ESTADO_APROBADO
+        item.save()
+    return redirect('desarrollo:menuAprobacion', item.fase.proyecto_id)
+
+
+def desaprobar_item(request, id_item):
+    """
+    Vista en la cual se desaprueban los items, el mismo pasa pendiente de
+    aprobacion a en desarrollo en caso de ser desaprobado
+    :param request: objeto tipo diccionario que permite acceder a datos
+    :param id_item: identificador del item en cuestion
+    :return: redirecciona al menu de aprobacion del item
+    """
+    item = Item.objects.get(pk=id_item)
+    if item.estado == Item.ESTADO_PENDIENTE:
+        item.estado = Item.ESTADO_DESARROLLO
+        item.save()
+    return redirect('desarrollo:menuAprobacion', item.fase.proyecto_id)
+
+
+def desactivar_item(request, id_item):
+    """
+    Vista en la cual se desactivan los items, el mismo debe estar en desarrollo para
+    poder desactivarlo y una vez echo simplemente se quedan especificados en los
+    detalles del item
+
+    :param request: objeto tipo diccionario que permite acceder a datos
+    :param id_item: identificador del item en cuestion
+    :return: redirecciona a los detalles del item
+    """
+    item = Item.objects.get(pk=id_item)
+    if item.estado == Item.ESTADO_DESARROLLO:
+        item.estado = Item.ESTADO_DESACTIVADO
+        item.fase = None
+        item.save()
+    return redirect('desarrollo:verItem', id_item)
