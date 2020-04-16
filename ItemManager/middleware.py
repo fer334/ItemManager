@@ -130,14 +130,6 @@ class EstadoProyectoMiddleware:
                 # Permitir entrar a proyectos/1/
                 elif not bool(re.match("^(.*)/proyectos/[0-9]+/$", path)):
                     pass
-                # url ejemplo /administracion/
-                elif obj_proyecto.estado == Proyecto.ESTADO_CANCELADO\
-                        or obj_proyecto.estado == Proyecto.ESTADO_FINALIZADO:
-
-                    return redirect(
-                        'administracion:accesoDenegado',
-                        id_proyecto=id_proyecto, caso='estado'
-                    )
                 # if para estado finalizado
                 elif obj_proyecto.estado == Proyecto.ESTADO_FINALIZADO:
                     # para el view administrar participantes y ver roles si el proyecto está en finalizado no se debe

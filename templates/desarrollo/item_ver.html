@@ -69,7 +69,7 @@
                 </div>
                 {% if item.estado == desarrollo %}
                     <a class="btn btn-warning" href="{% url 'desarrollo:solicitarAprobacion' item.id %}" >Solicitar Aprobación</a>
-                    <a class="btn btn-danger" href="{% url 'desarrollo:desactivarItem' item.id %}">Desactivar Ítem</a>
+                    <a class="btn btn-danger" href="{% url 'desarrollo:desactivarItem' proyecto.id item.id %}">Desactivar Ítem</a>
                 {% endif %}
             </div>
 
