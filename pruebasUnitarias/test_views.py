@@ -13,8 +13,7 @@ from administracion.models import Proyecto, Fase, Rol, UsuarioxRol, TipoItem
 from administracion.views import crear_rol, proyectos, desactivar_tipo_item, editar_tipo, estado_proyectov2, \
     eliminar_participante_y_comite, crear_proyecto, \
     administrar_participantes, registrar_rol_por_fase, asignar_rol_por_fase, desasignar_rol_al_usuario, \
-    administrar_comite, importar_tipo, confirmar_tipo_import, mostrar_tipo_import, administrar_fases_del_proyecto
-    administrar_comite, importar_tipo, confirmar_tipo_import, mostrar_tipo_import, administrar_fases_del_proyecto, \
+    administrar_comite, importar_tipo, confirmar_tipo_import, mostrar_tipo_import, administrar_fases_del_proyecto,\
     desactivar_tipo_item, editar_tipo
 
 from desarrollo.models import Item
@@ -471,7 +470,6 @@ class TestViews(TestCase):
         proyecto_cancelado = Proyecto.objects.get(pk=proyecto_cancelado.id)
         self.assertEqual(proyecto_cancelado.estado, 'cancelado', 'El estado no puede cambiar a cancelado')
 
-<<<<<<<<< Temporary merge branch 1
     def test_desactivar_tipo_item(self):
         """
         CU 31: Desactivar tipo de item
@@ -507,10 +505,6 @@ class TestViews(TestCase):
         self.assertEqual(PREFIJO_EDITADO, tipo_editado.prefijo, "No se edito el prefijo")
         self.assertEqual(DESCRIPCION_EDITADA, tipo_editado.descripcion, "No se edito la descripcion")
 
-
-
-
-=========
     def test_solicitud_aprobacion(self):
         """
         CU 38: Solicitar aprobación de ítems. Iteracion 3
@@ -595,4 +589,3 @@ class TestViews(TestCase):
         desactivar_item(request, id_item=cu_40.id)
         cu_40 = Item.objects.get(pk=cu_40.id)
         self.assertEqual(cu_40.estado, 'Desactivado', "No se puede realizar la accion")
->>>>>>>>> Temporary merge branch 2
