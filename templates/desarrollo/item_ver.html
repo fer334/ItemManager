@@ -46,21 +46,23 @@
                             <td>Descripcion</td>
                             <td>{{ item.descripcion }}</td>
                         </tr>
-                        <tr>
-                            <th rowspan="{{lista_atributos.count|add:1}}" class="text-center align-middle h5">Atributos particulares</th>
-                        </tr>
-                        {% for atributo in lista_atributos %}
+                        {% if lista_atributos %}
                             <tr>
-                                <td>{{ atributo.nombre }}</td>
-                                <td>
-                                    {% if atributo.tipo == 'file' %}
-                                        <a href="{{ atributo.valor }}" target="_blank">Archivo</a>
-                                    {% else %}
-                                        {{ atributo.valor }}
-                                    {% endif %}
-                                </td>
+                                <th rowspan="{{lista_atributos.count|add:1}}" class="text-center align-middle h5">Atributos particulares</th>
                             </tr>
-                        {% endfor %}
+                            {% for atributo in lista_atributos %}
+                                <tr>
+                                    <td>{{ atributo.nombre }}</td>
+                                    <td>
+                                        {% if atributo.tipo == 'file' %}
+                                            <a href="{{ atributo.valor }}" target="_blank">Archivo</a>
+                                        {% else %}
+                                            {{ atributo.valor }}
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        {% endif %}
                     </tbody>
                 </table>
                 <hr>
