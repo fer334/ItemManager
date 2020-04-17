@@ -233,14 +233,30 @@ def desactivar_relacion_item(request, id_proyecto):
         inicio__fase__proyecto_id=id_proyecto,
         fin__fase__proyecto_id=id_proyecto,
     )
+    mensaje_error = ""
+
     if request.method == "POST":
         for clave, valor in request.POST.items():
             if valor == "desactivar":
                 relacion = Relacion.objects.get(id=clave)
-                relacion.is_active = False
-                relacion.save()
-                break
-    content = {'relaciones': relaciones, 'id_proyecto': id_proyecto}
+                if relacion.es_relacion_padrehijo() and Item.ESTADO_APROBADO in [
+                    relacion.inicio.estado, relacion.fin.estado]:
+
+                    item_aprobado = relacion.inicio if relacion.inicio.estado==Item.ESTADO_APROBADO else relacion.fin
+                    mensaje_error = """
+                        El item {} esta 
+                        aprobado, por lo cual no se puede desactivar la relacion
+                        """.format(item_aprobado)
+                else:
+
+                    relacion.is_active = False
+                    relacion.save()
+
+    content = {
+        'relaciones': relaciones,
+        'id_proyecto': id_proyecto,
+        'mensaje_error': mensaje_error,
+    }
     return render(request, 'desarrollo/item_des_relacion.html', content)
 
 
