@@ -302,8 +302,14 @@ def desactivar_item(request, id_proyecto, id_item):
     """
     item = Item.objects.get(pk=id_item)
     print(Relacion.objects.filter(inicio=item))
+    #se verifica si es sucesor o padre
     if Relacion.objects.filter(inicio=item):
         return redirect('desarrollo:verItem', id_proyecto, id_item)
+
+    #se deben eliminar sucesores y hijos
+    for relacion_donde_es_ultimo in item.item_desarrollo_fin.all():
+        relacion_donde_es_ultimo.delete()
+
     if item.estado == Item.ESTADO_DESARROLLO:
         item.estado = Item.ESTADO_DESACTIVADO
         item.fase = None
