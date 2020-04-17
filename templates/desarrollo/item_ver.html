@@ -7,10 +7,13 @@
                 <table class="table">
                     <tbody>
                         <tr class="">
-                            <th rowspan="4" class="text-center align-middle h5">Item</th>
+                            <th rowspan="5" class="text-center align-middle h5">Item</th>
                         </tr>
                         <tr>
-
+                            <td>Tipo de item</td>
+                            <td>{{ item.tipo_item.nombre }}</td>
+                        </tr>
+                        <tr>
                             <td>Estado</td>
                             <td>{{ item.estado }}</td>
                         </tr>
@@ -23,10 +26,7 @@
                             <td>Fase</td>
                             <td>{{ fase.nombre }}</td>
                         </tr>
-                        <tr>
-                            <td>Tipo de item</td>
-                            <td>{{ item.tipo_item.nombre }}</td>
-                        </tr>
+
                         <tr>
                             <th rowspan="5" class="text-center align-middle h5">Atributos particulares</th>
                         </tr>
@@ -46,21 +46,23 @@
                             <td>Descripcion</td>
                             <td>{{ item.descripcion }}</td>
                         </tr>
-                        <tr>
-                            <th rowspan="{{lista_atributos.count|add:1}}" class="text-center align-middle h5">Atributos particulares</th>
-                        </tr>
-                        {% for atributo in lista_atributos %}
+                        {% if lista_atributos %}
                             <tr>
-                                <td>{{ atributo.nombre }}</td>
-                                <td>
-                                    {% if atributo.tipo == 'file' %}
-                                        <a href="{{ atributo.valor }}" target="_blank">Archivo</a>
-                                    {% else %}
-                                        {{ atributo.valor }}
-                                    {% endif %}
-                                </td>
+                                <th rowspan="{{lista_atributos.count|add:1}}" class="text-center align-middle h5">Atributos particulares</th>
                             </tr>
-                        {% endfor %}
+                            {% for atributo in lista_atributos %}
+                                <tr>
+                                    <td>{{ atributo.nombre }}</td>
+                                    <td>
+                                        {% if atributo.tipo == 'file' %}
+                                            <a href="{{ atributo.valor }}" target="_blank">Archivo</a>
+                                        {% else %}
+                                            {{ atributo.valor }}
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        {% endif %}
                     </tbody>
                 </table>
                 <hr>
@@ -68,13 +70,24 @@
                     <a href="{% url 'desarrollo:verProyecto' proyecto.id %}" class="btn btn-primary float-right">Volver atrás</a>
                 </div>
                 {% if item.estado == desarrollo %}
-                    <a class="btn btn-warning" href="{% url 'desarrollo:solicitarAprobacion' item.id %}" >Solicitar Aprobación</a>
-                    <a class="btn btn-danger" href="{% url 'desarrollo:desactivarItem' proyecto.id item.id %}">Desactivar Ítem</a>
+                    <a class="btn btn-success" href="{% url 'desarrollo:solicitarAprobacion' item.id %}" >Solicitar Aprobación</a>
+                    {% if item.item_desarrollo_inicio.count != 0 %}
+                        <button type="button" class="btn btn-secondary" onclick="showAlert()">Desactivar Ítem</button>
+                    {% else %}
+                        <a class="btn btn-danger" href="{% url 'desarrollo:desactivarItem' proyecto.id item.id %}">Desactivar Ítem</a>
+                    {% endif %}
                 {% endif %}
             </div>
-
+            <div class="mt-4 alert alert-warning" id="alertarelaciones" style="visibility: hidden;">
+                No se puede desactivar por que es antecesor/padre de otros items
+            </div>
         </div>
 
     </div>
-
+    <script>
+        const showAlert = ()=>{
+            const alertDiv = document.getElementById('alertarelaciones');
+            alertDiv.style.visibility = 'visible';
+        }
+    </script>
 {% endblock %}

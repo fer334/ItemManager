@@ -117,8 +117,9 @@ class EstadoProyectoMiddleware:
 
             user_proyect = Usuario.objects.get(id=obj_proyecto.gerente)
 
-            # Permitir entrar a accesodenegado
-            if not bool(re.match("(.*)/accesodenegado/", path)):
+            # Permitir entrar a accesodenegado y a proyectos/1/
+            if not bool(re.match("(.*)/accesodenegado/", path))\
+                    or not bool(re.match("^(.*)/proyectos/[0-9]+/$", path)):
 
                 # No permitir si el usuario actual es distinto al gerente del proyecto
                 if request.user.id != user_proyect.id:
@@ -126,10 +127,12 @@ class EstadoProyectoMiddleware:
                         'administracion:accesoDenegado',
                         id_proyecto=id_proyecto, caso="gerente"
                     )
-
-                # Permitir entrar a proyectos/1/
-                elif not bool(re.match("^(.*)/proyectos/[0-9]+/$", path)):
-                    pass
+                # if para estado del proyecto cancelado
+                elif obj_proyecto.estado == Proyecto.ESTADO_CANCELADO:
+                    return redirect(
+                        'administracion:accesoDenegado',
+                        id_proyecto=id_proyecto, caso='estado'
+                    )
                 # if para estado finalizado
                 elif obj_proyecto.estado == Proyecto.ESTADO_FINALIZADO:
                     # para el view administrar participantes y ver roles si el proyecto está en finalizado no se debe
