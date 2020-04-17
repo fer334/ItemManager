@@ -289,17 +289,21 @@ def desaprobar_item(request, id_item):
     return redirect('desarrollo:menuAprobacion', item.fase.proyecto_id)
 
 
-def desactivar_item(request,id_proyecto, id_item):
+def desactivar_item(request, id_proyecto, id_item):
     """
     Vista en la cual se desactivan los items, el mismo debe estar en desarrollo para
     poder desactivarlo y una vez echo simplemente se quedan especificados en los
     detalles del item
 
+    :param id_proyecto: identificador del proyecto
     :param request: objeto tipo diccionario que permite acceder a datos
     :param id_item: identificador del item en cuestion
     :return: redirecciona a los detalles del item
     """
     item = Item.objects.get(pk=id_item)
+    print(Relacion.objects.filter(inicio=item))
+    if Relacion.objects.filter(inicio=item):
+        return redirect('desarrollo:verItem', id_proyecto, id_item)
     if item.estado == Item.ESTADO_DESARROLLO:
         item.estado = Item.ESTADO_DESACTIVADO
         item.fase = None
