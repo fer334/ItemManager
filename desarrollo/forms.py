@@ -43,6 +43,7 @@ class RelacionForm(forms.ModelForm):
     """
     Formulario para la creacion de relaciones entre items
     """
+
     class Meta:
         model = Relacion
         fields = ('inicio', 'fin')
@@ -60,10 +61,17 @@ class RelacionForm(forms.ModelForm):
         # no se puede relacionar a si mismo
         if inicio.id == fin.id:
             raise forms.ValidationError('No se puede relacionar un item a si mismo')
-        elif abs(inicio.fase.id - fin.fase.id) > 1:
+        if abs(inicio.fase.id - fin.fase.id) > 1:
             raise forms.ValidationError(
                 'Solo se puede relacionar items de la misma fase o fases inmediatas'
             )
+        if inicio.fase.id - fin.fase.id == 1:
+            raise forms.ValidationError(
+                'Las relaciones entre fases deben ser hacia fases posteriores'
+            )
+        if Relacion.objects.filter(inicio=inicio, fin=fin, is_active=True).count() > 0:
+            raise forms.ValidationError(
+                'Esta relacion ya existe'
+            )
 
         return data
-
