@@ -58,7 +58,7 @@
                                         {% if item.fase == fase %}
                                             <li class="list-group">
                                                 <a class="align-baseline"
-                                                   href="{% url 'desarrollo:verItem' item.id %}" >
+                                                   href="{% url 'desarrollo:verItem' proyecto.id item.id %}" >
                                                    {{ item.tipo_item.prefijo }}_{{ item.nombre }}
                                                 </a>
                                             </li>

@@ -56,11 +56,12 @@ def crear_item(request, id_fase, id_tipo):
                                                           'plantilla_atr': plantilla_atr})
 
 
-def ver_item(request, id_item):
+def ver_item(request, id_proyecto, id_item):
     """
     vista que se encarga de mostrar un ítem con todos sus datos, atributos comunes y particulares y proyecto y fase
     a la que pertenece
 
+    :param id_proyecto: identificador del proyecto
     :param request: objeto tipo diccionario que permite acceder a datos
     :param id_item: identificador del ítem a mostrar
     :return: objeto que se encarga de renderear item_ver.html
@@ -69,7 +70,7 @@ def ver_item(request, id_item):
     item = Item.objects.get(pk=id_item)
     lista_atributos = AtributoParticular.objects.filter(item=item)
     fase = item.fase
-    proyecto = fase.proyecto
+    proyecto = Proyecto.objects.get(pk=id_proyecto)
     return render(request, 'desarrollo/item_ver.html', {'item': item, 'lista_atributos': lista_atributos, 'fase': fase,
                                                         'proyecto': proyecto, 'desarrollo': Item.ESTADO_DESARROLLO})
 
@@ -232,14 +233,30 @@ def desactivar_relacion_item(request, id_proyecto):
         inicio__fase__proyecto_id=id_proyecto,
         fin__fase__proyecto_id=id_proyecto,
     )
+    mensaje_error = ""
+
     if request.method == "POST":
         for clave, valor in request.POST.items():
             if valor == "desactivar":
                 relacion = Relacion.objects.get(id=clave)
-                relacion.is_active = False
-                relacion.save()
-                break
-    content = {'relaciones': relaciones, 'id_proyecto': id_proyecto}
+                if relacion.es_relacion_padrehijo() and Item.ESTADO_APROBADO in [
+                    relacion.inicio.estado, relacion.fin.estado]:
+
+                    item_aprobado = relacion.inicio if relacion.inicio.estado==Item.ESTADO_APROBADO else relacion.fin
+                    mensaje_error = """
+                        El item {} esta 
+                        aprobado, por lo cual no se puede desactivar la relacion
+                        """.format(item_aprobado)
+                else:
+
+                    relacion.is_active = False
+                    relacion.save()
+
+    content = {
+        'relaciones': relaciones,
+        'id_proyecto': id_proyecto,
+        'mensaje_error': mensaje_error,
+    }
     return render(request, 'desarrollo/item_des_relacion.html', content)
 
 
@@ -288,19 +305,29 @@ def desaprobar_item(request, id_item):
     return redirect('desarrollo:menuAprobacion', item.fase.proyecto_id)
 
 
-def desactivar_item(request, id_item):
+def desactivar_item(request, id_proyecto, id_item):
     """
     Vista en la cual se desactivan los items, el mismo debe estar en desarrollo para
     poder desactivarlo y una vez echo simplemente se quedan especificados en los
     detalles del item
 
+    :param id_proyecto: identificador del proyecto
     :param request: objeto tipo diccionario que permite acceder a datos
     :param id_item: identificador del item en cuestion
     :return: redirecciona a los detalles del item
     """
     item = Item.objects.get(pk=id_item)
+    print(Relacion.objects.filter(inicio=item))
+    #se verifica si es sucesor o padre
+    if Relacion.objects.filter(inicio=item):
+        return redirect('desarrollo:verItem', id_proyecto, id_item)
+
+    #se deben eliminar sucesores y hijos
+    for relacion_donde_es_ultimo in item.item_desarrollo_fin.all():
+        relacion_donde_es_ultimo.delete()
+
     if item.estado == Item.ESTADO_DESARROLLO:
         item.estado = Item.ESTADO_DESACTIVADO
         item.fase.proyecto = None
         item.save()
-    return redirect('desarrollo:verItem', id_item)
+    return redirect('desarrollo:verItem', id_proyecto, id_item)

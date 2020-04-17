@@ -7,6 +7,7 @@ from django.shortcuts import redirect
 from django.urls import reverse
 
 from administracion.models import Proyecto
+from login.models import Usuario
 
 
 class ActiveAccountMiddleware:
@@ -112,16 +113,22 @@ class EstadoProyectoMiddleware:
 
             # url ejemplo /desarrollo/proyectos/12/tipo
             id_proyecto = path.split("/")[3]
+            obj_proyecto = Proyecto.objects.get(pk=id_proyecto)
 
-            # No permitir entrar a urls estado denegado ni a url la vista ver
-            # proyecto
-            if not bool(re.match("(.*)/accesodenegado/estado", path)) \
-                    and not bool(re.match("^(.*)/proyectos/[0-9]+/$", path)):
+            user_proyect = Usuario.objects.get(id=obj_proyecto.gerente)
 
-                # url ejemplo /administracion/
-                obj_proyecto = Proyecto.objects.get(pk=id_proyecto)
+            # Permitir entrar a accesodenegado y a proyectos/1/
+            if not bool(re.match("(.*)/accesodenegado/", path))\
+                    or not bool(re.match("^(.*)/proyectos/[0-9]+/$", path)):
+
+                # No permitir si el usuario actual es distinto al gerente del proyecto
+                if request.user.id != user_proyect.id:
+                    return redirect(
+                        'administracion:accesoDenegado',
+                        id_proyecto=id_proyecto, caso="gerente"
+                    )
                 # if para estado del proyecto cancelado
-                if obj_proyecto.estado == Proyecto.ESTADO_CANCELADO:
+                elif obj_proyecto.estado == Proyecto.ESTADO_CANCELADO:
                     return redirect(
                         'administracion:accesoDenegado',
                         id_proyecto=id_proyecto, caso='estado'

@@ -60,8 +60,10 @@ class RelacionForm(forms.ModelForm):
         # no se puede relacionar a si mismo
         if inicio.id == fin.id:
             raise forms.ValidationError('No se puede relacionar un item a si mismo')
-        elif inicio.fase.id + 1 != fin.fase.id:
-            raise forms.ValidationError('Solo se puede relacionar con la fase inmediata')
+        elif abs(inicio.fase.id - fin.fase.id) > 1:
+            raise forms.ValidationError(
+                'Solo se puede relacionar items de la misma fase o fases inmediatas'
+            )
 
         return data
 

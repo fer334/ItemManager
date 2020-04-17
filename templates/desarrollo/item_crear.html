@@ -8,8 +8,9 @@
             {% csrf_token %}
             {{ form|crispy}}
             <div class="form-row">
-                <div class="form-group col-sm-12 col-md-8">
-                    Atributos Particulares:
+                {% if plantilla_atr %}
+                <div class="form-group col-sm-12 col-md-8 mt-3 mb-4">
+                    <h3>Atributos Particulares:</h3>
                 </div>
                 {% for atributo in plantilla_atr %}
                     <div class="form-group col-sm-12 col-md-8">
@@ -19,6 +20,7 @@
                                {% if atributo.es_requerido %}required=""{% endif %}>
                     </div>
                 {% endfor %}
+                {% endif %}
             </div>
             <div class="row">
                 <div class="col-md-3">
