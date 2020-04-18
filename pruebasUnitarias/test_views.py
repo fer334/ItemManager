@@ -216,13 +216,14 @@ class TestViews(TestCase):
         :return: el assert retorna True si el estado del proyecto no cambia a finalizado
         """
         proyecto_iniciado = Proyecto.objects.create(nombre='proyectoIniciado', fecha_inicio=timezone.now().date(),
-                                                    numero_fases=5, cant_comite=3, gerente=self.usuario.id)
+                                                    estado='Iniciado', numero_fases=5, cant_comite=3,
+                                                    gerente=self.usuario.id)
         request = RequestFactory()
         request.user = self.usuario
-        estado_proyectov2(request, proyecto_iniciado.id, 'finalizado')
+        estado_proyectov2(request, proyecto_iniciado.id, 'Finalizado')
         # sincronizamos el objeto con los nuevos cambios
         proyecto_iniciado = Proyecto.objects.get(pk=proyecto_iniciado.id)
-        self.assertNotEqual(proyecto_iniciado.estado, 'finalizado', 'el estado del proyecto cambió a finalizado y '
+        self.assertNotEqual(proyecto_iniciado.estado, 'Finalizado', 'el estado del proyecto cambió a finalizado y '
                                                                  'no debía cambiar de estado')
 
     def test_estado_proyecto_ejecucion_finalizado(self):
@@ -472,7 +473,7 @@ class TestViews(TestCase):
 
     def test_desactivar_tipo_item(self):
         """
-        CU 31: Desactivar tipo de item
+        CU 31: Desactivar tipo de item. Iteracion 3
         :return: Passed en caso de que el tipo item quede fuera de la lista de los tipo items del proyecto
         """
         # se asigna el tipo al proyecto:
@@ -484,7 +485,7 @@ class TestViews(TestCase):
 
     def test_editar_tipo(self):
         """
-        CU 30: Editar el tipo de item
+        CU 30: Editar el tipo de item. Iteracion 3
         :return: Passed en caso de que el tipo item quede con los valores cambiados
         """
         # se asigna el tipo al proyecto:
