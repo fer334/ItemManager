@@ -185,6 +185,7 @@ def ver_proyecto(request, id_proyecto):
     return render(request, 'desarrollo/proyecto_ver_unico.html', {'proyecto': proyecto, 'lista_tipos': lista_tipos,
                                                                   'lista_items': lista_items,
                                                                   'estado': Proyecto.ESTADO_EN_EJECUCION,
+                                                                  'desactivado': Item.ESTADO_DESACTIVADO,
                                                                   'es_aprobador': es_aprobador})
 
 
@@ -343,6 +344,5 @@ def desactivar_item(request, id_proyecto, id_item):
 
     if item.estado == Item.ESTADO_DESARROLLO:
         item.estado = Item.ESTADO_DESACTIVADO
-        item.fase = None
         item.save()
     return redirect('desarrollo:verItem', id_proyecto, id_item)
