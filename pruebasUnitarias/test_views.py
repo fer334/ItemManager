@@ -517,7 +517,7 @@ class TestViews(TestCase):
         tipor = TipoItem.objects.create(nombre='CasoU', descripcion='fndmsn', prefijo='cu')
         fas = Fase.objects.create(nombre='Fasex', descripcion='dskjalñ', estado='abierta',
                                   proyecto=Proyecto.objects.get(pk=pr.id))
-        cu_38 = Item.objects.create(nombre='cu_38', estado='en desarrollo', version=1, complejidad=5,
+        cu_38 = Item.objects.create(nombre='cu_38', estado='En Desarrollo', version=1, complejidad=5,
                                     descripcion='solicitar aprobacion', tipo_item=TipoItem.objects.get(pk=tipor.id),
                                     fase=Fase.objects.get(pk=fas.id))
         request = RequestFactory()
@@ -566,7 +566,7 @@ class TestViews(TestCase):
         request.user = self.usuario
         desaprobar_item(request, id_item=cu_39_2.id)
         cu_39_2 = Item.objects.get(pk=cu_39_2.id)
-        self.assertEqual(cu_39_2.estado, 'en desarrollo', 'No se puede realizar la accion')
+        self.assertEqual(cu_39_2.estado, 'En Desarrollo', 'No se puede realizar la accion')
 
     def test_desactivar_item(self):
         """
@@ -581,11 +581,11 @@ class TestViews(TestCase):
         tipom = TipoItem.objects.create(nombre='Casom', descripcion='uuuto', prefijo='cm')
         fasem = Fase.objects.create(nombre='Fasem', descripcion='cdshh', estado='abierta',
                                    proyecto=Proyecto.objects.get(pk=pm.id))
-        cu_40 = Item.objects.create(nombre='cu_40', estado='en desarrollo', version=1, complejidad=5,
+        cu_40 = Item.objects.create(nombre='cu_40', estado='En Desarrollo', version=1, complejidad=5,
                                       descripcion='desactivar item', tipo_item=TipoItem.objects.get(pk=tipom.id),
                                       fase=Fase.objects.get(pk=fasem.id))
         request = RequestFactory()
         request.user = self.usuario
-        desactivar_item(request, id_item=cu_40.id)
+        desactivar_item(request, id_item=cu_40.id, id_proyecto=pm.id)
         cu_40 = Item.objects.get(pk=cu_40.id)
         self.assertEqual(cu_40.estado, 'Desactivado', "No se puede realizar la accion")

@@ -318,7 +318,7 @@ def desactivar_item(request, id_proyecto, id_item):
     """
     item = Item.objects.get(pk=id_item)
     print(Relacion.objects.filter(inicio=item))
-    #se verifica si es sucesor o padre
+    # se verifica si es sucesor o padre
     if Relacion.objects.filter(inicio=item):
         return redirect('desarrollo:verItem', id_proyecto, id_item)
 
