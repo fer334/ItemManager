@@ -26,29 +26,43 @@ def crear_item(request, id_fase, id_tipo):
     fase = Fase.objects.get(pk=id_fase)
     tipo = TipoItem.objects.get(pk=id_tipo)
     plantilla_atr = tipo.plantillaatributo_set.all().order_by('id')
+
+    # filtro de tipos de items que aún no fueron usados (para todas las fases)
+    tipos_de_items_usados = []
+    for f in fase.proyecto.fase_set.all():
+        tipos_de_items_usados = tipos_de_items_usados + list(f.tipos_item.all())
+        lista_tipos_disponibles = [tipo_restante for tipo_restante in fase.proyecto.tipoitem_set.all() if
+                                   tipo_restante not in tipos_de_items_usados]
+
     if request.method == "POST":
         form = ItemForm(request.POST, request.FILES)
         if form.is_valid():
-            # creamos el ítem
-            nombre = form.cleaned_data['nombre']
-            complejidad = form.cleaned_data['complejidad']
-            descripcion = form.cleaned_data['descripcion']
-            nuevo_item = Item(nombre=nombre, complejidad=complejidad, descripcion=descripcion, tipo_item=tipo,
-                              fase=fase)
-            nuevo_item.save()
-            # vinculamos el tipo a la fase
-            if tipo not in fase.tipos_item.all():
-                fase.tipos_item.add(tipo)
-            # luego creamos los atributos del ítem
-            for atr in plantilla_atr:
-                if atr.tipo == 'file' and request.FILES:
-                    valor = handle_uploaded_file(request.FILES[atr.nombre], fase.proyecto.id, request.user)
-                else:
-                    valor = request.POST[atr.nombre]
-                nuevo_atributo = AtributoParticular(item=nuevo_item, nombre=atr.nombre, tipo=atr.tipo, valor=valor)
-                nuevo_atributo.save()
+            # verificamos que el tipo elegido sea valido para la fase
+            if tipo in fase.tipos_item.all() or tipo in lista_tipos_disponibles:
+                # creamos el ítem
+                nombre = form.cleaned_data['nombre']
+                complejidad = form.cleaned_data['complejidad']
+                descripcion = form.cleaned_data['descripcion']
+                nuevo_item = Item(nombre=nombre, complejidad=complejidad, descripcion=descripcion, tipo_item=tipo,
+                                  fase=fase)
+                nuevo_item.save()
+                # vinculamos el tipo a la fase
+                if tipo not in fase.tipos_item.all():
+                    fase.tipos_item.add(tipo)
+                # luego creamos los atributos del ítem
+                for atr in plantilla_atr:
+                    if atr.tipo == 'file' and request.FILES:
+                        valor = handle_uploaded_file(request.FILES[atr.nombre], fase.proyecto.id, request.user)
+                    else:
+                        valor = request.POST[atr.nombre]
+                    nuevo_atributo = AtributoParticular(item=nuevo_item, nombre=atr.nombre, tipo=atr.tipo, valor=valor)
+                    nuevo_atributo.save()
 
-            return redirect('desarrollo:verProyecto', id_proyecto=fase.proyecto.id)
+                return redirect('desarrollo:verProyecto', id_proyecto=fase.proyecto.id)
+            # si el tipo no es válido
+            else:
+                print(lista_tipos_disponibles)
+                return redirect('administracion:accesoDenegado', id_proyecto=fase.proyecto.id, caso='tiponovalido')
     else:
         form = ItemForm()
 
@@ -72,7 +86,8 @@ def ver_item(request, id_proyecto, id_item):
     fase = item.fase
     proyecto = Proyecto.objects.get(pk=id_proyecto)
     return render(request, 'desarrollo/item_ver.html', {'item': item, 'lista_atributos': lista_atributos, 'fase': fase,
-                                                        'proyecto': proyecto, 'desarrollo': Item.ESTADO_DESARROLLO})
+                                                        'proyecto': proyecto, 'desarrollo': Item.ESTADO_DESARROLLO,
+                                                        'estado': Proyecto.ESTADO_EN_EJECUCION})
 
 
 def menu_aprobacion(request, id_proyecto):
