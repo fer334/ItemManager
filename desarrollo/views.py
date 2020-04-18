@@ -287,7 +287,7 @@ def solicitud_aprobacion(request, id_item):
     if item.estado == Item.ESTADO_DESARROLLO:
         item.estado = Item.ESTADO_PENDIENTE
         item.save()
-    return redirect('desarrollo:verItem', id_item=id_item)
+    return redirect('desarrollo:verItem', item.fase.proyecto.id,id_item)
 
 
 def aprobar_item(request, id_item):
