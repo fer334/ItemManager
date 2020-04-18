@@ -222,7 +222,7 @@ class TestViews(TestCase):
         estado_proyectov2(request, proyecto_iniciado.id, 'finalizado')
         # sincronizamos el objeto con los nuevos cambios
         proyecto_iniciado = Proyecto.objects.get(pk=proyecto_iniciado.id)
-        self.assertEqual(proyecto_iniciado.estado, 'finalizado', 'el estado del proyecto cambió a finalizado y '
+        self.assertNotEqual(proyecto_iniciado.estado, 'finalizado', 'el estado del proyecto cambió a finalizado y '
                                                                  'no debía cambiar de estado')
 
     def test_estado_proyecto_ejecucion_finalizado(self):
