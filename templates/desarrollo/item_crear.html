@@ -1,0 +1,32 @@
+{% extends 'login/loginHeader.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="container">
+        <h1 class="text-center pt-3 mb-3">Creación De Item</h1>
+        <h5 style="color: #005cbf" class="text-center pt-0 mb-3">Tipo: [{{ tipo.nombre }}]</h5>
+        <form class="pt-3" METHOD="post" ACTION="#" enctype="multipart/form-data"><!--ACTION="{ url 'desarrollo:crearItem' fase.id tipo.id %}">-->
+            {% csrf_token %}
+            {{ form|crispy}}
+            <div class="form-row">
+                {% if plantilla_atr %}
+                <div class="form-group col-sm-12 col-md-8 mt-3 mb-4">
+                    <h3>Atributos Particulares:</h3>
+                </div>
+                {% for atributo in plantilla_atr %}
+                    <div class="form-group col-sm-12 col-md-8">
+                        <label>{{  atributo.nombre}} ({{ atributo.tipo }})</label>
+                        <input type="{{atributo.tipo}}"
+                               class="form-control" name="{{atributo.nombre}}"
+                               {% if atributo.es_requerido %}required=""{% endif %}>
+                    </div>
+                {% endfor %}
+                {% endif %}
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-primary btn-block">Crear Ítem</button>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}

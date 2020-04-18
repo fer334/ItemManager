@@ -1,0 +1,73 @@
+{% extends 'login/loginHeader.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="container">
+        <h1 class="col-12 text-center">Desactivar relaciones</h1>
+        <h5 class="col-12 text-center mt-3">
+            Puede desactivar relaciones desde este menu
+        </h5>
+
+        {% if mensaje_error %}
+            <div class="alert alert-danger m-3">
+                <h5 class="text-center">
+                    {{ mensaje_error }}
+                </h5>
+            </div>
+        {% endif %}
+
+        <div class="row justify-content-center mt-3">
+            {% if relaciones.count == 0 %}
+                <h3 class="center text-center text-warning">No hay relaciones</h3>
+            {% else %}
+                <form class="row col-sm-9 col-md-9 col-lg-9 pt-6" method="post">
+                    {% csrf_token %}
+
+                    <table class="table users table-hover">
+                        <tr>
+                            <th>Relacion</th>
+                            <th>Fase</th>
+                            <th>Item1</th>
+                            <th>Fase</th>
+                            <th>Item2</th>
+                            <th></th>
+                        </tr>
+                        {% for relacion in relaciones %}
+                            <tr>
+                                <td>
+                                    <label> {{ relacion }}</label>
+                                </td>
+                                <td>
+                                    <label> {{ relacion.inicio.fase.id }}</label>
+                                </td>
+                                <td>
+                                    <label> {{ relacion.inicio }} </label>
+                                </td>
+                                <td>
+                                    <label> {{ relacion.fin.fase.id }}</label>
+                                </td>
+                                <td>
+                                    <label> {{ relacion.fin }} </label>
+                                </td>
+                                <td>
+                                    <button class="btn btn-danger align-middle"
+                                            name="{{ relacion.id }}"
+                                            value="desactivar"
+                                            type="submit"
+                                            >
+                                            Desactivar
+                                    </button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </form>
+            {% endif %}
+        </div>
+        <div class="container">
+             <a class="btn btn-primary m-1 float-right"
+                     href="{% url 'desarrollo:verProyecto' id_proyecto %}">
+                 Volver
+             </a>
+        </div>
+    </div>
+{% endblock %}

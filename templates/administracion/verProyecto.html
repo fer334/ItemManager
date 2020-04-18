@@ -11,6 +11,21 @@
                         <tr class="">
                             <td>Fecha de Inicio </td><td>{{proyecto.fecha_inicio}}</td>
                         </tr>
+                        {% if proyecto.fecha_ejecucion %}
+                        <tr class="">
+                            <td>Fecha de inicio de Ejecución </td><td>{{proyecto.fecha_ejecucion}}</td>
+                        </tr>
+                        {% endif %}
+                        {% if proyecto.fecha_finalizado %}
+                        <tr class="">
+                            <td>Fecha de Finalización</td><td>{{proyecto.fecha_finalizado}}</td>
+                        </tr>
+                        {% endif %}
+                        {% if proyecto.fecha_cancelado %}
+                        <tr class="">
+                            <td>Fecha de Cancelación </td><td>{{proyecto.fecha_cancelado}}</td>
+                        </tr>
+                        {% endif %}
                         <tr class="table">
                             <td>Gerente del Proyecto </td><td>{{gerente}}</td>
                         </tr>
@@ -98,19 +113,17 @@
                             </a>
                     </div>
                     {% if proyecto.estado == 'iniciado' %}
-                        <a
+                        <button
                             {% if habilitadofase == False or habilitadocomite == False or habilitadotipo == False %}
-                                href="#"     class="btn btn-secondary" onclick="{
-                                    document.querySelector('#msj').innerHTML='Debe definir {% if habilitadofase == False %}nombres de las fases{% endif %}{% if habilitadofase == False and habilitadocomite == False %},{% endif %}{% if proyecto.comite.count < proyecto.cant_comite %}los miembros del comité {% endif %}{% if habilitadocomite == False and habilitadotipo == False %}y{% endif %} {% if habilitadotipo == False %}aunque sea un tipo de ítem{% endif %} primero';
-                                    document.querySelector('#msj').classList='alert alert-warning mt-3'};"
+                                class="btn btn-secondary" onclick="show_alert('Debe definir {% if habilitadofase == False %}nombres de las fases{% endif %}{% if habilitadofase == False and habilitadocomite == False %}, {% endif %}{% if proyecto.comite.count < proyecto.cant_comite %}los miembros del comité {% endif %}{% if habilitadocomite == False and habilitadotipo == False %}y{% endif %} {% if habilitadotipo == False %}aunque sea {{ proyecto.numero_fases }} tipos de ítem{% endif %}')"
                             {% else %}
-                                href="{% url 'administracion:estadoProyecto2' proyecto.id 'en ejecucion' %}" class="btn btn-primary"
+                                onclick="show_modal('{% url 'administracion:estadoProyecto2' proyecto.id 'en ejecucion' %}')" class="btn btn-primary"
                             {% endif %}
-                        >Pasar a en ejecucion</a>
-                        <a href="{% url 'administracion:estadoProyecto2' proyecto.id 'cancelado' %}" class="btn btn-danger">Pasar a cancelado</a>
+                        >Pasar a en ejecucion</button>
+                        <button onclick="show_modal('{% url 'administracion:estadoProyecto2' proyecto.id 'cancelado' %}')" class="btn btn-danger">Pasar a cancelado</button>
                     {% elif proyecto.estado == 'en ejecucion' %}
-                        <a href="{% url 'administracion:estadoProyecto2' proyecto.id 'finalizado' %}" class="btn btn-primary">Pasar a finalizado</a>
-                        <a href="{% url 'administracion:estadoProyecto2' proyecto.id 'cancelado' %}" class="btn btn-danger">Pasar a cancelado</a>
+                        <button onclick="show_modal('{% url 'administracion:estadoProyecto2' proyecto.id 'finalizado' %}')" class="btn btn-primary">Pasar a finalizado</button>
+                        <button onclick="show_modal('{% url 'administracion:estadoProyecto2' proyecto.id 'cancelado' %}')" class="btn btn-danger">Pasar a cancelado</button>
                     {% endif %}
                 {% else %}
                     <div class="d-inline-block">
@@ -128,6 +141,33 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="confirmacion" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">Estas seguro de que desea cambiar el estado del proyecto?</h3>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <a class="btn btn-success" id="botonConfirmar" href="">Confirmar</a>
+                    <button type="button" class="btn btn-danger float-right" data-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        //var $ = jQuery.noConflict();
+        function show_modal( url ){
+            $('#botonConfirmar').attr('href',url)
+            $('#confirmacion').modal('show');
+        }
+        function show_alert(msj) {
+            document.querySelector('#msj').innerHTML=msj;
+            document.querySelector('#msj').classList='alert alert-warning mt-3'
+        }
+    </script>
 {% endblock %}
 
 
