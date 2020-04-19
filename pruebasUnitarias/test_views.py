@@ -14,8 +14,8 @@ from administracion.views import crear_rol, proyectos, desactivar_tipo_item, edi
     eliminar_participante_y_comite, crear_proyecto, \
     administrar_participantes, registrar_rol_por_fase, asignar_rol_por_fase, desasignar_rol_al_usuario, \
     administrar_comite, importar_tipo, confirmar_tipo_import, mostrar_tipo_import, administrar_fases_del_proyecto
-from desarrollo.models import Item
-from desarrollo.views import solicitud_aprobacion, aprobar_item, desaprobar_item, desactivar_item
+from desarrollo.models import Item, AtributoParticular, Relacion
+from desarrollo.views import solicitud_aprobacion, aprobar_item, desaprobar_item, desactivar_item, ver_item
 import pytest
 
 
@@ -587,3 +587,35 @@ class TestViews(TestCase):
         desactivar_item(request, id_item=cu_40.id)
         cu_40 = Item.objects.get(pk=cu_40.id)
         self.assertEqual(cu_40.estado, 'Desactivado', "No se puede realizar la accion")
+
+    def test_ver_item(self):
+        """
+        CU 35: Listar ítems. Iteración 3
+        este test se encarga de probar que si se pasa un id válido de item, la vista renderee la página
+
+        :return: retorna true si es posible ver el ítem
+        """
+        item = Item(nombre='itemprue', descripcion='descripcion del ítem', tipo_item=self.tipo, fase=self.fase)
+        item.save()
+        path = reverse('desarrollo:verItem', args=[self.proyecto.id, item.id])
+        request = RequestFactory().get(path)
+        request.user = self.usuario
+        item = Item.objects.get(nombre='itemprue')
+        response = ver_item(request, self.proyecto.id, item.id)
+        self.assertEqual(response.status_code, 200, 'no se puede ver el item')
+
+    def test_modificar_estado_item(self):
+        """
+        CU 37: Modificar estado de ítems. Iteración 3.
+        Test para probar que el estado del item no debe ser cambiado a desactivado si el ítem se encuentra
+        en estado diferente a 'en desarrollo'
+
+        :return: el assert retorna True si el estado no es cambiado y false en caso contrario
+        """
+        item = Item(nombre='itemdesa', estado=Item.ESTADO_APROBADO, descripcion='descripcion del ítem', tipo_item=self.tipo, fase=self.fase)
+        item.save()
+        path = reverse('desarrollo:desactivarItem', args=[self.proyecto.id, item.id])
+        request = RequestFactory().get(path)
+        request.user = self.usuario
+        desactivar_item(request, self.proyecto.id, item.id)
+        self.assertNotEqual(item.estado, Item.ESTADO_DESACTIVADO, 'el estado cambió a desactivado')

@@ -29,6 +29,7 @@ def crear_item(request, id_fase, id_tipo):
 
     # filtro de tipos de items que aún no fueron usados (para todas las fases)
     tipos_de_items_usados = []
+    lista_tipos_disponibles = []
     for f in fase.proyecto.fase_set.all():
         tipos_de_items_usados = tipos_de_items_usados + list(f.tipos_item.all())
         lista_tipos_disponibles = [tipo_restante for tipo_restante in fase.proyecto.tipoitem_set.all() if
@@ -61,7 +62,6 @@ def crear_item(request, id_fase, id_tipo):
                 return redirect('desarrollo:verProyecto', id_proyecto=fase.proyecto.id)
             # si el tipo no es válido
             else:
-                print(lista_tipos_disponibles)
                 return redirect('administracion:accesoDenegado', id_proyecto=fase.proyecto.id, caso='tiponovalido')
     else:
         form = ItemForm()
@@ -334,11 +334,11 @@ def desactivar_item(request, id_proyecto, id_item):
     """
     item = Item.objects.get(pk=id_item)
     print(Relacion.objects.filter(inicio=item))
-    #se verifica si es sucesor o padre
+    # se verifica si es sucesor o padre
     if Relacion.objects.filter(inicio=item):
         return redirect('desarrollo:verItem', id_proyecto, id_item)
 
-    #se deben eliminar sucesores y hijos
+    # se deben eliminar sucesores y hijos
     for relacion_donde_es_ultimo in item.item_desarrollo_fin.all():
         relacion_donde_es_ultimo.delete()
 
