@@ -1,7 +1,7 @@
 """
 Modulo para hacer test sobre el modulo models.py
 """
-from desarrollo.models import Item
+from desarrollo.models import Item, Relacion
 from login.models import Usuario
 from administracion.models import Proyecto, Fase, Rol, TipoItem, UsuarioxRol, PlantillaAtributo
 from django.utils import timezone
@@ -159,3 +159,32 @@ class TestModels(TestCase):
         item = Item(nombre='itemTest', descripcion='descripcion del ítem', tipo_item=tipo, fase=fase)
 
         self.assertEqual(item.complejidad, 5, 'La complejidad no fue asignada')
+
+    def test_Relacion(self):
+        """
+        CU 42: Crear Relaciones. Iteracion 3
+        Test que prueba la creacion de Relaciones entre dos items
+
+        :return: True, si se creo la relacion de forma correcta
+        """
+
+        item1 = Item(
+            nombre='itemTest',
+            complejidad=5,
+            descripcion='descripcion del ítem',
+            # tipo_item=tipo,
+            # fase=fase
+        )
+        item2 = Item(
+            nombre='itemTest',
+            complejidad=5,
+            descripcion='descripcion del ítem',
+            # tipo_item=tipo,
+            # fase=fase
+        )
+
+        rel = Relacion(inicio=item1, fin=item2)
+
+        self.assertEqual(rel.inicio, item1, 'No se ha creado correctamente la relacion izquierda')
+        self.assertEqual(rel.fin, item2, 'No se ha creado correctamente la relacion derecha')
+        self.assertEqual(rel.is_active, True, 'La relacion se creo pero esta desactivado')
