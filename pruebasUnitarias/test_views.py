@@ -15,7 +15,8 @@ from administracion.views import crear_rol, proyectos, desactivar_tipo_item, edi
     administrar_participantes, registrar_rol_por_fase, asignar_rol_por_fase, desasignar_rol_al_usuario, \
     administrar_comite, importar_tipo, confirmar_tipo_import, mostrar_tipo_import, administrar_fases_del_proyecto
 from desarrollo.models import Item, AtributoParticular, Relacion
-from desarrollo.views import solicitud_aprobacion, aprobar_item, desaprobar_item, desactivar_item, ver_item
+from desarrollo.views import solicitud_aprobacion, aprobar_item, desaprobar_item, desactivar_item, ver_item, \
+    relacionar_item, desactivar_relacion_item
 import pytest
 
 
@@ -619,3 +620,34 @@ class TestViews(TestCase):
         request.user = self.usuario
         desactivar_item(request, self.proyecto.id, item.id)
         self.assertNotEqual(item.estado, Item.ESTADO_DESACTIVADO, 'el estado cambió a desactivado')
+
+    def test_crear_relacion_items(self):
+        """
+        CU 43: Desactivar relaciones entre items. Iteracion 3.
+        Test que prueba la vista encargada de desactivar las relaciones
+
+        :return: True, si la vista logro desactivar la relacion
+        """
+        item1 = Item.objects.create(
+            nombre='item1',
+            descripcion='descripcion del ítem',
+            tipo_item=self.tipo,
+            fase=self.fase
+        )
+        item2 = Item.objects.create(
+            nombre='item2',
+            descripcion='descripcion del ítem',
+            tipo_item=self.tipo,
+            fase=self.fase
+        )
+        relacion = Relacion.objects.create(inicio=item1, fin=item2)
+        path = reverse('desarrollo:desactivarRelacion', args=[self.proyecto.id])
+        data = {"desactivar": relacion.id}
+
+        request = RequestFactory().post(path, data)
+        request.user = self.usuario
+
+        desactivar_relacion_item(request, self.proyecto.id)
+        relacion = Relacion.objects.get(id=relacion.id)
+
+        self.assertEqual(relacion.is_active, False, 'el estado cambió a desactivado')
