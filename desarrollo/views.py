@@ -223,12 +223,12 @@ def relacionar_item(request, id_proyecto):
     else:
         form = RelacionForm()
 
-        form.fields["inicio"].queryset = Item.objects.filter(
-            fase__proyecto_id=id_proyecto,
-        )
-        form.fields["fin"].queryset = Item.objects.filter(
-            fase__proyecto_id=id_proyecto,
-        )
+    form.fields["inicio"].queryset = Item.objects.filter(
+        fase__proyecto_id=id_proyecto,
+    )
+    form.fields["fin"].queryset = Item.objects.filter(
+        fase__proyecto_id=id_proyecto,
+    )
     return render(request, "desarrollo/relacionar.html", {'form': form})
 
 
@@ -252,21 +252,25 @@ def desactivar_relacion_item(request, id_proyecto):
     mensaje_error = ""
 
     if request.method == "POST":
-        for clave, valor in request.POST.items():
-            if valor == "desactivar":
-                relacion = Relacion.objects.get(id=clave)
-                if relacion.es_relacion_padrehijo() and Item.ESTADO_APROBADO in [
-                    relacion.inicio.estado, relacion.fin.estado]:
 
-                    item_aprobado = relacion.inicio if relacion.inicio.estado==Item.ESTADO_APROBADO else relacion.fin
-                    mensaje_error = """
-                        El item {} esta 
-                        aprobado, por lo cual no se puede desactivar la relacion
-                        """.format(item_aprobado)
-                else:
+        clave = request.POST['desactivar']
 
-                    relacion.is_active = False
-                    relacion.save()
+        relacion = Relacion.objects.get(id=clave)
+        if relacion.es_relacion_padrehijo() and Item.ESTADO_APROBADO in [
+                relacion.inicio.estado, relacion.fin.estado]:
+
+            if relacion.inicio.estado == Item.ESTADO_APROBADO:
+                item_aprobado = relacion.inicio
+            else:
+                item_aprobado = relacion.fin
+            mensaje_error = """
+                El item {} esta 
+                aprobado, por lo cual no se puede desactivar la relacion
+                """.format(item_aprobado)
+        else:
+
+            relacion.is_active = False
+            relacion.save()
 
     content = {
         'relaciones': relaciones,
