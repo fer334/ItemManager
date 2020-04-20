@@ -31,7 +31,8 @@ def acceso_denegado(request, id_proyecto, caso):
         'estado': 'No se permite el ingreso a esta URL porque el proyecto: ' + proyecto.nombre + '  '
                                                                                                  'tiene estado actual: ' + proyecto.estado,
         'gerente': 'El usuario actual no puede acceder a esta URL porque no es el Gerente del Proyecto actual',
-        'tiimportado': 'No se puede editar este tipo de ítem porque se utiliza en otros proyectos'
+        'tiimportado': 'No se puede editar este tipo de ítem porque se utiliza en otros proyectos',
+        'tiponovalido': 'El tipo seleccionado no es válido para esta fase'
     }
     mensaje = posibles_casos.get(caso)
 

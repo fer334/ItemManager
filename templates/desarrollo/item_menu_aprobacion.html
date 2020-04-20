@@ -14,6 +14,9 @@
                     </thead>
                     <tbody>
                         <tr class="">
+                            {% if not lista_fases %}
+                                <div class="alert alert-warning">Su usuario no posee permisos de aprobación para ninguna fase de este proyecto.</div>
+                            {% endif %}
                             {% for fase in lista_fases %}
                                 <td class="justify-content-center">
                                     <div class="list-group pt-2">
@@ -22,7 +25,7 @@
                                                 {% if item.fase == fase %}
                                                     {% if item.estado == estado %}
                                                         <li class="list-group">
-                                                            <a class="align-baseline" href="{% url 'desarrollo:verItem' item.id %}" >
+                                                            <a class="align-baseline" href="{% url 'desarrollo:verItem' proyecto.id item.id %}" >
                                                                {{ item.tipo_item.prefijo }}_{{ item.nombre }}
                                                             </a>
                                                             <a class="btn btn-success" href="{% url 'desarrollo:aprobarItem' item.id %}" >
