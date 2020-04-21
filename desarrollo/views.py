@@ -29,6 +29,7 @@ def crear_item(request, id_fase, id_tipo):
 
     # filtro de tipos de items que aún no fueron usados (para todas las fases)
     tipos_de_items_usados = []
+    lista_tipos_disponibles = []
     for f in fase.proyecto.fase_set.all():
         tipos_de_items_usados = tipos_de_items_usados + list(f.tipos_item.all())
         lista_tipos_disponibles = [tipo_restante for tipo_restante in fase.proyecto.tipoitem_set.all() if
@@ -61,7 +62,6 @@ def crear_item(request, id_fase, id_tipo):
                 return redirect('desarrollo:verProyecto', id_proyecto=fase.proyecto.id)
             # si el tipo no es válido
             else:
-                print(lista_tipos_disponibles)
                 return redirect('administracion:accesoDenegado', id_proyecto=fase.proyecto.id, caso='tiponovalido')
     else:
         form = ItemForm()
@@ -185,6 +185,7 @@ def ver_proyecto(request, id_proyecto):
     return render(request, 'desarrollo/proyecto_ver_unico.html', {'proyecto': proyecto, 'lista_tipos': lista_tipos,
                                                                   'lista_items': lista_items,
                                                                   'estado': Proyecto.ESTADO_EN_EJECUCION,
+                                                                  'desactivado': Item.ESTADO_DESACTIVADO,
                                                                   'es_aprobador': es_aprobador})
 
 
@@ -222,12 +223,12 @@ def relacionar_item(request, id_proyecto):
     else:
         form = RelacionForm()
 
-        form.fields["inicio"].queryset = Item.objects.filter(
-            fase__proyecto_id=id_proyecto,
-        )
-        form.fields["fin"].queryset = Item.objects.filter(
-            fase__proyecto_id=id_proyecto,
-        )
+    form.fields["inicio"].queryset = Item.objects.filter(
+        fase__proyecto_id=id_proyecto,
+    )
+    form.fields["fin"].queryset = Item.objects.filter(
+        fase__proyecto_id=id_proyecto,
+    )
     return render(request, "desarrollo/relacionar.html", {'form': form})
 
 
@@ -251,21 +252,25 @@ def desactivar_relacion_item(request, id_proyecto):
     mensaje_error = ""
 
     if request.method == "POST":
-        for clave, valor in request.POST.items():
-            if valor == "desactivar":
-                relacion = Relacion.objects.get(id=clave)
-                if relacion.es_relacion_padrehijo() and Item.ESTADO_APROBADO in [
-                    relacion.inicio.estado, relacion.fin.estado]:
 
-                    item_aprobado = relacion.inicio if relacion.inicio.estado==Item.ESTADO_APROBADO else relacion.fin
-                    mensaje_error = """
-                        El item {} esta 
-                        aprobado, por lo cual no se puede desactivar la relacion
-                        """.format(item_aprobado)
-                else:
+        clave = request.POST['desactivar']
 
-                    relacion.is_active = False
-                    relacion.save()
+        relacion = Relacion.objects.get(id=clave)
+        if relacion.es_relacion_padrehijo() and Item.ESTADO_APROBADO in [
+                relacion.inicio.estado, relacion.fin.estado]:
+
+            if relacion.inicio.estado == Item.ESTADO_APROBADO:
+                item_aprobado = relacion.inicio
+            else:
+                item_aprobado = relacion.fin
+            mensaje_error = """
+                El item {} esta 
+                aprobado, por lo cual no se puede desactivar la relacion
+                """.format(item_aprobado)
+        else:
+
+            relacion.is_active = False
+            relacion.save()
 
     content = {
         'relaciones': relaciones,
@@ -337,7 +342,7 @@ def desactivar_item(request, id_proyecto, id_item):
     if Relacion.objects.filter(inicio=item):
         return redirect('desarrollo:verItem', id_proyecto, id_item)
 
-    #se deben eliminar sucesores y hijos
+    # se deben eliminar sucesores y hijos
     for relacion_donde_es_ultimo in item.item_desarrollo_fin.all():
         relacion_donde_es_ultimo.delete()
 

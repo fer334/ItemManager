@@ -160,8 +160,6 @@ def user_update(request, name):
             return redirect('login:index')
 
     else:
-        print('instance')
-        print(instance.id)
         form = UpdateUserForm(
             instance=instance,
             initial={'username': name}

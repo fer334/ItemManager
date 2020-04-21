@@ -55,7 +55,7 @@
                             <div class="list-group pt-2">
                                 <ul>
                                     {% for item in lista_items %}
-                                        {% if item.fase == fase %}
+                                        {% if item.fase == fase and item.estado != desactivado %}
                                             <li class="list-group">
                                                 <a class="align-baseline"
                                                    href="{% url 'desarrollo:verItem' proyecto.id item.id %}" >

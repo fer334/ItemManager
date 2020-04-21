@@ -13,11 +13,10 @@ from administracion.models import Proyecto, Fase, Rol, UsuarioxRol, TipoItem
 from administracion.views import crear_rol, proyectos, desactivar_tipo_item, editar_tipo, estado_proyectov2, \
     eliminar_participante_y_comite, crear_proyecto, \
     administrar_participantes, registrar_rol_por_fase, asignar_rol_por_fase, desasignar_rol_al_usuario, \
-    administrar_comite, importar_tipo, confirmar_tipo_import, mostrar_tipo_import, administrar_fases_del_proyecto,\
-    desactivar_tipo_item, editar_tipo
-
-from desarrollo.models import Item
-from desarrollo.views import solicitud_aprobacion, aprobar_item, desaprobar_item, desactivar_item
+    administrar_comite, importar_tipo, confirmar_tipo_import, mostrar_tipo_import, administrar_fases_del_proyecto
+from desarrollo.models import Item, AtributoParticular, Relacion
+from desarrollo.views import solicitud_aprobacion, aprobar_item, desaprobar_item, desactivar_item, ver_item, \
+    relacionar_item, desactivar_relacion_item
 import pytest
 
 
@@ -590,3 +589,66 @@ class TestViews(TestCase):
         desactivar_item(request, id_item=cu_40.id, id_proyecto=pm.id)
         cu_40 = Item.objects.get(pk=cu_40.id)
         self.assertEqual(cu_40.estado, Item.ESTADO_DESACTIVADO, "No se puede realizar la accion")
+
+    def test_ver_item(self):
+        """
+        CU 35: Listar ítems. Iteración 3
+        este test se encarga de probar que si se pasa un id válido de item, la vista renderee la página
+
+        :return: retorna true si es posible ver el ítem
+        """
+        item = Item(nombre='itemprue', descripcion='descripcion del ítem', tipo_item=self.tipo, fase=self.fase)
+        item.save()
+        path = reverse('desarrollo:verItem', args=[self.proyecto.id, item.id])
+        request = RequestFactory().get(path)
+        request.user = self.usuario
+        item = Item.objects.get(nombre='itemprue')
+        response = ver_item(request, self.proyecto.id, item.id)
+        self.assertEqual(response.status_code, 200, 'no se puede ver el item')
+
+    def test_modificar_estado_item(self):
+        """
+        CU 37: Modificar estado de ítems. Iteración 3.
+        Test para probar que el estado del item no debe ser cambiado a desactivado si el ítem se encuentra
+        en estado diferente a 'en desarrollo'
+
+        :return: el assert retorna True si el estado no es cambiado y false en caso contrario
+        """
+        item = Item(nombre='itemdesa', estado=Item.ESTADO_APROBADO, descripcion='descripcion del ítem', tipo_item=self.tipo, fase=self.fase)
+        item.save()
+        path = reverse('desarrollo:desactivarItem', args=[self.proyecto.id, item.id])
+        request = RequestFactory().get(path)
+        request.user = self.usuario
+        desactivar_item(request, self.proyecto.id, item.id)
+        self.assertNotEqual(item.estado, Item.ESTADO_DESACTIVADO, 'el estado cambió a desactivado')
+
+    def test_crear_relacion_items(self):
+        """
+        CU 43: Desactivar relaciones entre items. Iteracion 3.
+        Test que prueba la vista encargada de desactivar las relaciones
+
+        :return: True, si la vista logro desactivar la relacion
+        """
+        item1 = Item.objects.create(
+            nombre='item1',
+            descripcion='descripcion del ítem',
+            tipo_item=self.tipo,
+            fase=self.fase
+        )
+        item2 = Item.objects.create(
+            nombre='item2',
+            descripcion='descripcion del ítem',
+            tipo_item=self.tipo,
+            fase=self.fase
+        )
+        relacion = Relacion.objects.create(inicio=item1, fin=item2)
+        path = reverse('desarrollo:desactivarRelacion', args=[self.proyecto.id])
+        data = {"desactivar": relacion.id}
+
+        request = RequestFactory().post(path, data)
+        request.user = self.usuario
+
+        desactivar_relacion_item(request, self.proyecto.id)
+        relacion = Relacion.objects.get(id=relacion.id)
+
+        self.assertEqual(relacion.is_active, False, 'el estado cambió a desactivado')
