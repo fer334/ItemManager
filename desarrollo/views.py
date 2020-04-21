@@ -347,6 +347,5 @@ def desactivar_item(request, id_proyecto, id_item):
 
     if item.estado == Item.ESTADO_DESARROLLO:
         item.estado = Item.ESTADO_DESACTIVADO
-        item.fase.proyecto = None
         item.save()
     return redirect('desarrollo:verItem', id_proyecto, id_item)
