@@ -116,20 +116,22 @@ class EstadoProyectoMiddleware:
             id_proyecto = path.split("/")[3]
             obj_proyecto = Proyecto.objects.get(pk=id_proyecto)
 
-            user_proyect = Usuario.objects.get(id=obj_proyecto.gerente)
+            # (borrar si no es necesario) user_proyect = Usuario.objects.get(id=obj_proyecto.gerente)
 
             # Permitir entrar a accesodenegado y a proyectos/1/
             if not bool(re.match("(.*)/accesodenegado/", path))\
                     and not bool(re.match("^(.*)/proyectos/[0-9]+/$", path)):
 
                 # No permitir si el usuario actual es distinto al gerente del proyecto
+                """ probar si lo comentado no es necesario                
                 if request.user.id != user_proyect.id:
                     return redirect(
                         'administracion:accesoDenegado',
                         id_proyecto=id_proyecto, caso="gerente"
                     )
+                """
                 # if para estado del proyecto cancelado
-                elif obj_proyecto.estado == Proyecto.ESTADO_CANCELADO:
+                if obj_proyecto.estado == Proyecto.ESTADO_CANCELADO:
                     return redirect(
                         'administracion:accesoDenegado',
                         id_proyecto=id_proyecto, caso='estado'
