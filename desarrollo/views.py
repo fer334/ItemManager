@@ -210,7 +210,7 @@ def relacionar_item(request, id_proyecto):
 
     :param request: objeto tipo diccionario que permite acceder a datos
     :param id_proyecto: identificador unico por proyecto
-    :return: objeto que renderea relacionar.html
+    :return: objeto que renderea relacion_crear.html
     :rtype: render
     """
     if request.method == "POST":
@@ -222,13 +222,16 @@ def relacionar_item(request, id_proyecto):
     else:
         form = RelacionForm()
 
-    form.fields["inicio"].queryset = Item.objects.filter(
-        fase__proyecto_id=id_proyecto,
+    lista_items_padre = Item.objects.filter(
+        fase__proyecto_id=id_proyecto, estado=Item.ESTADO_APROBADO
     )
-    form.fields["fin"].queryset = Item.objects.filter(
-        fase__proyecto_id=id_proyecto,
+    lista_items_hijo = Item.objects.filter(
+        fase__proyecto_id=id_proyecto, estado=Item.ESTADO_DESARROLLO
     )
-    return render(request, "desarrollo/relacionar.html", {'form': form})
+    #Se agrega filtro para solo relacionar items aprobados y hijos en desarrollo
+    form.fields["inicio"].queryset = lista_items_padre
+    form.fields["fin"].queryset = lista_items_hijo
+    return render(request, "desarrollo/relacion_crear.html", {'form': form})
 
 
 def desactivar_relacion_item(request, id_proyecto):
