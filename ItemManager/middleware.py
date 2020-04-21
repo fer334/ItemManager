@@ -142,7 +142,7 @@ class EstadoProyectoMiddleware:
                     # redireccionar a acceso denegado
                     if not (bool(re.match("^(.*)/proyectos/[0-9]+/participantes(.*)", path))
                             or bool(re.match("^(.*)/proyectos/[0-9]+/roles(.*)", path))
-                            or bool(re.match("^(.*)/proyectos/[0-9]+/items/[0-9]+", path))):
+                            or bool(re.match("^(.*)/proyectos/[0-9]+/items/[0-9]+$", path))):
                         return redirect(
                             'administracion:accesoDenegado',
                             id_proyecto=id_proyecto, caso='estado')
