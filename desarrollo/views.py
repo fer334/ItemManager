@@ -111,7 +111,6 @@ def menu_aprobacion(request, id_proyecto):
     else:
         for fase in proyecto.fase_set.all():
             if has_permiso(fase, request.user, Rol.APROBAR_ITEM):
-                print(fase.id)
                 lista_fases.append(fase)
     return render(request, 'desarrollo/item_menu_aprobacion.html', {'proyecto': proyecto, 'lista_items': lista_items,
                                                                     'estado': Item.ESTADO_PENDIENTE,
