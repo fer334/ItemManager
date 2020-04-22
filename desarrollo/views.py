@@ -188,19 +188,6 @@ def ver_proyecto(request, id_proyecto):
                                                                   'es_aprobador': es_aprobador})
 
 
-def adjuntar_archivo(request, id_proyecto, id_item):
-    context = {}
-    if request.POST:
-        form = ItemForm(request.POST, request.FILES)
-        if form.is_valid():
-            url = handle_uploaded_file(request.FILES['archivo_adjunto'], id_proyecto, request.user)
-            print(url)
-    else:
-        form = ItemForm()
-    context['form'] = form
-    return render(request, "desarrollo/item_adjuntar_archivo.html", context)
-
-
 def relacionar_item(request, id_proyecto):
     """
     Metodo que se encarga de renderizar la vista relacionar items,

@@ -11,7 +11,6 @@ urlpatterns = [
     # URLs de David
     path('<str:filtro>', views.index, name='indexDesarrollo'),
     path('proyectos/<int:id_proyecto>/', views.ver_proyecto, name='verProyecto'),
-    path('proyectos/<int:id_proyecto>/item/<int:id_item>/adjuntar', views.adjuntar_archivo, name='adjuntarArchivo'),
     # URLs de Fer
     path('proyectos/<int:id_proyecto>/relacionar', views.relacionar_item, name='relacionar'),
     path('proyectos/<int:id_proyecto>/desactivar_relacion', views.desactivar_relacion_item, name='desactivarRelacion'),
