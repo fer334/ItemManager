@@ -91,6 +91,9 @@
 <li class="toctree-l1"><a class="reference internal" href="../../_autosummary/desarrollo.models.html">desarrollo.models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../_autosummary/desarrollo.views.html">desarrollo.views</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../_autosummary/desarrollo.forms.html">desarrollo.forms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/pruebasUnitarias.test_models.html">pruebasUnitarias.test_models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/pruebasUnitarias.test_urls.html">pruebasUnitarias.test_urls</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/pruebasUnitarias.test_views.html">pruebasUnitarias.test_views</a></li>
 </ul>
 
             
@@ -189,6 +192,12 @@
     <span class="c1">#: equipo de usuarios que participa en el proyecto</span>
     <span class="n">participantes</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ManyToManyField</span><span class="p">(</span><span class="s1">&#39;login.Usuario&#39;</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;usuario_login_participante&#39;</span><span class="p">)</span>
 
+    <span class="n">ESTADO_CANCELADO</span> <span class="o">=</span> <span class="s1">&#39;cancelado&#39;</span>
+    <span class="n">ESTADO_INICIADO</span> <span class="o">=</span> <span class="s1">&#39;iniciado&#39;</span>
+    <span class="n">ESTADO_EN_EJECUCION</span> <span class="o">=</span> <span class="s1">&#39;en ejecucion&#39;</span>
+    <span class="n">ESTADO_FINALIZADO</span> <span class="o">=</span> <span class="s1">&#39;finalizado&#39;</span>
+
+
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">nombre</span>
 
@@ -265,7 +274,7 @@
     <span class="c1">#: Proyecto asociado a la fase</span>
     <span class="n">proyecto</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="s1">&#39;Proyecto&#39;</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">)</span>
     <span class="c1">#: lista de tipos de ítem</span>
-    <span class="n">tipos_item</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ManyToManyField</span><span class="p">(</span><span class="s1">&#39;TipoItem&#39;</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">tipos_item</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ManyToManyField</span><span class="p">(</span><span class="s1">&#39;TipoItem&#39;</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
         <span class="n">ordering</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span></div>

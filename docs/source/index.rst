@@ -22,6 +22,9 @@ Sistema de gestion de Items
    desarrollo.models
    desarrollo.views
    desarrollo.forms
+   pruebasUnitarias.test_models
+   pruebasUnitarias.test_urls
+   pruebasUnitarias.test_views
 
 Indices and tables
 ==================
