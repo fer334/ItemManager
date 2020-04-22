@@ -15,6 +15,7 @@ desarrollo.models
 
   AtributoParticular
   Item
+  Relacion
 
 
 

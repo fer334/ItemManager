@@ -93,6 +93,9 @@
 <li class="toctree-l1"><a class="reference internal" href="desarrollo.models.html">desarrollo.models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="desarrollo.views.html">desarrollo.views</a></li>
 <li class="toctree-l1"><a class="reference internal" href="desarrollo.forms.html">desarrollo.forms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pruebasUnitarias.test_models.html">pruebasUnitarias.test_models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pruebasUnitarias.test_urls.html">pruebasUnitarias.test_urls</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pruebasUnitarias.test_views.html">pruebasUnitarias.test_views</a></li>
 </ul>
 
             
@@ -172,22 +175,22 @@
 </tbody>
 </table>
 <span class="target" id="module-login.models"></span><p>Mapeador objeto-relacional en el que es posible definir la estructura de la base de datos utilizando código Python.</p>
-<dl class="class">
+<dl class="py class">
 <dt id="login.models.Usuario">
-<em class="property">class </em><code class="sig-prename descclassname">login.models.</code><code class="sig-name descname">Usuario</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/login/models.html#Usuario"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#login.models.Usuario" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">login.models.</code><code class="sig-name descname">Usuario</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/login/models.html#Usuario"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#login.models.Usuario" title="Enlazar permanentemente con esta definición">¶</a></dt>
 <dd><p>Clase que representa al usuario en la base de datos local que extiende del
 modelo AbstractUser de django</p>
-<dl class="exception">
+<dl class="py exception">
 <dt id="login.models.Usuario.DoesNotExist">
 <em class="property">exception </em><code class="sig-name descname">DoesNotExist</code><a class="headerlink" href="#login.models.Usuario.DoesNotExist" title="Enlazar permanentemente con esta definición">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="exception">
+<dl class="py exception">
 <dt id="login.models.Usuario.MultipleObjectsReturned">
 <em class="property">exception </em><code class="sig-name descname">MultipleObjectsReturned</code><a class="headerlink" href="#login.models.Usuario.MultipleObjectsReturned" title="Enlazar permanentemente con esta definición">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="login.models.Usuario.es_participante">
 <code class="sig-name descname">es_participante</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/login/models.html#Usuario.es_participante"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#login.models.Usuario.es_participante" title="Enlazar permanentemente con esta definición">¶</a></dt>
 <dd><p>Metodo que comprueba que el usuario participa o no de algun proyecto
@@ -199,19 +202,19 @@ que ha iniciado o que esta en estado de en ejecucion</p>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="login.models.Usuario.id_token">
 <code class="sig-name descname">id_token</code><a class="headerlink" href="#login.models.Usuario.id_token" title="Enlazar permanentemente con esta definición">¶</a></dt>
 <dd><p>Atributo para el token dela base de Firebase</p>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="login.models.Usuario.is_gerente">
 <code class="sig-name descname">is_gerente</code><a class="headerlink" href="#login.models.Usuario.is_gerente" title="Enlazar permanentemente con esta definición">¶</a></dt>
 <dd><p>Atributo para el campo diferenciar usuarios normales de gerentes</p>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="login.models.Usuario.localId">
 <code class="sig-name descname">localId</code><a class="headerlink" href="#login.models.Usuario.localId" title="Enlazar permanentemente con esta definición">¶</a></dt>
 <dd><p>Atributo para el campo id en la base de datos de Firebase</p>

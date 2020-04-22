@@ -93,6 +93,9 @@
 <li class="toctree-l1"><a class="reference internal" href="desarrollo.models.html">desarrollo.models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="desarrollo.views.html">desarrollo.views</a></li>
 <li class="toctree-l1"><a class="reference internal" href="desarrollo.forms.html">desarrollo.forms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pruebasUnitarias.test_models.html">pruebasUnitarias.test_models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pruebasUnitarias.test_urls.html">pruebasUnitarias.test_urls</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pruebasUnitarias.test_views.html">pruebasUnitarias.test_views</a></li>
 </ul>
 
             
@@ -259,9 +262,9 @@
 </tbody>
 </table>
 <span class="target" id="module-administracion.views"></span><p>Modulo se detalla la logica para las vistas que serán utilizadas por la app</p>
-<dl class="function">
+<dl class="py function">
 <dt id="administracion.views.acceso_denegado">
-<code class="sig-prename descclassname">administracion.views.</code><code class="sig-name descname">acceso_denegado</code><span class="sig-paren">(</span><em class="sig-param">request</em>, <em class="sig-param">id_proyecto</em>, <em class="sig-param">caso</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/administracion/views.html#acceso_denegado"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#administracion.views.acceso_denegado" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<code class="sig-prename descclassname">administracion.views.</code><code class="sig-name descname">acceso_denegado</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em>, <em class="sig-param"><span class="n">id_proyecto</span></em>, <em class="sig-param"><span class="n">caso</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/administracion/views.html#acceso_denegado"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#administracion.views.acceso_denegado" title="Enlazar permanentemente con esta definición">¶</a></dt>
 <dd><p>vista que se encarga de desplegar la página de acceso denegado si es que se intenta ingresar
 a un url no permitido.</p>
 <dl class="field-list simple">
@@ -281,9 +284,9 @@ a un url no permitido.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="administracion.views.administrar_comite">
-<code class="sig-prename descclassname">administracion.views.</code><code class="sig-name descname">administrar_comite</code><span class="sig-paren">(</span><em class="sig-param">request</em>, <em class="sig-param">id_proyecto</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/administracion/views.html#administrar_comite"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#administracion.views.administrar_comite" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<code class="sig-prename descclassname">administracion.views.</code><code class="sig-name descname">administrar_comite</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em>, <em class="sig-param"><span class="n">id_proyecto</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/administracion/views.html#administrar_comite"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#administracion.views.administrar_comite" title="Enlazar permanentemente con esta definición">¶</a></dt>
 <dd><p>vista que permite administrar que participantes del proyecto formaran parte del comité de decisión</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parámetros</dt>
@@ -301,9 +304,9 @@ a un url no permitido.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="administracion.views.administrar_fases_del_proyecto">
-<code class="sig-prename descclassname">administracion.views.</code><code class="sig-name descname">administrar_fases_del_proyecto</code><span class="sig-paren">(</span><em class="sig-param">request</em>, <em class="sig-param">id_proyecto</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/administracion/views.html#administrar_fases_del_proyecto"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#administracion.views.administrar_fases_del_proyecto" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<code class="sig-prename descclassname">administracion.views.</code><code class="sig-name descname">administrar_fases_del_proyecto</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em>, <em class="sig-param"><span class="n">id_proyecto</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/administracion/views.html#administrar_fases_del_proyecto"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#administracion.views.administrar_fases_del_proyecto" title="Enlazar permanentemente con esta definición">¶</a></dt>
 <dd><p>vista que permite modificar los nombres y las descripciones de las fases del proyecto</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parámetros</dt>
@@ -321,9 +324,9 @@ a un url no permitido.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="administracion.views.administrar_participantes">
-<code class="sig-prename descclassname">administracion.views.</code><code class="sig-name descname">administrar_participantes</code><span class="sig-paren">(</span><em class="sig-param">request</em>, <em class="sig-param">id_proyecto</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/administracion/views.html#administrar_participantes"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#administracion.views.administrar_participantes" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<code class="sig-prename descclassname">administracion.views.</code><code class="sig-name descname">administrar_participantes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em>, <em class="sig-param"><span class="n">id_proyecto</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/administracion/views.html#administrar_participantes"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#administracion.views.administrar_participantes" title="Enlazar permanentemente con esta definición">¶</a></dt>
 <dd><p>Esta vista permite añadir y sacar participantes del proyecto, además también acceder a los roles de un
 participante</p>
 <dl class="field-list simple">
@@ -342,18 +345,18 @@ participante</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="administracion.views.administrar_roles">
-<code class="sig-prename descclassname">administracion.views.</code><code class="sig-name descname">administrar_roles</code><span class="sig-paren">(</span><em class="sig-param">request</em>, <em class="sig-param">id_proyecto</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/administracion/views.html#administrar_roles"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#administracion.views.administrar_roles" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<code class="sig-prename descclassname">administracion.views.</code><code class="sig-name descname">administrar_roles</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em>, <em class="sig-param"><span class="n">id_proyecto</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/administracion/views.html#administrar_roles"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#administracion.views.administrar_roles" title="Enlazar permanentemente con esta definición">¶</a></dt>
 <dd><p>Vista que muestra los datos y acciones relacionadas a los roles
 :param request: objeto tipo diccionario que permite acceder a datos
 :param id_proyecto:  identificador del proyecto
 :return: render de la vista de administracion de roles</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="administracion.views.asignar_rol_por_fase">
-<code class="sig-prename descclassname">administracion.views.</code><code class="sig-name descname">asignar_rol_por_fase</code><span class="sig-paren">(</span><em class="sig-param">request</em>, <em class="sig-param">id_fase</em>, <em class="sig-param">id_usuario</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/administracion/views.html#asignar_rol_por_fase"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#administracion.views.asignar_rol_por_fase" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<code class="sig-prename descclassname">administracion.views.</code><code class="sig-name descname">asignar_rol_por_fase</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em>, <em class="sig-param"><span class="n">id_fase</span></em>, <em class="sig-param"><span class="n">id_usuario</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/administracion/views.html#asignar_rol_por_fase"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#administracion.views.asignar_rol_por_fase" title="Enlazar permanentemente con esta definición">¶</a></dt>
 <dd><p>Vista que permite asignar roles por fase a un participante del proyecto</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parámetros</dt>
@@ -369,9 +372,9 @@ participante</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="administracion.views.confirmar_tipo_import">
-<code class="sig-prename descclassname">administracion.views.</code><code class="sig-name descname">confirmar_tipo_import</code><span class="sig-paren">(</span><em class="sig-param">request</em>, <em class="sig-param">id_proyecto</em>, <em class="sig-param">id_tipo</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/administracion/views.html#confirmar_tipo_import"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#administracion.views.confirmar_tipo_import" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<code class="sig-prename descclassname">administracion.views.</code><code class="sig-name descname">confirmar_tipo_import</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em>, <em class="sig-param"><span class="n">id_proyecto</span></em>, <em class="sig-param"><span class="n">id_tipo</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/administracion/views.html#confirmar_tipo_import"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#administracion.views.confirmar_tipo_import" title="Enlazar permanentemente con esta definición">¶</a></dt>
 <dd><p>Vista en la cual se confirma el tipo de item a utilizar</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parámetros</dt>
@@ -387,9 +390,9 @@ participante</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="administracion.views.crear_atributo">
-<code class="sig-prename descclassname">administracion.views.</code><code class="sig-name descname">crear_atributo</code><span class="sig-paren">(</span><em class="sig-param">request</em>, <em class="sig-param">id_proyecto</em>, <em class="sig-param">id_tipo</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/administracion/views.html#crear_atributo"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#administracion.views.crear_atributo" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<code class="sig-prename descclassname">administracion.views.</code><code class="sig-name descname">crear_atributo</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em>, <em class="sig-param"><span class="n">id_proyecto</span></em>, <em class="sig-param"><span class="n">id_tipo</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/administracion/views.html#crear_atributo"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#administracion.views.crear_atributo" title="Enlazar permanentemente con esta definición">¶</a></dt>
 <dd><p>Vista en la cual se permite crear los atributos de los tipos de item del proyecto</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parámetros</dt>
@@ -405,9 +408,9 @@ participante</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="administracion.views.crear_proyecto">
-<code class="sig-prename descclassname">administracion.views.</code><code class="sig-name descname">crear_proyecto</code><span class="sig-paren">(</span><em class="sig-param">request</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/administracion/views.html#crear_proyecto"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#administracion.views.crear_proyecto" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<code class="sig-prename descclassname">administracion.views.</code><code class="sig-name descname">crear_proyecto</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/administracion/views.html#crear_proyecto"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#administracion.views.crear_proyecto" title="Enlazar permanentemente con esta definición">¶</a></dt>
 <dd><p>esta vista se encarga de la creación del proyecto, primeramente verifica si el metodo del request es POST, de no
 ser retorna un form vacío y de ser pasa el request como parametro al form y el form retorna como “cleaned_data”
 los datos para crear el proyecto. Para el gerente se guarda el id del usuario que realiza el request y luego se
@@ -428,9 +431,9 @@ ver_proyecto.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="administracion.views.crear_rol">
-<code class="sig-prename descclassname">administracion.views.</code><code class="sig-name descname">crear_rol</code><span class="sig-paren">(</span><em class="sig-param">request</em>, <em class="sig-param">id_proyecto</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/administracion/views.html#crear_rol"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#administracion.views.crear_rol" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<code class="sig-prename descclassname">administracion.views.</code><code class="sig-name descname">crear_rol</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em>, <em class="sig-param"><span class="n">id_proyecto</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/administracion/views.html#crear_rol"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#administracion.views.crear_rol" title="Enlazar permanentemente con esta definición">¶</a></dt>
 <dd><p>Vista en la cual se crean los roles del proyecto</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parámetros</dt>
@@ -445,9 +448,9 @@ ver_proyecto.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="administracion.views.crear_tipo">
-<code class="sig-prename descclassname">administracion.views.</code><code class="sig-name descname">crear_tipo</code><span class="sig-paren">(</span><em class="sig-param">request</em>, <em class="sig-param">id_proyecto</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/administracion/views.html#crear_tipo"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#administracion.views.crear_tipo" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<code class="sig-prename descclassname">administracion.views.</code><code class="sig-name descname">crear_tipo</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em>, <em class="sig-param"><span class="n">id_proyecto</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/administracion/views.html#crear_tipo"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#administracion.views.crear_tipo" title="Enlazar permanentemente con esta definición">¶</a></dt>
 <dd><p>Vista en la cual se crean los tipos de item de los proyectos</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parámetros</dt>
@@ -462,9 +465,9 @@ ver_proyecto.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="administracion.views.desactivar_rol_proyecto">
-<code class="sig-prename descclassname">administracion.views.</code><code class="sig-name descname">desactivar_rol_proyecto</code><span class="sig-paren">(</span><em class="sig-param">request</em>, <em class="sig-param">id_proyecto</em>, <em class="sig-param">id_rol</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/administracion/views.html#desactivar_rol_proyecto"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#administracion.views.desactivar_rol_proyecto" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<code class="sig-prename descclassname">administracion.views.</code><code class="sig-name descname">desactivar_rol_proyecto</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em>, <em class="sig-param"><span class="n">id_proyecto</span></em>, <em class="sig-param"><span class="n">id_rol</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/administracion/views.html#desactivar_rol_proyecto"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#administracion.views.desactivar_rol_proyecto" title="Enlazar permanentemente con esta definición">¶</a></dt>
 <dd><p>Vista que desactiva loroels del proyecto recibido, solo lo hace si el proyecto aun no esta iniciado y
 si no tiene usuarios con ese rol
 :param request: objeto tipo diccionario que permite acceder a datos
@@ -473,9 +476,9 @@ si no tiene usuarios con ese rol
 :return: redirecciona a la vista de administracion de roles</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="administracion.views.desactivar_tipo_item">
-<code class="sig-prename descclassname">administracion.views.</code><code class="sig-name descname">desactivar_tipo_item</code><span class="sig-paren">(</span><em class="sig-param">request</em>, <em class="sig-param">id_proyecto</em>, <em class="sig-param">id_tipo</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/administracion/views.html#desactivar_tipo_item"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#administracion.views.desactivar_tipo_item" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<code class="sig-prename descclassname">administracion.views.</code><code class="sig-name descname">desactivar_tipo_item</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em>, <em class="sig-param"><span class="n">id_proyecto</span></em>, <em class="sig-param"><span class="n">id_tipo</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/administracion/views.html#desactivar_tipo_item"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#administracion.views.desactivar_tipo_item" title="Enlazar permanentemente con esta definición">¶</a></dt>
 <dd><p>Vista que desactiva los tipos de item del proyecto recibido, solo lo hace si el proyecto aun no esta iniciado
 :param request: objeto tipo diccionario que permite acceder a datos
 :param id_proyecto: identificador del proyecto
@@ -483,9 +486,9 @@ si no tiene usuarios con ese rol
 :return: redirecciona a la vista de administracion del tipo de item</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="administracion.views.desasignar_rol_al_usuario">
-<code class="sig-prename descclassname">administracion.views.</code><code class="sig-name descname">desasignar_rol_al_usuario</code><span class="sig-paren">(</span><em class="sig-param">request</em>, <em class="sig-param">id_fase</em>, <em class="sig-param">id_usuario</em>, <em class="sig-param">id_rol</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/administracion/views.html#desasignar_rol_al_usuario"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#administracion.views.desasignar_rol_al_usuario" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<code class="sig-prename descclassname">administracion.views.</code><code class="sig-name descname">desasignar_rol_al_usuario</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em>, <em class="sig-param"><span class="n">id_fase</span></em>, <em class="sig-param"><span class="n">id_usuario</span></em>, <em class="sig-param"><span class="n">id_rol</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/administracion/views.html#desasignar_rol_al_usuario"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#administracion.views.desasignar_rol_al_usuario" title="Enlazar permanentemente con esta definición">¶</a></dt>
 <dd><p>Vista en donde se desasignan roles al usuario.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parámetros</dt>
@@ -502,9 +505,9 @@ si no tiene usuarios con ese rol
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="administracion.views.editar_proyecto">
-<code class="sig-prename descclassname">administracion.views.</code><code class="sig-name descname">editar_proyecto</code><span class="sig-paren">(</span><em class="sig-param">request</em>, <em class="sig-param">id_proyecto</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/administracion/views.html#editar_proyecto"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#administracion.views.editar_proyecto" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<code class="sig-prename descclassname">administracion.views.</code><code class="sig-name descname">editar_proyecto</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em>, <em class="sig-param"><span class="n">id_proyecto</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/administracion/views.html#editar_proyecto"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#administracion.views.editar_proyecto" title="Enlazar permanentemente con esta definición">¶</a></dt>
 <dd><p>Vista que permite editar los datos del proyecto seleccionado</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parámetros</dt>
@@ -522,9 +525,9 @@ si no tiene usuarios con ese rol
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="administracion.views.editar_tipo">
-<code class="sig-prename descclassname">administracion.views.</code><code class="sig-name descname">editar_tipo</code><span class="sig-paren">(</span><em class="sig-param">request</em>, <em class="sig-param">id_proyecto</em>, <em class="sig-param">id_tipo</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/administracion/views.html#editar_tipo"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#administracion.views.editar_tipo" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<code class="sig-prename descclassname">administracion.views.</code><code class="sig-name descname">editar_tipo</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em>, <em class="sig-param"><span class="n">id_proyecto</span></em>, <em class="sig-param"><span class="n">id_tipo</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/administracion/views.html#editar_tipo"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#administracion.views.editar_tipo" title="Enlazar permanentemente con esta definición">¶</a></dt>
 <dd><p>Vista en la cual se editan los tipos de item</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parámetros</dt>
@@ -541,9 +544,9 @@ si no tiene usuarios con ese rol
 </div></blockquote>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="administracion.views.eliminar_participante_y_comite">
-<code class="sig-prename descclassname">administracion.views.</code><code class="sig-name descname">eliminar_participante_y_comite</code><span class="sig-paren">(</span><em class="sig-param">request</em>, <em class="sig-param">id_proyecto</em>, <em class="sig-param">id_usuario</em>, <em class="sig-param">caso</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/administracion/views.html#eliminar_participante_y_comite"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#administracion.views.eliminar_participante_y_comite" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<code class="sig-prename descclassname">administracion.views.</code><code class="sig-name descname">eliminar_participante_y_comite</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em>, <em class="sig-param"><span class="n">id_proyecto</span></em>, <em class="sig-param"><span class="n">id_usuario</span></em>, <em class="sig-param"><span class="n">caso</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/administracion/views.html#eliminar_participante_y_comite"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#administracion.views.eliminar_participante_y_comite" title="Enlazar permanentemente con esta definición">¶</a></dt>
 <dd><p>Vista que permite sacar a un usuario ya sea del proyecto completo o del comité de decisión del proyecto.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parámetros</dt>
@@ -563,9 +566,9 @@ si no tiene usuarios con ese rol
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="administracion.views.estado_proyecto">
-<code class="sig-prename descclassname">administracion.views.</code><code class="sig-name descname">estado_proyecto</code><span class="sig-paren">(</span><em class="sig-param">request</em>, <em class="sig-param">id_proyecto</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/administracion/views.html#estado_proyecto"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#administracion.views.estado_proyecto" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<code class="sig-prename descclassname">administracion.views.</code><code class="sig-name descname">estado_proyecto</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em>, <em class="sig-param"><span class="n">id_proyecto</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/administracion/views.html#estado_proyecto"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#administracion.views.estado_proyecto" title="Enlazar permanentemente con esta definición">¶</a></dt>
 <dd><p>vista que permite seleccionar y cambiar el estado de un proyecto. Bloquea el paso a estado de ejecución si las
 fases no están definidas o el comité no está completo</p>
 <dl class="field-list simple">
@@ -584,9 +587,9 @@ fases no están definidas o el comité no está completo</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="administracion.views.estado_proyectov2">
-<code class="sig-prename descclassname">administracion.views.</code><code class="sig-name descname">estado_proyectov2</code><span class="sig-paren">(</span><em class="sig-param">request</em>, <em class="sig-param">id_proyecto</em>, <em class="sig-param">estado</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/administracion/views.html#estado_proyectov2"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#administracion.views.estado_proyectov2" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<code class="sig-prename descclassname">administracion.views.</code><code class="sig-name descname">estado_proyectov2</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em>, <em class="sig-param"><span class="n">id_proyecto</span></em>, <em class="sig-param"><span class="n">estado</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/administracion/views.html#estado_proyectov2"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#administracion.views.estado_proyectov2" title="Enlazar permanentemente con esta definición">¶</a></dt>
 <dd><p>vista que permite seleccionar y cambiar el estado de un proyecto. Bloquea el paso a estado de ejecución si las
 fases no están definidas o el comité no está completo</p>
 <dl class="field-list simple">
@@ -606,9 +609,9 @@ fases no están definidas o el comité no está completo</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="administracion.views.importar_tipo">
-<code class="sig-prename descclassname">administracion.views.</code><code class="sig-name descname">importar_tipo</code><span class="sig-paren">(</span><em class="sig-param">request</em>, <em class="sig-param">id_proyecto</em>, <em class="sig-param">id_tipo</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/administracion/views.html#importar_tipo"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#administracion.views.importar_tipo" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<code class="sig-prename descclassname">administracion.views.</code><code class="sig-name descname">importar_tipo</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em>, <em class="sig-param"><span class="n">id_proyecto</span></em>, <em class="sig-param"><span class="n">id_tipo</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/administracion/views.html#importar_tipo"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#administracion.views.importar_tipo" title="Enlazar permanentemente con esta definición">¶</a></dt>
 <dd><p>Vista que permite traer de otro proyecto su tipo de item con sus
 respectivos atributos</p>
 <dl class="field-list simple">
@@ -625,9 +628,9 @@ respectivos atributos</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="administracion.views.mostrar_tipo_import">
-<code class="sig-prename descclassname">administracion.views.</code><code class="sig-name descname">mostrar_tipo_import</code><span class="sig-paren">(</span><em class="sig-param">request</em>, <em class="sig-param">id_proyecto</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/administracion/views.html#mostrar_tipo_import"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#administracion.views.mostrar_tipo_import" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<code class="sig-prename descclassname">administracion.views.</code><code class="sig-name descname">mostrar_tipo_import</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em>, <em class="sig-param"><span class="n">id_proyecto</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/administracion/views.html#mostrar_tipo_import"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#administracion.views.mostrar_tipo_import" title="Enlazar permanentemente con esta definición">¶</a></dt>
 <dd><p>Vista que en la cual se muestra los tipos de item del proyecto</p>
 <dl class="field-list simple">
 <dt class="field-odd">Devuelve</dt>
@@ -636,9 +639,9 @@ respectivos atributos</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="administracion.views.proyectos">
-<code class="sig-prename descclassname">administracion.views.</code><code class="sig-name descname">proyectos</code><span class="sig-paren">(</span><em class="sig-param">request</em>, <em class="sig-param">filtro</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/administracion/views.html#proyectos"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#administracion.views.proyectos" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<code class="sig-prename descclassname">administracion.views.</code><code class="sig-name descname">proyectos</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em>, <em class="sig-param"><span class="n">filtro</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/administracion/views.html#proyectos"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#administracion.views.proyectos" title="Enlazar permanentemente con esta definición">¶</a></dt>
 <dd><p>Vista que despliega la lista de proyectos con su estado actual, también permite filtrar los proyectos según estado,
 además solo muestra los proyectos de los cuales es gerente el usuario que hizo el request</p>
 <dl class="field-list simple">
@@ -657,9 +660,9 @@ además solo muestra los proyectos de los cuales es gerente el usuario que hizo 
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="administracion.views.quitar_atributo">
-<code class="sig-prename descclassname">administracion.views.</code><code class="sig-name descname">quitar_atributo</code><span class="sig-paren">(</span><em class="sig-param">request</em>, <em class="sig-param">id_proyecto</em>, <em class="sig-param">id_tipo</em>, <em class="sig-param">id_atributo</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/administracion/views.html#quitar_atributo"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#administracion.views.quitar_atributo" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<code class="sig-prename descclassname">administracion.views.</code><code class="sig-name descname">quitar_atributo</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em>, <em class="sig-param"><span class="n">id_proyecto</span></em>, <em class="sig-param"><span class="n">id_tipo</span></em>, <em class="sig-param"><span class="n">id_atributo</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/administracion/views.html#quitar_atributo"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#administracion.views.quitar_atributo" title="Enlazar permanentemente con esta definición">¶</a></dt>
 <dd><p>Vista que permite quitar los atributos de los tipos de item</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parámetros</dt>
@@ -676,9 +679,9 @@ además solo muestra los proyectos de los cuales es gerente el usuario que hizo 
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="administracion.views.registrar_rol_por_fase">
-<code class="sig-prename descclassname">administracion.views.</code><code class="sig-name descname">registrar_rol_por_fase</code><span class="sig-paren">(</span><em class="sig-param">request</em>, <em class="sig-param">id_fase</em>, <em class="sig-param">id_usuario</em>, <em class="sig-param">id_rol</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/administracion/views.html#registrar_rol_por_fase"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#administracion.views.registrar_rol_por_fase" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<code class="sig-prename descclassname">administracion.views.</code><code class="sig-name descname">registrar_rol_por_fase</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em>, <em class="sig-param"><span class="n">id_fase</span></em>, <em class="sig-param"><span class="n">id_usuario</span></em>, <em class="sig-param"><span class="n">id_rol</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/administracion/views.html#registrar_rol_por_fase"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#administracion.views.registrar_rol_por_fase" title="Enlazar permanentemente con esta definición">¶</a></dt>
 <dd><p>Vista en la cual se registran los roles de cada fase</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parámetros</dt>
@@ -695,9 +698,9 @@ además solo muestra los proyectos de los cuales es gerente el usuario que hizo 
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="administracion.views.registrar_tipoitem_en_base">
-<code class="sig-prename descclassname">administracion.views.</code><code class="sig-name descname">registrar_tipoitem_en_base</code><span class="sig-paren">(</span><em class="sig-param">request</em>, <em class="sig-param">id_proyecto</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/administracion/views.html#registrar_tipoitem_en_base"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#administracion.views.registrar_tipoitem_en_base" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<code class="sig-prename descclassname">administracion.views.</code><code class="sig-name descname">registrar_tipoitem_en_base</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em>, <em class="sig-param"><span class="n">id_proyecto</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/administracion/views.html#registrar_tipoitem_en_base"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#administracion.views.registrar_tipoitem_en_base" title="Enlazar permanentemente con esta definición">¶</a></dt>
 <dd><p>Vista en la cual se registran los tipos de item a utilizar en el proyecto</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parámetros</dt>
@@ -712,9 +715,9 @@ además solo muestra los proyectos de los cuales es gerente el usuario que hizo 
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="administracion.views.ver_proyecto">
-<code class="sig-prename descclassname">administracion.views.</code><code class="sig-name descname">ver_proyecto</code><span class="sig-paren">(</span><em class="sig-param">request</em>, <em class="sig-param">id_proyecto</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/administracion/views.html#ver_proyecto"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#administracion.views.ver_proyecto" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<code class="sig-prename descclassname">administracion.views.</code><code class="sig-name descname">ver_proyecto</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em>, <em class="sig-param"><span class="n">id_proyecto</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/administracion/views.html#ver_proyecto"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#administracion.views.ver_proyecto" title="Enlazar permanentemente con esta definición">¶</a></dt>
 <dd><p>Esta vista despliega un proyecto con todos los valores que toman sus atributos, además de sus fases, roles
 y tipos de ítems</p>
 <dl class="field-list simple">
@@ -733,9 +736,9 @@ y tipos de ítems</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="administracion.views.ver_roles_usuario">
-<code class="sig-prename descclassname">administracion.views.</code><code class="sig-name descname">ver_roles_usuario</code><span class="sig-paren">(</span><em class="sig-param">request</em>, <em class="sig-param">id_proyecto</em>, <em class="sig-param">id_usuario</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/administracion/views.html#ver_roles_usuario"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#administracion.views.ver_roles_usuario" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<code class="sig-prename descclassname">administracion.views.</code><code class="sig-name descname">ver_roles_usuario</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em>, <em class="sig-param"><span class="n">id_proyecto</span></em>, <em class="sig-param"><span class="n">id_usuario</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/administracion/views.html#ver_roles_usuario"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#administracion.views.ver_roles_usuario" title="Enlazar permanentemente con esta definición">¶</a></dt>
 <dd><p>Vista en donde se ven los roles del usuario</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parámetros</dt>
@@ -751,9 +754,9 @@ y tipos de ítems</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="administracion.views.ver_tipo">
-<code class="sig-prename descclassname">administracion.views.</code><code class="sig-name descname">ver_tipo</code><span class="sig-paren">(</span><em class="sig-param">request</em>, <em class="sig-param">id_proyecto</em>, <em class="sig-param">id_tipo</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/administracion/views.html#ver_tipo"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#administracion.views.ver_tipo" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<code class="sig-prename descclassname">administracion.views.</code><code class="sig-name descname">ver_tipo</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em>, <em class="sig-param"><span class="n">id_proyecto</span></em>, <em class="sig-param"><span class="n">id_tipo</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/administracion/views.html#ver_tipo"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#administracion.views.ver_tipo" title="Enlazar permanentemente con esta definición">¶</a></dt>
 <dd><p>Vista en la cual se ve los tipos de items del proyecto</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parámetros</dt>
@@ -769,9 +772,9 @@ y tipos de ítems</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="administracion.views.ver_tipo_por_proyecto">
-<code class="sig-prename descclassname">administracion.views.</code><code class="sig-name descname">ver_tipo_por_proyecto</code><span class="sig-paren">(</span><em class="sig-param">request</em>, <em class="sig-param">id_proyecto</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/administracion/views.html#ver_tipo_por_proyecto"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#administracion.views.ver_tipo_por_proyecto" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<code class="sig-prename descclassname">administracion.views.</code><code class="sig-name descname">ver_tipo_por_proyecto</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em>, <em class="sig-param"><span class="n">id_proyecto</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/administracion/views.html#ver_tipo_por_proyecto"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#administracion.views.ver_tipo_por_proyecto" title="Enlazar permanentemente con esta definición">¶</a></dt>
 <dd><p>Vista que permite ver el tipo de item por proyectos</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parámetros</dt>

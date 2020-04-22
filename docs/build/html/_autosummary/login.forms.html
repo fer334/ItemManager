@@ -93,6 +93,9 @@
 <li class="toctree-l1"><a class="reference internal" href="desarrollo.models.html">desarrollo.models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="desarrollo.views.html">desarrollo.views</a></li>
 <li class="toctree-l1"><a class="reference internal" href="desarrollo.forms.html">desarrollo.forms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pruebasUnitarias.test_models.html">pruebasUnitarias.test_models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pruebasUnitarias.test_urls.html">pruebasUnitarias.test_urls</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pruebasUnitarias.test_views.html">pruebasUnitarias.test_views</a></li>
 </ul>
 
             
@@ -175,15 +178,15 @@
 </tbody>
 </table>
 <span class="target" id="module-login.forms"></span><p>Formularios para la aplicacion login</p>
-<dl class="class">
+<dl class="py class">
 <dt id="login.forms.RegisterForm">
-<em class="property">class </em><code class="sig-prename descclassname">login.forms.</code><code class="sig-name descname">RegisterForm</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/login/forms.html#RegisterForm"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#login.forms.RegisterForm" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">login.forms.</code><code class="sig-name descname">RegisterForm</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/login/forms.html#RegisterForm"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#login.forms.RegisterForm" title="Enlazar permanentemente con esta definición">¶</a></dt>
 <dd><p>Formulario para la creacion del usuario.</p>
-<dl class="class">
+<dl class="py class">
 <dt id="login.forms.RegisterForm.Meta">
 <em class="property">class </em><code class="sig-name descname">Meta</code><a class="reference internal" href="../_modules/login/forms.html#RegisterForm.Meta"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#login.forms.RegisterForm.Meta" title="Enlazar permanentemente con esta definición">¶</a></dt>
 <dd><p>Form settings.</p>
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="login.forms.RegisterForm.Meta.model">
 <code class="sig-name descname">model</code><a class="headerlink" href="#login.forms.RegisterForm.Meta.model" title="Enlazar permanentemente con esta definición">¶</a></dt>
 <dd><p>alias de <a class="reference internal" href="login.models.html#login.models.Usuario" title="login.models.Usuario"><code class="xref py py-class docutils literal notranslate"><span class="pre">login.models.Usuario</span></code></a></p>
@@ -191,25 +194,25 @@
 
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="login.forms.RegisterForm.clean">
 <code class="sig-name descname">clean</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/login/forms.html#RegisterForm.clean"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#login.forms.RegisterForm.clean" title="Enlazar permanentemente con esta definición">¶</a></dt>
 <dd><p>Verifica la igualdad entre contraseñas.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="login.forms.RegisterForm.clean_email">
 <code class="sig-name descname">clean_email</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/login/forms.html#RegisterForm.clean_email"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#login.forms.RegisterForm.clean_email" title="Enlazar permanentemente con esta definición">¶</a></dt>
 <dd><p>Metodo que comprueba si el usuario es unico</p>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="login.forms.RegisterForm.pass_confirmation">
 <code class="sig-name descname">pass_confirmation</code><em class="property"> = None</em><a class="headerlink" href="#login.forms.RegisterForm.pass_confirmation" title="Enlazar permanentemente con esta definición">¶</a></dt>
 <dd><p>Campo para la confimacion de contraseñas</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="login.forms.RegisterForm.save">
 <code class="sig-name descname">save</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/login/forms.html#RegisterForm.save"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#login.forms.RegisterForm.save" title="Enlazar permanentemente con esta definición">¶</a></dt>
 <dd><p>Metodo encargado de guardar los campos del formulario.</p>
@@ -217,15 +220,15 @@
 
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="login.forms.UpdateUserForm">
-<em class="property">class </em><code class="sig-prename descclassname">login.forms.</code><code class="sig-name descname">UpdateUserForm</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/login/forms.html#UpdateUserForm"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#login.forms.UpdateUserForm" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">login.forms.</code><code class="sig-name descname">UpdateUserForm</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/login/forms.html#UpdateUserForm"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#login.forms.UpdateUserForm" title="Enlazar permanentemente con esta definición">¶</a></dt>
 <dd><p>Formulario para la modificacion del usuario.</p>
-<dl class="class">
+<dl class="py class">
 <dt id="login.forms.UpdateUserForm.Meta">
 <em class="property">class </em><code class="sig-name descname">Meta</code><a class="reference internal" href="../_modules/login/forms.html#UpdateUserForm.Meta"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#login.forms.UpdateUserForm.Meta" title="Enlazar permanentemente con esta definición">¶</a></dt>
 <dd><p>Form settings.</p>
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="login.forms.UpdateUserForm.Meta.model">
 <code class="sig-name descname">model</code><a class="headerlink" href="#login.forms.UpdateUserForm.Meta.model" title="Enlazar permanentemente con esta definición">¶</a></dt>
 <dd><p>alias de <a class="reference internal" href="login.models.html#login.models.Usuario" title="login.models.Usuario"><code class="xref py py-class docutils literal notranslate"><span class="pre">login.models.Usuario</span></code></a></p>
@@ -233,15 +236,15 @@
 
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="login.forms.UpdateUserForm.clean_username">
 <code class="sig-name descname">clean_username</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/login/forms.html#UpdateUserForm.clean_username"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#login.forms.UpdateUserForm.clean_username" title="Enlazar permanentemente con esta definición">¶</a></dt>
 <dd><p>Comprueba si el usuario es unico</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="login.forms.UpdateUserForm.update">
-<code class="sig-name descname">update</code><span class="sig-paren">(</span><em class="sig-param">key</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/login/forms.html#UpdateUserForm.update"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#login.forms.UpdateUserForm.update" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<code class="sig-name descname">update</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">key</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/login/forms.html#UpdateUserForm.update"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#login.forms.UpdateUserForm.update" title="Enlazar permanentemente con esta definición">¶</a></dt>
 <dd><p>Metodo que actualiza la base de datos.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parámetros</dt>
@@ -250,7 +253,7 @@
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="login.forms.UpdateUserForm.username">
 <code class="sig-name descname">username</code><em class="property"> = None</em><a class="headerlink" href="#login.forms.UpdateUserForm.username" title="Enlazar permanentemente con esta definición">¶</a></dt>
 <dd><p>Campo para la modificacion del nombre de Usuario</p>

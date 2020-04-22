@@ -91,6 +91,9 @@
 <li class="toctree-l1"><a class="reference internal" href="../../_autosummary/desarrollo.models.html">desarrollo.models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../_autosummary/desarrollo.views.html">desarrollo.views</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../_autosummary/desarrollo.forms.html">desarrollo.forms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/pruebasUnitarias.test_models.html">pruebasUnitarias.test_models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/pruebasUnitarias.test_urls.html">pruebasUnitarias.test_urls</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/pruebasUnitarias.test_views.html">pruebasUnitarias.test_views</a></li>
 </ul>
 
             
@@ -250,7 +253,6 @@
 
     <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;POST&#39;</span><span class="p">:</span>
         <span class="n">usuarios</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">usuarios</span><span class="p">)</span>
         <span class="n">Usuario</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">is_active</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="n">Usuario</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">is_gerente</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">id_usuario</span><span class="p">,</span> <span class="n">valor</span> <span class="ow">in</span> <span class="n">usuarios</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
@@ -317,8 +319,6 @@
             <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;login:index&#39;</span><span class="p">)</span>
 
     <span class="k">else</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;instance&#39;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">instance</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
         <span class="n">form</span> <span class="o">=</span> <span class="n">UpdateUserForm</span><span class="p">(</span>
             <span class="n">instance</span><span class="o">=</span><span class="n">instance</span><span class="p">,</span>
             <span class="n">initial</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;username&#39;</span><span class="p">:</span> <span class="n">name</span><span class="p">}</span>

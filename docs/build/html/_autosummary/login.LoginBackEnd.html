@@ -93,6 +93,9 @@
 <li class="toctree-l1"><a class="reference internal" href="desarrollo.models.html">desarrollo.models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="desarrollo.views.html">desarrollo.views</a></li>
 <li class="toctree-l1"><a class="reference internal" href="desarrollo.forms.html">desarrollo.forms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pruebasUnitarias.test_models.html">pruebasUnitarias.test_models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pruebasUnitarias.test_urls.html">pruebasUnitarias.test_urls</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pruebasUnitarias.test_views.html">pruebasUnitarias.test_views</a></li>
 </ul>
 
             
@@ -172,14 +175,14 @@
 </tbody>
 </table>
 <span class="target" id="module-login.LoginBackEnd"></span><p>Clase creada para gestionar el Login del usuario</p>
-<dl class="class">
+<dl class="py class">
 <dt id="login.LoginBackEnd.LoginBackEnd">
 <em class="property">class </em><code class="sig-prename descclassname">login.LoginBackEnd.</code><code class="sig-name descname">LoginBackEnd</code><a class="reference internal" href="../_modules/login/LoginBackEnd.html#LoginBackEnd"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#login.LoginBackEnd.LoginBackEnd" title="Enlazar permanentemente con esta definición">¶</a></dt>
 <dd><p>Clase que hereda de BaseBackend para implementar la autenticacion del usuario, esta clase realiza la coneccion con
 firebase y autentica al usuario en la base de datos de la app</p>
-<dl class="method">
+<dl class="py method">
 <dt id="login.LoginBackEnd.LoginBackEnd.authenticate">
-<code class="sig-name descname">authenticate</code><span class="sig-paren">(</span><em class="sig-param">request</em>, <em class="sig-param">email=None</em>, <em class="sig-param">password=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/login/LoginBackEnd.html#LoginBackEnd.authenticate"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#login.LoginBackEnd.LoginBackEnd.authenticate" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<code class="sig-name descname">authenticate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em>, <em class="sig-param"><span class="n">email</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">password</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/login/LoginBackEnd.html#LoginBackEnd.authenticate"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#login.LoginBackEnd.LoginBackEnd.authenticate" title="Enlazar permanentemente con esta definición">¶</a></dt>
 <dd><p>Metodo que se encarga de la autenticacion del usuario tanto en firebase como en la base local</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parámetros</dt>
@@ -193,9 +196,9 @@ firebase y autentica al usuario en la base de datos de la app</p>
 <p>:returns Se retorna el objeto correspondiente al usuario de la base de datos local</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="login.LoginBackEnd.LoginBackEnd.get_user">
-<code class="sig-name descname">get_user</code><span class="sig-paren">(</span><em class="sig-param">user_id</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/login/LoginBackEnd.html#LoginBackEnd.get_user"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#login.LoginBackEnd.LoginBackEnd.get_user" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<code class="sig-name descname">get_user</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">user_id</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/login/LoginBackEnd.html#LoginBackEnd.get_user"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#login.LoginBackEnd.LoginBackEnd.get_user" title="Enlazar permanentemente con esta definición">¶</a></dt>
 <dd><p>Metodo que busca un usuario en la base local</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parámetros</dt>

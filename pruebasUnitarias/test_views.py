@@ -16,7 +16,7 @@ from administracion.views import crear_rol, proyectos, desactivar_tipo_item, edi
     administrar_comite, importar_tipo, confirmar_tipo_import, mostrar_tipo_import, administrar_fases_del_proyecto
 from desarrollo.models import Item, AtributoParticular, Relacion
 from desarrollo.views import solicitud_aprobacion, aprobar_item, desaprobar_item, desactivar_item, ver_item, \
-    relacionar_item, desactivar_relacion_item
+    relacionar_item, desactivar_relacion_item, ver_proyecto
 import pytest
 
 
@@ -652,3 +652,16 @@ class TestViews(TestCase):
         relacion = Relacion.objects.get(id=relacion.id)
 
         self.assertEqual(relacion.is_active, False, 'el estado cambió a desactivado')
+
+    def test_ver_fases(self):
+        """
+        CU 21: Mostrar Fases. Iteración 3.
+        Este test prueba que se muestre las fases de un proyecto
+
+        :return: retorna true si es posible ver las fases
+        """
+        path = reverse('desarrollo:verProyecto', args=[self.proyecto.id])
+        request = RequestFactory().get(path)
+        request.user = self.usuario
+        response = ver_proyecto(request, self.proyecto.id)
+        self.assertEqual(response.status_code, 200, 'no se puede ver las fases del proyecto')
