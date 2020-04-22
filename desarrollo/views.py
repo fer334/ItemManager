@@ -111,7 +111,6 @@ def menu_aprobacion(request, id_proyecto):
     else:
         for fase in proyecto.fase_set.all():
             if has_permiso(fase, request.user, Rol.APROBAR_ITEM):
-                print(fase.id)
                 lista_fases.append(fase)
     return render(request, 'desarrollo/item_menu_aprobacion.html', {'proyecto': proyecto, 'lista_items': lista_items,
                                                                     'estado': Item.ESTADO_PENDIENTE,
@@ -189,19 +188,6 @@ def ver_proyecto(request, id_proyecto):
                                                                   'es_aprobador': es_aprobador})
 
 
-def adjuntar_archivo(request, id_proyecto, id_item):
-    context = {}
-    if request.POST:
-        form = ItemForm(request.POST, request.FILES)
-        if form.is_valid():
-            url = handle_uploaded_file(request.FILES['archivo_adjunto'], id_proyecto, request.user)
-            print(url)
-    else:
-        form = ItemForm()
-    context['form'] = form
-    return render(request, "desarrollo/item_adjuntar_archivo.html", context)
-
-
 def relacionar_item(request, id_proyecto):
     """
     Metodo que se encarga de renderizar la vista relacionar items,
@@ -211,7 +197,7 @@ def relacionar_item(request, id_proyecto):
 
     :param request: objeto tipo diccionario que permite acceder a datos
     :param id_proyecto: identificador unico por proyecto
-    :return: objeto que renderea relacionar.html
+    :return: objeto que renderea relacion_crear.html
     :rtype: render
     """
     if request.method == "POST":
@@ -223,13 +209,16 @@ def relacionar_item(request, id_proyecto):
     else:
         form = RelacionForm()
 
-    form.fields["inicio"].queryset = Item.objects.filter(
-        fase__proyecto_id=id_proyecto,
+    lista_items_padre = Item.objects.filter(
+        fase__proyecto_id=id_proyecto, estado=Item.ESTADO_APROBADO
     )
-    form.fields["fin"].queryset = Item.objects.filter(
-        fase__proyecto_id=id_proyecto,
+    lista_items_hijo = Item.objects.filter(
+        fase__proyecto_id=id_proyecto, estado=Item.ESTADO_DESARROLLO
     )
-    return render(request, "desarrollo/relacionar.html", {'form': form})
+    #Se agrega filtro para solo relacionar items aprobados y hijos en desarrollo
+    form.fields["inicio"].queryset = lista_items_padre
+    form.fields["fin"].queryset = lista_items_hijo
+    return render(request, "desarrollo/relacion_crear.html", {'form': form})
 
 
 def desactivar_relacion_item(request, id_proyecto):

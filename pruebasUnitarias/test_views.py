@@ -215,13 +215,14 @@ class TestViews(TestCase):
         :return: el assert retorna True si el estado del proyecto no cambia a finalizado
         """
         proyecto_iniciado = Proyecto.objects.create(nombre='proyectoIniciado', fecha_inicio=timezone.now().date(),
-                                                    numero_fases=5, cant_comite=3, gerente=self.usuario.id)
+                                                    estado=Proyecto.ESTADO_INICIADO, numero_fases=5, cant_comite=3,
+                                                    gerente=self.usuario.id)
         request = RequestFactory()
         request.user = self.usuario
-        estado_proyectov2(request, proyecto_iniciado.id, 'finalizado')
+        estado_proyectov2(request, proyecto_iniciado.id, Proyecto.ESTADO_FINALIZADO)
         # sincronizamos el objeto con los nuevos cambios
         proyecto_iniciado = Proyecto.objects.get(pk=proyecto_iniciado.id)
-        self.assertEqual(proyecto_iniciado.estado, 'finalizado', 'el estado del proyecto cambió a finalizado y '
+        self.assertNotEqual(proyecto_iniciado.estado, Proyecto.ESTADO_FINALIZADO, 'el estado del proyecto cambió a finalizado y '
                                                                  'no debía cambiar de estado')
 
     def test_estado_proyecto_ejecucion_finalizado(self):
@@ -233,14 +234,14 @@ class TestViews(TestCase):
         :return: el assert retorna True si el estado del proyecto cambia a finalizado
         """
         proyecto_ejecucion = Proyecto.objects.create(nombre='proyectoEjecucion', fecha_inicio=timezone.now().date(),
-                                                     estado='en ejecucion', numero_fases=5, cant_comite=3,
+                                                     estado=Proyecto.ESTADO_EN_EJECUCION, numero_fases=5, cant_comite=3,
                                                      gerente=self.usuario.id)
         request = RequestFactory()
         request.user = self.usuario
-        estado_proyectov2(request, proyecto_ejecucion.id, 'finalizado')
+        estado_proyectov2(request, proyecto_ejecucion.id, Proyecto.ESTADO_FINALIZADO)
         # sincronizamos el objeto con los nuevos cambios
         proyecto_ejecucion = Proyecto.objects.get(pk=proyecto_ejecucion.id)
-        self.assertEqual(proyecto_ejecucion.estado, 'finalizado', 'el estado del proyecto no cambió a finalizado')
+        self.assertEqual(proyecto_ejecucion.estado, Proyecto.ESTADO_FINALIZADO, 'el estado del proyecto no cambió a finalizado')
 
     def test_eliminar_participante(self):
         """
@@ -292,7 +293,7 @@ class TestViews(TestCase):
                                       numero_fases=5, cant_comite=3, gerente=self.usuario.id)
         response = self.client.post(reverse('administracion:crearProyecto'))
         self.assertEqual(ppp.nombre, 'ppp', 'indica que el proyecto no creado')
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 302)
 
     def test_proyectos(self):
         """
@@ -322,9 +323,9 @@ class TestViews(TestCase):
                                      numero_fases=5, cant_comite=3, gerente=self.usuario.id)
         request = RequestFactory()
         request.user = self.usuario
-        estado_proyectov2(request, pl.id, 'cancelado')
+        estado_proyectov2(request, pl.id, Proyecto.ESTADO_CANCELADO)
         pl = Proyecto.objects.get(pk=pl.id)
-        self.assertEqual(pl.estado, 'cancelado', 'no se logro cambiar de estado')
+        self.assertEqual(pl.estado, Proyecto.ESTADO_CANCELADO, 'no se logro cambiar de estado')
 
     def test_estado_proyecto_en_ejecucion(self):
         """
@@ -337,9 +338,9 @@ class TestViews(TestCase):
                                                     numero_fases=5, cant_comite=3, gerente=self.usuario.id)
         request = RequestFactory()
         request.user = self.usuario
-        estado_proyectov2(request, proyecto_iniciado.id, 'en ejecucion')
+        estado_proyectov2(request, proyecto_iniciado.id, Proyecto.ESTADO_EN_EJECUCION)
         proyecto_iniciado = Proyecto.objects.get(pk=proyecto_iniciado.id)
-        self.assertEqual(proyecto_iniciado.estado, 'en ejecucion', 'el proyecto cambio de estado')
+        self.assertEqual(proyecto_iniciado.estado, Proyecto.ESTADO_EN_EJECUCION, 'el proyecto cambio de estado')
 
     def test_crear_admin_sistema(self):
         """
@@ -464,14 +465,14 @@ class TestViews(TestCase):
         )
         request = RequestFactory()
         request.user = self.usuario
-        estado_proyectov2(request, proyecto_cancelado.id, 'cancelado')
+        estado_proyectov2(request, proyecto_cancelado.id, Proyecto.ESTADO_CANCELADO)
         # sincronizamos el objeto con los nuevos cambios
         proyecto_cancelado = Proyecto.objects.get(pk=proyecto_cancelado.id)
-        self.assertEqual(proyecto_cancelado.estado, 'cancelado', 'El estado no puede cambiar a cancelado')
+        self.assertEqual(proyecto_cancelado.estado, Proyecto.ESTADO_CANCELADO, 'El estado no puede cambiar a cancelado')
 
     def test_desactivar_tipo_item(self):
         """
-        CU 31: Desactivar tipo de item
+        CU 31: Desactivar tipo de item. Iteracion 3
         :return: Passed en caso de que el tipo item quede fuera de la lista de los tipo items del proyecto
         """
         # se asigna el tipo al proyecto:
@@ -483,7 +484,7 @@ class TestViews(TestCase):
 
     def test_editar_tipo(self):
         """
-        CU 30: Editar el tipo de item
+        CU 30: Editar el tipo de item. Iteracion 3
         :return: Passed en caso de que el tipo item quede con los valores cambiados
         """
         # se asigna el tipo al proyecto:
@@ -516,14 +517,14 @@ class TestViews(TestCase):
         tipor = TipoItem.objects.create(nombre='CasoU', descripcion='fndmsn', prefijo='cu')
         fas = Fase.objects.create(nombre='Fasex', descripcion='dskjalñ', estado='abierta',
                                   proyecto=Proyecto.objects.get(pk=pr.id))
-        cu_38 = Item.objects.create(nombre='cu_38', estado='en desarrollo', version=1, complejidad=5,
+        cu_38 = Item.objects.create(nombre='cu_38', estado=Item.ESTADO_DESARROLLO, version=1, complejidad=5,
                                     descripcion='solicitar aprobacion', tipo_item=TipoItem.objects.get(pk=tipor.id),
                                     fase=Fase.objects.get(pk=fas.id))
         request = RequestFactory()
         request.user = self.usuario
         solicitud_aprobacion(request, id_item=cu_38.id)
         cu_38 = Item.objects.get(pk=cu_38.id)
-        self.assertEqual(cu_38.estado, 'Pendiente de Aprobacion', 'No se puede realizar la solicitud')
+        self.assertEqual(cu_38.estado, Item.ESTADO_PENDIENTE, 'No se puede realizar la solicitud')
 
     def test_aprobar_item(self):
         """
@@ -537,14 +538,14 @@ class TestViews(TestCase):
         tipox = TipoItem.objects.create(nombre='Casox', descripcion='uto', prefijo='cx')
         fasx = Fase.objects.create(nombre='Fasx', descripcion='dshh', estado='abierta',
                                    proyecto=Proyecto.objects.get(pk=px.id))
-        cu_39_1 = Item.objects.create(nombre='cu_39_1', estado='Pendiente de Aprobacion', version=1, complejidad=5,
+        cu_39_1 = Item.objects.create(nombre='cu_39_1', estado=Item.ESTADO_PENDIENTE, version=1, complejidad=5,
                                       descripcion='aprobar item', tipo_item=TipoItem.objects.get(pk=tipox.id),
                                       fase=Fase.objects.get(pk=fasx.id))
         request = RequestFactory()
         request.user = self.usuario
         aprobar_item(request, id_item=cu_39_1.id)
         cu_39_1 = Item.objects.get(pk=cu_39_1.id)
-        self.assertEqual(cu_39_1.estado, 'Aprobado', 'No se puede realizar la accion')
+        self.assertEqual(cu_39_1.estado, Item.ESTADO_APROBADO, 'No se puede realizar la accion')
 
     def test_desaprobar_item(self):
         """
@@ -558,14 +559,14 @@ class TestViews(TestCase):
         tipop = TipoItem.objects.create(nombre='Casop', descripcion='bkdls', prefijo='cp')
         fasep = Fase.objects.create(nombre='Fasep', descripcion='shh', estado='abierta',
                                     proyecto=Proyecto.objects.get(pk=pp.id))
-        cu_39_2 = Item.objects.create(nombre='cu_39_2', estado='Pendiente de Aprobacion', version=1, complejidad=5,
+        cu_39_2 = Item.objects.create(nombre='cu_39_2', estado=Item.ESTADO_PENDIENTE, version=1, complejidad=5,
                                       descripcion='desaprobar item', tipo_item=TipoItem.objects.get(pk=tipop.id),
                                       fase=Fase.objects.get(pk=fasep.id))
         request = RequestFactory()
         request.user = self.usuario
         desaprobar_item(request, id_item=cu_39_2.id)
         cu_39_2 = Item.objects.get(pk=cu_39_2.id)
-        self.assertEqual(cu_39_2.estado, 'en desarrollo', 'No se puede realizar la accion')
+        self.assertEqual(cu_39_2.estado, Item.ESTADO_DESARROLLO, 'No se puede realizar la accion')
 
     def test_desactivar_item(self):
         """
@@ -579,15 +580,15 @@ class TestViews(TestCase):
                                      gerente=self.usuario.id, numero_fases=3, cant_comite=3)
         tipom = TipoItem.objects.create(nombre='Casom', descripcion='uuuto', prefijo='cm')
         fasem = Fase.objects.create(nombre='Fasem', descripcion='cdshh', estado='abierta',
-                                    proyecto=Proyecto.objects.get(pk=pm.id))
-        cu_40 = Item.objects.create(nombre='cu_40', estado='en desarrollo', version=1, complejidad=5,
-                                    descripcion='desactivar item', tipo_item=TipoItem.objects.get(pk=tipom.id),
-                                    fase=Fase.objects.get(pk=fasem.id))
+                                   proyecto=Proyecto.objects.get(pk=pm.id))
+        cu_40 = Item.objects.create(nombre='cu_40', estado=Item.ESTADO_DESARROLLO, version=1, complejidad=5,
+                                      descripcion='desactivar item', tipo_item=TipoItem.objects.get(pk=tipom.id),
+                                      fase=Fase.objects.get(pk=fasem.id))
         request = RequestFactory()
         request.user = self.usuario
-        desactivar_item(request, id_item=cu_40.id)
+        desactivar_item(request, id_item=cu_40.id, id_proyecto=pm.id)
         cu_40 = Item.objects.get(pk=cu_40.id)
-        self.assertEqual(cu_40.estado, 'Desactivado', "No se puede realizar la accion")
+        self.assertEqual(cu_40.estado, Item.ESTADO_DESACTIVADO, "No se puede realizar la accion")
 
     def test_ver_item(self):
         """
