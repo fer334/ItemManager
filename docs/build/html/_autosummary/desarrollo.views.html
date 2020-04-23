@@ -1,0 +1,466 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="es" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="es" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>desarrollo.views &mdash; documentación de ItemManager - 1.0</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="../_static/translations.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Índice" href="../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../search.html" />
+    <link rel="next" title="desarrollo.forms" href="desarrollo.forms.html" />
+    <link rel="prev" title="desarrollo.models" href="desarrollo.models.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> ItemManager
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="login.models.html">login.models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="login.forms.html">login.forms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="login.views.html">login.views</a></li>
+<li class="toctree-l1"><a class="reference internal" href="login.LoginBackEnd.html">login.LoginBackEnd</a></li>
+<li class="toctree-l1"><a class="reference internal" href="login.Register.html">login.Register</a></li>
+<li class="toctree-l1"><a class="reference internal" href="administracion.models.html">administracion.models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="administracion.views.html">administracion.views</a></li>
+<li class="toctree-l1"><a class="reference internal" href="administracion.forms.html">administracion.forms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="desarrollo.models.html">desarrollo.models</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">desarrollo.views</a></li>
+<li class="toctree-l1"><a class="reference internal" href="desarrollo.forms.html">desarrollo.forms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pruebasUnitarias.test_models.html">pruebasUnitarias.test_models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pruebasUnitarias.test_urls.html">pruebasUnitarias.test_urls</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pruebasUnitarias.test_views.html">pruebasUnitarias.test_views</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ItemManager</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>desarrollo.views</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/_autosummary/desarrollo.views.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="desarrollo-views">
+<h1>desarrollo.views<a class="headerlink" href="#desarrollo-views" title="Enlazar permanentemente con este título">¶</a></h1>
+<p class="rubric">Functions</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#desarrollo.views.aprobar_item" title="desarrollo.views.aprobar_item"><code class="xref py py-obj docutils literal notranslate"><span class="pre">aprobar_item</span></code></a>(request, id_item)</p></td>
+<td><p>Vista en la cual se aprueban los items, el mismo pasa pendiente de aprobacion a aprobado :param request: objeto tipo diccionario que permite acceder a datos :param id_item: identificador del item en cuestion :return: redirecciona al menu de aprobacion del item</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#desarrollo.views.crear_item" title="desarrollo.views.crear_item"><code class="xref py py-obj docutils literal notranslate"><span class="pre">crear_item</span></code></a>(request, id_fase, id_tipo)</p></td>
+<td><p>Esta vista se encarga de crear un ítem con sus atributos particulares en una fase, utiliza un form para los atributos comunes del ítem y luego con el ítem ya creado crea sus atributos particulares.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#desarrollo.views.desactivar_item" title="desarrollo.views.desactivar_item"><code class="xref py py-obj docutils literal notranslate"><span class="pre">desactivar_item</span></code></a>(request, id_proyecto, id_item)</p></td>
+<td><p>Vista en la cual se desactivan los items, el mismo debe estar en desarrollo para poder desactivarlo y una vez echo simplemente se quedan especificados en los detalles del item</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#desarrollo.views.desactivar_relacion_item" title="desarrollo.views.desactivar_relacion_item"><code class="xref py py-obj docutils literal notranslate"><span class="pre">desactivar_relacion_item</span></code></a>(request, id_proyecto)</p></td>
+<td><p>Metodo que se encarga de renderizar la vista desactivar relacion de items, recibe como parametro dos atributos, el request que es comun entre todas las vistas y el id_proyecto que tiene el numero identificador del proyecto donde se encuentran las relaciones que se van a desactivar</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#desarrollo.views.desaprobar_item" title="desarrollo.views.desaprobar_item"><code class="xref py py-obj docutils literal notranslate"><span class="pre">desaprobar_item</span></code></a>(request, id_item)</p></td>
+<td><p>Vista en la cual se desaprueban los items, el mismo pasa pendiente de aprobacion a en desarrollo en caso de ser desaprobado :param request: objeto tipo diccionario que permite acceder a datos :param id_item: identificador del item en cuestion :return: redirecciona al menu de aprobacion del item</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_numeracion</span></code>(fase, tipo)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#desarrollo.views.index" title="desarrollo.views.index"><code class="xref py py-obj docutils literal notranslate"><span class="pre">index</span></code></a>(request, filtro)</p></td>
+<td><p>Vista que despliega la lista de proyectos con su estado actual, también permite filtrar los proyectos según estado, además solo muestra los proyectos de los cuales es gerente el usuario que hizo el request</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#desarrollo.views.menu_aprobacion" title="desarrollo.views.menu_aprobacion"><code class="xref py py-obj docutils literal notranslate"><span class="pre">menu_aprobacion</span></code></a>(request, id_proyecto)</p></td>
+<td><p>Vista que se encarga de mostrar un menú en el cual se permite administrar los ítems pendientes de aprobación si se tiene los permisos adecuados</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#desarrollo.views.relacionar_item" title="desarrollo.views.relacionar_item"><code class="xref py py-obj docutils literal notranslate"><span class="pre">relacionar_item</span></code></a>(request, id_proyecto)</p></td>
+<td><p>Metodo que se encarga de renderizar la vista relacionar items, recibe como parametro dos atributos, el request que es comun entre todas las vistas y el id_proyecto que tiene el numero identificador del proyecto donde se encuentran los items a relacionar</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#desarrollo.views.solicitud_aprobacion" title="desarrollo.views.solicitud_aprobacion"><code class="xref py py-obj docutils literal notranslate"><span class="pre">solicitud_aprobacion</span></code></a>(request, id_item)</p></td>
+<td><p>Vista en la cual se realiza la solicitud de aprobacion de items, el mismo debe estar en desarrollo para pasarlo a pendiente de aprobacion :param request: objeto tipo diccionario que permite acceder a datos :param id_item: identificador del item en cuestion :return: redirecciona a los detalles del item</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#desarrollo.views.ver_item" title="desarrollo.views.ver_item"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ver_item</span></code></a>(request, id_proyecto, id_item)</p></td>
+<td><p>vista que se encarga de mostrar un ítem con todos sus datos, atributos comunes y particulares y proyecto y fase a la que pertenece</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#desarrollo.views.ver_proyecto" title="desarrollo.views.ver_proyecto"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ver_proyecto</span></code></a>(request, id_proyecto)</p></td>
+<td><p>Esta vista despliega un proyecto con todos los valores que toman sus atributos, además de sus fases, roles y tipos de ítems</p></td>
+</tr>
+</tbody>
+</table>
+<span class="target" id="module-desarrollo.views"></span><p>Modulo se detalla la logica para las vistas que serán utilizadas por la app</p>
+<dl class="py function">
+<dt id="desarrollo.views.aprobar_item">
+<code class="sig-prename descclassname">desarrollo.views.</code><code class="sig-name descname">aprobar_item</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em>, <em class="sig-param"><span class="n">id_item</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/desarrollo/views.html#aprobar_item"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#desarrollo.views.aprobar_item" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Vista en la cual se aprueban los items, el mismo pasa pendiente de
+aprobacion a aprobado
+:param request: objeto tipo diccionario que permite acceder a datos
+:param id_item: identificador del item en cuestion
+:return: redirecciona al menu de aprobacion del item</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="desarrollo.views.crear_item">
+<code class="sig-prename descclassname">desarrollo.views.</code><code class="sig-name descname">crear_item</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em>, <em class="sig-param"><span class="n">id_fase</span></em>, <em class="sig-param"><span class="n">id_tipo</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/desarrollo/views.html#crear_item"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#desarrollo.views.crear_item" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Esta vista se encarga de crear un ítem con sus atributos particulares en una fase, utiliza un form para los
+atributos comunes del ítem y luego con el ítem ya creado crea sus atributos particulares. También se encarga de
+vincular el tipo del ítem creado a la fase.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>request</strong> – objeto tipo diccionario que permite acceder a datos</p></li>
+<li><p><strong>id_fase</strong> – identificador de la fase en la cual será creado el ítem</p></li>
+<li><p><strong>id_tipo</strong> – identificar del tipo del ítem</p></li>
+</ul>
+</dd>
+<dt class="field-even">Devuelve</dt>
+<dd class="field-even"><p>objeto que se encarga de renderear item_crear.html o redireccion a proyecto_ver_unico.html en caso de POST</p>
+</dd>
+<dt class="field-odd">Tipo del valor devuelto</dt>
+<dd class="field-odd"><p>render, redirect</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="desarrollo.views.desactivar_item">
+<code class="sig-prename descclassname">desarrollo.views.</code><code class="sig-name descname">desactivar_item</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em>, <em class="sig-param"><span class="n">id_proyecto</span></em>, <em class="sig-param"><span class="n">id_item</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/desarrollo/views.html#desactivar_item"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#desarrollo.views.desactivar_item" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Vista en la cual se desactivan los items, el mismo debe estar en desarrollo para
+poder desactivarlo y una vez echo simplemente se quedan especificados en los
+detalles del item</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>id_proyecto</strong> – identificador del proyecto</p></li>
+<li><p><strong>request</strong> – objeto tipo diccionario que permite acceder a datos</p></li>
+<li><p><strong>id_item</strong> – identificador del item en cuestion</p></li>
+</ul>
+</dd>
+<dt class="field-even">Devuelve</dt>
+<dd class="field-even"><p>redirecciona a los detalles del item</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="desarrollo.views.desactivar_relacion_item">
+<code class="sig-prename descclassname">desarrollo.views.</code><code class="sig-name descname">desactivar_relacion_item</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em>, <em class="sig-param"><span class="n">id_proyecto</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/desarrollo/views.html#desactivar_relacion_item"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#desarrollo.views.desactivar_relacion_item" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Metodo que se encarga de renderizar la vista desactivar relacion de items,
+recibe como parametro dos atributos, el request que es comun entre todas las
+vistas y el id_proyecto que tiene el numero identificador del proyecto donde
+se encuentran las relaciones que se van a desactivar</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>request</strong> – objeto tipo diccionario que permite acceder a datos</p></li>
+<li><p><strong>id_proyecto</strong> – identificador unico por proyecto</p></li>
+</ul>
+</dd>
+<dt class="field-even">Devuelve</dt>
+<dd class="field-even"><p>objeto que renderea item_des_relacion.html</p>
+</dd>
+<dt class="field-odd">Tipo del valor devuelto</dt>
+<dd class="field-odd"><p>render</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="desarrollo.views.desaprobar_item">
+<code class="sig-prename descclassname">desarrollo.views.</code><code class="sig-name descname">desaprobar_item</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em>, <em class="sig-param"><span class="n">id_item</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/desarrollo/views.html#desaprobar_item"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#desarrollo.views.desaprobar_item" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Vista en la cual se desaprueban los items, el mismo pasa pendiente de
+aprobacion a en desarrollo en caso de ser desaprobado
+:param request: objeto tipo diccionario que permite acceder a datos
+:param id_item: identificador del item en cuestion
+:return: redirecciona al menu de aprobacion del item</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="desarrollo.views.index">
+<code class="sig-prename descclassname">desarrollo.views.</code><code class="sig-name descname">index</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em>, <em class="sig-param"><span class="n">filtro</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/desarrollo/views.html#index"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#desarrollo.views.index" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Vista que despliega la lista de proyectos con su estado actual, también permite filtrar los proyectos según estado,
+además solo muestra los proyectos de los cuales es gerente el usuario que hizo el request</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>request</strong> – objeto tipo diccionario que permite acceder a datos</p></li>
+<li><p><strong>filtro</strong> – este parámetro indica el estado según se filtrarán los proyectos. Si el valor es “todos” no se aplicará ningún filtro</p></li>
+</ul>
+</dd>
+<dt class="field-even">Devuelve</dt>
+<dd class="field-even"><p>objeto que se encarga de renderear proyecto_ver_todos.html</p>
+</dd>
+<dt class="field-odd">Tipo del valor devuelto</dt>
+<dd class="field-odd"><p>render</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="desarrollo.views.menu_aprobacion">
+<code class="sig-prename descclassname">desarrollo.views.</code><code class="sig-name descname">menu_aprobacion</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em>, <em class="sig-param"><span class="n">id_proyecto</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/desarrollo/views.html#menu_aprobacion"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#desarrollo.views.menu_aprobacion" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Vista que se encarga de mostrar un menú en el cual se permite administrar los ítems pendientes de aprobación
+si se tiene los permisos adecuados</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>request</strong> – objeto tipo diccionario que permite acceder a datos</p></li>
+<li><p><strong>id_proyecto</strong> – identificador del proyecto sobre el cual se administraran los ítems</p></li>
+</ul>
+</dd>
+<dt class="field-even">Devuelve</dt>
+<dd class="field-even"><p>objeto que renderea item_menu_aprobacion.html</p>
+</dd>
+<dt class="field-odd">Tipo del valor devuelto</dt>
+<dd class="field-odd"><p>render</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="desarrollo.views.relacionar_item">
+<code class="sig-prename descclassname">desarrollo.views.</code><code class="sig-name descname">relacionar_item</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em>, <em class="sig-param"><span class="n">id_proyecto</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/desarrollo/views.html#relacionar_item"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#desarrollo.views.relacionar_item" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Metodo que se encarga de renderizar la vista relacionar items,
+recibe como parametro dos atributos, el request que es comun entre todas las
+vistas y el id_proyecto que tiene el numero identificador del proyecto donde
+se encuentran los items a relacionar</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>request</strong> – objeto tipo diccionario que permite acceder a datos</p></li>
+<li><p><strong>id_proyecto</strong> – identificador unico por proyecto</p></li>
+</ul>
+</dd>
+<dt class="field-even">Devuelve</dt>
+<dd class="field-even"><p>objeto que renderea relacion_crear.html</p>
+</dd>
+<dt class="field-odd">Tipo del valor devuelto</dt>
+<dd class="field-odd"><p>render</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="desarrollo.views.solicitud_aprobacion">
+<code class="sig-prename descclassname">desarrollo.views.</code><code class="sig-name descname">solicitud_aprobacion</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em>, <em class="sig-param"><span class="n">id_item</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/desarrollo/views.html#solicitud_aprobacion"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#desarrollo.views.solicitud_aprobacion" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Vista en la cual se realiza la solicitud de aprobacion de items, el mismo
+debe estar en desarrollo para pasarlo a pendiente de aprobacion
+:param request: objeto tipo diccionario que permite acceder a datos
+:param id_item: identificador del item en cuestion
+:return: redirecciona a los detalles del item</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="desarrollo.views.ver_item">
+<code class="sig-prename descclassname">desarrollo.views.</code><code class="sig-name descname">ver_item</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em>, <em class="sig-param"><span class="n">id_proyecto</span></em>, <em class="sig-param"><span class="n">id_item</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/desarrollo/views.html#ver_item"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#desarrollo.views.ver_item" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>vista que se encarga de mostrar un ítem con todos sus datos, atributos comunes y particulares y proyecto y fase
+a la que pertenece</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>id_proyecto</strong> – identificador del proyecto</p></li>
+<li><p><strong>request</strong> – objeto tipo diccionario que permite acceder a datos</p></li>
+<li><p><strong>id_item</strong> – identificador del ítem a mostrar</p></li>
+</ul>
+</dd>
+<dt class="field-even">Devuelve</dt>
+<dd class="field-even"><p>objeto que se encarga de renderear item_ver.html</p>
+</dd>
+<dt class="field-odd">Tipo del valor devuelto</dt>
+<dd class="field-odd"><p>render</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="desarrollo.views.ver_proyecto">
+<code class="sig-prename descclassname">desarrollo.views.</code><code class="sig-name descname">ver_proyecto</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em>, <em class="sig-param"><span class="n">id_proyecto</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/desarrollo/views.html#ver_proyecto"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#desarrollo.views.ver_proyecto" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Esta vista despliega un proyecto con todos los valores que toman sus atributos, además de sus fases, roles
+y tipos de ítems</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>request</strong> – objeto tipo diccionario que permite acceder a datos</p></li>
+<li><p><strong>id_proyecto</strong> – Se recibe como parámetro el id_del proyecto que se desea ver</p></li>
+</ul>
+</dd>
+<dt class="field-even">Devuelve</dt>
+<dd class="field-even"><p>objeto que renderea verProyecto.html</p>
+</dd>
+<dt class="field-odd">Tipo del valor devuelto</dt>
+<dd class="field-odd"><p>render</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="desarrollo.forms.html" class="btn btn-neutral float-right" title="desarrollo.forms" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="desarrollo.models.html" class="btn btn-neutral float-left" title="desarrollo.models" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Paola Olmedo, Matías López, David Nuñez, Luis Ríos
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

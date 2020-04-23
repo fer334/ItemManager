@@ -14,6 +14,12 @@ class Proyecto(models.Model):
     nombre = models.CharField(max_length=200, null=False)
     #: fecha en la que el proyecto comienza
     fecha_inicio = models.DateField(auto_now=False, auto_now_add=False)
+    #: fecha y hora en la que el proyecto pasa a estado de ejecución
+    fecha_ejecucion = models.DateTimeField(auto_now=False, auto_now_add=False, null=True)
+    #: fecha y hora en la que el proyecto pasa a finalizado
+    fecha_finalizado = models.DateTimeField(auto_now=False, auto_now_add=False, null=True)
+    #: fecha y hoar en la que el proyecto pasa a cancelado
+    fecha_cancelado = models.DateTimeField(auto_now=False, auto_now_add=False, null=True)
     #: estado actual del proyecto, puede variar entre iniciado, en ejecución, cancelado, finalizado
     estado = models.CharField(max_length=200, default='iniciado')
     #: cantidad de fases que tiene el proyecto
@@ -26,6 +32,12 @@ class Proyecto(models.Model):
     comite = models.ManyToManyField('login.Usuario', related_name='usuario_login_comite')
     #: equipo de usuarios que participa en el proyecto
     participantes = models.ManyToManyField('login.Usuario', related_name='usuario_login_participante')
+
+    ESTADO_CANCELADO = 'cancelado'
+    ESTADO_INICIADO = 'iniciado'
+    ESTADO_EN_EJECUCION = 'en ejecucion'
+    ESTADO_FINALIZADO = 'finalizado'
+
 
     def __str__(self):
         return self.nombre
@@ -55,20 +67,6 @@ class Proyecto(models.Model):
         return False
 
 
-class Fase(models.Model):
-    """
-    Esta clase representa las fases
-    """
-    #: Se almacena el nombre de la fase
-    nombre = models.CharField(max_length=200, null=False)
-    #: Descripcion de la fase
-    descripcion = models.CharField(max_length=400, null=True)
-    #: Estado de la fase, iniciada, cerrada etc.
-    estado = models.CharField(max_length=200, default='abierta')
-    #: Proyecto asociado a la fase
-    proyecto = models.ForeignKey(Proyecto, on_delete=models.CASCADE)
-
-
 class TipoItem(models.Model):
     """
     Esta clase representa los tipos de items
@@ -93,13 +91,34 @@ class PlantillaAtributo(models.Model):
     """
     #: Se almacena el nombre del tipo de item
     nombre = models.CharField(max_length=200)
-    #: Tipo del item a ser instanciado
+    #: Tipo del atributo a ser instanciado
     tipo = models.CharField(max_length=100)
     #: TipoItem asociado a la plantilla
     tipo_item = models.ForeignKey(TipoItem, on_delete=models.CASCADE)
+    #: Atributo que indica si completar el atributo es requerido
+    es_requerido = models.BooleanField(default=False)
 
     def __str__(self):
         return self.nombre
+
+
+class Fase(models.Model):
+    """
+    Esta clase representa las fases
+    """
+    #: Se almacena el nombre de la fase
+    nombre = models.CharField(max_length=200, null=False)
+    #: Descripcion de la fase
+    descripcion = models.CharField(max_length=400, null=True)
+    #: Estado de la fase, iniciada, cerrada etc.
+    estado = models.CharField(max_length=200, default='abierta')
+    #: Proyecto asociado a la fase
+    proyecto = models.ForeignKey('Proyecto', on_delete=models.CASCADE)
+    #: lista de tipos de ítem
+    tipos_item = models.ManyToManyField('TipoItem', blank=True)
+
+    class Meta:
+        ordering = ['id']
 
 
 class Rol(models.Model):
@@ -126,9 +145,19 @@ class Rol(models.Model):
     crear_relaciones_as = models.BooleanField(default=False)
     #:
     borrar_relaciones = models.BooleanField(default=False)
+    #:
     activo = models.BooleanField(default=True)
 
-    def get_permisos(self):
+    CREAR_ITEM = 'CREAR_ITEM'
+    MODIFICAR_ITEM = 'MODIFICAR_ITEM'
+    DESACTIVAR_ITEM = 'DESACTIVAR_ITEM'
+    APROBAR_ITEM = 'APROBAR_ITEM'
+    REVERSIONAR_ITEM = 'REVERSIONAR_ITEM'
+    CREAR_RELACIONES_PH = 'CREAR_RELACIONES_PH'
+    CREAR_RELACIONES_AS = 'CREAR_RELACIONES_AS'
+    BORRAR_RELACIONES = 'BORRAR_RELACIONES'
+
+    def get_permisos_clean(self):
         """
         Metodo que colecta los permisos activos
         :return: una lista de permisos activos
@@ -145,7 +174,7 @@ class Rol(models.Model):
         return permisos
 
     def __str__(self):
-        return (self.nombre)
+        return self.nombre
 
 
 class UsuarioxRol(models.Model):
@@ -162,4 +191,4 @@ class UsuarioxRol(models.Model):
     activo = models.BooleanField(default=True)
 
     def __str__(self):
-        return self.id
+        return f'{self.usuario.username} es {self.rol.nombre} en {self.fase.nombre} - {self.activo}'

@@ -6,7 +6,7 @@ app_name = 'administracion'
 urlpatterns = [
 
     # URL DE PAO
-    path('proyectos/<int:id_proyecto>/roles/crear/',views.crear_rol, name='crearRol'),
+    path('proyectos/<int:id_proyecto>/roles/crear/', views.crear_rol, name='crearRol'),
     path('proyectos/<int:id_proyecto>/roles', views.administrar_roles, name='administrarRoles'),
     path('proyectos/<int:id_proyecto>/roles/<int:id_rol>/desactivar/', views.desactivar_rol_proyecto, name='desactivarRol'),
     path('proyectos/<int:id_proyecto>/usuario/<int:id_usuario>/roles', views.ver_roles_usuario, name='verRolesUsuario'),

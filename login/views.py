@@ -51,7 +51,7 @@ def user_login(request):
             message = 'Credenciales invalidas'
             return render(request, 'login/login.html', {'error_message': message})
         login(request, user)
-
+        request.session.set_expiry(3600)
         return redirect('login:index')
 
     return render(request, 'login/login.html')
@@ -94,7 +94,6 @@ def users_access(request):
 
     if request.method == 'POST':
         usuarios = request.POST
-        print(usuarios)
         Usuario.objects.update(is_active=False)
         Usuario.objects.update(is_gerente=False)
         for id_usuario, valor in usuarios.items():
@@ -161,8 +160,6 @@ def user_update(request, name):
             return redirect('login:index')
 
     else:
-        print('instance')
-        print(instance.id)
         form = UpdateUserForm(
             instance=instance,
             initial={'username': name}

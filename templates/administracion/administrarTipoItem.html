@@ -23,24 +23,36 @@
                         <td>{{ tipo_item.nombre }}</td>
                         <td>{{ tipo_item.descripcion }}</td>
                         <td>
-                            <a
+
+
                             {% if tipo_item.proyecto.all.count > 1 %}
-                                href="#" class="btn btn-secondary"
+                                <button onclick="showMessage()" class="btn btn-secondary">Editar</button>
+                                <button onclick="showMessage()" class="btn btn-secondary">Editar atributos</button>
                             {% else %}
-                                href="{% url 'administracion:editarTipoItem' proyecto.id tipo_item.id %}" class="btn btn-info"
+                                <a href="{% url 'administracion:editarTipoItem' proyecto.id tipo_item.id %}" class="btn btn-info">Editar</a>
+                                <a href="{% url 'administracion:verTipoItem' proyecto.id tipo_item.id %}" class="btn btn-info">Editar atributos</a>
                             {% endif %}
-                            >Editar</a>
-                            <a href="{% url 'administracion:verTipoItem' proyecto.id tipo_item.id %}" class="btn btn-info">Editar atributos</a>
+
                             <a href="{% url 'administracion:desactivarTipoItem' proyecto.id tipo_item.id %}" class="btn btn-info">Desactivar</a>
                         </td>
                     </tr>
                 {% endfor %}
             </tbody>
         </table>
+        <div id="mensaje">
+
+        </div>
         <div class="mt-5">
             <a href="{% url 'administracion:crearTipoItem' proyecto.id %}" class="btn btn-primary">Agregar tipo de item</a> <span class="mr-1 ml-1">o</span>
             <a href="{% url 'administracion:importarTipoItem' proyecto.id %}" class="btn btn-primary">Importar tipo de item</a>
             <a class="btn btn-primary float-right" href="{% url 'administracion:verProyecto' proyecto.id %}">Volver a datos del proyecto {{ proyecto.nombre }}</a>
         </div>
     </div>
+    <script>
+        const showMessage = ()=>{
+            const mensaje = document.querySelector('#mensaje');
+            mensaje.innerHTML = "No se puede editar por que se usa en otros proyectos";
+            mensaje.className = 'alert alert-warning';
+        }
+    </script>
 {% endblock %}

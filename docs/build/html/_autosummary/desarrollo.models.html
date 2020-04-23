@@ -1,0 +1,374 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="es" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="es" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>desarrollo.models &mdash; documentación de ItemManager - 1.0</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="../_static/translations.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Índice" href="../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../search.html" />
+    <link rel="next" title="desarrollo.views" href="desarrollo.views.html" />
+    <link rel="prev" title="administracion.forms" href="administracion.forms.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> ItemManager
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="login.models.html">login.models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="login.forms.html">login.forms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="login.views.html">login.views</a></li>
+<li class="toctree-l1"><a class="reference internal" href="login.LoginBackEnd.html">login.LoginBackEnd</a></li>
+<li class="toctree-l1"><a class="reference internal" href="login.Register.html">login.Register</a></li>
+<li class="toctree-l1"><a class="reference internal" href="administracion.models.html">administracion.models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="administracion.views.html">administracion.views</a></li>
+<li class="toctree-l1"><a class="reference internal" href="administracion.forms.html">administracion.forms</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">desarrollo.models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="desarrollo.views.html">desarrollo.views</a></li>
+<li class="toctree-l1"><a class="reference internal" href="desarrollo.forms.html">desarrollo.forms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pruebasUnitarias.test_models.html">pruebasUnitarias.test_models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pruebasUnitarias.test_urls.html">pruebasUnitarias.test_urls</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pruebasUnitarias.test_views.html">pruebasUnitarias.test_views</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ItemManager</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>desarrollo.models</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/_autosummary/desarrollo.models.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="desarrollo-models">
+<h1>desarrollo.models<a class="headerlink" href="#desarrollo-models" title="Enlazar permanentemente con este título">¶</a></h1>
+<p class="rubric">Classes</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#desarrollo.models.AtributoParticular" title="desarrollo.models.AtributoParticular"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AtributoParticular</span></code></a>(*args, **kwargs)</p></td>
+<td><p>Esta clase representa cada uno de los atributos extra que tiene un ítem dependiendo de su tipo de ítem</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#desarrollo.models.Item" title="desarrollo.models.Item"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Item</span></code></a>(*args, **kwargs)</p></td>
+<td><p>clase que representa a los ítems que son instanciados a partir de un tipo de ítem</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#desarrollo.models.Relacion" title="desarrollo.models.Relacion"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Relacion</span></code></a>(*args, **kwargs)</p></td>
+<td><p>Clase que representa las relaciones entre items</p></td>
+</tr>
+</tbody>
+</table>
+<span class="target" id="module-desarrollo.models"></span><p>Mapeador objeto-relacional en el que es posible definir la estructura de la base de datos utilizando código Python.</p>
+<dl class="py class">
+<dt id="desarrollo.models.AtributoParticular">
+<em class="property">class </em><code class="sig-prename descclassname">desarrollo.models.</code><code class="sig-name descname">AtributoParticular</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/desarrollo/models.html#AtributoParticular"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#desarrollo.models.AtributoParticular" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Esta clase representa cada uno de los atributos extra que tiene un ítem dependiendo de su tipo de ítem</p>
+<dl class="py exception">
+<dt id="desarrollo.models.AtributoParticular.DoesNotExist">
+<em class="property">exception </em><code class="sig-name descname">DoesNotExist</code><a class="headerlink" href="#desarrollo.models.AtributoParticular.DoesNotExist" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py exception">
+<dt id="desarrollo.models.AtributoParticular.MultipleObjectsReturned">
+<em class="property">exception </em><code class="sig-name descname">MultipleObjectsReturned</code><a class="headerlink" href="#desarrollo.models.AtributoParticular.MultipleObjectsReturned" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="desarrollo.models.AtributoParticular.item">
+<code class="sig-name descname">item</code><a class="headerlink" href="#desarrollo.models.AtributoParticular.item" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>item al cual pertenecen estos atributos</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="desarrollo.models.AtributoParticular.nombre">
+<code class="sig-name descname">nombre</code><a class="headerlink" href="#desarrollo.models.AtributoParticular.nombre" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>nombre del atributo</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="desarrollo.models.AtributoParticular.tipo">
+<code class="sig-name descname">tipo</code><a class="headerlink" href="#desarrollo.models.AtributoParticular.tipo" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>tipo del atributo, puede tomar valores: text, numeric, file, date</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="desarrollo.models.AtributoParticular.valor">
+<code class="sig-name descname">valor</code><a class="headerlink" href="#desarrollo.models.AtributoParticular.valor" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>valor que es almacenado dentro del atributo</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="desarrollo.models.Item">
+<em class="property">class </em><code class="sig-prename descclassname">desarrollo.models.</code><code class="sig-name descname">Item</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/desarrollo/models.html#Item"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#desarrollo.models.Item" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>clase que representa a los ítems que son instanciados a partir de un tipo de ítem</p>
+<dl class="py exception">
+<dt id="desarrollo.models.Item.DoesNotExist">
+<em class="property">exception </em><code class="sig-name descname">DoesNotExist</code><a class="headerlink" href="#desarrollo.models.Item.DoesNotExist" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py exception">
+<dt id="desarrollo.models.Item.MultipleObjectsReturned">
+<em class="property">exception </em><code class="sig-name descname">MultipleObjectsReturned</code><a class="headerlink" href="#desarrollo.models.Item.MultipleObjectsReturned" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="desarrollo.models.Item.complejidad">
+<code class="sig-name descname">complejidad</code><a class="headerlink" href="#desarrollo.models.Item.complejidad" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>valor que define el impacto del ítem en el proyecto. Toma valores enteros entre 1 y 10</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="desarrollo.models.Item.descripcion">
+<code class="sig-name descname">descripcion</code><a class="headerlink" href="#desarrollo.models.Item.descripcion" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>comentarios opcionales para describir al ítem</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="desarrollo.models.Item.fase">
+<code class="sig-name descname">fase</code><a class="headerlink" href="#desarrollo.models.Item.fase" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>fase del proyecto en la que se crea el ítem</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="desarrollo.models.Item.nombre">
+<code class="sig-name descname">nombre</code><a class="headerlink" href="#desarrollo.models.Item.nombre" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>nombre que identifica al ítem</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="desarrollo.models.Item.tipo_item">
+<code class="sig-name descname">tipo_item</code><a class="headerlink" href="#desarrollo.models.Item.tipo_item" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>tipo que tendrá el ítem, de eso dependen sus atributos particulares</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="desarrollo.models.Item.version">
+<code class="sig-name descname">version</code><a class="headerlink" href="#desarrollo.models.Item.version" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>version actual del ítem que va cambiando luego de cada nueva relación y cada modificación de sus datos</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="desarrollo.models.Relacion">
+<em class="property">class </em><code class="sig-prename descclassname">desarrollo.models.</code><code class="sig-name descname">Relacion</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/desarrollo/models.html#Relacion"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#desarrollo.models.Relacion" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Clase que representa las relaciones entre items</p>
+<dl class="py exception">
+<dt id="desarrollo.models.Relacion.DoesNotExist">
+<em class="property">exception </em><code class="sig-name descname">DoesNotExist</code><a class="headerlink" href="#desarrollo.models.Relacion.DoesNotExist" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py exception">
+<dt id="desarrollo.models.Relacion.MultipleObjectsReturned">
+<em class="property">exception </em><code class="sig-name descname">MultipleObjectsReturned</code><a class="headerlink" href="#desarrollo.models.Relacion.MultipleObjectsReturned" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="desarrollo.models.Relacion.es_relacion_padrehijo">
+<code class="sig-name descname">es_relacion_padrehijo</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/desarrollo/models.html#Relacion.es_relacion_padrehijo"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#desarrollo.models.Relacion.es_relacion_padrehijo" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Metodo de clase que verifica el tipo de relacion de este item que puede
+ser de padre-hijo para items de la misma fase o antecesor-sucesor para
+items de diferentes fases</p>
+<dl class="field-list simple">
+<dt class="field-odd">Devuelve</dt>
+<dd class="field-odd"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="desarrollo.models.Relacion.fin">
+<code class="sig-name descname">fin</code><a class="headerlink" href="#desarrollo.models.Relacion.fin" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Atributo que contiene al item donde termina la relacion</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="desarrollo.models.Relacion.inicio">
+<code class="sig-name descname">inicio</code><a class="headerlink" href="#desarrollo.models.Relacion.inicio" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Atributo que contiene al item donde comienza la relacion</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="desarrollo.models.Relacion.is_active">
+<code class="sig-name descname">is_active</code><a class="headerlink" href="#desarrollo.models.Relacion.is_active" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Atributo que nos dice si la relacion ha sido borrada</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="desarrollo.views.html" class="btn btn-neutral float-right" title="desarrollo.views" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="administracion.forms.html" class="btn btn-neutral float-left" title="administracion.forms" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Paola Olmedo, Matías López, David Nuñez, Luis Ríos
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

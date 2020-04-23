@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'login',
     'administracion',
+    'desarrollo',
 ]
 
 SITE = 1
@@ -61,7 +62,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'ItemManager.middleware.ActiveAccountMiddleware',
-    'ItemManager.middleware.GerenteAccountMiddleware',
+    'ItemManager.middleware.EstadoProyectoMiddleware',
 ]
 
 ROOT_URLCONF = 'ItemManager.urls'
@@ -125,7 +126,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'es-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Asuncion'
 
 USE_I18N = True
 

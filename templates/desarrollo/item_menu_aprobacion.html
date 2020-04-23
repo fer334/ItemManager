@@ -1,0 +1,58 @@
+{% extends 'login/loginHeader.html' %}
+{% block content %}
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-sm-12 col-md-8 col-lg-8 ">
+                <h3 class="text-center mt-3 mb-5">Menú de Aprobación </h3>
+                <table class="table table-active">
+                    <thead class="thead-light">
+                        <tr>
+                            {% for fase in lista_fases %}
+                                <th class="">Fase: {{ fase.nombre }}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="">
+                            {% if not lista_fases %}
+                                <div class="alert alert-warning">Su usuario no posee permisos de aprobación para ninguna fase de este proyecto.</div>
+                            {% endif %}
+                            {% for fase in lista_fases %}
+                                <td class="justify-content-center">
+                                    <div class="list-group pt-2">
+                                        <ul>
+                                            {% for item in lista_items %}
+                                                {% if item.fase == fase %}
+                                                    {% if item.estado == estado %}
+                                                        <li class="list-group">
+                                                            <a class="align-baseline" href="{% url 'desarrollo:verItem' proyecto.id item.id %}" >
+                                                               {{ item.tipo_item.prefijo }}_{{ item.nombre }}
+                                                            </a>
+                                                            <a class="btn btn-success" href="{% url 'desarrollo:aprobarItem' item.id %}" >
+                                                               Aprobar
+                                                            </a>
+                                                            <a class="btn btn-danger" href="{% url 'desarrollo:desaprobarItem' item.id %}" >
+                                                               Desaprobar
+                                                            </a>
+                                                        </li>
+                                                    {% endif %}
+                                                {% endif %}
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                </td>
+                            {% endfor %}
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="col-sm-12 mt-4">
+                    <a href="{% url 'desarrollo:verProyecto' proyecto.id %}" class="btn btn-primary float-right">Volver atrás</a>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+{% endblock %}

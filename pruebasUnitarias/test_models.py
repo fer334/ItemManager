@@ -1,6 +1,7 @@
 """
 Modulo para hacer test sobre el modulo models.py
 """
+from desarrollo.models import Item, Relacion
 from login.models import Usuario
 from administracion.models import Proyecto, Fase, Rol, TipoItem, UsuarioxRol, PlantillaAtributo
 from django.utils import timezone
@@ -33,8 +34,8 @@ class TestModels(TestCase):
         CU 10: Crear Proyectos. Iteración 2
 
         Se prueban que los proyectos se crean correctamente.
-        :return: Las afirmaciones devuelven true  si fueron creados correctamente, false en
-        caso contrario.
+
+        :return: Las afirmaciones devuelven true  si fueron creados correctamente, false en caso contrario.
         """
         proyecto_X = Proyecto(nombre='n', fecha_inicio=timezone.now().date(), numero_fases=5, cant_comite=3,
                               gerente=1)
@@ -50,10 +51,10 @@ class TestModels(TestCase):
         :return: Las afirmaciones devuelven si la creacion fue realizada correctamente, envia un mensaje en caso
         contrario.
         """
-        proyecto= Proyecto(nombre='nombre', fecha_inicio=timezone.now().date(), numero_fases=5, cant_comite=3,
-                      gerente=1)
+        proyecto = Proyecto(nombre='nombre', fecha_inicio=timezone.now().date(), numero_fases=5, cant_comite=3,
+                            gerente=1)
         fase_X = Fase(nombre='fase 1', descripcion='Fase que en la cual se incia el analisis del proyecto',
-              estado='abierta', proyecto=proyecto)
+                      estado='abierta', proyecto=proyecto)
 
         assert fase_X.proyecto == proyecto
         assert fase_X.estado != 'cerrada', "falla porque la fase recien inicio por lo que es abierta"
@@ -100,10 +101,10 @@ class TestModels(TestCase):
         """
         proyecto_x = Proyecto(nombre='nombre', fecha_inicio=timezone.now().date(), numero_fases=5, cant_comite=3,
                               gerente=1)
-        role= Rol(nombre='aprobador', proyecto=proyecto_x, crear_item=True, modificar_item=False,
-                    desactivar_item=True,
-                    aprobar_item=True, reversionar_item=True, crear_relaciones_ph=True, crear_relaciones_as=True,
-                    borrar_relaciones=True)
+        role = Rol(nombre='aprobador', proyecto=proyecto_x, crear_item=True, modificar_item=False,
+                   desactivar_item=True,
+                   aprobar_item=True, reversionar_item=True, crear_relaciones_ph=True, crear_relaciones_as=True,
+                   borrar_relaciones=True)
         assert role.crear_item == True
         assert role.reversionar_item != False, "Falla porque no coinciden"
         assert role.proyecto == proyecto_x
@@ -114,10 +115,10 @@ class TestModels(TestCase):
         """
         usuario_X = Usuario.objects.create_user(username="PPP", email="TEST@mail.com", password="contra")
         proyect = Proyecto(nombre='nomB', fecha_inicio=timezone.now().date(), numero_fases=5, cant_comite=3,
-                              gerente=1)
-        r= Rol(nombre='aprobador', proyecto=proyect, crear_item=True, modificar_item=False,
-                    desactivar_item=False, aprobar_item=True, reversionar_item=True, crear_relaciones_ph=True,
-                    crear_relaciones_as=True, borrar_relaciones=True)
+                           gerente=1)
+        r = Rol(nombre='aprobador', proyecto=proyect, crear_item=True, modificar_item=False,
+                desactivar_item=False, aprobar_item=True, reversionar_item=True, crear_relaciones_ph=True,
+                crear_relaciones_as=True, borrar_relaciones=True)
         fase_X = Fase(nombre='fase 1', descripcion='Fase que en la cual se incia el analisis del proyecto',
                       estado='abierta', proyecto=proyect)
         relacion = UsuarioxRol(usuario=usuario_X, rol=r, fase=fase_X, activo=True)
@@ -125,3 +126,70 @@ class TestModels(TestCase):
         assert relacion.usuario == usuario_X
         assert relacion.rol == r
         assert relacion.activo != False
+
+    def test_Item(self):
+        """
+        CU 33: Agregar Items. Iteración 3
+        Test que prueba la creación de manera correcta de un objeto Item
+
+        :return: los asserts verifican que se haya creado con el nombre correcto, que tenga el tipo de ítem correcto y que haya sido asignado a la fase correcta
+        """
+        proy = Proyecto(nombre='testProyect', fecha_inicio=timezone.now().date(), numero_fases=5, cant_comite=3,
+                        gerente=1)
+        proy.save()
+        tipo = TipoItem(nombre='tipoTest', descripcion='tipo de prueba', prefijo='TT')
+        tipo.save()
+        tipo.proyecto.add(proy)
+        fase = Fase(nombre='faseTest', descripcion='fase de prueba', estado='abierta', proyecto=proy)
+        item = Item(nombre='itemTest', complejidad=5, descripcion='descripcion del ítem', tipo_item=tipo, fase=fase)
+
+        self.assertEqual(item.nombre, 'itemTest', 'No se ha creado el ítem')
+        self.assertEqual(item.fase, fase, 'no se añadió a la fase correcta')
+        self.assertEqual(item.tipo_item, tipo, 'no tiene el tipo correcto')
+
+    def test_Item_complejidad(self):
+        """
+        CU 33: Agregar Items. Iteración 3
+        Test que prueba la creación de un ítem cuya complejidad no está definida y le agrega un valor por defecto
+
+        :return: el assert retorna true si la complejidad por defecto es asignada
+        """
+        pro = Proyecto(nombre='otroProy', fecha_inicio=timezone.now().date(), numero_fases=5, cant_comite=3,
+                       gerente=1)
+        pro.save()
+        tipo = TipoItem(nombre='tipoTest', descripcion='tipo de prueba', prefijo='TT')
+        tipo.save()
+        tipo.proyecto.add(pro)
+        fase = Fase(nombre='faseTest', descripcion='fase de prueba', estado='abierta', proyecto=pro)
+        item = Item(nombre='itemTest', descripcion='descripcion del ítem', tipo_item=tipo, fase=fase)
+
+        self.assertEqual(item.complejidad, 5, 'La complejidad no fue asignada')
+
+    def test_Relacion(self):
+        """
+        CU 42: Crear Relaciones. Iteracion 3
+        Test que prueba la creacion de Relaciones entre dos items
+
+        :return: True, si se creo la relacion de forma correcta
+        """
+
+        item1 = Item(
+            nombre='itemTest',
+            complejidad=5,
+            descripcion='descripcion del ítem',
+            # tipo_item=tipo,
+            # fase=fase
+        )
+        item2 = Item(
+            nombre='itemTest',
+            complejidad=5,
+            descripcion='descripcion del ítem',
+            # tipo_item=tipo,
+            # fase=fase
+        )
+
+        rel = Relacion(inicio=item1, fin=item2)
+
+        self.assertEqual(rel.inicio, item1, 'No se ha creado correctamente la relacion izquierda')
+        self.assertEqual(rel.fin, item2, 'No se ha creado correctamente la relacion derecha')
+        self.assertEqual(rel.is_active, True, 'La relacion se creo pero esta desactivado')

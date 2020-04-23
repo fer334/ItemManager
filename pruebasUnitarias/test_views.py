@@ -10,11 +10,13 @@ from django.test import TestCase
 from login.views import index, user_register, users_access, user_update
 from login.models import Usuario
 from administracion.models import Proyecto, Fase, Rol, UsuarioxRol, TipoItem
-from administracion.views import crear_proyecto, administrar_participantes, registrar_rol_por_fase, \
-    asignar_rol_por_fase, desasignar_rol_al_usuario, administrar_comite, importar_tipo, confirmar_tipo_import, \
-    mostrar_tipo_import, administrar_fases_del_proyecto, eliminar_participante_y_comite, crear_rol, \
-    proyectos, estado_proyectov2
-
+from administracion.views import crear_rol, proyectos, desactivar_tipo_item, editar_tipo, estado_proyectov2, \
+    eliminar_participante_y_comite, crear_proyecto, \
+    administrar_participantes, registrar_rol_por_fase, asignar_rol_por_fase, desasignar_rol_al_usuario, \
+    administrar_comite, importar_tipo, confirmar_tipo_import, mostrar_tipo_import, administrar_fases_del_proyecto
+from desarrollo.models import Item, AtributoParticular, Relacion
+from desarrollo.views import solicitud_aprobacion, aprobar_item, desaprobar_item, desactivar_item, ver_item, \
+    relacionar_item, desactivar_relacion_item, ver_proyecto
 import pytest
 
 
@@ -36,12 +38,13 @@ class TestViews(TestCase):
                                                numero_fases=5, cant_comite=3, gerente=cls.usuario.id)
         cls.fase = Fase.objects.create(nombre='Fase de prueba', proyecto=cls.proyecto)
         cls.rol = Rol.objects.create(nombre='Rol de prueba', proyecto=cls.proyecto)
+        cls.tipo = TipoItem.objects.create(nombre='Tipo de item de prueba', prefijo='TIP')
 
     def test_index_usuario_no_autenticado(self):
         """
         CU 01: acceder al sistema. Iteración 1
         La vista index tiene la marca de @login_required por lo que si el usuario no se ha logeado
-        se redireccionara a login con el codigo 302 de redireccionamiento
+        se redireccionara a login con el codigo 302 de redireccionamiento.
 
         :return: el assert retornara true si se hace un redireccionamiento y false en otros casos
         """
@@ -91,14 +94,14 @@ class TestViews(TestCase):
         response = crear_proyecto(request)
         # asignamos a p el proyecto que se creó
         p = Proyecto.objects.get(nombre='proyectoTest')
-        self.assertEqual(response.status_code,302, 'No se redirecciona a verProyecto, eso implica que el proyecto no '
-                                                   'se creó')
+        self.assertEqual(response.status_code, 302, 'No se redirecciona a verProyecto, eso implica que el proyecto no '
+                                                    'se creó')
         self.assertEqual(p.gerente, request.user.id, 'El gerente no es el usuario que hizo el request')
 
     def test_administrar_participantes(self):
         """
         CU 06: crear Usuario de Proyecto y CU 16: administrar participantes del proyecto. Iteración 2
-        Este test comprueba que un participante sea efectivamente añadido a un proyecto
+        Este test comprueba que un participante sea efectivamente añadido a un proyecto.
 
         :return: el assert comprueba que en el proyecto exista un participante cuyo id sea igual al nombre del participante que se añadió a proyecto
         """
@@ -116,7 +119,7 @@ class TestViews(TestCase):
     def test_desasignar_rol_al_usuario(self):
         """
         CU 24: Desasignar rol x fase a usuario. Iteración 2
-        Este test comprueba que un cierto rol sea desasignado a un participante
+        Este test comprueba que un cierto rol sea desasignado a un participante.
 
         :return: el assert comprueba que el objeto rol por fase quede desactivo
         """
@@ -130,7 +133,7 @@ class TestViews(TestCase):
     def test_registrar_rol_por_fase(self):
         """
         CU 25: Asignar rol x fase a usuario. Iteración 2
-        Este test comprueba que un cierto rol sea asignado a un participante
+        Este test comprueba que un cierto rol sea asignado a un participante.
 
         :return: el assert comprueba que se cree el objeto rol por fase que representa la asignacion
         """
@@ -148,7 +151,7 @@ class TestViews(TestCase):
     def test_administrar_comite(self):
         """
         CU 26: Crear comite de aprobacion de cambios
-        Este test comprueba que un participante sea efectivamente añadido al comite de un proyecto
+        Este test comprueba que un participante sea efectivamente añadido al comite de un proyecto.
 
         :return: el assert comprueba que en el proyecto exista un participante cuyo id sea igual al nombre del participante que se añadió a proyecto
         """
@@ -160,12 +163,13 @@ class TestViews(TestCase):
         request = RequestFactory().post(path, {'miembro_comite': participante.id})
         request.user = self.usuario
         administrar_comite(request, self.proyecto.id)
-        self.assertIn(participante, self.proyecto.comite.all(), "La prueba fallo por que no se pudo asignar a un miembro del comite")
+        self.assertIn(participante, self.proyecto.comite.all(),
+                      "La prueba fallo por que no se pudo asignar a un miembro del comite")
 
     def test_importar_tipo(self):
         """
-        CU 32: Crear tipo de item
-        Este test comprueba que un participante sea efectivamente añadido al comite de un proyecto
+        CU 32: Crear tipo de item. Iteracion 2
+        Este test comprueba que un participante sea efectivamente añadido al comite de un proyecto.
 
         :return: el assert comprueba que en el proyecto exista un participante cuyo id sea igual al nombre del participante que se añadió a proyecto
         """
@@ -173,73 +177,77 @@ class TestViews(TestCase):
         request.user = self.usuario
         tipo_a_importar = TipoItem.objects.create()
         response = confirmar_tipo_import(request, self.proyecto.id, tipo_a_importar.id)
-        self.assertEqual(response.status_code, 200, 'La prueba falló porque no se pudo mostrar la vista con la lista de tipos de item')
+        self.assertEqual(response.status_code, 200,
+                         'La prueba falló porque no se pudo mostrar la vista con la lista de tipos de item')
         response = mostrar_tipo_import(request, self.proyecto.id)
-        self.assertEqual(response.status_code, 200, 'La prueba falló porque no se pudo mostrar la vista del tipo de item a importar')
+        self.assertEqual(response.status_code, 200,
+                         'La prueba falló porque no se pudo mostrar la vista del tipo de item a importar')
         importar_tipo(request, self.proyecto.id, tipo_a_importar.id)
-        self.assertIn(tipo_a_importar, self.proyecto.tipoitem_set.all(),"La prueba fallo por que no se pudo importar el tipo de item")
+        self.assertIn(tipo_a_importar, self.proyecto.tipoitem_set.all(),
+                      "La prueba fallo por que no se pudo importar el tipo de item")
 
     def test_administrar_fases_del_proyecto(self):
         """
-        CU 19: Editar fases
-        Este test comprueba que se editen correctamente las propiedades de la fase
+        CU 19: Editar fases. Iteracion 2
+        Este test comprueba que se editen correctamente las propiedades de la fase.
+
         :return: el assert comprueba que las propiedades hayan cambiado
         """
         path = reverse('administracion:administrarFasesProyecto', args=[self.proyecto.id])
         nuevo_nombre = 'Fase Prueba Editado'
         nueva_descripcion = 'Descripcion editada'
-        fase_nueva = Fase.objects.create(nombre='Fase inicial', proyecto=self.proyecto, descripcion='Descripcion inicial')
-        request = RequestFactory().post(path, {f'{fase_nueva.id}': [nuevo_nombre], f'd{fase_nueva.id}': [nueva_descripcion]})
+        fase_nueva = Fase.objects.create(nombre='Fase inicial', proyecto=self.proyecto,
+                                         descripcion='Descripcion inicial')
+        request = RequestFactory().post(path,
+                                        {f'{fase_nueva.id}': [nuevo_nombre], f'd{fase_nueva.id}': [nueva_descripcion]})
         request.user = self.usuario
         administrar_fases_del_proyecto(request, self.proyecto.id)
         fase_nueva = Fase.objects.get(pk=fase_nueva.id)
         self.assertEqual(fase_nueva.nombre, nuevo_nombre, "No se pudo cambiar el nombre de la fase")
         self.assertEqual(fase_nueva.descripcion, nueva_descripcion, "No se pudo cambiar la descripcion de la fase")
 
-
-
-
     def test_estado_proyecto_iniciado_finalizado(self):
         """
         CU 14: modificar estado del proyecto a finalizado. Iteración 2
         En este test probamos cambiar el estado del proyecto de iniciado a finalizado. Algo que no se permite ya
         que solo puede cambiarse al estado finalizado si el estado actual del proyecto es en ejecución por lo que
-        el assert verifica que el cambio de estado no suceda
+        el assert verifica que el cambio de estado no suceda.
 
         :return: el assert retorna True si el estado del proyecto no cambia a finalizado
         """
         proyecto_iniciado = Proyecto.objects.create(nombre='proyectoIniciado', fecha_inicio=timezone.now().date(),
-                                                    numero_fases=5, cant_comite=3, gerente=self.usuario.id)
+                                                    estado=Proyecto.ESTADO_INICIADO, numero_fases=5, cant_comite=3,
+                                                    gerente=self.usuario.id)
         request = RequestFactory()
         request.user = self.usuario
-        estado_proyectov2(request, proyecto_iniciado.id, 'finalizado')
+        estado_proyectov2(request, proyecto_iniciado.id, Proyecto.ESTADO_FINALIZADO)
         # sincronizamos el objeto con los nuevos cambios
         proyecto_iniciado = Proyecto.objects.get(pk=proyecto_iniciado.id)
-        self.assertNotEqual(proyecto_iniciado.estado, 'finalizado', 'el estado del proyecto cambió a finalizado y '
-                                                                    'no debía cambiar de estado')
+        self.assertNotEqual(proyecto_iniciado.estado, Proyecto.ESTADO_FINALIZADO, 'el estado del proyecto cambió a finalizado y '
+                                                                 'no debía cambiar de estado')
 
     def test_estado_proyecto_ejecucion_finalizado(self):
         """
         CU 14: modificar estado del proyecto a finalizado. Iteración 2
         En este test probamos cambiar el estado del proyecto de iniciado a finalizado. Algo que solo se permite si el
-        estado actual del proyecto es en ejecución por lo que el assert verifica que el cambio de estado suceda
+        estado actual del proyecto es en ejecución por lo que el assert verifica que el cambio de estado suceda.
 
         :return: el assert retorna True si el estado del proyecto cambia a finalizado
         """
         proyecto_ejecucion = Proyecto.objects.create(nombre='proyectoEjecucion', fecha_inicio=timezone.now().date(),
-                                                     estado='en ejecucion', numero_fases=5, cant_comite=3,
+                                                     estado=Proyecto.ESTADO_EN_EJECUCION, numero_fases=5, cant_comite=3,
                                                      gerente=self.usuario.id)
         request = RequestFactory()
         request.user = self.usuario
-        estado_proyectov2(request, proyecto_ejecucion.id, 'finalizado')
+        estado_proyectov2(request, proyecto_ejecucion.id, Proyecto.ESTADO_FINALIZADO)
         # sincronizamos el objeto con los nuevos cambios
         proyecto_ejecucion = Proyecto.objects.get(pk=proyecto_ejecucion.id)
-        self.assertEqual(proyecto_ejecucion.estado, 'finalizado', 'el estado del proyecto no cambió a finalizado')
+        self.assertEqual(proyecto_ejecucion.estado, Proyecto.ESTADO_FINALIZADO, 'el estado del proyecto no cambió a finalizado')
 
     def test_eliminar_participante(self):
         """
         CU 16: Administrar Participantes del Proyecto. iteración 2
-        Esta prueba primeramente añade un usuario al proyecto y luego lo desasigna del mismo
+        Esta prueba primeramente añade un usuario al proyecto y luego lo desasigna del mismo.
 
         :return: el assert comprueba que el usuario no sea participante del proyecto, en caso de ser retorna false
         """
@@ -259,9 +267,9 @@ class TestViews(TestCase):
 
     def test_crear_fases(self):
         """
-        CU 18: crear fase. Iteración 2
+        CU 16: crear fase. Iteración 2
         Nuestra implementación permite la creación automática de la cantidad de fases que se defina al crear un proyecto
-        en numero_fases. Este test verifica que se creen las fases y la cantidad correcta definida al crear proyecto
+        en numero_fases. Este test verifica que se creen las fases y la cantidad correcta definida al crear proyecto.
 
         :return: el primer assert retorna True si la lista de fases no está vacía y el segundo retorna True si la cantidad correcta de fases fue creada
         """
@@ -274,19 +282,20 @@ class TestViews(TestCase):
         lista_fases = p.fase_set.all()
         self.assertNotEqual(lista_fases, [], 'No se ha creado ninguna fase')
         self.assertEqual(lista_fases.count(), p.numero_fases, 'No se ha creado el número correcto de fases')
+        self.assertEqual(lista_fases.count(), p.numero_fases, 'No se ha creado el número correcto de fases')
 
     def test_verificar_proyecto(self):
         """
         CU 10: Crear Proyectos. Iteración 2
-        Se verifica que el proyecto es creado correctamente y que tambien el url redirecciona a donde debe ir
+        Se verifica que el proyecto es creado correctamente y que tambien el url redirecciona a donde debe ir.
 
         :return: el primer assert indica que el proyecto fue creado correctamente, envia un mensaje en casocontrario, y el segundo que el url redirecciona correctamente
         """
         ppp = Proyecto.objects.create(nombre='ppp', fecha_inicio=timezone.now().date(),
-                                                    numero_fases=5, cant_comite=3, gerente=self.usuario.id)
+                                      numero_fases=5, cant_comite=3, gerente=self.usuario.id)
         response = self.client.post(reverse('administracion:crearProyecto'))
-        self.assertEqual(ppp.nombre,'ppp', 'indica que el proyecto no creado' )
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(ppp.nombre, 'ppp', 'indica que el proyecto no creado')
+        self.assertEqual(response.status_code, 302)
 
     def test_proyectos(self):
         """
@@ -297,13 +306,12 @@ class TestViews(TestCase):
         :return: Retorna que se realiza correctamente el filtro
         """
         proyecto = Proyecto.objects.create(nombre='proyecto_T', fecha_inicio=timezone.now().date(),
-                                          numero_fases=5, cant_comite=3, gerente= self.usuario.id)
+                                           numero_fases=5, cant_comite=3, gerente=self.usuario.id)
         proy = Proyecto.objects.create(nombre='proyecto_x', fecha_inicio=timezone.now().date(),
-
-                                          numero_fases=5, cant_comite=3, gerente= self.usuario.id)
-        request =RequestFactory()
-        request.user =self.usuario
-        resp = proyectos(request,'todos')
+                                       numero_fases=5, cant_comite=3, gerente=self.usuario.id)
+        request = RequestFactory()
+        request.user = self.usuario
+        resp = proyectos(request, 'todos')
         assert resp.status_code == 200
 
     def test_estado_proyecto_cancelado(self):
@@ -314,12 +322,12 @@ class TestViews(TestCase):
         :return: Se verifica que el cambio de estado se realizo correctamente, envia un mensaje en caso contrario
         """
         pl = Proyecto.objects.create(nombre='proyecto_turu', fecha_inicio=timezone.now().date(),
-                                                    numero_fases=5, cant_comite=3, gerente=self.usuario.id)
+                                     numero_fases=5, cant_comite=3, gerente=self.usuario.id)
         request = RequestFactory()
         request.user = self.usuario
-        estado_proyectov2(request, pl.id, 'cancelado')
+        estado_proyectov2(request, pl.id, Proyecto.ESTADO_CANCELADO)
         pl = Proyecto.objects.get(pk=pl.id)
-        self.assertEqual(pl.estado, 'cancelado', 'no se logro cambiar de estado')
+        self.assertEqual(pl.estado, Proyecto.ESTADO_CANCELADO, 'no se logro cambiar de estado')
 
     def test_estado_proyecto_en_ejecucion(self):
         """
@@ -332,9 +340,9 @@ class TestViews(TestCase):
                                                     numero_fases=5, cant_comite=3, gerente=self.usuario.id)
         request = RequestFactory()
         request.user = self.usuario
-        estado_proyectov2(request, proyecto_iniciado.id, 'en ejecucion')
+        estado_proyectov2(request, proyecto_iniciado.id, Proyecto.ESTADO_EN_EJECUCION)
         proyecto_iniciado = Proyecto.objects.get(pk=proyecto_iniciado.id)
-        self.assertEqual(proyecto_iniciado.estado, 'en ejecucion', 'el proyecto cambio de estado')
+        self.assertEqual(proyecto_iniciado.estado, Proyecto.ESTADO_EN_EJECUCION, 'el proyecto cambio de estado')
 
     def test_crear_admin_sistema(self):
         """
@@ -352,7 +360,7 @@ class TestViews(TestCase):
         # creamos un request de tipo post al que asignamos el path y los datos del proyecto a crear
         request = RequestFactory().post(path, {
             'username': 'AdminPrueba',
-            'email': 'admin'+aux+'@admin.com',
+            'email': 'admin' + aux + '@admin.com',
             'password': 'admin123',
             'pass_confirmation': 'admin123',
             'first_name': 'Juan',
@@ -459,7 +467,209 @@ class TestViews(TestCase):
         )
         request = RequestFactory()
         request.user = self.usuario
-        estado_proyectov2(request, proyecto_cancelado.id, 'cancelado')
+        estado_proyectov2(request, proyecto_cancelado.id, Proyecto.ESTADO_CANCELADO)
         # sincronizamos el objeto con los nuevos cambios
         proyecto_cancelado = Proyecto.objects.get(pk=proyecto_cancelado.id)
-        self.assertEqual(proyecto_cancelado.estado, 'cancelado', 'El estado no puede cambiar a cancelado')
+        self.assertEqual(proyecto_cancelado.estado, Proyecto.ESTADO_CANCELADO, 'El estado no puede cambiar a cancelado')
+
+    def test_desactivar_tipo_item(self):
+        """
+        CU 31: Desactivar tipo de item. Iteracion 3
+
+        :return: Passed en caso de que el tipo item quede fuera de la lista de los tipo items del proyecto
+        """
+        # se asigna el tipo al proyecto:
+        self.tipo.proyecto.add(self.proyecto)
+        request = RequestFactory()
+        request.user = self.usuario
+        desactivar_tipo_item(request, self.proyecto.id, self.tipo.id)
+        self.assertNotIn(self.tipo, self.proyecto.tipoitem_set.all(), "El proyecto sigue con el tipo de item activo")
+
+    def test_editar_tipo(self):
+        """
+        CU 30: Editar el tipo de item. Iteracion 3
+
+        :return: Passed en caso de que el tipo item quede con los valores cambiados
+        """
+        # se asigna el tipo al proyecto:
+        self.tipo.proyecto.add(self.proyecto)
+        NOMBRE_EDITADO = 'nombre nuevo'
+        PREFIJO_EDITADO = 'PRE'
+        DESCRIPCION_EDITADA = 'descripcion nueva'
+        path = reverse('administracion:editarTipoItem', args=[self.proyecto.id, self.tipo.id])
+        request = RequestFactory().post(path, {
+            'nombre': NOMBRE_EDITADO,
+            'prefijo': PREFIJO_EDITADO,
+            'descripcion': DESCRIPCION_EDITADA
+        })
+        request.user = self.usuario
+        editar_tipo(request, self.proyecto.id, self.tipo.id)
+        tipo_editado = TipoItem.objects.get(pk=self.tipo.id)
+        self.assertEqual(NOMBRE_EDITADO, tipo_editado.nombre, "No se edito el nombre")
+        self.assertEqual(PREFIJO_EDITADO, tipo_editado.prefijo, "No se edito el prefijo")
+        self.assertEqual(DESCRIPCION_EDITADA, tipo_editado.descripcion, "No se edito la descripcion")
+
+    def test_solicitud_aprobacion(self):
+        """
+        CU 38: Solicitar aprobación de ítems. Iteracion 3
+        Se envia una solicitud para aprobar cierto item, el mismo debe tener un estado de en desarrollo
+        para poder pasar a Pendiente de Aprobacion
+
+        :return: Indica que se realizo correctamente la solicitud, envia un mensaje en caso contrario
+        """
+        pr = Proyecto.objects.create(nombre='proyecTest', fecha_inicio=timezone.now().date(),
+                                     gerente=self.usuario.id, numero_fases=3, cant_comite=3)
+        tipor = TipoItem.objects.create(nombre='CasoU', descripcion='fndmsn', prefijo='cu')
+        fas = Fase.objects.create(nombre='Fasex', descripcion='dskjalñ', estado='abierta',
+                                  proyecto=Proyecto.objects.get(pk=pr.id))
+        cu_38 = Item.objects.create(nombre='cu_38', estado=Item.ESTADO_DESARROLLO, version=1, complejidad=5,
+                                    descripcion='solicitar aprobacion', tipo_item=TipoItem.objects.get(pk=tipor.id),
+                                    fase=Fase.objects.get(pk=fas.id))
+        request = RequestFactory()
+        request.user = self.usuario
+        solicitud_aprobacion(request, id_item=cu_38.id)
+        cu_38 = Item.objects.get(pk=cu_38.id)
+        self.assertEqual(cu_38.estado, Item.ESTADO_PENDIENTE, 'No se puede realizar la solicitud')
+
+    def test_aprobar_item(self):
+        """
+        CU 39: Aprobar ítems. Iteracion 3
+        Una vez hecha la solicitud de aprobacion, el item queda en un estado de Pendiente de Aprobacion,
+        de ahi, si esta correcto se aprueba y su estado pasa a ser Aprobado
+
+        :return: Indica que el item fue correctamente aprobado, envia un mensaje en caso contrario
+        """
+        px = Proyecto.objects.create(nombre='projectTest', fecha_inicio=timezone.now().date(),
+                                     gerente=self.usuario.id, numero_fases=3, cant_comite=3)
+        tipox = TipoItem.objects.create(nombre='Casox', descripcion='uto', prefijo='cx')
+        fasx = Fase.objects.create(nombre='Fasx', descripcion='dshh', estado='abierta',
+                                   proyecto=Proyecto.objects.get(pk=px.id))
+        cu_39_1 = Item.objects.create(nombre='cu_39_1', estado=Item.ESTADO_PENDIENTE, version=1, complejidad=5,
+                                      descripcion='aprobar item', tipo_item=TipoItem.objects.get(pk=tipox.id),
+                                      fase=Fase.objects.get(pk=fasx.id))
+        request = RequestFactory()
+        request.user = self.usuario
+        aprobar_item(request, id_item=cu_39_1.id)
+        cu_39_1 = Item.objects.get(pk=cu_39_1.id)
+        self.assertEqual(cu_39_1.estado, Item.ESTADO_APROBADO, 'No se puede realizar la accion')
+
+    def test_desaprobar_item(self):
+        """
+        CU 39: Aprobar ítems. Iteracion 3
+        En caso de que el item no se encuentre con los requerimientos pertinentes, se desaprueba y tal como
+        indica el RF-127, el estado del item pasa de Pendiente de Aprobacion a en desarrollo nuevamente
+
+        :return: Indica que el item fue desaprobado, caso contrario envia un mensaje
+        """
+        pp = Proyecto.objects.create(nombre='proTest', fecha_inicio=timezone.now().date(),
+                                     gerente=self.usuario.id, numero_fases=3, cant_comite=3)
+        tipop = TipoItem.objects.create(nombre='Casop', descripcion='bkdls', prefijo='cp')
+        fasep = Fase.objects.create(nombre='Fasep', descripcion='shh', estado='abierta',
+                                    proyecto=Proyecto.objects.get(pk=pp.id))
+        cu_39_2 = Item.objects.create(nombre='cu_39_2', estado=Item.ESTADO_PENDIENTE, version=1, complejidad=5,
+                                      descripcion='desaprobar item', tipo_item=TipoItem.objects.get(pk=tipop.id),
+                                      fase=Fase.objects.get(pk=fasep.id))
+        request = RequestFactory()
+        request.user = self.usuario
+        desaprobar_item(request, id_item=cu_39_2.id)
+        cu_39_2 = Item.objects.get(pk=cu_39_2.id)
+        self.assertEqual(cu_39_2.estado, Item.ESTADO_DESARROLLO, 'No se puede realizar la accion')
+
+    def test_desactivar_item(self):
+        """
+        CU 40: Desactivar ítems. Iteracion 3
+        Existe la posibilidad en la cual un item creado sea innecesario, por ello requiere ser desactivado,
+        para realizar esta accion el mismo debe esta en el estado de en desarrollo y una vez desactivado
+        su estado pasa a Desactivado
+
+        :return: Indica que el item fue desactivado sin inconvenientes, envia un mensaje en caso contrario
+        """
+        pm = Proyecto.objects.create(nombre='proTest', fecha_inicio=timezone.now().date(),
+                                     gerente=self.usuario.id, numero_fases=3, cant_comite=3)
+        tipom = TipoItem.objects.create(nombre='Casom', descripcion='uuuto', prefijo='cm')
+        fasem = Fase.objects.create(nombre='Fasem', descripcion='cdshh', estado='abierta',
+                                   proyecto=Proyecto.objects.get(pk=pm.id))
+        cu_40 = Item.objects.create(nombre='cu_40', estado=Item.ESTADO_DESARROLLO, version=1, complejidad=5,
+                                      descripcion='desactivar item', tipo_item=TipoItem.objects.get(pk=tipom.id),
+                                      fase=Fase.objects.get(pk=fasem.id))
+        request = RequestFactory()
+        request.user = self.usuario
+        desactivar_item(request, id_item=cu_40.id, id_proyecto=pm.id)
+        cu_40 = Item.objects.get(pk=cu_40.id)
+        self.assertEqual(cu_40.estado, Item.ESTADO_DESACTIVADO, "No se puede realizar la accion")
+
+    def test_ver_item(self):
+        """
+        CU 35: Listar ítems. Iteración 3
+        este test se encarga de probar que si se pasa un id válido de item, la vista renderee la página
+
+        :return: retorna true si es posible ver el ítem
+        """
+        item = Item(nombre='itemprue', descripcion='descripcion del ítem', tipo_item=self.tipo, fase=self.fase)
+        item.save()
+        path = reverse('desarrollo:verItem', args=[self.proyecto.id, item.id])
+        request = RequestFactory().get(path)
+        request.user = self.usuario
+        item = Item.objects.get(nombre='itemprue')
+        response = ver_item(request, self.proyecto.id, item.id)
+        self.assertEqual(response.status_code, 200, 'no se puede ver el item')
+
+    def test_modificar_estado_item(self):
+        """
+        CU 37: Modificar estado de ítems. Iteración 3.
+        Test para probar que el estado del item no debe ser cambiado a desactivado si el ítem se encuentra
+        en estado diferente a 'en desarrollo'
+
+        :return: el assert retorna True si el estado no es cambiado y false en caso contrario
+        """
+        item = Item(nombre='itemdesa', estado=Item.ESTADO_APROBADO, descripcion='descripcion del ítem', tipo_item=self.tipo, fase=self.fase)
+        item.save()
+        path = reverse('desarrollo:desactivarItem', args=[self.proyecto.id, item.id])
+        request = RequestFactory().get(path)
+        request.user = self.usuario
+        desactivar_item(request, self.proyecto.id, item.id)
+        self.assertNotEqual(item.estado, Item.ESTADO_DESACTIVADO, 'el estado cambió a desactivado')
+
+    def test_crear_relacion_items(self):
+        """
+        CU 43: Desactivar relaciones entre items. Iteracion 3.
+        Test que prueba la vista encargada de desactivar las relaciones
+
+        :return: True, si la vista logro desactivar la relacion
+        """
+        item1 = Item.objects.create(
+            nombre='item1',
+            descripcion='descripcion del ítem',
+            tipo_item=self.tipo,
+            fase=self.fase
+        )
+        item2 = Item.objects.create(
+            nombre='item2',
+            descripcion='descripcion del ítem',
+            tipo_item=self.tipo,
+            fase=self.fase
+        )
+        relacion = Relacion.objects.create(inicio=item1, fin=item2)
+        path = reverse('desarrollo:desactivarRelacion', args=[self.proyecto.id])
+        data = {"desactivar": relacion.id}
+
+        request = RequestFactory().post(path, data)
+        request.user = self.usuario
+
+        desactivar_relacion_item(request, self.proyecto.id)
+        relacion = Relacion.objects.get(id=relacion.id)
+
+        self.assertEqual(relacion.is_active, False, 'el estado cambió a desactivado')
+
+    def test_ver_fases(self):
+        """
+        CU 21: Mostrar Fases. Iteración 3.
+        Este test prueba que se muestre las fases de un proyecto
+
+        :return: retorna true si es posible ver las fases
+        """
+        path = reverse('desarrollo:verProyecto', args=[self.proyecto.id])
+        request = RequestFactory().get(path)
+        request.user = self.usuario
+        response = ver_proyecto(request, self.proyecto.id)
+        self.assertEqual(response.status_code, 200, 'no se puede ver las fases del proyecto')
