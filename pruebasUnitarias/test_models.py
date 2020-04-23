@@ -33,8 +33,8 @@ class TestModels(TestCase):
         """
         CU 10: Crear Proyectos. Iteración 2
         Se prueban que los proyectos se crean correctamente.
-        :return: Las afirmaciones devuelven true  si fueron creados correctamente, false en
-        caso contrario.
+
+        :return: Las afirmaciones devuelven true  si fueron creados correctamente, false en caso contrario.
         """
         proyecto_X = Proyecto(nombre='n', fecha_inicio=timezone.now().date(), numero_fases=5, cant_comite=3,
                               gerente=1)
@@ -127,7 +127,7 @@ class TestModels(TestCase):
         CU 33: Agregar Items. Iteración 3
         Test que prueba la creación de manera correcta de un objeto Item
 
-        :return los asserts verifican que se haya creado con el nombre correcto, que tenga el tipo de ítem correcto y que haya sido asignado a la fase correcta
+        :return: los asserts verifican que se haya creado con el nombre correcto, que tenga el tipo de ítem correcto y que haya sido asignado a la fase correcta
         """
         proy = Proyecto(nombre='testProyect', fecha_inicio=timezone.now().date(), numero_fases=5, cant_comite=3,
                         gerente=1)
@@ -147,7 +147,7 @@ class TestModels(TestCase):
         CU 33: Agregar Items. Iteración 3
         Test que prueba la creación de un ítem cuya complejidad no está definida y le agrega un valor por defecto
 
-        :return el assert retorna true si la complejidad por defecto es asignada
+        :return: el assert retorna true si la complejidad por defecto es asignada
         """
         pro = Proyecto(nombre='otroProy', fecha_inicio=timezone.now().date(), numero_fases=5, cant_comite=3,
                        gerente=1)

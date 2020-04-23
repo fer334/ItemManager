@@ -415,9 +415,8 @@ def editar_tipo(request, id_proyecto, id_tipo):
 
     :param id_tipo: id del tipo de ítem a editar
     :param request: objeto tipo diccionario que permite acceder a datos
-    :param id_proyecto:identificador del proyecto
-    :return: redirecciona a los permisos de acceso si el tipo de item es usado en mas de un proyecto o si el proyecto
-     ya inicio
+    :param id_proyecto: identificador del proyecto
+    :return: redirecciona a los permisos de acceso si el tipo de item es usado en mas de un proyecto o si el proyecto ya inicio
      """
     proyecto = Proyecto.objects.get(pk=id_proyecto)
     tipo = TipoItem.objects.get(pk=id_tipo)
