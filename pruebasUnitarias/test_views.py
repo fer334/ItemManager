@@ -44,7 +44,7 @@ class TestViews(TestCase):
         """
         CU 01: acceder al sistema. Iteración 1
         La vista index tiene la marca de @login_required por lo que si el usuario no se ha logeado
-        se redireccionara a login con el codigo 302 de redireccionamiento
+        se redireccionara a login con el codigo 302 de redireccionamiento.
 
         :return: el assert retornara true si se hace un redireccionamiento y false en otros casos
         """
@@ -101,7 +101,7 @@ class TestViews(TestCase):
     def test_administrar_participantes(self):
         """
         CU 06: crear Usuario de Proyecto y CU 16: administrar participantes del proyecto. Iteración 2
-        Este test comprueba que un participante sea efectivamente añadido a un proyecto
+        Este test comprueba que un participante sea efectivamente añadido a un proyecto.
 
         :return: el assert comprueba que en el proyecto exista un participante cuyo id sea igual al nombre del participante que se añadió a proyecto
         """
@@ -119,7 +119,7 @@ class TestViews(TestCase):
     def test_desasignar_rol_al_usuario(self):
         """
         CU 24: Desasignar rol x fase a usuario. Iteración 2
-        Este test comprueba que un cierto rol sea desasignado a un participante
+        Este test comprueba que un cierto rol sea desasignado a un participante.
 
         :return: el assert comprueba que el objeto rol por fase quede desactivo
         """
@@ -133,7 +133,7 @@ class TestViews(TestCase):
     def test_registrar_rol_por_fase(self):
         """
         CU 25: Asignar rol x fase a usuario. Iteración 2
-        Este test comprueba que un cierto rol sea asignado a un participante
+        Este test comprueba que un cierto rol sea asignado a un participante.
 
         :return: el assert comprueba que se cree el objeto rol por fase que representa la asignacion
         """
@@ -151,7 +151,7 @@ class TestViews(TestCase):
     def test_administrar_comite(self):
         """
         CU 26: Crear comite de aprobacion de cambios
-        Este test comprueba que un participante sea efectivamente añadido al comite de un proyecto
+        Este test comprueba que un participante sea efectivamente añadido al comite de un proyecto.
 
         :return: el assert comprueba que en el proyecto exista un participante cuyo id sea igual al nombre del participante que se añadió a proyecto
         """
@@ -169,7 +169,7 @@ class TestViews(TestCase):
     def test_importar_tipo(self):
         """
         CU 32: Crear tipo de item. Iteracion 2
-        Este test comprueba que un participante sea efectivamente añadido al comite de un proyecto
+        Este test comprueba que un participante sea efectivamente añadido al comite de un proyecto.
 
         :return: el assert comprueba que en el proyecto exista un participante cuyo id sea igual al nombre del participante que se añadió a proyecto
         """
@@ -189,7 +189,8 @@ class TestViews(TestCase):
     def test_administrar_fases_del_proyecto(self):
         """
         CU 19: Editar fases. Iteracion 2
-        Este test comprueba que se editen correctamente las propiedades de la fase
+        Este test comprueba que se editen correctamente las propiedades de la fase.
+
         :return: el assert comprueba que las propiedades hayan cambiado
         """
         path = reverse('administracion:administrarFasesProyecto', args=[self.proyecto.id])
@@ -210,7 +211,7 @@ class TestViews(TestCase):
         CU 14: modificar estado del proyecto a finalizado. Iteración 2
         En este test probamos cambiar el estado del proyecto de iniciado a finalizado. Algo que no se permite ya
         que solo puede cambiarse al estado finalizado si el estado actual del proyecto es en ejecución por lo que
-        el assert verifica que el cambio de estado no suceda
+        el assert verifica que el cambio de estado no suceda.
 
         :return: el assert retorna True si el estado del proyecto no cambia a finalizado
         """
@@ -229,7 +230,7 @@ class TestViews(TestCase):
         """
         CU 14: modificar estado del proyecto a finalizado. Iteración 2
         En este test probamos cambiar el estado del proyecto de iniciado a finalizado. Algo que solo se permite si el
-        estado actual del proyecto es en ejecución por lo que el assert verifica que el cambio de estado suceda
+        estado actual del proyecto es en ejecución por lo que el assert verifica que el cambio de estado suceda.
 
         :return: el assert retorna True si el estado del proyecto cambia a finalizado
         """
@@ -246,7 +247,7 @@ class TestViews(TestCase):
     def test_eliminar_participante(self):
         """
         CU 16: Administrar Participantes del Proyecto. iteración 2
-        Esta prueba primeramente añade un usuario al proyecto y luego lo desasigna del mismo
+        Esta prueba primeramente añade un usuario al proyecto y luego lo desasigna del mismo.
 
         :return: el assert comprueba que el usuario no sea participante del proyecto, en caso de ser retorna false
         """
@@ -268,7 +269,8 @@ class TestViews(TestCase):
         """
         CU 16: crear fase. Iteración 2
         Nuestra implementación permite la creación automática de la cantidad de fases que se defina al crear un proyecto
-        en numero_fases. Este test verifica que se creen las fases y la cantidad correcta definida al crear proyecto
+        en numero_fases. Este test verifica que se creen las fases y la cantidad correcta definida al crear proyecto.
+
         :return: el primer assert retorna True si la lista de fases no está vacía y el segundo retorna True si la cantidad correcta de fases fue creada
         """
         path = reverse('administracion:crearProyecto')
@@ -285,7 +287,7 @@ class TestViews(TestCase):
     def test_verificar_proyecto(self):
         """
         CU 10: Crear Proyectos. Iteración 2
-        Se verifica que el proyecto es creado correctamente y que tambien el url redirecciona a donde debe ir
+        Se verifica que el proyecto es creado correctamente y que tambien el url redirecciona a donde debe ir.
 
         :return: el primer assert indica que el proyecto fue creado correctamente, envia un mensaje en casocontrario, y el segundo que el url redirecciona correctamente
         """
@@ -473,6 +475,7 @@ class TestViews(TestCase):
     def test_desactivar_tipo_item(self):
         """
         CU 31: Desactivar tipo de item. Iteracion 3
+
         :return: Passed en caso de que el tipo item quede fuera de la lista de los tipo items del proyecto
         """
         # se asigna el tipo al proyecto:
@@ -485,6 +488,7 @@ class TestViews(TestCase):
     def test_editar_tipo(self):
         """
         CU 30: Editar el tipo de item. Iteracion 3
+
         :return: Passed en caso de que el tipo item quede con los valores cambiados
         """
         # se asigna el tipo al proyecto:
@@ -510,6 +514,7 @@ class TestViews(TestCase):
         CU 38: Solicitar aprobación de ítems. Iteracion 3
         Se envia una solicitud para aprobar cierto item, el mismo debe tener un estado de en desarrollo
         para poder pasar a Pendiente de Aprobacion
+
         :return: Indica que se realizo correctamente la solicitud, envia un mensaje en caso contrario
         """
         pr = Proyecto.objects.create(nombre='proyecTest', fecha_inicio=timezone.now().date(),
@@ -531,6 +536,7 @@ class TestViews(TestCase):
         CU 39: Aprobar ítems. Iteracion 3
         Una vez hecha la solicitud de aprobacion, el item queda en un estado de Pendiente de Aprobacion,
         de ahi, si esta correcto se aprueba y su estado pasa a ser Aprobado
+
         :return: Indica que el item fue correctamente aprobado, envia un mensaje en caso contrario
         """
         px = Proyecto.objects.create(nombre='projectTest', fecha_inicio=timezone.now().date(),
@@ -552,6 +558,7 @@ class TestViews(TestCase):
         CU 39: Aprobar ítems. Iteracion 3
         En caso de que el item no se encuentre con los requerimientos pertinentes, se desaprueba y tal como
         indica el RF-127, el estado del item pasa de Pendiente de Aprobacion a en desarrollo nuevamente
+
         :return: Indica que el item fue desaprobado, caso contrario envia un mensaje
         """
         pp = Proyecto.objects.create(nombre='proTest', fecha_inicio=timezone.now().date(),
@@ -574,6 +581,7 @@ class TestViews(TestCase):
         Existe la posibilidad en la cual un item creado sea innecesario, por ello requiere ser desactivado,
         para realizar esta accion el mismo debe esta en el estado de en desarrollo y una vez desactivado
         su estado pasa a Desactivado
+
         :return: Indica que el item fue desactivado sin inconvenientes, envia un mensaje en caso contrario
         """
         pm = Proyecto.objects.create(nombre='proTest', fecha_inicio=timezone.now().date(),

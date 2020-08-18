@@ -32,9 +32,10 @@ class TestModels(TestCase):
     def test_Proyecto(self):
         """
         CU 10: Crear Proyectos. Iteración 2
+
         Se prueban que los proyectos se crean correctamente.
-        :return: Las afirmaciones devuelven true  si fueron creados correctamente, false en
-        caso contrario.
+
+        :return: Las afirmaciones devuelven true  si fueron creados correctamente, false en caso contrario.
         """
         proyecto_X = Proyecto(nombre='n', fecha_inicio=timezone.now().date(), numero_fases=5, cant_comite=3,
                               gerente=1)
@@ -44,7 +45,8 @@ class TestModels(TestCase):
 
     def test_Fase(self):
         """
-        CU 18: Crear Fase. Iteración 2
+        CU 18: Crear Fase. Iteración 2.
+
         Se prueban que las fases se crean correctamente.
         :return: Las afirmaciones devuelven si la creacion fue realizada correctamente, envia un mensaje en caso
         contrario.
@@ -61,6 +63,7 @@ class TestModels(TestCase):
     def test_tipo_item(self):
         """
         CU 29:	Crear tipo de item. Iteración 2
+
         Se prueban que los tipos de item se crean correctamente.
         :return: La afirmacion devuelve si la creacion fue realizada correctamente, envia un mensaje en caso
         contrario
@@ -78,6 +81,7 @@ class TestModels(TestCase):
     def test_plantilla_atributo(self):
         """
         Plantilla que ayuda a los tipos de item.
+
         :return: Demuestra que funciona el modelo
         """
         tipo_item_X = TipoItem(nombre='alfan',
@@ -91,6 +95,7 @@ class TestModels(TestCase):
     def test_rol(self):
         """
         CU 22:	Crear rol. Iteración 2
+
         Se prueban que crean los roles correctamente.
         :return: Las afirmaciones devuelven correctamente los parametros, envia un mensaje en caso contrario
         """
@@ -127,7 +132,7 @@ class TestModels(TestCase):
         CU 33: Agregar Items. Iteración 3
         Test que prueba la creación de manera correcta de un objeto Item
 
-        :return los asserts verifican que se haya creado con el nombre correcto, que tenga el tipo de ítem correcto y que haya sido asignado a la fase correcta
+        :return: los asserts verifican que se haya creado con el nombre correcto, que tenga el tipo de ítem correcto y que haya sido asignado a la fase correcta
         """
         proy = Proyecto(nombre='testProyect', fecha_inicio=timezone.now().date(), numero_fases=5, cant_comite=3,
                         gerente=1)
@@ -147,7 +152,7 @@ class TestModels(TestCase):
         CU 33: Agregar Items. Iteración 3
         Test que prueba la creación de un ítem cuya complejidad no está definida y le agrega un valor por defecto
 
-        :return el assert retorna true si la complejidad por defecto es asignada
+        :return: el assert retorna true si la complejidad por defecto es asignada
         """
         pro = Proyecto(nombre='otroProy', fecha_inicio=timezone.now().date(), numero_fases=5, cant_comite=3,
                        gerente=1)

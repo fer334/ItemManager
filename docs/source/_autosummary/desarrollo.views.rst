@@ -14,6 +14,7 @@ desarrollo.views
   desactivar_item
   desactivar_relacion_item
   desaprobar_item
+  get_numeracion
   index
   menu_aprobacion
   relacionar_item

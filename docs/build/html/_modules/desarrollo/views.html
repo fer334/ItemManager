@@ -168,7 +168,10 @@
 <span class="kn">from</span> <span class="nn">desarrollo.getPermisos</span> <span class="kn">import</span> <span class="n">has_permiso</span>
 
 
-<span class="c1"># Create your views here.</span>
+<span class="k">def</span> <span class="nf">get_numeracion</span><span class="p">(</span><span class="n">fase</span><span class="p">,</span> <span class="n">tipo</span><span class="p">):</span>
+    <span class="n">items_del_tipo</span> <span class="o">=</span> <span class="p">[</span><span class="n">item</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">fase</span><span class="o">.</span><span class="n">item_set</span><span class="o">.</span><span class="n">all</span><span class="p">()</span> <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">tipo_item</span> <span class="o">==</span> <span class="n">tipo</span><span class="p">]</span>
+    <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">items_del_tipo</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+
 
 <div class="viewcode-block" id="crear_item"><a class="viewcode-back" href="../../_autosummary/desarrollo.views.html#desarrollo.views.crear_item">[documentos]</a><span class="k">def</span> <span class="nf">crear_item</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">id_fase</span><span class="p">,</span> <span class="n">id_tipo</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -204,7 +207,7 @@
                 <span class="n">complejidad</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s1">&#39;complejidad&#39;</span><span class="p">]</span>
                 <span class="n">descripcion</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s1">&#39;descripcion&#39;</span><span class="p">]</span>
                 <span class="n">nuevo_item</span> <span class="o">=</span> <span class="n">Item</span><span class="p">(</span><span class="n">nombre</span><span class="o">=</span><span class="n">nombre</span><span class="p">,</span> <span class="n">complejidad</span><span class="o">=</span><span class="n">complejidad</span><span class="p">,</span> <span class="n">descripcion</span><span class="o">=</span><span class="n">descripcion</span><span class="p">,</span> <span class="n">tipo_item</span><span class="o">=</span><span class="n">tipo</span><span class="p">,</span>
-                                  <span class="n">fase</span><span class="o">=</span><span class="n">fase</span><span class="p">)</span>
+                                  <span class="n">fase</span><span class="o">=</span><span class="n">fase</span><span class="p">,</span> <span class="n">numeracion</span><span class="o">=</span><span class="n">get_numeracion</span><span class="p">(</span><span class="n">fase</span><span class="p">,</span><span class="n">tipo</span><span class="p">))</span>
                 <span class="n">nuevo_item</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
                 <span class="c1"># vinculamos el tipo a la fase</span>
                 <span class="k">if</span> <span class="n">tipo</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">fase</span><span class="o">.</span><span class="n">tipos_item</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
@@ -374,7 +377,7 @@
     <span class="n">lista_items_hijo</span> <span class="o">=</span> <span class="n">Item</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
         <span class="n">fase__proyecto_id</span><span class="o">=</span><span class="n">id_proyecto</span><span class="p">,</span> <span class="n">estado</span><span class="o">=</span><span class="n">Item</span><span class="o">.</span><span class="n">ESTADO_DESARROLLO</span>
     <span class="p">)</span>
-    <span class="c1">#Se agrega filtro para solo relacionar items aprobados y hijos en desarrollo</span>
+    <span class="c1"># Se agrega filtro para solo relacionar items aprobados y hijos en desarrollo</span>
     <span class="n">form</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">&quot;inicio&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">queryset</span> <span class="o">=</span> <span class="n">lista_items_padre</span>
     <span class="n">form</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">&quot;fin&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">queryset</span> <span class="o">=</span> <span class="n">lista_items_hijo</span>
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;desarrollo/relacion_crear.html&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;form&#39;</span><span class="p">:</span> <span class="n">form</span><span class="p">})</span></div>
@@ -434,7 +437,7 @@
     <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">estado</span> <span class="o">==</span> <span class="n">Item</span><span class="o">.</span><span class="n">ESTADO_DESARROLLO</span><span class="p">:</span>
         <span class="n">item</span><span class="o">.</span><span class="n">estado</span> <span class="o">=</span> <span class="n">Item</span><span class="o">.</span><span class="n">ESTADO_PENDIENTE</span>
         <span class="n">item</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;desarrollo:verItem&#39;</span><span class="p">,</span> <span class="n">item</span><span class="o">.</span><span class="n">fase</span><span class="o">.</span><span class="n">proyecto</span><span class="o">.</span><span class="n">id</span><span class="p">,</span><span class="n">id_item</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;desarrollo:verItem&#39;</span><span class="p">,</span> <span class="n">item</span><span class="o">.</span><span class="n">fase</span><span class="o">.</span><span class="n">proyecto</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">id_item</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="aprobar_item"><a class="viewcode-back" href="../../_autosummary/desarrollo.views.html#desarrollo.views.aprobar_item">[documentos]</a><span class="k">def</span> <span class="nf">aprobar_item</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">id_item</span><span class="p">):</span>

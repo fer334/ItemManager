@@ -218,7 +218,7 @@ def relacionar_item(request, id_proyecto):
     lista_items_hijo = Item.objects.filter(
         fase__proyecto_id=id_proyecto, estado=Item.ESTADO_DESARROLLO
     )
-    #Se agrega filtro para solo relacionar items aprobados y hijos en desarrollo
+    # Se agrega filtro para solo relacionar items aprobados y hijos en desarrollo
     form.fields["inicio"].queryset = lista_items_padre
     form.fields["fin"].queryset = lista_items_hijo
     return render(request, "desarrollo/relacion_crear.html", {'form': form})
@@ -278,7 +278,7 @@ def solicitud_aprobacion(request, id_item):
     if item.estado == Item.ESTADO_DESARROLLO:
         item.estado = Item.ESTADO_PENDIENTE
         item.save()
-    return redirect('desarrollo:verItem', item.fase.proyecto.id,id_item)
+    return redirect('desarrollo:verItem', item.fase.proyecto.id, id_item)
 
 
 def aprobar_item(request, id_item):
