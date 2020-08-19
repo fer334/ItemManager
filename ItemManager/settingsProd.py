@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'login',
     'administracion',
     'desarrollo',
+    'configuracion',
 ]
 
 SITE = 1
