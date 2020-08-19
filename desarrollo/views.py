@@ -48,7 +48,7 @@ def crear_item(request, id_fase, id_tipo):
                 complejidad = form.cleaned_data['complejidad']
                 descripcion = form.cleaned_data['descripcion']
                 nuevo_item = Item(nombre=nombre, complejidad=complejidad, descripcion=descripcion, tipo_item=tipo,
-                                  fase=fase, numeracion=get_numeracion(fase,tipo))
+                                  fase=fase, numeracion=get_numeracion(fase, tipo))
                 nuevo_item.save()
                 # vinculamos el tipo a la fase
                 if tipo not in fase.tipos_item.all():
@@ -334,5 +334,9 @@ def desactivar_item(request, id_proyecto, id_item):
 
     if item.estado == Item.ESTADO_DESARROLLO:
         item.estado = Item.ESTADO_DESACTIVADO
+        # desvinculamos el item de la fase
+        fase = Fase.objects.get(pk=item.fase.id)
+        fase.tipos_item.remove(item.tipo_item)
+
         item.save()
     return redirect('desarrollo:verItem', id_proyecto, id_item)
