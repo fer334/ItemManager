@@ -1,10 +1,11 @@
 from django.urls import path
 
-from desarrollo import views
+from configuracion import views
 
 app_name = 'configuracion'
 urlpatterns = [
     # URLs de Mati
+    path('<str:filtro>', views.index, name='indexConfiguracion'),
 
     # URLs de David
     #path('<str:filtro>', views.index, name='indexDesarrollo'),
