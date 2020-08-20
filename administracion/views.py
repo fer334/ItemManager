@@ -437,7 +437,7 @@ def editar_tipo(request, id_proyecto, id_tipo):
                 tipo.save()
                 return redirect('administracion:tipoItemPorProyecto', id_proyecto=id_proyecto)
         form = EditarTipoItemForm()
-        return render(request, 'administracion/editarTipoItem.html', {'form': form})
+        return render(request, 'administracion/editarTipoItem.html', {'form': form, 'tipo':tipo})
 
 
 def ver_tipo(request, id_proyecto, id_tipo):

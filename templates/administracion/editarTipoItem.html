@@ -6,16 +6,16 @@
             {% csrf_token %}
             <div class="form-row">
                 <div class="form-group col-sm-12 col-md-8">
-                    <label for="id_nombre">Nombre</label>
+                    <label for="id_nombre">Nombre (Nombre actual: {{ tipo.nombre }})</label>
                     {{ form.nombre }}
                 </div>
                 <div class="form-group col-sm-12 col-md-4">
-                    <label for="id_prefijo">Prefijo</label>
+                    <label for="id_prefijo">Prefijo (Prefijo actual: {{ tipo.prefijo }})</label>
                     {{ form.prefijo }}
                 </div>
             </div>
             <div class="form-group">
-                <label for="id_descripcion">Descripcion</label>
+                <label for="id_descripcion">Descripcion (Descripcion actual: {{ tipo.descripcion }})</label>
                 {{ form.descripcion }}
             </div>
             <div class="row">

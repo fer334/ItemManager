@@ -14,7 +14,10 @@
                 </div>
                 {% for atributo in plantilla_atr %}
                     <div class="form-group col-sm-12 col-md-8">
-                        <label>{{  atributo.nombre}} ({{ atributo.tipo }})</label>
+                        <label>
+                            {{  atributo.nombre}} ({{ atributo.tipo }})
+                            {% if atributo.es_requerido %}<h6 style="color: deepskyblue">[requerido]</h6>{% endif %}
+                        </label>
                         <input type="{{atributo.tipo}}"
                                class="form-control" name="{{atributo.nombre}}"
                                {% if atributo.es_requerido %}required=""{% endif %}>
