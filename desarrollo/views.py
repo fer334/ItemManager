@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect
 from .SubirArchivos import handle_uploaded_file
 from desarrollo.models import Item, AtributoParticular, Relacion
 from administracion.models import Proyecto, TipoItem, Fase, Rol
-from desarrollo.forms import ItemForm, RelacionForm
+from desarrollo.forms import ItemForm, RelacionForm, EditarItemForm
 from desarrollo.getPermisos import has_permiso
 
 
@@ -338,7 +338,27 @@ def desactivar_item(request, id_proyecto, id_item):
     return redirect('desarrollo:verItem', id_proyecto, id_item)
 
 
-"""def modificar_item(request, id_item):
+def modificar_item(request, id_item):
+    """
+    Vista Modificar Item
+    :param request:
+    :param id_item:
+    :return:
+    """
     item = Item.objects.get(pk=id_item)
-    if item.ESTADO_DESARROLLO:"""
+    if item.ESTADO_DESARROLLO:
+        form = EditarItemForm(request.POST)
+        if form.is_valid():
+            nombre = form.cleaned_data['nombre']
+            complejidad = form.cleaned_data['complejidad']
+            descripcion = form.cleaned_data['descripcion']
+            item.nombre = nombre
+            item.complejidad = complejidad
+            item.descripcion = descripcion
+            item.save()
+            return redirect('desarrollo:verItem', id_item = id_item)
+    form = EditarItemForm()
+    return render(request,'desarrollo/editarItem.html', {'form': form})
+
+
 
