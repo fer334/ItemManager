@@ -13,6 +13,7 @@ class Item(models.Model):
     nombre = models.CharField(max_length=200, null=False)
     #: estado actual, puede tomar los valores: en desarrollo, pendiente de aprobación, aprobado, desactivado,
     # en revisión, en línea base
+    numeracion = models.IntegerField(default=1)
     estado = models.CharField(max_length=100, default='En Desarrollo', null=False)
     #: version actual del ítem que va cambiando luego de cada nueva relación y cada modificación de sus datos
     version = models.PositiveIntegerField(null=False, default=1)

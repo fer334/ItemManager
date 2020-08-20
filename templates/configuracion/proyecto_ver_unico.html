@@ -1,0 +1,48 @@
+{% extends 'login/loginHeader.html' %}
+{% block content %}
+    <div class="container">
+        <h1 class="text-center pt-3 mb-5">{{ proyecto.nombre }}</h1>
+        <div class="btn float-right">
+            <a class="btn btn-info"
+               href="#"
+               style="color: white">
+                Crear linea base
+            </a>
+        </div>
+        <table class="table table-bordered">
+            <thead class="thead-dark">
+                <tr>
+                    {% for fase in proyecto.fase_set.all %}
+                        <th class="">{{ fase.nombre }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="">
+                    {% for fase in proyecto.fase_set.all %}
+                        <td class="justify-content-center">
+                            <div class="list-group pt-2">
+                                <ul>
+
+                                    {% for item in fase.item_set.all %}
+                                        {% if item.estado == item.ESTADO_APROBADO %}
+                                            <li class="list-group">
+                                                <a class="align-baseline"
+                                                   href="#" >
+                                                   {{ item.tipo_item.prefijo }} {% if item.numeracion < 10 %}0{% endif %}{{ item.numeracion    }}-{{ item.nombre }}
+                                                </a>
+                                            </li>
+                                        {% endif %}
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </td>
+                    {% endfor %}
+                </tr>
+            </tbody>
+        </table>
+        <div class="col-sm-12 mt-4">
+            <a href="{% url 'configuracion:indexConfiguracion' 'todos' %}" class="btn btn-primary float-right">Volver atrás</a>
+        </div>
+    </div>
+{% endblock %}

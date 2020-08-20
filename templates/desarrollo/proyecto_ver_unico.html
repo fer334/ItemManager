@@ -59,7 +59,7 @@
                                             <li class="list-group">
                                                 <a class="align-baseline"
                                                    href="{% url 'desarrollo:verItem' proyecto.id item.id %}" >
-                                                   {{ item.tipo_item.prefijo }}_{{ item.nombre }}
+                                                   {{ item.tipo_item.prefijo }} {% if item.numeracion < 10 %}0{% endif %}{{ item.numeracion    }}-{{ item.nombre }}
                                                 </a>
                                             </li>
                                         {% endif %}

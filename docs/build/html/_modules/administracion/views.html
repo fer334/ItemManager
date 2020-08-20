@@ -574,9 +574,8 @@
 
 <span class="sd">    :param id_tipo: id del tipo de ítem a editar</span>
 <span class="sd">    :param request: objeto tipo diccionario que permite acceder a datos</span>
-<span class="sd">    :param id_proyecto:identificador del proyecto</span>
-<span class="sd">    :return: redirecciona a los permisos de acceso si el tipo de item es usado en mas de un proyecto o si el proyecto</span>
-<span class="sd">     ya inicio</span>
+<span class="sd">    :param id_proyecto: identificador del proyecto</span>
+<span class="sd">    :return: redirecciona a los permisos de acceso si el tipo de item es usado en mas de un proyecto o si el proyecto ya inicio</span>
 <span class="sd">     &quot;&quot;&quot;</span>
     <span class="n">proyecto</span> <span class="o">=</span> <span class="n">Proyecto</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">id_proyecto</span><span class="p">)</span>
     <span class="n">tipo</span> <span class="o">=</span> <span class="n">TipoItem</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">id_tipo</span><span class="p">)</span>

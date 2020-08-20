@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'login',
     'administracion',
     'desarrollo',
+    'configuracion',
 ]
 
 SITE = 1
@@ -58,6 +59,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'ItemManager.middleware.ActiveAccountMiddleware',
+    'ItemManager.middleware.EstadoProyectoMiddleware',
+
 ]
 
 ROOT_URLCONF = 'ItemManager.urls'

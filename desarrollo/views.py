@@ -9,7 +9,10 @@ from desarrollo.forms import ItemForm, RelacionForm
 from desarrollo.getPermisos import has_permiso
 
 
-# Create your views here.
+def get_numeracion(fase, tipo):
+    items_del_tipo = [item for item in fase.item_set.all() if item.tipo_item == tipo]
+    return len(items_del_tipo) + 1
+
 
 def crear_item(request, id_fase, id_tipo):
     """
@@ -45,7 +48,7 @@ def crear_item(request, id_fase, id_tipo):
                 complejidad = form.cleaned_data['complejidad']
                 descripcion = form.cleaned_data['descripcion']
                 nuevo_item = Item(nombre=nombre, complejidad=complejidad, descripcion=descripcion, tipo_item=tipo,
-                                  fase=fase)
+                                  fase=fase, numeracion=get_numeracion(fase,tipo))
                 nuevo_item.save()
                 # vinculamos el tipo a la fase
                 if tipo not in fase.tipos_item.all():
@@ -215,7 +218,7 @@ def relacionar_item(request, id_proyecto):
     lista_items_hijo = Item.objects.filter(
         fase__proyecto_id=id_proyecto, estado=Item.ESTADO_DESARROLLO
     )
-    #Se agrega filtro para solo relacionar items aprobados y hijos en desarrollo
+    # Se agrega filtro para solo relacionar items aprobados y hijos en desarrollo
     form.fields["inicio"].queryset = lista_items_padre
     form.fields["fin"].queryset = lista_items_hijo
     return render(request, "desarrollo/relacion_crear.html", {'form': form})
@@ -275,7 +278,7 @@ def solicitud_aprobacion(request, id_item):
     if item.estado == Item.ESTADO_DESARROLLO:
         item.estado = Item.ESTADO_PENDIENTE
         item.save()
-    return redirect('desarrollo:verItem', item.fase.proyecto.id,id_item)
+    return redirect('desarrollo:verItem', item.fase.proyecto.id, id_item)
 
 
 def aprobar_item(request, id_item):

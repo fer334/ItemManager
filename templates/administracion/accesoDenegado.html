@@ -1,6 +1,10 @@
 {% extends 'login/loginHeader.html' %}
 {% load crispy_forms_tags %}
 {% block content %}
+    <script>
+        function goBack() {
+          window.history.back()}
+    </script>
     <div class="container">
         <div class="center-block col-md-12 p-3">
             <h3 class="text-danger m-3 font-weight-bold" align="middle">ACCESO DENEGADO</h3>
@@ -10,8 +14,8 @@
                 </h5>
             </div>
         </div>
-        <a class="btn btn-primary mt-3" href="{% url 'administracion:verProyecto' proyecto.id %}" role="button" >
-            Volver a detalles de {{ proyecto.nombre }}
+        <a class="btn btn-primary mt-3" onclick="goBack()" role="button" style="color: white">
+            Volver Atrás
         </a>
     </div>
 {% endblock %}
