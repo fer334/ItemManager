@@ -336,3 +336,9 @@ def desactivar_item(request, id_proyecto, id_item):
         item.estado = Item.ESTADO_DESACTIVADO
         item.save()
     return redirect('desarrollo:verItem', id_proyecto, id_item)
+
+
+"""def modificar_item(request, id_item):
+    item = Item.objects.get(pk=id_item)
+    if item.ESTADO_DESARROLLO:"""
+
