@@ -3,11 +3,7 @@
     <div class="container">
         <h1 class="text-center pt-3 mb-5">{{ proyecto.nombre }}</h1>
         <div class="btn float-right">
-            <a class="btn btn-info"
-               href="#"
-               style="color: white">
-                Crear linea base
-            </a>
+
         </div>
         <table class="table table-bordered">
             <thead class="thead-dark">
@@ -40,6 +36,17 @@
                     {% endfor %}
                 </tr>
             </tbody>
+            <tfoot>
+                <tr>
+                {% for fase in proyecto.fase_set.all %}
+                    <td>
+                        <a class="btn btn-info btn-block" href="{% url 'configuracion:crearLineaBase' fase.id %}">
+                            Crear linea base
+                        </a>
+                    </td>
+                {% endfor %}
+                </tr>
+            </tfoot>
         </table>
         <div class="col-sm-12 mt-4">
             <a href="{% url 'configuracion:indexConfiguracion' 'todos' %}" class="btn btn-primary float-right">Volver atrás</a>
