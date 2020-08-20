@@ -2,6 +2,7 @@ from django.shortcuts import render
 
 # Create your views here.
 from administracion.models import Proyecto
+from desarrollo.models import Item
 
 
 def index(request, filtro):
@@ -37,3 +38,24 @@ def index(request, filtro):
                                                                      'filtro': filtro,
                                                                      'cancelado': Proyecto.ESTADO_CANCELADO,
                                                                      'ejecucion': Proyecto.ESTADO_EN_EJECUCION})
+
+
+def ver_proyecto(request, id_proyecto):
+    """
+    Esta vista despliega un proyecto con todas sus fases e items
+
+    :param request: objeto tipo diccionario que permite acceder a datos
+    :param id_proyecto: Se recibe como parámetro el id_del proyecto que se desea ver
+    :return: objeto que renderea verProyecto.html
+    :rtype: render
+    """
+    proyecto = Proyecto.objects.get(pk=id_proyecto)
+    # lista de items
+    lista_items = Item.objects.all()
+    # filtro de tipos de items que aún no fueron usados (para todas las fases)
+
+    es_aprobador = False
+    if request.user.id == proyecto.gerente:
+        es_aprobador = True
+
+    return render(request, 'configuracion/proyecto_ver_unico.html', {'proyecto': proyecto})
