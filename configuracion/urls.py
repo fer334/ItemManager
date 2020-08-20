@@ -8,7 +8,7 @@ urlpatterns = [
     path('<str:filtro>', views.index, name='indexConfiguracion'),
 
     # URLs de David
-    #path('<str:filtro>', views.index, name='indexDesarrollo'),
+    path('proyectos/<int:id_proyecto>/', views.ver_proyecto, name='verProyecto'),
     #path('proyectos/<int:id_proyecto>/', views.ver_proyecto, name='verProyecto'),
     # URLs de Fer
 
