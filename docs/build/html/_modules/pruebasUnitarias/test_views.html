@@ -1,0 +1,876 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="es" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="es" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pruebasUnitarias.test_views &mdash; documentación de ItemManager - 1.0</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script src="../../_static/translations.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Índice" href="../../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> ItemManager
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/login.models.html">login.models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/login.forms.html">login.forms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/login.views.html">login.views</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/login.LoginBackEnd.html">login.LoginBackEnd</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/login.Register.html">login.Register</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/administracion.models.html">administracion.models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/administracion.views.html">administracion.views</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/administracion.forms.html">administracion.forms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/desarrollo.models.html">desarrollo.models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/desarrollo.views.html">desarrollo.views</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/desarrollo.forms.html">desarrollo.forms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/pruebasUnitarias.test_models.html">pruebasUnitarias.test_models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/pruebasUnitarias.test_urls.html">pruebasUnitarias.test_urls</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/pruebasUnitarias.test_views.html">pruebasUnitarias.test_views</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">ItemManager</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Código de módulo</a> &raquo;</li>
+        
+      <li>pruebasUnitarias.test_views</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Código fuente para pruebasUnitarias.test_views</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Modulo para hacer test sobre el modulo views.py</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">django.test</span> <span class="kn">import</span> <span class="n">RequestFactory</span>
+<span class="kn">from</span> <span class="nn">django.urls</span> <span class="kn">import</span> <span class="n">reverse</span>
+<span class="kn">from</span> <span class="nn">django.utils</span> <span class="kn">import</span> <span class="n">timezone</span>
+<span class="kn">from</span> <span class="nn">django.contrib.auth.models</span> <span class="kn">import</span> <span class="n">AnonymousUser</span>
+<span class="kn">from</span> <span class="nn">django.test</span> <span class="kn">import</span> <span class="n">TestCase</span>
+
+<span class="kn">from</span> <span class="nn">login.views</span> <span class="kn">import</span> <span class="n">index</span><span class="p">,</span> <span class="n">user_register</span><span class="p">,</span> <span class="n">users_access</span><span class="p">,</span> <span class="n">user_update</span>
+<span class="kn">from</span> <span class="nn">login.models</span> <span class="kn">import</span> <span class="n">Usuario</span>
+<span class="kn">from</span> <span class="nn">administracion.models</span> <span class="kn">import</span> <span class="n">Proyecto</span><span class="p">,</span> <span class="n">Fase</span><span class="p">,</span> <span class="n">Rol</span><span class="p">,</span> <span class="n">UsuarioxRol</span><span class="p">,</span> <span class="n">TipoItem</span>
+<span class="kn">from</span> <span class="nn">administracion.views</span> <span class="kn">import</span> <span class="n">crear_rol</span><span class="p">,</span> <span class="n">proyectos</span><span class="p">,</span> <span class="n">desactivar_tipo_item</span><span class="p">,</span> <span class="n">editar_tipo</span><span class="p">,</span> <span class="n">estado_proyectov2</span><span class="p">,</span> \
+    <span class="n">eliminar_participante_y_comite</span><span class="p">,</span> <span class="n">crear_proyecto</span><span class="p">,</span> \
+    <span class="n">administrar_participantes</span><span class="p">,</span> <span class="n">registrar_rol_por_fase</span><span class="p">,</span> <span class="n">asignar_rol_por_fase</span><span class="p">,</span> <span class="n">desasignar_rol_al_usuario</span><span class="p">,</span> \
+    <span class="n">administrar_comite</span><span class="p">,</span> <span class="n">importar_tipo</span><span class="p">,</span> <span class="n">confirmar_tipo_import</span><span class="p">,</span> <span class="n">mostrar_tipo_import</span><span class="p">,</span> <span class="n">administrar_fases_del_proyecto</span>
+<span class="kn">from</span> <span class="nn">desarrollo.models</span> <span class="kn">import</span> <span class="n">Item</span><span class="p">,</span> <span class="n">AtributoParticular</span><span class="p">,</span> <span class="n">Relacion</span>
+<span class="kn">from</span> <span class="nn">desarrollo.views</span> <span class="kn">import</span> <span class="n">solicitud_aprobacion</span><span class="p">,</span> <span class="n">aprobar_item</span><span class="p">,</span> <span class="n">desaprobar_item</span><span class="p">,</span> <span class="n">desactivar_item</span><span class="p">,</span> <span class="n">ver_item</span><span class="p">,</span> \
+    <span class="n">relacionar_item</span><span class="p">,</span> <span class="n">desactivar_relacion_item</span><span class="p">,</span> <span class="n">ver_proyecto</span>
+<span class="kn">import</span> <span class="nn">pytest</span>
+
+
+<div class="viewcode-block" id="TestViews"><a class="viewcode-back" href="../../_autosummary/pruebasUnitarias.test_views.html#pruebasUnitarias.test_views.TestViews">[documentos]</a><span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">django_db</span>
+<span class="k">class</span> <span class="nc">TestViews</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Clase para realizar pruebas sobre las vistas del proyecto ItemManager</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="TestViews.setUpClass"><a class="viewcode-back" href="../../_autosummary/pruebasUnitarias.test_views.html#pruebasUnitarias.test_views.TestViews.setUpClass">[documentos]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">setUpClass</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Esta función sobreescribe setUpClass de TestCase y permite definir variables que serán usadas en varias clases</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">TestViews</span><span class="p">,</span> <span class="bp">cls</span><span class="p">)</span><span class="o">.</span><span class="n">setUpClass</span><span class="p">()</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">usuario</span> <span class="o">=</span> <span class="n">Usuario</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span>
+            <span class="n">username</span><span class="o">=</span><span class="s1">&#39;testusuario&#39;</span><span class="p">,</span> <span class="n">email</span><span class="o">=</span><span class="s1">&#39;estoes@unaprueba.com&#39;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s1">&#39;password&#39;</span><span class="p">)</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">proyecto</span> <span class="o">=</span> <span class="n">Proyecto</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">nombre</span><span class="o">=</span><span class="s1">&#39;proyectoTestGeneral&#39;</span><span class="p">,</span> <span class="n">fecha_inicio</span><span class="o">=</span><span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">date</span><span class="p">(),</span>
+                                               <span class="n">numero_fases</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">cant_comite</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">gerente</span><span class="o">=</span><span class="bp">cls</span><span class="o">.</span><span class="n">usuario</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">fase</span> <span class="o">=</span> <span class="n">Fase</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">nombre</span><span class="o">=</span><span class="s1">&#39;Fase de prueba&#39;</span><span class="p">,</span> <span class="n">proyecto</span><span class="o">=</span><span class="bp">cls</span><span class="o">.</span><span class="n">proyecto</span><span class="p">)</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">rol</span> <span class="o">=</span> <span class="n">Rol</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">nombre</span><span class="o">=</span><span class="s1">&#39;Rol de prueba&#39;</span><span class="p">,</span> <span class="n">proyecto</span><span class="o">=</span><span class="bp">cls</span><span class="o">.</span><span class="n">proyecto</span><span class="p">)</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">tipo</span> <span class="o">=</span> <span class="n">TipoItem</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">nombre</span><span class="o">=</span><span class="s1">&#39;Tipo de item de prueba&#39;</span><span class="p">,</span> <span class="n">prefijo</span><span class="o">=</span><span class="s1">&#39;TIP&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TestViews.test_index_usuario_no_autenticado"><a class="viewcode-back" href="../../_autosummary/pruebasUnitarias.test_views.html#pruebasUnitarias.test_views.TestViews.test_index_usuario_no_autenticado">[documentos]</a>    <span class="k">def</span> <span class="nf">test_index_usuario_no_autenticado</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        CU 01: acceder al sistema. Iteración 1</span>
+<span class="sd">        La vista index tiene la marca de @login_required por lo que si el usuario no se ha logeado</span>
+<span class="sd">        se redireccionara a login con el codigo 302 de redireccionamiento.</span>
+
+<span class="sd">        :return: el assert retornara true si se hace un redireccionamiento y false en otros casos</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;login:index&#39;</span><span class="p">)</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="n">RequestFactory</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="c1"># la funcion anonymousUser simula un usuario sin logearse</span>
+        <span class="n">request</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">AnonymousUser</span><span class="p">()</span>
+
+        <span class="n">response</span> <span class="o">=</span> <span class="n">index</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+
+        <span class="k">assert</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">302</span><span class="p">,</span> <span class="s1">&#39;Prueba falló porque no hubo redirección&#39;</span></div>
+
+<div class="viewcode-block" id="TestViews.test_index_usuario_autenticado"><a class="viewcode-back" href="../../_autosummary/pruebasUnitarias.test_views.html#pruebasUnitarias.test_views.TestViews.test_index_usuario_autenticado">[documentos]</a>    <span class="k">def</span> <span class="nf">test_index_usuario_autenticado</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        CU 01: acceder al sistema y CU 02: registrar usuario. Iteración 1</span>
+<span class="sd">        Prueba parecida a la anterior pero con la diferencia de que se utiliza un usuario autenticado.</span>
+
+<span class="sd">        :return: el assert retornara true si se hace un redireccionamiento y false en otros casos</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;login:index&#39;</span><span class="p">)</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="n">RequestFactory</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="n">request</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">usuario</span>
+
+        <span class="n">response</span> <span class="o">=</span> <span class="n">index</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="s1">&#39;La prueba falló porque el usuario no fue registrado&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TestViews.test_crear_proyecto"><a class="viewcode-back" href="../../_autosummary/pruebasUnitarias.test_views.html#pruebasUnitarias.test_views.TestViews.test_crear_proyecto">[documentos]</a>    <span class="k">def</span> <span class="nf">test_crear_proyecto</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        CU 04: crear gerente de proyectos. Iteración 2</span>
+<span class="sd">        Nuestra implementación de creación de proyecto asigna al usuario que crea el proyecto como el gerente del mismo</span>
+<span class="sd">        por lo que este test primeramente crea un request que apunta crear_proyecto (view), luego crea un post para</span>
+<span class="sd">        crear un proyecto y asigna un usuario logueado al request. Finalmente comprueba que se cree el proyecto y que el</span>
+<span class="sd">        gerente del proyecto sea el usuario que hizo el request.</span>
+
+<span class="sd">        :return: el primer assert retorna True si el codigo de respuesta es una redirección, en este caso a verProyecto.html. El segundo assert retorna True si el id del gerente es el mismo que el id del usuario que hizo el request</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># primero definimos la direccion del view a probar en el test</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;administracion:crearProyecto&#39;</span><span class="p">)</span>
+        <span class="c1"># creamos un request de tipo post al que asignamos el path y los datos del proyecto a crear</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="n">RequestFactory</span><span class="p">()</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;nombre&#39;</span><span class="p">:</span> <span class="s1">&#39;proyectoTest&#39;</span><span class="p">,</span> <span class="s1">&#39;fecha_inicio&#39;</span><span class="p">:</span> <span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">date</span><span class="p">(),</span>
+                                               <span class="s1">&#39;numero_fases&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;cant_comite&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">})</span>
+        <span class="c1"># asignamos el usuario al request</span>
+        <span class="n">request</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">usuario</span>
+        <span class="c1"># llamamos al view que queramos probar y le pasamos el request y los otros parametros que necesite en otros</span>
+        <span class="c1"># casos</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">crear_proyecto</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+        <span class="c1"># asignamos a p el proyecto que se creó</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">Proyecto</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">nombre</span><span class="o">=</span><span class="s1">&#39;proyectoTest&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">302</span><span class="p">,</span> <span class="s1">&#39;No se redirecciona a verProyecto, eso implica que el proyecto no &#39;</span>
+                                                    <span class="s1">&#39;se creó&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">gerente</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="s1">&#39;El gerente no es el usuario que hizo el request&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TestViews.test_administrar_participantes"><a class="viewcode-back" href="../../_autosummary/pruebasUnitarias.test_views.html#pruebasUnitarias.test_views.TestViews.test_administrar_participantes">[documentos]</a>    <span class="k">def</span> <span class="nf">test_administrar_participantes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        CU 06: crear Usuario de Proyecto y CU 16: administrar participantes del proyecto. Iteración 2</span>
+<span class="sd">        Este test comprueba que un participante sea efectivamente añadido a un proyecto.</span>
+
+<span class="sd">        :return: el assert comprueba que en el proyecto exista un participante cuyo id sea igual al nombre del participante que se añadió a proyecto</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># creamos un usuario participante para el proyecto</span>
+        <span class="n">partipante</span> <span class="o">=</span> <span class="n">Usuario</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span>
+            <span class="n">username</span><span class="o">=</span><span class="s1">&#39;participante1&#39;</span><span class="p">,</span> <span class="n">email</span><span class="o">=</span><span class="s1">&#39;estoes@otraprueba.com&#39;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s1">&#39;password&#39;</span><span class="p">)</span>
+        <span class="c1"># asignamos al path la vista administrar_participantes</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;administracion:administrarParticipantes&#39;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">proyecto</span><span class="o">.</span><span class="n">id</span><span class="p">])</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="n">RequestFactory</span><span class="p">()</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;participante&#39;</span><span class="p">:</span> <span class="n">partipante</span><span class="o">.</span><span class="n">id</span><span class="p">})</span>
+        <span class="n">request</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">usuario</span>
+        <span class="c1"># llamamos a la vista a ser probada</span>
+        <span class="n">administrar_participantes</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">proyecto</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="n">partipante</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">proyecto</span><span class="o">.</span><span class="n">participantes</span><span class="o">.</span><span class="n">all</span><span class="p">(),</span> <span class="s1">&#39;participante no fue añadido al proyecto&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TestViews.test_desasignar_rol_al_usuario"><a class="viewcode-back" href="../../_autosummary/pruebasUnitarias.test_views.html#pruebasUnitarias.test_views.TestViews.test_desasignar_rol_al_usuario">[documentos]</a>    <span class="k">def</span> <span class="nf">test_desasignar_rol_al_usuario</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        CU 24: Desasignar rol x fase a usuario. Iteración 2</span>
+<span class="sd">        Este test comprueba que un cierto rol sea desasignado a un participante.</span>
+
+<span class="sd">        :return: el assert comprueba que el objeto rol por fase quede desactivo</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="n">RequestFactory</span><span class="p">()</span>
+        <span class="n">request</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">usuario</span>
+        <span class="n">uxr</span> <span class="o">=</span> <span class="n">UsuarioxRol</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">usuario</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">usuario</span><span class="p">,</span> <span class="n">fase</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">fase</span><span class="p">,</span> <span class="n">rol</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rol</span><span class="p">)</span>
+        <span class="n">desasignar_rol_al_usuario</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fase</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">usuario</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rol</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="n">uxr</span> <span class="o">=</span> <span class="n">UsuarioxRol</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">usuario</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">usuario</span><span class="p">,</span> <span class="n">fase</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">fase</span><span class="p">,</span> <span class="n">rol</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rol</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">uxr</span><span class="o">.</span><span class="n">activo</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;La prueba falló no se pudo desasignar el rol&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TestViews.test_registrar_rol_por_fase"><a class="viewcode-back" href="../../_autosummary/pruebasUnitarias.test_views.html#pruebasUnitarias.test_views.TestViews.test_registrar_rol_por_fase">[documentos]</a>    <span class="k">def</span> <span class="nf">test_registrar_rol_por_fase</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        CU 25: Asignar rol x fase a usuario. Iteración 2</span>
+<span class="sd">        Este test comprueba que un cierto rol sea asignado a un participante.</span>
+
+<span class="sd">        :return: el assert comprueba que se cree el objeto rol por fase que representa la asignacion</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;administracion:asignarRol&#39;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">fase</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">usuario</span><span class="o">.</span><span class="n">id</span><span class="p">])</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="n">RequestFactory</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="n">request</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">usuario</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">asignar_rol_por_fase</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fase</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">usuario</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span><span class="p">,</span> <span class="s1">&#39;La prueba falló porque no se pudo mostrar la vista de asignacion&#39;</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="n">RequestFactory</span><span class="p">()</span>
+        <span class="n">request</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">usuario</span>
+        <span class="n">registrar_rol_por_fase</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fase</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">usuario</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rol</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">UsuarioxRol</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">fase</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">fase</span><span class="p">,</span> <span class="n">rol</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rol</span><span class="p">,</span> <span class="n">usuario</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">usuario</span><span class="p">),</span> \
+            <span class="s2">&quot;La prueba falló porque No se asigno rol&quot;</span></div>
+
+<div class="viewcode-block" id="TestViews.test_administrar_comite"><a class="viewcode-back" href="../../_autosummary/pruebasUnitarias.test_views.html#pruebasUnitarias.test_views.TestViews.test_administrar_comite">[documentos]</a>    <span class="k">def</span> <span class="nf">test_administrar_comite</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        CU 26: Crear comite de aprobacion de cambios</span>
+<span class="sd">        Este test comprueba que un participante sea efectivamente añadido al comite de un proyecto.</span>
+
+<span class="sd">        :return: el assert comprueba que en el proyecto exista un participante cuyo id sea igual al nombre del participante que se añadió a proyecto</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># creamos un usuario participante para el proyecto</span>
+        <span class="n">participante</span> <span class="o">=</span> <span class="n">Usuario</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span>
+            <span class="n">username</span><span class="o">=</span><span class="s1">&#39;participante1&#39;</span><span class="p">,</span> <span class="n">email</span><span class="o">=</span><span class="s1">&#39;estoes@otraprueba.com&#39;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s1">&#39;password&#39;</span><span class="p">)</span>
+        <span class="c1"># asignamos al path la vista administrar_comite</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;administracion:administrarComite&#39;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">proyecto</span><span class="o">.</span><span class="n">id</span><span class="p">])</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="n">RequestFactory</span><span class="p">()</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;miembro_comite&#39;</span><span class="p">:</span> <span class="n">participante</span><span class="o">.</span><span class="n">id</span><span class="p">})</span>
+        <span class="n">request</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">usuario</span>
+        <span class="n">administrar_comite</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">proyecto</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="n">participante</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">proyecto</span><span class="o">.</span><span class="n">comite</span><span class="o">.</span><span class="n">all</span><span class="p">(),</span>
+                      <span class="s2">&quot;La prueba fallo por que no se pudo asignar a un miembro del comite&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TestViews.test_importar_tipo"><a class="viewcode-back" href="../../_autosummary/pruebasUnitarias.test_views.html#pruebasUnitarias.test_views.TestViews.test_importar_tipo">[documentos]</a>    <span class="k">def</span> <span class="nf">test_importar_tipo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        CU 32: Crear tipo de item. Iteracion 2</span>
+<span class="sd">        Este test comprueba que un participante sea efectivamente añadido al comite de un proyecto.</span>
+
+<span class="sd">        :return: el assert comprueba que en el proyecto exista un participante cuyo id sea igual al nombre del participante que se añadió a proyecto</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="n">RequestFactory</span><span class="p">()</span>
+        <span class="n">request</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">usuario</span>
+        <span class="n">tipo_a_importar</span> <span class="o">=</span> <span class="n">TipoItem</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">()</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">confirmar_tipo_import</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">proyecto</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">tipo_a_importar</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span>
+                         <span class="s1">&#39;La prueba falló porque no se pudo mostrar la vista con la lista de tipos de item&#39;</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">mostrar_tipo_import</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">proyecto</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span>
+                         <span class="s1">&#39;La prueba falló porque no se pudo mostrar la vista del tipo de item a importar&#39;</span><span class="p">)</span>
+        <span class="n">importar_tipo</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">proyecto</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">tipo_a_importar</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="n">tipo_a_importar</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">proyecto</span><span class="o">.</span><span class="n">tipoitem_set</span><span class="o">.</span><span class="n">all</span><span class="p">(),</span>
+                      <span class="s2">&quot;La prueba fallo por que no se pudo importar el tipo de item&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TestViews.test_administrar_fases_del_proyecto"><a class="viewcode-back" href="../../_autosummary/pruebasUnitarias.test_views.html#pruebasUnitarias.test_views.TestViews.test_administrar_fases_del_proyecto">[documentos]</a>    <span class="k">def</span> <span class="nf">test_administrar_fases_del_proyecto</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        CU 19: Editar fases. Iteracion 2</span>
+<span class="sd">        Este test comprueba que se editen correctamente las propiedades de la fase.</span>
+
+<span class="sd">        :return: el assert comprueba que las propiedades hayan cambiado</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;administracion:administrarFasesProyecto&#39;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">proyecto</span><span class="o">.</span><span class="n">id</span><span class="p">])</span>
+        <span class="n">nuevo_nombre</span> <span class="o">=</span> <span class="s1">&#39;Fase Prueba Editado&#39;</span>
+        <span class="n">nueva_descripcion</span> <span class="o">=</span> <span class="s1">&#39;Descripcion editada&#39;</span>
+        <span class="n">fase_nueva</span> <span class="o">=</span> <span class="n">Fase</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">nombre</span><span class="o">=</span><span class="s1">&#39;Fase inicial&#39;</span><span class="p">,</span> <span class="n">proyecto</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">proyecto</span><span class="p">,</span>
+                                         <span class="n">descripcion</span><span class="o">=</span><span class="s1">&#39;Descripcion inicial&#39;</span><span class="p">)</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="n">RequestFactory</span><span class="p">()</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">path</span><span class="p">,</span>
+                                        <span class="p">{</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">fase_nueva</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">nuevo_nombre</span><span class="p">],</span> <span class="sa">f</span><span class="s1">&#39;d</span><span class="si">{</span><span class="n">fase_nueva</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">nueva_descripcion</span><span class="p">]})</span>
+        <span class="n">request</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">usuario</span>
+        <span class="n">administrar_fases_del_proyecto</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">proyecto</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="n">fase_nueva</span> <span class="o">=</span> <span class="n">Fase</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">fase_nueva</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">fase_nueva</span><span class="o">.</span><span class="n">nombre</span><span class="p">,</span> <span class="n">nuevo_nombre</span><span class="p">,</span> <span class="s2">&quot;No se pudo cambiar el nombre de la fase&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">fase_nueva</span><span class="o">.</span><span class="n">descripcion</span><span class="p">,</span> <span class="n">nueva_descripcion</span><span class="p">,</span> <span class="s2">&quot;No se pudo cambiar la descripcion de la fase&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TestViews.test_estado_proyecto_iniciado_finalizado"><a class="viewcode-back" href="../../_autosummary/pruebasUnitarias.test_views.html#pruebasUnitarias.test_views.TestViews.test_estado_proyecto_iniciado_finalizado">[documentos]</a>    <span class="k">def</span> <span class="nf">test_estado_proyecto_iniciado_finalizado</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        CU 14: modificar estado del proyecto a finalizado. Iteración 2</span>
+<span class="sd">        En este test probamos cambiar el estado del proyecto de iniciado a finalizado. Algo que no se permite ya</span>
+<span class="sd">        que solo puede cambiarse al estado finalizado si el estado actual del proyecto es en ejecución por lo que</span>
+<span class="sd">        el assert verifica que el cambio de estado no suceda.</span>
+
+<span class="sd">        :return: el assert retorna True si el estado del proyecto no cambia a finalizado</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">proyecto_iniciado</span> <span class="o">=</span> <span class="n">Proyecto</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">nombre</span><span class="o">=</span><span class="s1">&#39;proyectoIniciado&#39;</span><span class="p">,</span> <span class="n">fecha_inicio</span><span class="o">=</span><span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">date</span><span class="p">(),</span>
+                                                    <span class="n">estado</span><span class="o">=</span><span class="n">Proyecto</span><span class="o">.</span><span class="n">ESTADO_INICIADO</span><span class="p">,</span> <span class="n">numero_fases</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">cant_comite</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+                                                    <span class="n">gerente</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">usuario</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="n">RequestFactory</span><span class="p">()</span>
+        <span class="n">request</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">usuario</span>
+        <span class="n">estado_proyectov2</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">proyecto_iniciado</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">Proyecto</span><span class="o">.</span><span class="n">ESTADO_FINALIZADO</span><span class="p">)</span>
+        <span class="c1"># sincronizamos el objeto con los nuevos cambios</span>
+        <span class="n">proyecto_iniciado</span> <span class="o">=</span> <span class="n">Proyecto</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">proyecto_iniciado</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertNotEqual</span><span class="p">(</span><span class="n">proyecto_iniciado</span><span class="o">.</span><span class="n">estado</span><span class="p">,</span> <span class="n">Proyecto</span><span class="o">.</span><span class="n">ESTADO_FINALIZADO</span><span class="p">,</span> <span class="s1">&#39;el estado del proyecto cambió a finalizado y &#39;</span>
+                                                                 <span class="s1">&#39;no debía cambiar de estado&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TestViews.test_estado_proyecto_ejecucion_finalizado"><a class="viewcode-back" href="../../_autosummary/pruebasUnitarias.test_views.html#pruebasUnitarias.test_views.TestViews.test_estado_proyecto_ejecucion_finalizado">[documentos]</a>    <span class="k">def</span> <span class="nf">test_estado_proyecto_ejecucion_finalizado</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        CU 14: modificar estado del proyecto a finalizado. Iteración 2</span>
+<span class="sd">        En este test probamos cambiar el estado del proyecto de iniciado a finalizado. Algo que solo se permite si el</span>
+<span class="sd">        estado actual del proyecto es en ejecución por lo que el assert verifica que el cambio de estado suceda.</span>
+
+<span class="sd">        :return: el assert retorna True si el estado del proyecto cambia a finalizado</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">proyecto_ejecucion</span> <span class="o">=</span> <span class="n">Proyecto</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">nombre</span><span class="o">=</span><span class="s1">&#39;proyectoEjecucion&#39;</span><span class="p">,</span> <span class="n">fecha_inicio</span><span class="o">=</span><span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">date</span><span class="p">(),</span>
+                                                     <span class="n">estado</span><span class="o">=</span><span class="n">Proyecto</span><span class="o">.</span><span class="n">ESTADO_EN_EJECUCION</span><span class="p">,</span> <span class="n">numero_fases</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">cant_comite</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+                                                     <span class="n">gerente</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">usuario</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="n">RequestFactory</span><span class="p">()</span>
+        <span class="n">request</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">usuario</span>
+        <span class="n">estado_proyectov2</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">proyecto_ejecucion</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">Proyecto</span><span class="o">.</span><span class="n">ESTADO_FINALIZADO</span><span class="p">)</span>
+        <span class="c1"># sincronizamos el objeto con los nuevos cambios</span>
+        <span class="n">proyecto_ejecucion</span> <span class="o">=</span> <span class="n">Proyecto</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">proyecto_ejecucion</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">proyecto_ejecucion</span><span class="o">.</span><span class="n">estado</span><span class="p">,</span> <span class="n">Proyecto</span><span class="o">.</span><span class="n">ESTADO_FINALIZADO</span><span class="p">,</span> <span class="s1">&#39;el estado del proyecto no cambió a finalizado&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TestViews.test_eliminar_participante"><a class="viewcode-back" href="../../_autosummary/pruebasUnitarias.test_views.html#pruebasUnitarias.test_views.TestViews.test_eliminar_participante">[documentos]</a>    <span class="k">def</span> <span class="nf">test_eliminar_participante</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        CU 16: Administrar Participantes del Proyecto. iteración 2</span>
+<span class="sd">        Esta prueba primeramente añade un usuario al proyecto y luego lo desasigna del mismo.</span>
+
+<span class="sd">        :return: el assert comprueba que el usuario no sea participante del proyecto, en caso de ser retorna false</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">partipante</span> <span class="o">=</span> <span class="n">Usuario</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s1">&#39;participante2&#39;</span><span class="p">,</span>
+                                                 <span class="n">email</span><span class="o">=</span><span class="s1">&#39;estoes@otraprueba.com&#39;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s1">&#39;password&#39;</span><span class="p">)</span>
+        <span class="c1"># asignamos al path la vista administrar_participantes</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;administracion:administrarParticipantes&#39;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">proyecto</span><span class="o">.</span><span class="n">id</span><span class="p">])</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="n">RequestFactory</span><span class="p">()</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;participante&#39;</span><span class="p">:</span> <span class="n">partipante</span><span class="o">.</span><span class="n">id</span><span class="p">})</span>
+        <span class="n">request</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">usuario</span>
+        <span class="c1"># añadimos al participante al proyecto</span>
+        <span class="n">administrar_participantes</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">proyecto</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="c1"># eliminamos al participante del proyecto</span>
+        <span class="n">path2</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;administracion:desasignarUsuario&#39;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">proyecto</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">partipante</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="s1">&#39;participante&#39;</span><span class="p">])</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="n">RequestFactory</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">path2</span><span class="p">)</span>
+        <span class="n">eliminar_participante_y_comite</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">proyecto</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">partipante</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="s1">&#39;participante&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertNotIn</span><span class="p">(</span><span class="n">partipante</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">proyecto</span><span class="o">.</span><span class="n">participantes</span><span class="o">.</span><span class="n">all</span><span class="p">(),</span> <span class="s1">&#39;participante no fue quitado del proyecto&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TestViews.test_crear_fases"><a class="viewcode-back" href="../../_autosummary/pruebasUnitarias.test_views.html#pruebasUnitarias.test_views.TestViews.test_crear_fases">[documentos]</a>    <span class="k">def</span> <span class="nf">test_crear_fases</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        CU 16: crear fase. Iteración 2</span>
+<span class="sd">        Nuestra implementación permite la creación automática de la cantidad de fases que se defina al crear un proyecto</span>
+<span class="sd">        en numero_fases. Este test verifica que se creen las fases y la cantidad correcta definida al crear proyecto.</span>
+
+<span class="sd">        :return: el primer assert retorna True si la lista de fases no está vacía y el segundo retorna True si la cantidad correcta de fases fue creada</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;administracion:crearProyecto&#39;</span><span class="p">)</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="n">RequestFactory</span><span class="p">()</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;nombre&#39;</span><span class="p">:</span> <span class="s1">&#39;proyectoFases&#39;</span><span class="p">,</span> <span class="s1">&#39;fecha_inicio&#39;</span><span class="p">:</span> <span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">date</span><span class="p">(),</span>
+                                               <span class="s1">&#39;numero_fases&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;cant_comite&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">})</span>
+        <span class="n">request</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">usuario</span>
+        <span class="n">crear_proyecto</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">Proyecto</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">nombre</span><span class="o">=</span><span class="s1">&#39;proyectoFases&#39;</span><span class="p">)</span>
+        <span class="n">lista_fases</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">fase_set</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertNotEqual</span><span class="p">(</span><span class="n">lista_fases</span><span class="p">,</span> <span class="p">[],</span> <span class="s1">&#39;No se ha creado ninguna fase&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">lista_fases</span><span class="o">.</span><span class="n">count</span><span class="p">(),</span> <span class="n">p</span><span class="o">.</span><span class="n">numero_fases</span><span class="p">,</span> <span class="s1">&#39;No se ha creado el número correcto de fases&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">lista_fases</span><span class="o">.</span><span class="n">count</span><span class="p">(),</span> <span class="n">p</span><span class="o">.</span><span class="n">numero_fases</span><span class="p">,</span> <span class="s1">&#39;No se ha creado el número correcto de fases&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TestViews.test_verificar_proyecto"><a class="viewcode-back" href="../../_autosummary/pruebasUnitarias.test_views.html#pruebasUnitarias.test_views.TestViews.test_verificar_proyecto">[documentos]</a>    <span class="k">def</span> <span class="nf">test_verificar_proyecto</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        CU 10: Crear Proyectos. Iteración 2</span>
+<span class="sd">        Se verifica que el proyecto es creado correctamente y que tambien el url redirecciona a donde debe ir.</span>
+
+<span class="sd">        :return: el primer assert indica que el proyecto fue creado correctamente, envia un mensaje en casocontrario, y el segundo que el url redirecciona correctamente</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ppp</span> <span class="o">=</span> <span class="n">Proyecto</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">nombre</span><span class="o">=</span><span class="s1">&#39;ppp&#39;</span><span class="p">,</span> <span class="n">fecha_inicio</span><span class="o">=</span><span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">date</span><span class="p">(),</span>
+                                      <span class="n">numero_fases</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">cant_comite</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">gerente</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">usuario</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;administracion:crearProyecto&#39;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">ppp</span><span class="o">.</span><span class="n">nombre</span><span class="p">,</span> <span class="s1">&#39;ppp&#39;</span><span class="p">,</span> <span class="s1">&#39;indica que el proyecto no creado&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">302</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TestViews.test_proyectos"><a class="viewcode-back" href="../../_autosummary/pruebasUnitarias.test_views.html#pruebasUnitarias.test_views.TestViews.test_proyectos">[documentos]</a>    <span class="k">def</span> <span class="nf">test_proyectos</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        CU 11: Listar proyectos por estado. Iteración 2</span>
+<span class="sd">        Se listan los proyectos segun su estado actual, los cuales pueden ser iniciado, en ejecucion, finalizado o</span>
+<span class="sd">        cancelado o por defecto todos, si no se hizo ningun filtro.</span>
+
+<span class="sd">        :return: Retorna que se realiza correctamente el filtro</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">proyecto</span> <span class="o">=</span> <span class="n">Proyecto</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">nombre</span><span class="o">=</span><span class="s1">&#39;proyecto_T&#39;</span><span class="p">,</span> <span class="n">fecha_inicio</span><span class="o">=</span><span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">date</span><span class="p">(),</span>
+                                           <span class="n">numero_fases</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">cant_comite</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">gerente</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">usuario</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="n">proy</span> <span class="o">=</span> <span class="n">Proyecto</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">nombre</span><span class="o">=</span><span class="s1">&#39;proyecto_x&#39;</span><span class="p">,</span> <span class="n">fecha_inicio</span><span class="o">=</span><span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">date</span><span class="p">(),</span>
+                                       <span class="n">numero_fases</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">cant_comite</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">gerente</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">usuario</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="n">RequestFactory</span><span class="p">()</span>
+        <span class="n">request</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">usuario</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="n">proyectos</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;todos&#39;</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">resp</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span></div>
+
+<div class="viewcode-block" id="TestViews.test_estado_proyecto_cancelado"><a class="viewcode-back" href="../../_autosummary/pruebasUnitarias.test_views.html#pruebasUnitarias.test_views.TestViews.test_estado_proyecto_cancelado">[documentos]</a>    <span class="k">def</span> <span class="nf">test_estado_proyecto_cancelado</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        CU 12: Gestionar estados del proyecto. Iteración 2</span>
+<span class="sd">        Gestión correcta del estado del proyecto, en este estado se pasa algun proyecto a estado de cancelado</span>
+
+<span class="sd">        :return: Se verifica que el cambio de estado se realizo correctamente, envia un mensaje en caso contrario</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pl</span> <span class="o">=</span> <span class="n">Proyecto</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">nombre</span><span class="o">=</span><span class="s1">&#39;proyecto_turu&#39;</span><span class="p">,</span> <span class="n">fecha_inicio</span><span class="o">=</span><span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">date</span><span class="p">(),</span>
+                                     <span class="n">numero_fases</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">cant_comite</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">gerente</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">usuario</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="n">RequestFactory</span><span class="p">()</span>
+        <span class="n">request</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">usuario</span>
+        <span class="n">estado_proyectov2</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">pl</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">Proyecto</span><span class="o">.</span><span class="n">ESTADO_CANCELADO</span><span class="p">)</span>
+        <span class="n">pl</span> <span class="o">=</span> <span class="n">Proyecto</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">pl</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">estado</span><span class="p">,</span> <span class="n">Proyecto</span><span class="o">.</span><span class="n">ESTADO_CANCELADO</span><span class="p">,</span> <span class="s1">&#39;no se logro cambiar de estado&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TestViews.test_estado_proyecto_en_ejecucion"><a class="viewcode-back" href="../../_autosummary/pruebasUnitarias.test_views.html#pruebasUnitarias.test_views.TestViews.test_estado_proyecto_en_ejecucion">[documentos]</a>    <span class="k">def</span> <span class="nf">test_estado_proyecto_en_ejecucion</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        CU 13: Modificar el estado del proyecto a en ejecución. Iteración 2</span>
+<span class="sd">        Se modifica el estado del proyecto de iniciado a en ejecucion.</span>
+
+<span class="sd">        :return: Se verifica que el cambio de estado se realizo correctamente, envia un mensaje en caso contrario</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">proyecto_iniciado</span> <span class="o">=</span> <span class="n">Proyecto</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">nombre</span><span class="o">=</span><span class="s1">&#39;proyectoEnEjecucion&#39;</span><span class="p">,</span> <span class="n">fecha_inicio</span><span class="o">=</span><span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">date</span><span class="p">(),</span>
+                                                    <span class="n">numero_fases</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">cant_comite</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">gerente</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">usuario</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="n">RequestFactory</span><span class="p">()</span>
+        <span class="n">request</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">usuario</span>
+        <span class="n">estado_proyectov2</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">proyecto_iniciado</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">Proyecto</span><span class="o">.</span><span class="n">ESTADO_EN_EJECUCION</span><span class="p">)</span>
+        <span class="n">proyecto_iniciado</span> <span class="o">=</span> <span class="n">Proyecto</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">proyecto_iniciado</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">proyecto_iniciado</span><span class="o">.</span><span class="n">estado</span><span class="p">,</span> <span class="n">Proyecto</span><span class="o">.</span><span class="n">ESTADO_EN_EJECUCION</span><span class="p">,</span> <span class="s1">&#39;el proyecto cambio de estado&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TestViews.test_crear_admin_sistema"><a class="viewcode-back" href="../../_autosummary/pruebasUnitarias.test_views.html#pruebasUnitarias.test_views.TestViews.test_crear_admin_sistema">[documentos]</a>    <span class="k">def</span> <span class="nf">test_crear_admin_sistema</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        CU 07: Crear Administrador del sistema. Iteracion 2</span>
+
+<span class="sd">        :return: True si se crea correctamente el usuario administrador</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># variable auxiliar para email random para arreglar el error de</span>
+        <span class="c1"># email repetido en la bd de firebase</span>
+        <span class="n">aux</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">())</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;+&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c1"># primero definimos la direccion del view a probar en el test</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;login:register&#39;</span><span class="p">)</span>
+        <span class="c1"># creamos un request de tipo post al que asignamos el path y los datos del proyecto a crear</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="n">RequestFactory</span><span class="p">()</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="p">{</span>
+            <span class="s1">&#39;username&#39;</span><span class="p">:</span> <span class="s1">&#39;AdminPrueba&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;email&#39;</span><span class="p">:</span> <span class="s1">&#39;admin&#39;</span> <span class="o">+</span> <span class="n">aux</span> <span class="o">+</span> <span class="s1">&#39;@admin.com&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;password&#39;</span><span class="p">:</span> <span class="s1">&#39;admin123&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;pass_confirmation&#39;</span><span class="p">:</span> <span class="s1">&#39;admin123&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;first_name&#39;</span><span class="p">:</span> <span class="s1">&#39;Juan&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;last_name&#39;</span><span class="p">:</span> <span class="s1">&#39;Perez&#39;</span><span class="p">,</span>
+        <span class="p">})</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">user_register</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+        <span class="n">usuario</span> <span class="o">=</span> <span class="n">Usuario</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s1">&#39;AdminPrueba&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">usuario</span><span class="o">.</span><span class="n">is_superuser</span><span class="p">,</span> <span class="s1">&#39;No se pudo crear el usuario Administrador&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">302</span><span class="p">,</span> <span class="s1">&#39;No se pudo crear el usuario Administrador&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TestViews.test_desactivar_usuarios"><a class="viewcode-back" href="../../_autosummary/pruebasUnitarias.test_views.html#pruebasUnitarias.test_views.TestViews.test_desactivar_usuarios">[documentos]</a>    <span class="k">def</span> <span class="nf">test_desactivar_usuarios</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        CU 08: Desactivar usuarios. Iteracion 2.</span>
+
+<span class="sd">        :return: True, si desactiva al usuario</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Creo un usuario que con cuenta activa</span>
+        <span class="n">Usuario</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;Prueba&quot;</span><span class="p">,</span> <span class="n">email</span><span class="o">=</span><span class="s2">&quot;prueba@prueba.com&quot;</span><span class="p">,</span> <span class="n">is_active</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
+        <span class="n">path</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;login:administrarAccesos&#39;</span><span class="p">)</span>
+
+        <span class="c1"># hago el request para desactivar al usuario con id 2</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="n">RequestFactory</span><span class="p">()</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="p">{</span>
+            <span class="s1">&#39;2&#39;</span><span class="p">:</span> <span class="s1">&#39;False&#39;</span><span class="p">,</span>
+        <span class="p">})</span>
+
+        <span class="n">users_access</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+        <span class="n">usuario</span> <span class="o">=</span> <span class="n">Usuario</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s1">&#39;Prueba&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">usuario</span><span class="o">.</span><span class="n">is_active</span><span class="p">,</span> <span class="s2">&quot;No se  pudo desactivar al usuario&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TestViews.test_modificar_usuarios"><a class="viewcode-back" href="../../_autosummary/pruebasUnitarias.test_views.html#pruebasUnitarias.test_views.TestViews.test_modificar_usuarios">[documentos]</a>    <span class="k">def</span> <span class="nf">test_modificar_usuarios</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        CU 09: Modificar usuarios. Iteracion 2.</span>
+
+<span class="sd">        :return: Passed si se modifica correcta los datos de los usuarios</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># self.usuario.username tiene como valor testusuario</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;login:userUpdate&quot;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">usuario</span><span class="o">.</span><span class="n">username</span><span class="p">])</span>
+
+        <span class="n">request</span> <span class="o">=</span> <span class="n">RequestFactory</span><span class="p">()</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="p">{</span>
+            <span class="s1">&#39;username&#39;</span><span class="p">:</span> <span class="s1">&#39;userModificado&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;first_name&#39;</span><span class="p">:</span> <span class="s1">&#39;Juan&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;last_name&#39;</span><span class="p">:</span> <span class="s1">&#39;Perez&#39;</span><span class="p">,</span>
+        <span class="p">})</span>
+        <span class="n">user_update</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">usuario</span><span class="o">.</span><span class="n">username</span><span class="p">)</span>
+
+        <span class="c1"># Obtengo el usuario desde la base de datos</span>
+        <span class="n">usuario</span> <span class="o">=</span> <span class="n">Usuario</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">usuario</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">usuario</span><span class="o">.</span><span class="n">username</span><span class="p">,</span> <span class="s1">&#39;userModificado&#39;</span><span class="p">,</span> <span class="s2">&quot;Modificacion de username exitosa&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">usuario</span><span class="o">.</span><span class="n">first_name</span><span class="p">,</span> <span class="s1">&#39;Juan&#39;</span><span class="p">,</span> <span class="s2">&quot;Modificacion de nombre exitosa&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">usuario</span><span class="o">.</span><span class="n">last_name</span><span class="p">,</span> <span class="s1">&#39;Perez&#39;</span><span class="p">,</span> <span class="s2">&quot;Modificacion de apellido exitosa&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TestViews.test_crear_rol"><a class="viewcode-back" href="../../_autosummary/pruebasUnitarias.test_views.html#pruebasUnitarias.test_views.TestViews.test_crear_rol">[documentos]</a>    <span class="k">def</span> <span class="nf">test_crear_rol</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        CU 22: Crear rol. Iteracion 2.</span>
+
+<span class="sd">        :return: Passed, si el Rol se creo de forma correcta</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Se agrega un nuevo proyecto</span>
+        <span class="n">proyecto</span> <span class="o">=</span> <span class="n">Proyecto</span><span class="p">(</span>
+            <span class="n">nombre</span><span class="o">=</span><span class="s1">&#39;proyectoTest&#39;</span><span class="p">,</span>
+            <span class="n">fecha_inicio</span><span class="o">=</span><span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">date</span><span class="p">(),</span>
+            <span class="n">gerente</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">usuario</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+            <span class="n">numero_fases</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+            <span class="n">cant_comite</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">proyecto</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;administracion:crearRol&#39;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">proyecto</span><span class="o">.</span><span class="n">id</span><span class="p">])</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="n">RequestFactory</span><span class="p">()</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="p">{</span>
+            <span class="s1">&#39;nombre&#39;</span><span class="p">:</span> <span class="s1">&#39;Aprobador&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;crear_item&#39;</span><span class="p">:</span> <span class="s1">&#39;True&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;modificar_item&#39;</span><span class="p">:</span> <span class="s1">&#39;True&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;desactivar_item&#39;</span><span class="p">:</span> <span class="s1">&#39;True&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;aprobar_item&#39;</span><span class="p">:</span> <span class="s1">&#39;True&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;reversionar_item&#39;</span><span class="p">:</span> <span class="s1">&#39;False&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;crear_relaciones_ph&#39;</span><span class="p">:</span> <span class="s1">&#39;True&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;crear_relaciones_as&#39;</span><span class="p">:</span> <span class="s1">&#39;True&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;borrar_relaciones&#39;</span><span class="p">:</span> <span class="s1">&#39;True&#39;</span><span class="p">,</span>
+        <span class="p">})</span>
+        <span class="n">request</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">usuario</span>
+
+        <span class="n">response</span> <span class="o">=</span> <span class="n">crear_rol</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">proyecto</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+
+        <span class="n">rol</span> <span class="o">=</span> <span class="n">Rol</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">nombre</span><span class="o">=</span><span class="s1">&#39;Aprobador&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">rol</span><span class="o">.</span><span class="n">nombre</span><span class="p">,</span> <span class="s1">&#39;Aprobador&#39;</span><span class="p">,</span> <span class="s1">&#39;Se crea el rol correctamente&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">302</span><span class="p">,</span> <span class="s1">&#39;Se crea el rol correctamente&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TestViews.test_estado_proyecto_iniciado_cancelado"><a class="viewcode-back" href="../../_autosummary/pruebasUnitarias.test_views.html#pruebasUnitarias.test_views.TestViews.test_estado_proyecto_iniciado_cancelado">[documentos]</a>    <span class="k">def</span> <span class="nf">test_estado_proyecto_iniciado_cancelado</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        CU 15: Modificar estado del proyecto a cancelado. Iteración 2</span>
+
+<span class="sd">        :return: Passed, si el proyecto pasa a estado cancelado</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">proyecto_cancelado</span> <span class="o">=</span> <span class="n">Proyecto</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+            <span class="n">nombre</span><span class="o">=</span><span class="s1">&#39;proyectoCancelado&#39;</span><span class="p">,</span>
+            <span class="n">fecha_inicio</span><span class="o">=</span><span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">date</span><span class="p">(),</span>
+            <span class="n">numero_fases</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+            <span class="n">cant_comite</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+            <span class="n">gerente</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">usuario</span><span class="o">.</span><span class="n">id</span>
+        <span class="p">)</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="n">RequestFactory</span><span class="p">()</span>
+        <span class="n">request</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">usuario</span>
+        <span class="n">estado_proyectov2</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">proyecto_cancelado</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">Proyecto</span><span class="o">.</span><span class="n">ESTADO_CANCELADO</span><span class="p">)</span>
+        <span class="c1"># sincronizamos el objeto con los nuevos cambios</span>
+        <span class="n">proyecto_cancelado</span> <span class="o">=</span> <span class="n">Proyecto</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">proyecto_cancelado</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">proyecto_cancelado</span><span class="o">.</span><span class="n">estado</span><span class="p">,</span> <span class="n">Proyecto</span><span class="o">.</span><span class="n">ESTADO_CANCELADO</span><span class="p">,</span> <span class="s1">&#39;El estado no puede cambiar a cancelado&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TestViews.test_desactivar_tipo_item"><a class="viewcode-back" href="../../_autosummary/pruebasUnitarias.test_views.html#pruebasUnitarias.test_views.TestViews.test_desactivar_tipo_item">[documentos]</a>    <span class="k">def</span> <span class="nf">test_desactivar_tipo_item</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        CU 31: Desactivar tipo de item. Iteracion 3</span>
+
+<span class="sd">        :return: Passed en caso de que el tipo item quede fuera de la lista de los tipo items del proyecto</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># se asigna el tipo al proyecto:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tipo</span><span class="o">.</span><span class="n">proyecto</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">proyecto</span><span class="p">)</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="n">RequestFactory</span><span class="p">()</span>
+        <span class="n">request</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">usuario</span>
+        <span class="n">desactivar_tipo_item</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">proyecto</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tipo</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertNotIn</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tipo</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">proyecto</span><span class="o">.</span><span class="n">tipoitem_set</span><span class="o">.</span><span class="n">all</span><span class="p">(),</span> <span class="s2">&quot;El proyecto sigue con el tipo de item activo&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TestViews.test_editar_tipo"><a class="viewcode-back" href="../../_autosummary/pruebasUnitarias.test_views.html#pruebasUnitarias.test_views.TestViews.test_editar_tipo">[documentos]</a>    <span class="k">def</span> <span class="nf">test_editar_tipo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        CU 30: Editar el tipo de item. Iteracion 3</span>
+
+<span class="sd">        :return: Passed en caso de que el tipo item quede con los valores cambiados</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># se asigna el tipo al proyecto:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tipo</span><span class="o">.</span><span class="n">proyecto</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">proyecto</span><span class="p">)</span>
+        <span class="n">NOMBRE_EDITADO</span> <span class="o">=</span> <span class="s1">&#39;nombre nuevo&#39;</span>
+        <span class="n">PREFIJO_EDITADO</span> <span class="o">=</span> <span class="s1">&#39;PRE&#39;</span>
+        <span class="n">DESCRIPCION_EDITADA</span> <span class="o">=</span> <span class="s1">&#39;descripcion nueva&#39;</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;administracion:editarTipoItem&#39;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">proyecto</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tipo</span><span class="o">.</span><span class="n">id</span><span class="p">])</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="n">RequestFactory</span><span class="p">()</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="p">{</span>
+            <span class="s1">&#39;nombre&#39;</span><span class="p">:</span> <span class="n">NOMBRE_EDITADO</span><span class="p">,</span>
+            <span class="s1">&#39;prefijo&#39;</span><span class="p">:</span> <span class="n">PREFIJO_EDITADO</span><span class="p">,</span>
+            <span class="s1">&#39;descripcion&#39;</span><span class="p">:</span> <span class="n">DESCRIPCION_EDITADA</span>
+        <span class="p">})</span>
+        <span class="n">request</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">usuario</span>
+        <span class="n">editar_tipo</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">proyecto</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tipo</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="n">tipo_editado</span> <span class="o">=</span> <span class="n">TipoItem</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tipo</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">NOMBRE_EDITADO</span><span class="p">,</span> <span class="n">tipo_editado</span><span class="o">.</span><span class="n">nombre</span><span class="p">,</span> <span class="s2">&quot;No se edito el nombre&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">PREFIJO_EDITADO</span><span class="p">,</span> <span class="n">tipo_editado</span><span class="o">.</span><span class="n">prefijo</span><span class="p">,</span> <span class="s2">&quot;No se edito el prefijo&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">DESCRIPCION_EDITADA</span><span class="p">,</span> <span class="n">tipo_editado</span><span class="o">.</span><span class="n">descripcion</span><span class="p">,</span> <span class="s2">&quot;No se edito la descripcion&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TestViews.test_solicitud_aprobacion"><a class="viewcode-back" href="../../_autosummary/pruebasUnitarias.test_views.html#pruebasUnitarias.test_views.TestViews.test_solicitud_aprobacion">[documentos]</a>    <span class="k">def</span> <span class="nf">test_solicitud_aprobacion</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        CU 38: Solicitar aprobación de ítems. Iteracion 3</span>
+<span class="sd">        Se envia una solicitud para aprobar cierto item, el mismo debe tener un estado de en desarrollo</span>
+<span class="sd">        para poder pasar a Pendiente de Aprobacion</span>
+
+<span class="sd">        :return: Indica que se realizo correctamente la solicitud, envia un mensaje en caso contrario</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pr</span> <span class="o">=</span> <span class="n">Proyecto</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">nombre</span><span class="o">=</span><span class="s1">&#39;proyecTest&#39;</span><span class="p">,</span> <span class="n">fecha_inicio</span><span class="o">=</span><span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">date</span><span class="p">(),</span>
+                                     <span class="n">gerente</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">usuario</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">numero_fases</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">cant_comite</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+        <span class="n">tipor</span> <span class="o">=</span> <span class="n">TipoItem</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">nombre</span><span class="o">=</span><span class="s1">&#39;CasoU&#39;</span><span class="p">,</span> <span class="n">descripcion</span><span class="o">=</span><span class="s1">&#39;fndmsn&#39;</span><span class="p">,</span> <span class="n">prefijo</span><span class="o">=</span><span class="s1">&#39;cu&#39;</span><span class="p">)</span>
+        <span class="n">fas</span> <span class="o">=</span> <span class="n">Fase</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">nombre</span><span class="o">=</span><span class="s1">&#39;Fasex&#39;</span><span class="p">,</span> <span class="n">descripcion</span><span class="o">=</span><span class="s1">&#39;dskjalñ&#39;</span><span class="p">,</span> <span class="n">estado</span><span class="o">=</span><span class="s1">&#39;abierta&#39;</span><span class="p">,</span>
+                                  <span class="n">proyecto</span><span class="o">=</span><span class="n">Proyecto</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">pr</span><span class="o">.</span><span class="n">id</span><span class="p">))</span>
+        <span class="n">cu_38</span> <span class="o">=</span> <span class="n">Item</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">nombre</span><span class="o">=</span><span class="s1">&#39;cu_38&#39;</span><span class="p">,</span> <span class="n">estado</span><span class="o">=</span><span class="n">Item</span><span class="o">.</span><span class="n">ESTADO_DESARROLLO</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">complejidad</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+                                    <span class="n">descripcion</span><span class="o">=</span><span class="s1">&#39;solicitar aprobacion&#39;</span><span class="p">,</span> <span class="n">tipo_item</span><span class="o">=</span><span class="n">TipoItem</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">tipor</span><span class="o">.</span><span class="n">id</span><span class="p">),</span>
+                                    <span class="n">fase</span><span class="o">=</span><span class="n">Fase</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">fas</span><span class="o">.</span><span class="n">id</span><span class="p">))</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="n">RequestFactory</span><span class="p">()</span>
+        <span class="n">request</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">usuario</span>
+        <span class="n">solicitud_aprobacion</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">id_item</span><span class="o">=</span><span class="n">cu_38</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="n">cu_38</span> <span class="o">=</span> <span class="n">Item</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">cu_38</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">cu_38</span><span class="o">.</span><span class="n">estado</span><span class="p">,</span> <span class="n">Item</span><span class="o">.</span><span class="n">ESTADO_PENDIENTE</span><span class="p">,</span> <span class="s1">&#39;No se puede realizar la solicitud&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TestViews.test_aprobar_item"><a class="viewcode-back" href="../../_autosummary/pruebasUnitarias.test_views.html#pruebasUnitarias.test_views.TestViews.test_aprobar_item">[documentos]</a>    <span class="k">def</span> <span class="nf">test_aprobar_item</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        CU 39: Aprobar ítems. Iteracion 3</span>
+<span class="sd">        Una vez hecha la solicitud de aprobacion, el item queda en un estado de Pendiente de Aprobacion,</span>
+<span class="sd">        de ahi, si esta correcto se aprueba y su estado pasa a ser Aprobado</span>
+
+<span class="sd">        :return: Indica que el item fue correctamente aprobado, envia un mensaje en caso contrario</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">px</span> <span class="o">=</span> <span class="n">Proyecto</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">nombre</span><span class="o">=</span><span class="s1">&#39;projectTest&#39;</span><span class="p">,</span> <span class="n">fecha_inicio</span><span class="o">=</span><span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">date</span><span class="p">(),</span>
+                                     <span class="n">gerente</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">usuario</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">numero_fases</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">cant_comite</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+        <span class="n">tipox</span> <span class="o">=</span> <span class="n">TipoItem</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">nombre</span><span class="o">=</span><span class="s1">&#39;Casox&#39;</span><span class="p">,</span> <span class="n">descripcion</span><span class="o">=</span><span class="s1">&#39;uto&#39;</span><span class="p">,</span> <span class="n">prefijo</span><span class="o">=</span><span class="s1">&#39;cx&#39;</span><span class="p">)</span>
+        <span class="n">fasx</span> <span class="o">=</span> <span class="n">Fase</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">nombre</span><span class="o">=</span><span class="s1">&#39;Fasx&#39;</span><span class="p">,</span> <span class="n">descripcion</span><span class="o">=</span><span class="s1">&#39;dshh&#39;</span><span class="p">,</span> <span class="n">estado</span><span class="o">=</span><span class="s1">&#39;abierta&#39;</span><span class="p">,</span>
+                                   <span class="n">proyecto</span><span class="o">=</span><span class="n">Proyecto</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">px</span><span class="o">.</span><span class="n">id</span><span class="p">))</span>
+        <span class="n">cu_39_1</span> <span class="o">=</span> <span class="n">Item</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">nombre</span><span class="o">=</span><span class="s1">&#39;cu_39_1&#39;</span><span class="p">,</span> <span class="n">estado</span><span class="o">=</span><span class="n">Item</span><span class="o">.</span><span class="n">ESTADO_PENDIENTE</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">complejidad</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+                                      <span class="n">descripcion</span><span class="o">=</span><span class="s1">&#39;aprobar item&#39;</span><span class="p">,</span> <span class="n">tipo_item</span><span class="o">=</span><span class="n">TipoItem</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">tipox</span><span class="o">.</span><span class="n">id</span><span class="p">),</span>
+                                      <span class="n">fase</span><span class="o">=</span><span class="n">Fase</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">fasx</span><span class="o">.</span><span class="n">id</span><span class="p">))</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="n">RequestFactory</span><span class="p">()</span>
+        <span class="n">request</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">usuario</span>
+        <span class="n">aprobar_item</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">id_item</span><span class="o">=</span><span class="n">cu_39_1</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="n">cu_39_1</span> <span class="o">=</span> <span class="n">Item</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">cu_39_1</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">cu_39_1</span><span class="o">.</span><span class="n">estado</span><span class="p">,</span> <span class="n">Item</span><span class="o">.</span><span class="n">ESTADO_APROBADO</span><span class="p">,</span> <span class="s1">&#39;No se puede realizar la accion&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TestViews.test_desaprobar_item"><a class="viewcode-back" href="../../_autosummary/pruebasUnitarias.test_views.html#pruebasUnitarias.test_views.TestViews.test_desaprobar_item">[documentos]</a>    <span class="k">def</span> <span class="nf">test_desaprobar_item</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        CU 39: Aprobar ítems. Iteracion 3</span>
+<span class="sd">        En caso de que el item no se encuentre con los requerimientos pertinentes, se desaprueba y tal como</span>
+<span class="sd">        indica el RF-127, el estado del item pasa de Pendiente de Aprobacion a en desarrollo nuevamente</span>
+
+<span class="sd">        :return: Indica que el item fue desaprobado, caso contrario envia un mensaje</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pp</span> <span class="o">=</span> <span class="n">Proyecto</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">nombre</span><span class="o">=</span><span class="s1">&#39;proTest&#39;</span><span class="p">,</span> <span class="n">fecha_inicio</span><span class="o">=</span><span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">date</span><span class="p">(),</span>
+                                     <span class="n">gerente</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">usuario</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">numero_fases</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">cant_comite</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+        <span class="n">tipop</span> <span class="o">=</span> <span class="n">TipoItem</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">nombre</span><span class="o">=</span><span class="s1">&#39;Casop&#39;</span><span class="p">,</span> <span class="n">descripcion</span><span class="o">=</span><span class="s1">&#39;bkdls&#39;</span><span class="p">,</span> <span class="n">prefijo</span><span class="o">=</span><span class="s1">&#39;cp&#39;</span><span class="p">)</span>
+        <span class="n">fasep</span> <span class="o">=</span> <span class="n">Fase</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">nombre</span><span class="o">=</span><span class="s1">&#39;Fasep&#39;</span><span class="p">,</span> <span class="n">descripcion</span><span class="o">=</span><span class="s1">&#39;shh&#39;</span><span class="p">,</span> <span class="n">estado</span><span class="o">=</span><span class="s1">&#39;abierta&#39;</span><span class="p">,</span>
+                                    <span class="n">proyecto</span><span class="o">=</span><span class="n">Proyecto</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">pp</span><span class="o">.</span><span class="n">id</span><span class="p">))</span>
+        <span class="n">cu_39_2</span> <span class="o">=</span> <span class="n">Item</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">nombre</span><span class="o">=</span><span class="s1">&#39;cu_39_2&#39;</span><span class="p">,</span> <span class="n">estado</span><span class="o">=</span><span class="n">Item</span><span class="o">.</span><span class="n">ESTADO_PENDIENTE</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">complejidad</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+                                      <span class="n">descripcion</span><span class="o">=</span><span class="s1">&#39;desaprobar item&#39;</span><span class="p">,</span> <span class="n">tipo_item</span><span class="o">=</span><span class="n">TipoItem</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">tipop</span><span class="o">.</span><span class="n">id</span><span class="p">),</span>
+                                      <span class="n">fase</span><span class="o">=</span><span class="n">Fase</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">fasep</span><span class="o">.</span><span class="n">id</span><span class="p">))</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="n">RequestFactory</span><span class="p">()</span>
+        <span class="n">request</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">usuario</span>
+        <span class="n">desaprobar_item</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">id_item</span><span class="o">=</span><span class="n">cu_39_2</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="n">cu_39_2</span> <span class="o">=</span> <span class="n">Item</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">cu_39_2</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">cu_39_2</span><span class="o">.</span><span class="n">estado</span><span class="p">,</span> <span class="n">Item</span><span class="o">.</span><span class="n">ESTADO_DESARROLLO</span><span class="p">,</span> <span class="s1">&#39;No se puede realizar la accion&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TestViews.test_desactivar_item"><a class="viewcode-back" href="../../_autosummary/pruebasUnitarias.test_views.html#pruebasUnitarias.test_views.TestViews.test_desactivar_item">[documentos]</a>    <span class="k">def</span> <span class="nf">test_desactivar_item</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        CU 40: Desactivar ítems. Iteracion 3</span>
+<span class="sd">        Existe la posibilidad en la cual un item creado sea innecesario, por ello requiere ser desactivado,</span>
+<span class="sd">        para realizar esta accion el mismo debe esta en el estado de en desarrollo y una vez desactivado</span>
+<span class="sd">        su estado pasa a Desactivado</span>
+
+<span class="sd">        :return: Indica que el item fue desactivado sin inconvenientes, envia un mensaje en caso contrario</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pm</span> <span class="o">=</span> <span class="n">Proyecto</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">nombre</span><span class="o">=</span><span class="s1">&#39;proTest&#39;</span><span class="p">,</span> <span class="n">fecha_inicio</span><span class="o">=</span><span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">date</span><span class="p">(),</span>
+                                     <span class="n">gerente</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">usuario</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">numero_fases</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">cant_comite</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+        <span class="n">tipom</span> <span class="o">=</span> <span class="n">TipoItem</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">nombre</span><span class="o">=</span><span class="s1">&#39;Casom&#39;</span><span class="p">,</span> <span class="n">descripcion</span><span class="o">=</span><span class="s1">&#39;uuuto&#39;</span><span class="p">,</span> <span class="n">prefijo</span><span class="o">=</span><span class="s1">&#39;cm&#39;</span><span class="p">)</span>
+        <span class="n">fasem</span> <span class="o">=</span> <span class="n">Fase</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">nombre</span><span class="o">=</span><span class="s1">&#39;Fasem&#39;</span><span class="p">,</span> <span class="n">descripcion</span><span class="o">=</span><span class="s1">&#39;cdshh&#39;</span><span class="p">,</span> <span class="n">estado</span><span class="o">=</span><span class="s1">&#39;abierta&#39;</span><span class="p">,</span>
+                                   <span class="n">proyecto</span><span class="o">=</span><span class="n">Proyecto</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">pm</span><span class="o">.</span><span class="n">id</span><span class="p">))</span>
+        <span class="n">cu_40</span> <span class="o">=</span> <span class="n">Item</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">nombre</span><span class="o">=</span><span class="s1">&#39;cu_40&#39;</span><span class="p">,</span> <span class="n">estado</span><span class="o">=</span><span class="n">Item</span><span class="o">.</span><span class="n">ESTADO_DESARROLLO</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">complejidad</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+                                      <span class="n">descripcion</span><span class="o">=</span><span class="s1">&#39;desactivar item&#39;</span><span class="p">,</span> <span class="n">tipo_item</span><span class="o">=</span><span class="n">TipoItem</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">tipom</span><span class="o">.</span><span class="n">id</span><span class="p">),</span>
+                                      <span class="n">fase</span><span class="o">=</span><span class="n">Fase</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">fasem</span><span class="o">.</span><span class="n">id</span><span class="p">))</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="n">RequestFactory</span><span class="p">()</span>
+        <span class="n">request</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">usuario</span>
+        <span class="n">desactivar_item</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">id_item</span><span class="o">=</span><span class="n">cu_40</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">id_proyecto</span><span class="o">=</span><span class="n">pm</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="n">cu_40</span> <span class="o">=</span> <span class="n">Item</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">cu_40</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">cu_40</span><span class="o">.</span><span class="n">estado</span><span class="p">,</span> <span class="n">Item</span><span class="o">.</span><span class="n">ESTADO_DESACTIVADO</span><span class="p">,</span> <span class="s2">&quot;No se puede realizar la accion&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TestViews.test_ver_item"><a class="viewcode-back" href="../../_autosummary/pruebasUnitarias.test_views.html#pruebasUnitarias.test_views.TestViews.test_ver_item">[documentos]</a>    <span class="k">def</span> <span class="nf">test_ver_item</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        CU 35: Listar ítems. Iteración 3</span>
+<span class="sd">        este test se encarga de probar que si se pasa un id válido de item, la vista renderee la página</span>
+
+<span class="sd">        :return: retorna true si es posible ver el ítem</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">item</span> <span class="o">=</span> <span class="n">Item</span><span class="p">(</span><span class="n">nombre</span><span class="o">=</span><span class="s1">&#39;itemprue&#39;</span><span class="p">,</span> <span class="n">descripcion</span><span class="o">=</span><span class="s1">&#39;descripcion del ítem&#39;</span><span class="p">,</span> <span class="n">tipo_item</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tipo</span><span class="p">,</span> <span class="n">fase</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">fase</span><span class="p">)</span>
+        <span class="n">item</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;desarrollo:verItem&#39;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">proyecto</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">item</span><span class="o">.</span><span class="n">id</span><span class="p">])</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="n">RequestFactory</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="n">request</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">usuario</span>
+        <span class="n">item</span> <span class="o">=</span> <span class="n">Item</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">nombre</span><span class="o">=</span><span class="s1">&#39;itemprue&#39;</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">ver_item</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">proyecto</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">item</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="s1">&#39;no se puede ver el item&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TestViews.test_modificar_estado_item"><a class="viewcode-back" href="../../_autosummary/pruebasUnitarias.test_views.html#pruebasUnitarias.test_views.TestViews.test_modificar_estado_item">[documentos]</a>    <span class="k">def</span> <span class="nf">test_modificar_estado_item</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        CU 37: Modificar estado de ítems. Iteración 3.</span>
+<span class="sd">        Test para probar que el estado del item no debe ser cambiado a desactivado si el ítem se encuentra</span>
+<span class="sd">        en estado diferente a &#39;en desarrollo&#39;</span>
+
+<span class="sd">        :return: el assert retorna True si el estado no es cambiado y false en caso contrario</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">item</span> <span class="o">=</span> <span class="n">Item</span><span class="p">(</span><span class="n">nombre</span><span class="o">=</span><span class="s1">&#39;itemdesa&#39;</span><span class="p">,</span> <span class="n">estado</span><span class="o">=</span><span class="n">Item</span><span class="o">.</span><span class="n">ESTADO_APROBADO</span><span class="p">,</span> <span class="n">descripcion</span><span class="o">=</span><span class="s1">&#39;descripcion del ítem&#39;</span><span class="p">,</span> <span class="n">tipo_item</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tipo</span><span class="p">,</span> <span class="n">fase</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">fase</span><span class="p">)</span>
+        <span class="n">item</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;desarrollo:desactivarItem&#39;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">proyecto</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">item</span><span class="o">.</span><span class="n">id</span><span class="p">])</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="n">RequestFactory</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="n">request</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">usuario</span>
+        <span class="n">desactivar_item</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">proyecto</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">item</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertNotEqual</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">estado</span><span class="p">,</span> <span class="n">Item</span><span class="o">.</span><span class="n">ESTADO_DESACTIVADO</span><span class="p">,</span> <span class="s1">&#39;el estado cambió a desactivado&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TestViews.test_crear_relacion_items"><a class="viewcode-back" href="../../_autosummary/pruebasUnitarias.test_views.html#pruebasUnitarias.test_views.TestViews.test_crear_relacion_items">[documentos]</a>    <span class="k">def</span> <span class="nf">test_crear_relacion_items</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        CU 43: Desactivar relaciones entre items. Iteracion 3.</span>
+<span class="sd">        Test que prueba la vista encargada de desactivar las relaciones</span>
+
+<span class="sd">        :return: True, si la vista logro desactivar la relacion</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">item1</span> <span class="o">=</span> <span class="n">Item</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+            <span class="n">nombre</span><span class="o">=</span><span class="s1">&#39;item1&#39;</span><span class="p">,</span>
+            <span class="n">descripcion</span><span class="o">=</span><span class="s1">&#39;descripcion del ítem&#39;</span><span class="p">,</span>
+            <span class="n">tipo_item</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tipo</span><span class="p">,</span>
+            <span class="n">fase</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">fase</span>
+        <span class="p">)</span>
+        <span class="n">item2</span> <span class="o">=</span> <span class="n">Item</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+            <span class="n">nombre</span><span class="o">=</span><span class="s1">&#39;item2&#39;</span><span class="p">,</span>
+            <span class="n">descripcion</span><span class="o">=</span><span class="s1">&#39;descripcion del ítem&#39;</span><span class="p">,</span>
+            <span class="n">tipo_item</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tipo</span><span class="p">,</span>
+            <span class="n">fase</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">fase</span>
+        <span class="p">)</span>
+        <span class="n">relacion</span> <span class="o">=</span> <span class="n">Relacion</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">inicio</span><span class="o">=</span><span class="n">item1</span><span class="p">,</span> <span class="n">fin</span><span class="o">=</span><span class="n">item2</span><span class="p">)</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;desarrollo:desactivarRelacion&#39;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">proyecto</span><span class="o">.</span><span class="n">id</span><span class="p">])</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;desactivar&quot;</span><span class="p">:</span> <span class="n">relacion</span><span class="o">.</span><span class="n">id</span><span class="p">}</span>
+
+        <span class="n">request</span> <span class="o">=</span> <span class="n">RequestFactory</span><span class="p">()</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+        <span class="n">request</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">usuario</span>
+
+        <span class="n">desactivar_relacion_item</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">proyecto</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="n">relacion</span> <span class="o">=</span> <span class="n">Relacion</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">relacion</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">relacion</span><span class="o">.</span><span class="n">is_active</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;el estado cambió a desactivado&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TestViews.test_ver_fases"><a class="viewcode-back" href="../../_autosummary/pruebasUnitarias.test_views.html#pruebasUnitarias.test_views.TestViews.test_ver_fases">[documentos]</a>    <span class="k">def</span> <span class="nf">test_ver_fases</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        CU 21: Mostrar Fases. Iteración 3.</span>
+<span class="sd">        Este test prueba que se muestre las fases de un proyecto</span>
+
+<span class="sd">        :return: retorna true si es posible ver las fases</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;desarrollo:verProyecto&#39;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">proyecto</span><span class="o">.</span><span class="n">id</span><span class="p">])</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="n">RequestFactory</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="n">request</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">usuario</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">ver_proyecto</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">proyecto</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="s1">&#39;no se puede ver las fases del proyecto&#39;</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Paola Olmedo, Matías López, David Nuñez, Luis Ríos
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
