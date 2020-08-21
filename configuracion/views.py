@@ -1,7 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 # Create your views here.
 from administracion.models import Proyecto, Fase
+from .models import LineaBase
 from desarrollo.models import Item
 
 
@@ -63,4 +64,15 @@ def vista_crear_linea_base(request, id_fase):
     :rtype: render
     """
     fase = Fase.objects.get(pk=id_fase)
+    if request.method == 'POST':
+        items = [Item.objects.get(pk=item.split('-')[1]) for item in request.POST if len(item.split('-')) > 1]
+        if len(items) > 0:
+            nueva_linea_base = LineaBase()
+            nueva_linea_base.save()
+            for item in items:
+                item.estado = Item.ESTADO_LINEABASE
+                item.save()
+                nueva_linea_base.items.add(item)
+            nueva_linea_base.save()
+        return redirect('configuracion:verProyecto', id_proyecto=fase.proyecto_id)
     return render(request, 'configuracion/lineabase_crear.html', {'fase': fase})

@@ -19,9 +19,20 @@
                         <td class="justify-content-center">
                             <div class="list-group pt-2">
                                 <ul>
-
                                     {% for item in fase.item_set.all %}
                                         {% if item.estado == item.ESTADO_APROBADO %}
+                                            <li class="list-group">
+                                                <a class="align-baseline"
+                                                   href="#" >
+                                                   {{ item.tipo_item.prefijo }} {% if item.numeracion < 10 %}0{% endif %}{{ item.numeracion    }}-{{ item.nombre }}
+                                                </a>
+                                            </li>
+                                        {% endif %}
+                                    {% endfor %}
+                                </ul>
+                                <ul class="" id="listaEnLB">
+                                    {% for item in fase.item_set.all %}
+                                        {% if item.estado == item.ESTADO_LINEABASE%}
                                             <li class="list-group">
                                                 <a class="align-baseline"
                                                    href="#" >
@@ -52,4 +63,11 @@
             <a href="{% url 'configuracion:indexConfiguracion' 'todos' %}" class="btn btn-primary float-right">Volver atrás</a>
         </div>
     </div>
+    <script>
+        const enLB = document.getElementById('listaEnLB');
+        if( enLB.childElementCount > 0){
+            enLB.classList.add('border');
+            enLB.classList.add('border-primary');
+        }
+    </script>
 {% endblock %}
