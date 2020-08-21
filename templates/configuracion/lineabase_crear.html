@@ -1,0 +1,27 @@
+{% extends 'login/loginHeader.html' %}
+{% block content %}
+    <div class="container">
+        <h1 class="text-center pt-3 mb-5">Crear linea base</h1>
+        <h4 class="mb-5">Seleccione los items a incluir en la linea base de la fase "{{ fase.nombre }}"</h4>
+
+        <form target="{% url 'configuracion:crearLineaBase' fase.id %}" method="post">
+            {% csrf_token %}
+            {% for item in fase.item_set.all %}
+                {% if item.estado == item.ESTADO_APROBADO %}
+                    <div  class="form-check">
+                        <input class="form-check-input" type="checkbox" name="checkItem-{{ item.id }}" id="checkItem-{{ item.id }}">
+                        <label class="form-check-label" for="checkItem-{{ item.id }}">
+                            {{ item.tipo_item.prefijo }} {% if item.numeracion < 10 %}0{% endif %}{{ item.numeracion    }}-{{ item.nombre }}
+                        </label>
+                    </div>
+                {% endif %}
+            {% endfor %}
+
+            <div class="mt-5">
+                <button class="btn btn-primary">Confirmar creacion</button>
+                <a href="{% url 'configuracion:verProyecto' fase.proyecto_id %}" class="btn btn-primary float-right">Volver atrás</a>
+            </div>
+        </form>
+
+    </div>
+{% endblock %}

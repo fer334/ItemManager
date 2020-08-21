@@ -1,7 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 # Create your views here.
-from administracion.models import Proyecto
+from administracion.models import Proyecto, Fase
+from .models import LineaBase
 from desarrollo.models import Item
 
 
@@ -50,12 +51,28 @@ def ver_proyecto(request, id_proyecto):
     :rtype: render
     """
     proyecto = Proyecto.objects.get(pk=id_proyecto)
-    # lista de items
-    lista_items = Item.objects.all()
-    # filtro de tipos de items que aún no fueron usados (para todas las fases)
-
-    es_aprobador = False
-    if request.user.id == proyecto.gerente:
-        es_aprobador = True
-
     return render(request, 'configuracion/proyecto_ver_unico.html', {'proyecto': proyecto})
+
+
+def vista_crear_linea_base(request, id_fase):
+    """
+    Esta vista despliega el template para iniciar la creacion de una linea base
+
+    :param request: objeto tipo diccionario que permite acceder a datos
+    :param id_proyecto: Se recibe como parámetro la fase en la que se creara la linea base
+    :return: objeto que renderea verProyecto.html
+    :rtype: render
+    """
+    fase = Fase.objects.get(pk=id_fase)
+    if request.method == 'POST':
+        items = [Item.objects.get(pk=item.split('-')[1]) for item in request.POST if len(item.split('-')) > 1]
+        if len(items) > 0:
+            nueva_linea_base = LineaBase()
+            nueva_linea_base.save()
+            for item in items:
+                item.estado = Item.ESTADO_LINEABASE
+                item.save()
+                nueva_linea_base.items.add(item)
+            nueva_linea_base.save()
+        return redirect('configuracion:verProyecto', id_proyecto=fase.proyecto_id)
+    return render(request, 'configuracion/lineabase_crear.html', {'fase': fase})
