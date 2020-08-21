@@ -48,7 +48,7 @@ def crear_item(request, id_fase, id_tipo):
                 complejidad = form.cleaned_data['complejidad']
                 descripcion = form.cleaned_data['descripcion']
                 nuevo_item = Item(nombre=nombre, complejidad=complejidad, descripcion=descripcion, tipo_item=tipo,
-                                  fase=fase, numeracion=get_numeracion(fase,tipo))
+                                  fase=fase, numeracion=get_numeracion(fase, tipo))
                 nuevo_item.save()
                 # vinculamos el tipo a la fase
                 if tipo not in fase.tipos_item.all():
@@ -336,3 +336,54 @@ def desactivar_item(request, id_proyecto, id_item):
         item.estado = Item.ESTADO_DESACTIVADO
         item.save()
     return redirect('desarrollo:verItem', id_proyecto, id_item)
+
+
+def cerrar_fase(request, id_proyecto):
+    """
+    Metodo que se encarga de renderizar la vista cerrar fase,
+    recibe como parametro dos atributos, el request que es comun entre todas las
+    vistas y el id_proyecto que tiene el numero identificador del proyecto donde
+    se encuentran todas las fases para ese proyecto
+
+    :param request: objeto tipo diccionario que permite acceder a datos
+    :param id_proyecto: identificador unico por proyecto
+    :return: objeto que renderea item_des_relacion.html
+    :rtype: render
+    """
+    fases = Fase.objects.filter(proyecto=id_proyecto)
+    mensaje_error = ""
+
+    for i, fase in enumerate(fases):
+        fase.nro_de_fase = i + 1
+    # Ver cual fase se puede cerrar
+    for i, fase in enumerate(fases):
+        if fase.estado == 'abierta':
+            if i == 0 or fases[i - 1].estado == 'cerrada':
+                fases[i].cerrable = True
+                break
+
+    # Comprobacion de gerencia de proyecto
+    gerente_del_proyecto = Proyecto.objects.get(pk=id_proyecto).gerente
+    if gerente_del_proyecto == request.user.id:
+        es_gerente = True
+    else:
+        es_gerente = False
+
+    if request.method == "POST":
+
+        clave = int(request.POST['cerrar'])
+        fase = Fase.objects.get(id=clave)
+        i = clave - fases[0].id
+        if fases[i].cerrable:
+            fase.estado = 'cerrada'
+            fase.save()
+        else:
+            mensaje_error = "La fase anterior aun no se cerro"
+        return redirect('desarrollo:cerrarFase', id_proyecto)
+    content = {
+        'id_proyecto': id_proyecto,
+        'fases': fases,
+        'es_gerente': es_gerente,
+        'mensaje_error': mensaje_error,
+    }
+    return render(request, 'desarrollo/fase_cerrar.html', content)
