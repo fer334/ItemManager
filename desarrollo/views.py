@@ -358,7 +358,7 @@ def modificar_item(request, id_proyecto, id_item):
             item.save()
             return redirect('desarrollo:verItem', id_proyecto, id_item)
     form = EditarItemForm()
-    return render(request,'desarrollo/editarItem.html', {'form': form})
+    return render(request, 'desarrollo/item_editar.html', {'form': form})
 
 
 
