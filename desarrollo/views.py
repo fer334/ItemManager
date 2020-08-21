@@ -338,7 +338,7 @@ def desactivar_item(request, id_proyecto, id_item):
     return redirect('desarrollo:verItem', id_proyecto, id_item)
 
 
-def modificar_item(request, id_item):
+def modificar_item(request, id_proyecto, id_item):
     """
     Vista Modificar Item
     :param request:
@@ -356,7 +356,7 @@ def modificar_item(request, id_item):
             item.complejidad = complejidad
             item.descripcion = descripcion
             item.save()
-            return redirect('desarrollo:verItem', id_item = id_item)
+            return redirect('desarrollo:verItem', id_proyecto, id_item)
     form = EditarItemForm()
     return render(request,'desarrollo/editarItem.html', {'form': form})
 

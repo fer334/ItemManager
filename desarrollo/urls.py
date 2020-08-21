@@ -19,5 +19,5 @@ urlpatterns = [
     path('proyectos/<int:id_proyecto>/items/<int:id_item>/desactivar', views.desactivar_item, name='desactivarItem'),
     path('items/<int:id_item>/aprobar', views.aprobar_item, name='aprobarItem'),
     path('items/<int:id_item>/desaprobar', views.desaprobar_item, name='desaprobarItem'),
-    path('items/<int:id_item>/editar', views.modificar_item, name='editarItem')
+    path('proyectos/<int:id_proyecto>/items/<int:id_item>/editar', views.modificar_item, name='editarItem')
 ]
