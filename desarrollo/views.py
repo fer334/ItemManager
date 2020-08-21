@@ -346,9 +346,9 @@ def modificar_item(request, id_item):
     :return:
     """
     item = Item.objects.get(pk=id_item)
-    if item.ESTADO_DESARROLLO:
+    if Item.ESTADO_DESARROLLO == item.estado:
         form = EditarItemForm(request.POST)
-        if form.is_valid():
+        if form.is_valid() and request.method == 'POST':
             nombre = form.cleaned_data['nombre']
             complejidad = form.cleaned_data['complejidad']
             descripcion = form.cleaned_data['descripcion']
