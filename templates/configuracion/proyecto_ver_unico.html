@@ -3,18 +3,30 @@
     <div class="container">
         <h1 class="text-center pt-3 mb-5">{{ proyecto.nombre }}</h1>
         <div class="btn float-right">
-            <a class="btn btn-info"
-               href="#"
-               style="color: white">
-                Crear linea base
-            </a>
+
         </div>
         <table class="table table-bordered">
             <thead class="thead-dark">
                 <tr>
                     {% for fase in proyecto.fase_set.all %}
-                        <th class="">{{ fase.nombre }}</th>
+                        <th class="">
+                            <div>{{ fase.nombre }}</div>
+                            <div class="dropdown">
+                                <button type="button" class="btn btn-secondary dropdown-toggle" id="dropdownMenuButton"
+                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Ver Lineas Base
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    {% for lb in fase.lineabase_set.all %}
+                                        <a class="dropdown-item" role="button" href="{% url 'configuracion:verLineaBase' lb.id %}"  >
+                                            Linea Base {{ lb.id }}
+                                        </a>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </th>
                     {% endfor %}
+
                 </tr>
             </thead>
             <tbody>
@@ -23,9 +35,20 @@
                         <td class="justify-content-center">
                             <div class="list-group pt-2">
                                 <ul>
-
                                     {% for item in fase.item_set.all %}
                                         {% if item.estado == item.ESTADO_APROBADO %}
+                                            <li class="list-group">
+                                                <a class="align-baseline"
+                                                   href="#" >
+                                                   {{ item.tipo_item.prefijo }} {% if item.numeracion < 10 %}0{% endif %}{{ item.numeracion    }}-{{ item.nombre }}
+                                                </a>
+                                            </li>
+                                        {% endif %}
+                                    {% endfor %}
+                                </ul>
+                                <ul class="" id="listaEnLB">
+                                    {% for item in fase.item_set.all %}
+                                        {% if item.estado == item.ESTADO_LINEABASE%}
                                             <li class="list-group">
                                                 <a class="align-baseline"
                                                    href="#" >
@@ -40,9 +63,32 @@
                     {% endfor %}
                 </tr>
             </tbody>
+            <tfoot>
+                <tr>
+                {% for fase in proyecto.fase_set.all %}
+                    <td>
+                        <a class="btn btn-info btn-block" href="{% url 'configuracion:crearLineaBase' fase.id %}">
+                            Crear linea base
+                        </a>
+                    </td>
+                {% endfor %}
+                </tr>
+            </tfoot>
         </table>
+
         <div class="col-sm-12 mt-4">
+            {% if es_comite %}
+                <a class="btn btn-primary" href="{% url 'configuracion:verIndexComite' proyecto.id %}">Comite de decisiones</a>
+            {% endif %}
             <a href="{% url 'configuracion:indexConfiguracion' 'todos' %}" class="btn btn-primary float-right">Volver atrás</a>
         </div>
+
     </div>
+    <script>
+        const enLB = document.getElementById('listaEnLB');
+        if( enLB.childElementCount > 0){
+            enLB.classList.add('border');
+            enLB.classList.add('border-primary');
+        }
+    </script>
 {% endblock %}

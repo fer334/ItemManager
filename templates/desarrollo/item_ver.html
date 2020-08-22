@@ -70,6 +70,8 @@
                     <a href="{% url 'desarrollo:verProyecto' proyecto.id %}" class="btn btn-primary float-right">Volver atrás</a>
                 </div>
                 {% if item.estado == desarrollo %}
+                    <a class="btn btn-info" href="{% url 'desarrollo:editarItem' proyecto.id item.id%}">Editar</a>
+
                     <a class="btn btn-success" href="{% url 'desarrollo:solicitarAprobacion' item.id %}" >Solicitar Aprobación</a>
                     {% if item.item_desarrollo_inicio.count != 0 %}
                         <button type="button" class="btn btn-secondary" onclick="showAlert()">Desactivar Ítem</button>

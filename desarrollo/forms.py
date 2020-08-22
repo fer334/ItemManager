@@ -75,3 +75,19 @@ class RelacionForm(forms.ModelForm):
             )
 
         return data
+
+
+class EditarItemForm(forms.Form):
+    """Formulario para la modificar Items"""
+
+    nombre = forms.CharField(required=True, widget=forms.TextInput(attrs={'class': 'form-control',
+                                                                          'value': 'Item'}))
+    complejidad = forms.IntegerField(required=True, widget=forms.TextInput(attrs={'class': 'numberinput form-control',
+                                                                                  'type': 'number',
+                                                                                  'min': '1', 'max': '10',
+                                                                                  'value': '5'}))
+    descripcion = forms.CharField(required=True, widget=forms.Textarea(attrs={'class': 'form-control', 'rows': '3',
+                                                                              'value': ''}))
+
+    def __init__(self, *args, **kwargs):
+        super(EditarItemForm, self).__init__(*args, **kwargs)
