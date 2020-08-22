@@ -28,7 +28,7 @@
                         </tr>
 
                         <tr>
-                            <th rowspan="5" class="text-center align-middle h5">Atributos particulares</th>
+                            <th rowspan="5" class="text-center align-middle h5">Atributos Comunes</th>
                         </tr>
                         <tr>
                             <td>Nombre</td>
@@ -40,7 +40,9 @@
                         </tr>
                         <tr>
                             <td>Version</td>
-                            <td>{{ item.version }}</td>
+                            <td>{{ item.version }}
+                                <a class="btn btn-outline-primary" href="{% url 'desarrollo:histVersionesItem' proyecto.id item.id %}" >historial de versiones</a>
+                            </td>
                         </tr>
                         <tr>
                             <td>Descripcion</td>

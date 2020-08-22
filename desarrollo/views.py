@@ -93,6 +93,16 @@ def ver_item(request, id_proyecto, id_item):
                                                         'estado': Proyecto.ESTADO_EN_EJECUCION})
 
 
+def historial_versiones_item(request, id_proyecto, id_item):
+    proyecto = Proyecto.objects.get(pk=id_proyecto)
+    item = Item.objects.get(pk=id_item)
+    lista_atributos = AtributoParticular.objects.filter(item=item)
+    lista_versiones = []
+    return render(request, 'desarrollo/item_historial_versiones.html', {'lista_versiones': lista_versiones,
+                                                                        'item_actual': item, 'proyecto': proyecto,
+                                                                        'lista_atributos': lista_atributos})
+
+
 def menu_aprobacion(request, id_proyecto):
     """
     Vista que se encarga de mostrar un menú en el cual se permite administrar los ítems pendientes de aprobación

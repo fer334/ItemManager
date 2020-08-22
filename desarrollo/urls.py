@@ -7,6 +7,8 @@ urlpatterns = [
     # URLs de Mati
     path('fase/<int:id_fase>/tipo/<int:id_tipo>/items/crear', views.crear_item, name='crearItem'),
     path('proyectos/<int:id_proyecto>/items/<int:id_item>', views.ver_item, name='verItem'),
+    path('proyectos/<int:id_proyecto>/items/<int:id_item>/historialversiones', views.historial_versiones_item,
+         name='histVersionesItem'),
     path('proyectos/<int:id_proyecto>/aprobacion', views.menu_aprobacion, name='menuAprobacion'),
     # URLs de David
     path('<str:filtro>', views.index, name='indexDesarrollo'),

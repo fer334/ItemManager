@@ -1,0 +1,94 @@
+{% extends 'login/loginHeader.html' %}
+{% block content %}
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-sm-12 col-md-8 col-lg-8 ">
+                <h3 class="text-center mt-3 mb-5">Historial de Versiones de {{item_actual.tipo_item.prefijo}}_{{item_actual.nombre}} </h3>
+                <table class="table">
+                <thead>
+                    <th></th><th>Versiones:</th><th>{{ item_actual.version }} (actual)</th>
+                </thead>
+                    <tbody>
+                        <tr>
+                            <th rowspan="4" class="text-center align-middle h5">Atributos Comunes</th>
+                        </tr>
+                        <tr>
+                            <td bgcolor="#87cefa">Nombre</td>
+                            <td style="font-weight: bold">{{ item_actual.nombre }}</td>
+                            <td>hola</td><td>hola1</td><td>hola2</td><td>hola3</td>
+                        </tr>
+                        <tr>
+                            <td bgcolor="#87cefa">Complejidad</td>
+                            <td style="font-weight: bold">{{ item_actual.complejidad }}</td>
+                        </tr>
+                        <tr>
+                            <td bgcolor="#87cefa">Descripcion</td>
+                            <td style="font-weight: bold">{{ item_actual.descripcion }}</td>
+                        </tr>
+                        {% if lista_atributos %}
+                            <tr>
+                                <th rowspan="{{lista_atributos.count|add:1}}" class="text-center align-middle h5">Atributos particulares</th>
+                            </tr>
+                            {% for atributo in lista_atributos %}
+                                <tr>
+                                    <td bgcolor="#87cefa">{{ atributo.nombre }}</td>
+                                    <td style="font-weight: bold">
+                                        {% if atributo.tipo == 'file' %}
+                                            <a href="{{ atributo.valor }}" target="_blank">Archivo</a>
+                                        {% else %}
+                                            {{ atributo.valor }}
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        {% endif %}
+                        <tr>
+                            <th rowspan="5" class="text-center align-middle h5">Relaciones</th>
+                        </tr>
+                        <tr>
+                            <td bgcolor="#87cefa">Antecesores</td>
+                            <td>
+                                <ul>
+                                    <li>algo</li>
+                                    <li>algo</li>
+                                    <li>algo</li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td bgcolor="#87cefa">Sucesores</td>
+                            <td>otro</td>
+                        </tr>
+                        <tr>
+                            <td bgcolor="#87cefa">Padres</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td bgcolor="#87cefa">Hijos</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <hr>
+                <div class="col-sm-5">
+                    <input type="range" class="custom-range" id="customRange1">
+                    <button type="submit" class="btn btn-primary">Ver más versiones</button>
+                </div>
+                <div class="col-sm-12 mt-4">
+                    <a href="{% url 'desarrollo:verItem' proyecto.id item_actual.id%}" class="btn btn-primary float-right">Volver atrás</a>
+                </div>
+
+            </div>
+            <div class="mt-4 alert alert-warning" id="alertarelaciones" style="visibility: hidden;">
+                No se puede desactivar por que es antecesor/padre de otros items
+            </div>
+        </div>
+
+    </div>
+    <script>
+        const showAlert = ()=>{
+            const alertDiv = document.getElementById('alertarelaciones');
+            alertDiv.style.visibility = 'visible';
+        }
+    </script>
+{% endblock %}
