@@ -13,8 +13,8 @@ class Item(models.Model):
     nombre = models.CharField(max_length=200, null=False)
     #: estado actual, puede tomar los valores: en desarrollo, pendiente de aprobación, aprobado, desactivado,
     # en revisión, en línea base
-    numeracion = models.IntegerField(default=1)
     estado = models.CharField(max_length=100, default='En Desarrollo', null=False)
+    numeracion = models.IntegerField(default=1)
     #: version actual del ítem que va cambiando luego de cada nueva relación y cada modificación de sus datos
     version = models.PositiveIntegerField(null=False, default=1)
     #: valor que define el impacto del ítem en el proyecto. Toma valores enteros entre 1 y 10
@@ -25,6 +25,8 @@ class Item(models.Model):
     tipo_item = models.ForeignKey('administracion.TipoItem', on_delete=models.CASCADE)
     #: fase del proyecto en la que se crea el ítem
     fase = models.ForeignKey('administracion.Fase', on_delete=models.CASCADE, default=None, blank=True, null=True)
+    #: versión anterior a la del item actual
+    version_anterior = models.ForeignKey('desarrollo.Item', on_delete=models.CASCADE, default=None, null=True)
     # constantes del modelo
     ESTADO_DESARROLLO = 'En Desarrollo'
     ESTADO_PENDIENTE = 'Pendiente de Aprobacion'

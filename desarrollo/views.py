@@ -94,10 +94,22 @@ def ver_item(request, id_proyecto, id_item):
 
 
 def historial_versiones_item(request, id_proyecto, id_item):
+    """
+    Vista que permite ver las versiones que un item tuvo a lo largo del tiempo y las diferencias entre estas versiones
+
+    :param request: objeto tipo diccionario que permite acceder a datos
+    :param id_proyecto: Identificador del proyecto actual
+    :param id_item: Identificador del ítem del cual se verán sus versiones
+    :return: objeto que renderea item_historial_versiones.html
+    """
     proyecto = Proyecto.objects.get(pk=id_proyecto)
     item = Item.objects.get(pk=id_item)
     lista_atributos = AtributoParticular.objects.filter(item=item)
     lista_versiones = []
+    item_aux = item
+    while item_aux.version_anterior is not None:
+        lista_versiones.append(item_aux.version_anterior)
+        item_aux = item_aux.version_anterior
     return render(request, 'desarrollo/item_historial_versiones.html', {'lista_versiones': lista_versiones,
                                                                         'item_actual': item, 'proyecto': proyecto,
                                                                         'lista_atributos': lista_atributos})
@@ -108,7 +120,7 @@ def menu_aprobacion(request, id_proyecto):
     Vista que se encarga de mostrar un menú en el cual se permite administrar los ítems pendientes de aprobación
     si se tiene los permisos adecuados
 
-    :param request:  objeto tipo diccionario que permite acceder a datos
+    :param request: objeto tipo diccionario que permite acceder a datos
     :param id_proyecto: identificador del proyecto sobre el cual se administraran los ítems
     :return: objeto que renderea item_menu_aprobacion.html
     :rtype: render
@@ -357,6 +369,8 @@ def modificar_item(request, id_proyecto, id_item):
     Vista en la cual se modifican los Item, para hacerlo el mismo aún debe
     de estar En Desarrollo, una vez realizados vuelve a los detalles
     correspondientes al item.
+    Lo que hace la vista en realidad es crear un nuevo objeto Item el cual tendra una referencia a la versipn anterior
+    y heredará sus relaciones
 
     :param request: objeto tipo diccionario que permite acceder a datos
     :param id_proyecto: identificador del proyecto
@@ -365,19 +379,36 @@ def modificar_item(request, id_proyecto, id_item):
     :return: renderea a la platilla de edición del item
     """
     item = Item.objects.get(pk=id_item)
+    fase = Item.fase
+    lista_atr = AtributoParticular.objects.filter(item=item)
     if Item.ESTADO_DESARROLLO == item.estado:
         form = EditarItemForm(request.POST)
         if form.is_valid() and request.method == 'POST':
             nombre = form.cleaned_data['nombre']
             complejidad = form.cleaned_data['complejidad']
             descripcion = form.cleaned_data['descripcion']
-            item.nombre = nombre
-            item.complejidad = complejidad
-            item.descripcion = descripcion
+            # creamos un nuevo objeto item que guardará una clave a su versión anterior
+            item_editado = Item(nombre=nombre, complejidad=complejidad, descripcion=descripcion, fase=item.fase,
+                                tipo_item=item.tipo_item, numeracion=item.numeracion, estado=item.estado,
+                                version=item.version+1, version_anterior=item)
+            # también nos encargamos de los atributos particulares
+            for atr in lista_atr:
+                if atr.tipo == 'file' and request.FILES:
+                    valor = handle_uploaded_file(request.FILES[atr.nombre], fase.proyecto.id, request.user)
+                else:
+                    valor = request.POST[atr.nombre]
+                nuevo_atributo = AtributoParticular(item=item_editado, nombre=atr.nombre, tipo=atr.tipo, valor=valor)
+                nuevo_atributo.save()
+            # nos encargamos también de vincular las relaciones del ítem anterior con el actual
+
+            # guardamos el ítem editado
+            item_editado.save()
+            # por ultimo desactivamos la versión anterior (mejorar esta parte)
+            item.estado = Item.ESTADO_DESACTIVADO
             item.save()
-            return redirect('desarrollo:verItem', id_proyecto, id_item)
+            return redirect('desarrollo:verItem', id_proyecto, item_editado.id)
     form = EditarItemForm()
-    return render(request, 'desarrollo/item_editar.html', {'form': form})
+    return render(request, 'desarrollo/item_editar.html', {'form': form, 'lista_atr': lista_atr})
 
 
 

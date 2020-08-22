@@ -6,7 +6,12 @@
                 <h3 class="text-center mt-3 mb-5">Historial de Versiones de {{item_actual.tipo_item.prefijo}}_{{item_actual.nombre}} </h3>
                 <table class="table">
                 <thead>
-                    <th></th><th>Versiones:</th><th>{{ item_actual.version }} (actual)</th>
+                    <th></th>
+                    <th>Versiones:</th>
+                    <th>{{ item_actual.version }} (actual)</th>
+                    {% for item_anterior in lista_versiones %}
+                        <th>{{ item_anterior.version }}</th>
+                    {% endfor %}
                 </thead>
                     <tbody>
                         <tr>
@@ -15,15 +20,23 @@
                         <tr>
                             <td bgcolor="#87cefa">Nombre</td>
                             <td style="font-weight: bold">{{ item_actual.nombre }}</td>
-                            <td>hola</td><td>hola1</td><td>hola2</td><td>hola3</td>
+                            {% for item_anterior in lista_versiones %}
+                                <td>{{ item_anterior.nombre }}</td>
+                            {% endfor %}
                         </tr>
                         <tr>
                             <td bgcolor="#87cefa">Complejidad</td>
                             <td style="font-weight: bold">{{ item_actual.complejidad }}</td>
+                            {% for item_anterior in lista_versiones %}
+                                <td>{{ item_anterior.complejidad }}</td>
+                            {% endfor %}
                         </tr>
                         <tr>
                             <td bgcolor="#87cefa">Descripcion</td>
                             <td style="font-weight: bold">{{ item_actual.descripcion }}</td>
+                            {% for item_anterior in lista_versiones %}
+                                <td>{{ item_anterior.descripcion }}</td>
+                            {% endfor %}
                         </tr>
                         {% if lista_atributos %}
                             <tr>
