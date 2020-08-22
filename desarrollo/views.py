@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect
 from .SubirArchivos import handle_uploaded_file
 from desarrollo.models import Item, AtributoParticular, Relacion
 from administracion.models import Proyecto, TipoItem, Fase, Rol
-from desarrollo.forms import ItemForm, RelacionForm
+from desarrollo.forms import ItemForm, RelacionForm, EditarItemForm
 from desarrollo.getPermisos import has_permiso
 
 
@@ -336,3 +336,34 @@ def desactivar_item(request, id_proyecto, id_item):
         item.estado = Item.ESTADO_DESACTIVADO
         item.save()
     return redirect('desarrollo:verItem', id_proyecto, id_item)
+
+
+def modificar_item(request, id_proyecto, id_item):
+    """
+    Vista en la cual se modifican los Item, para hacerlo el mismo aún debe
+    de estar En Desarrollo, una vez realizados vuelve a los detalles
+    correspondientes al item.
+
+    :param request: objeto tipo diccionario que permite acceder a datos
+    :param id_proyecto: identificador del proyecto
+    :param id_item: identificador del item
+    :return: redirecciona a los detalles del item
+    :return: renderea a la platilla de edición del item
+    """
+    item = Item.objects.get(pk=id_item)
+    if Item.ESTADO_DESARROLLO == item.estado:
+        form = EditarItemForm(request.POST)
+        if form.is_valid() and request.method == 'POST':
+            nombre = form.cleaned_data['nombre']
+            complejidad = form.cleaned_data['complejidad']
+            descripcion = form.cleaned_data['descripcion']
+            item.nombre = nombre
+            item.complejidad = complejidad
+            item.descripcion = descripcion
+            item.save()
+            return redirect('desarrollo:verItem', id_proyecto, id_item)
+    form = EditarItemForm()
+    return render(request, 'desarrollo/item_editar.html', {'form': form})
+
+
+
