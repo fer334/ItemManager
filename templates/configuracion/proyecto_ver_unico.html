@@ -9,8 +9,24 @@
             <thead class="thead-dark">
                 <tr>
                     {% for fase in proyecto.fase_set.all %}
-                        <th class="">{{ fase.nombre }}</th>
+                        <th class="">
+                            <div>{{ fase.nombre }}</div>
+                            <div class="dropdown">
+                                <button type="button" class="btn btn-secondary dropdown-toggle" id="dropdownMenuButton"
+                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Ver Lineas Base
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    {% for lb in fase.lineabase_set.all %}
+                                        <a class="dropdown-item" role="button" href="{% url 'configuracion:verLineaBase' lb.id %}"  >
+                                            Linea Base {{ lb.id }}
+                                        </a>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </th>
                     {% endfor %}
+
                 </tr>
             </thead>
             <tbody>
