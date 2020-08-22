@@ -1,0 +1,10 @@
+{% extends 'login/loginHeader.html' %}
+{% block content %}
+    <div class="container">
+        <h1 class="text-center pt-3 mb-5">Comite de decisiones</h1>
+        <div class="mt-5">
+            <button class="btn btn-primary">Confirmar</button>
+            <a href="{% url 'configuracion:verProyecto' proyecto.id %}" class="btn btn-primary float-right">Volver atrás</a>
+        </div>
+    </div>
+{% endblock %}
