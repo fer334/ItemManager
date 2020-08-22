@@ -340,10 +340,15 @@ def desactivar_item(request, id_proyecto, id_item):
 
 def modificar_item(request, id_proyecto, id_item):
     """
-    Vista Modificar Item
-    :param request:
-    :param id_item:
-    :return:
+    Vista en la cual se modifican los Item, para hacerlo el mismo aún debe
+    de estar En Desarrollo, una vez realizados vuelve a los detalles
+    correspondientes al item.
+
+    :param request: objeto tipo diccionario que permite acceder a datos
+    :param id_proyecto: identificador del proyecto
+    :param id_item: identificador del item
+    :return: redirecciona a los detalles del item
+    :return: renderea a la platilla de edición del item
     """
     item = Item.objects.get(pk=id_item)
     if Item.ESTADO_DESARROLLO == item.estado:
