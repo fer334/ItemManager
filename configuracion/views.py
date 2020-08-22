@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect
 from administracion.models import Proyecto, Fase
 from .models import LineaBase
 from desarrollo.models import Item
-
+from login.models import Usuario
 
 def index(request, filtro):
     """
@@ -68,6 +68,11 @@ def vista_crear_linea_base(request, id_fase):
         items = [Item.objects.get(pk=item.split('-')[1]) for item in request.POST if len(item.split('-')) > 1]
         if len(items) > 0:
             nueva_linea_base = LineaBase()
+            nueva_linea_base.fase = fase
+            nueva_linea_base.creador = Usuario.objects.get(pk=request.user.id)
+            if len(items) == len(fase.item_set.all()):
+                nueva_linea_base.tipo = LineaBase.TIPO_TOTAL
+
             nueva_linea_base.save()
             for item in items:
                 item.estado = Item.ESTADO_LINEABASE

@@ -11,6 +11,29 @@
                     {% for fase in proyecto.fase_set.all %}
                         <th class="">{{ fase.nombre }}</th>
                     {% endfor %}
+                        <div class="dropdown">
+                                <button type="button" class="btn btn-secondary dropdown-toggle" id="dropdownMenuButton"
+                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Asignar item
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <a class="dropdown-item" href="#">
+                                        (seleccione tipo)
+                                    </a>
+                                    {% for tipoitem in proyecto.tipoitem_set.all %}
+                                        {% if tipoitem in fase.tipos_item.all %}
+                                            <a class="dropdown-item" role="button"
+                                               href="#"  >
+                                                {{ tipoitem.nombre }}</a>
+                                        {% endif %}
+                                    {% endfor %}
+                                    {% for tipo in lista_tipos %}
+                                        <a class="dropdown-item" href="#" role="button">
+                                            {{ tipo.nombre }}
+                                        </a>
+                                    {% endfor %}
+                                </div>
+                            </div>
                 </tr>
             </thead>
             <tbody>

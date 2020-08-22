@@ -1,5 +1,7 @@
 from django.db import models
 from desarrollo.models import Item
+from django.utils.timezone import now
+from desarrollo.models import Fase
 # Create your models here.
 
 
@@ -9,10 +11,17 @@ class LineaBase(models.Model):
     """
     #: lista de items de la linea base
     items = models.ManyToManyField(Item)
+    fecha_creacion = models.DateField(default=now)
+    creador = models.ForeignKey('login.Usuario', on_delete=models.CASCADE, default=None, null=True)
+    fase = models.ForeignKey(Fase, on_delete=models.CASCADE, null=False)
     ESTADO_CERRADA = 'Cerrada'
     ESTADO_ROTA = 'Rota'
+    TIPO_PARCIAL = 'Parcial'
+    TIPO_TOTAL = 'Total'
+    tipo = models.CharField(max_length=100, default=TIPO_PARCIAL)
     #: estado actual de la linea base
     estado = models.CharField(max_length=100, default=ESTADO_CERRADA, null=False)
+
 
 
 
