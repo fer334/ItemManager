@@ -54,13 +54,13 @@ def ver_proyecto(request, id_proyecto):
     return render(request, 'configuracion/proyecto_ver_unico.html', {'proyecto': proyecto})
 
 
-def vista_crear_linea_base(request, id_fase):
+def crear_linea_base(request, id_fase):
     """
     Esta vista despliega el template para iniciar la creacion de una linea base
 
     :param request: objeto tipo diccionario que permite acceder a datos
     :param id_proyecto: Se recibe como parámetro la fase en la que se creara la linea base
-    :return: objeto que renderea verProyecto.html
+    :return: objeto que renderea lineabase_crear.html
     :rtype: render
     """
     fase = Fase.objects.get(pk=id_fase)
@@ -81,3 +81,16 @@ def vista_crear_linea_base(request, id_fase):
             nueva_linea_base.save()
         return redirect('configuracion:verProyecto', id_proyecto=fase.proyecto_id)
     return render(request, 'configuracion/lineabase_crear.html', {'fase': fase})
+
+
+def ver_linea_base(request, id_lineabase):
+    """
+    Esta vista despliega el template para ver detalles de una linea base
+
+    :param request: objeto tipo diccionario que permite acceder a datos
+    :param id_lineabase: Se recibe como parámetro el id de la linea base
+    :return: objeto que renderea lineabase_ver.html
+    :rtype: render
+    """
+    lineabase = LineaBase.objects.get(pk=id_lineabase)
+    return render(request, 'configuracion/lineabase_ver.html', {'lineabase': lineabase})

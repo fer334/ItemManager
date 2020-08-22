@@ -9,31 +9,24 @@
             <thead class="thead-dark">
                 <tr>
                     {% for fase in proyecto.fase_set.all %}
-                        <th class="">{{ fase.nombre }}</th>
-                    {% endfor %}
-                        <div class="dropdown">
+                        <th class="">
+                            <div>{{ fase.nombre }}</div>
+                            <div class="dropdown">
                                 <button type="button" class="btn btn-secondary dropdown-toggle" id="dropdownMenuButton"
                                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Asignar item
+                                    Ver Lineas Base
                                 </button>
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <a class="dropdown-item" href="#">
-                                        (seleccione tipo)
-                                    </a>
-                                    {% for tipoitem in proyecto.tipoitem_set.all %}
-                                        {% if tipoitem in fase.tipos_item.all %}
-                                            <a class="dropdown-item" role="button"
-                                               href="#"  >
-                                                {{ tipoitem.nombre }}</a>
-                                        {% endif %}
-                                    {% endfor %}
-                                    {% for tipo in lista_tipos %}
-                                        <a class="dropdown-item" href="#" role="button">
-                                            {{ tipo.nombre }}
+                                    {% for lb in fase.lineabase_set.all %}
+                                        <a class="dropdown-item" role="button" href="{% url 'configuracion:verLineaBase' lb.id %}"  >
+                                            Linea Base {{ lb.id }}
                                         </a>
                                     {% endfor %}
                                 </div>
                             </div>
+                        </th>
+                    {% endfor %}
+
                 </tr>
             </thead>
             <tbody>
