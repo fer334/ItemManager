@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect
 from .SubirArchivos import handle_uploaded_file
 from desarrollo.models import Item, AtributoParticular, Relacion
 from administracion.models import Proyecto, TipoItem, Fase, Rol
-from desarrollo.forms import ItemForm, RelacionForm, EditarItemForm
+from desarrollo.forms import ItemForm, RelacionForm
 from desarrollo.getPermisos import has_permiso
 
 
@@ -106,13 +106,22 @@ def historial_versiones_item(request, id_proyecto, id_item):
     item = Item.objects.get(pk=id_item)
     lista_atributos = AtributoParticular.objects.filter(item=item)
     lista_versiones = []
+    lista_atr_versiones = []
     item_aux = item
+    # mientras que el item tenga una referencia a un item anterior
     while item_aux.version_anterior is not None:
+        # vamos añadiendo las versiones anteriores a la lista
         lista_versiones.append(item_aux.version_anterior)
+        # cambiamos al item de la version anterior
         item_aux = item_aux.version_anterior
+        # creamos una lista de atributos auxiliar de los atributos del item actualmente en item_aux
+        lista_atributos_aux = AtributoParticular.objects.filter(item=item_aux)
+        # creamos una lista de lista de atributos auxiliares
+        lista_atr_versiones.append(lista_atributos_aux)
     return render(request, 'desarrollo/item_historial_versiones.html', {'lista_versiones': lista_versiones,
                                                                         'item_actual': item, 'proyecto': proyecto,
-                                                                        'lista_atributos': lista_atributos})
+                                                                        'lista_atributos': lista_atributos,
+                                                                        'lista_atr_versiones': lista_atr_versiones })
 
 
 def menu_aprobacion(request, id_proyecto):
@@ -382,15 +391,15 @@ def modificar_item(request, id_proyecto, id_item):
     fase = Item.fase
     lista_atr = AtributoParticular.objects.filter(item=item)
     if Item.ESTADO_DESARROLLO == item.estado:
-        form = EditarItemForm(request.POST)
-        if form.is_valid() and request.method == 'POST':
-            nombre = form.cleaned_data['nombre']
-            complejidad = form.cleaned_data['complejidad']
-            descripcion = form.cleaned_data['descripcion']
+        if request.method == 'POST':
+            nombre = request.POST['nombre']
+            complejidad = request.POST['complejidad']
+            descripcion = request.POST['descripcion']
             # creamos un nuevo objeto item que guardará una clave a su versión anterior
             item_editado = Item(nombre=nombre, complejidad=complejidad, descripcion=descripcion, fase=item.fase,
                                 tipo_item=item.tipo_item, numeracion=item.numeracion, estado=item.estado,
                                 version=item.version+1, version_anterior=item)
+            item_editado.save()
             # también nos encargamos de los atributos particulares
             for atr in lista_atr:
                 if atr.tipo == 'file' and request.FILES:
@@ -401,14 +410,11 @@ def modificar_item(request, id_proyecto, id_item):
                 nuevo_atributo.save()
             # nos encargamos también de vincular las relaciones del ítem anterior con el actual
 
-            # guardamos el ítem editado
-            item_editado.save()
             # por ultimo desactivamos la versión anterior (mejorar esta parte)
             item.estado = Item.ESTADO_DESACTIVADO
             item.save()
             return redirect('desarrollo:verItem', id_proyecto, item_editado.id)
-    form = EditarItemForm()
-    return render(request, 'desarrollo/item_editar.html', {'form': form, 'lista_atr': lista_atr})
+    return render(request, 'desarrollo/item_editar.html', {'item': item, 'lista_atr': lista_atr})
 
 
 
