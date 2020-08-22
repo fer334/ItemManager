@@ -51,7 +51,11 @@ def ver_proyecto(request, id_proyecto):
     :rtype: render
     """
     proyecto = Proyecto.objects.get(pk=id_proyecto)
-    return render(request, 'configuracion/proyecto_ver_unico.html', {'proyecto': proyecto})
+    es_comite = False
+    if request.user in proyecto.comite.all():
+        es_comite = True
+
+    return render(request, 'configuracion/proyecto_ver_unico.html', {'proyecto': proyecto, 'es_comite': es_comite})
 
 
 def crear_linea_base(request, id_fase):
@@ -94,3 +98,16 @@ def ver_linea_base(request, id_lineabase):
     """
     lineabase = LineaBase.objects.get(pk=id_lineabase)
     return render(request, 'configuracion/lineabase_ver.html', {'lineabase': lineabase})
+
+
+def comite_index(request, id_proyecto):
+    """
+    Esta vista despliega el template para ver el index del comite
+
+    :param request: objeto tipo diccionario que permite acceder a datos
+    :param id_proyecto: Se recibe como parámetro el id_del proyecto que se desea ver
+    :return: objeto que renderea comite_index.html
+    :rtype: render
+    """
+    proyecto = Proyecto.objects.get(pk=id_proyecto)
+    return render(request, 'configuracion/comite_index.html', {'proyecto': proyecto})
