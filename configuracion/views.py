@@ -6,9 +6,10 @@ from .models import LineaBase
 from desarrollo.models import Item
 from login.models import Usuario
 
+
 def index(request, filtro):
     """
-    añadir doc
+    Vista que despliega la lista de proyectos con su estado actual, también permite filtrar los proyectos según estado.
 
     :param request: objeto tipo diccionario que permite acceder a datos
     :param filtro: este parámetro indica el estado según se filtrarán los proyectos. Si el valor es 'todos' no se aplicará ningún filtro
