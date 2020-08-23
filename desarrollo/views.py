@@ -106,7 +106,6 @@ def historial_versiones_item(request, id_proyecto, id_item):
     item = Item.objects.get(pk=id_item)
     lista_atributos = AtributoParticular.objects.filter(item=item)
     lista_versiones = []
-    lista_atr_versiones = []
     item_aux = item
     # mientras que el item tenga una referencia a un item anterior
     while item_aux.version_anterior is not None:
@@ -114,14 +113,9 @@ def historial_versiones_item(request, id_proyecto, id_item):
         lista_versiones.append(item_aux.version_anterior)
         # cambiamos al item de la version anterior
         item_aux = item_aux.version_anterior
-        # creamos una lista de atributos auxiliar de los atributos del item actualmente en item_aux
-        lista_atributos_aux = AtributoParticular.objects.filter(item=item_aux)
-        # creamos una lista de lista de atributos auxiliares
-        lista_atr_versiones.append(lista_atributos_aux)
     return render(request, 'desarrollo/item_historial_versiones.html', {'lista_versiones': lista_versiones,
                                                                         'item_actual': item, 'proyecto': proyecto,
-                                                                        'lista_atributos': lista_atributos,
-                                                                        'lista_atr_versiones': lista_atr_versiones })
+                                                                        'lista_atributos': lista_atributos})
 
 
 def menu_aprobacion(request, id_proyecto):
@@ -389,7 +383,7 @@ def modificar_item(request, id_proyecto, id_item):
     """
     item = Item.objects.get(pk=id_item)
     fase = Item.fase
-    lista_atr = AtributoParticular.objects.filter(item=item)
+    lista_atr = AtributoParticular.objects.filter(item=item).order_by('id')
     if Item.ESTADO_DESARROLLO == item.estado:
         if request.method == 'POST':
             nombre = request.POST['nombre']

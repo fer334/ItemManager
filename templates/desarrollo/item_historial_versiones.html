@@ -40,20 +40,42 @@
                         </tr>
                         {% if lista_atributos %}
                             <tr>
-                                <th rowspan="{{lista_atributos.count|add:1}}" class="text-center align-middle h5">Atributos particulares</th>
+                                <th rowspan="2" class="text-center align-middle h5">Atributos particulares</th>
                             </tr>
-                            {% for atributo in lista_atributos %}
-                                <tr>
-                                    <td bgcolor="#87cefa">{{ atributo.nombre }}</td>
+                            <tr>
+                                <td bgcolor="#87cefa">
+                                    <ul>
+                                        {% for atributo in lista_atributos %}
+                                            <li>{{ atributo.nombre }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </td>
                                     <td style="font-weight: bold">
-                                        {% if atributo.tipo == 'file' %}
-                                            <a href="{{ atributo.valor }}" target="_blank">Archivo</a>
-                                        {% else %}
-                                            {{ atributo.valor }}
-                                        {% endif %}
+                                        <ul>
+                                            {% for atributo in lista_atributos %}
+                                                {% if atributo.tipo == 'file' %}
+                                                    <li><a href="{{ atributo.valor }}" target="_blank">Archivo</a></li>
+                                                {% else %}
+                                                    <li>{{ atributo.valor }}</li>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </ul>
                                     </td>
+                                    {% for item_anterior in lista_versiones %}
+                                    <td>
+                                        <ul>
+                                            {% for atributo in item_anterior.atributoparticular_set.all %}
+                                                {% if atributo.tipo == 'file' %}
+                                                    <li><a href="{{ atributo.valor }}" target="_blank">Archivo</a></li>
+                                                {% else %}
+                                                    <li>{{ atributo.valor }}</li>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </ul>
+                                    </td>
+                                    {% endfor %}
                                 </tr>
-                            {% endfor %}
+
                         {% endif %}
                         <tr>
                             <th rowspan="5" class="text-center align-middle h5">Relaciones</th>
