@@ -61,7 +61,8 @@ def ver_proyecto(request, id_proyecto):
 
 def crear_linea_base(request, id_fase):
     """
-    Esta vista despliega el template para iniciar la creacion de una linea base
+    Esta vista despliega el template para iniciar la creacion de una linea base y se encarga de la creacion de una en
+    caso de recibir un request POST
 
     :param request: objeto tipo diccionario que permite acceder a datos
     :param id_proyecto: Se recibe como parámetro la fase en la que se creara la linea base
