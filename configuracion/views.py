@@ -111,3 +111,17 @@ def comite_index(request, id_proyecto):
     """
     proyecto = Proyecto.objects.get(pk=id_proyecto)
     return render(request, 'configuracion/comite_index.html', {'proyecto': proyecto})
+
+
+def solicitud_ruptura(request, id_lineabase):
+    """
+    Esta vista despliega el template para ver detalles de una linea base
+
+    :param request: objeto tipo diccionario que permite acceder a datos
+    :param id_lineabase: Se recibe como parámetro el id de la linea base
+    :return: objeto que renderea lineabase_ver.html
+    :rtype: render
+    """
+    lineabase = LineaBase.objects.get(pk=id_lineabase)
+    return render(request, 'configuracion/solicitud_ruptura.html', {'lineabase': lineabase})
+

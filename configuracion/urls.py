@@ -13,6 +13,7 @@ urlpatterns = [
     path('proyectos/fase/lineabase/<int:id_lineabase>', views.ver_linea_base, name='verLineaBase'),
     path('proyectos/<int:id_proyecto>/comite/', views.comite_index, name='verIndexComite'),
     # URLs de Fer
+    path('lineabase/<int:id_lineabase>', views.solicitud_ruptura, name='solicitudRuptura'),
 
     # URLs de Pao
 
