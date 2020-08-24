@@ -372,8 +372,8 @@ def modificar_item(request, id_proyecto, id_item):
     Vista en la cual se modifican los Item, para hacerlo el mismo aún debe
     de estar En Desarrollo, una vez realizados vuelve a los detalles
     correspondientes al item.
-    Lo que hace la vista en realidad es crear un nuevo objeto Item el cual tendra una referencia a la versipn anterior
-    y heredará sus relaciones
+    Lo que hace la vista en realidad es crear un nuevo objeto Item el cual
+    tendra una referencia a la versipn anterior y heredará sus relaciones.
 
     :param request: objeto tipo diccionario que permite acceder a datos
     :param id_proyecto: identificador del proyecto
