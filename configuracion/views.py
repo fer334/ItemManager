@@ -123,5 +123,14 @@ def solicitud_ruptura(request, id_lineabase):
     :rtype: render
     """
     lineabase = LineaBase.objects.get(pk=id_lineabase)
+    if request.POST:
+        items_seleccionados = [Item.objects.get(pk=item.split('-')[1]) for item in request.POST if len(item.split('-')) > 1]
+        a_reversionar = items_seleccionados
+        print(items_seleccionados)
+        for item in items_seleccionados:
+            for relacion in item.relaciones_this_as_inicio.all():
+                a_reversionar.append(relacion.fin)
+        print('a_reversionar')
+        print(a_reversionar)
     return render(request, 'configuracion/solicitud_ruptura.html', {'lineabase': lineabase})
 
