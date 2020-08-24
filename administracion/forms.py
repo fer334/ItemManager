@@ -24,7 +24,7 @@ class ProyectoForm(forms.Form):
                                      help_text='obs: nro. impar >=3',
                                      widget=forms.TextInput(attrs={'placeholder': 'Ej. 3', 'size': 35}))
 
-    def clean_cant_comite(self):
+    def clean_cant_comite(self):  
         """
         Método que comprueba que la cantidad de miembros del comité sea impar
 

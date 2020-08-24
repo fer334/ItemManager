@@ -1,0 +1,630 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="es" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="es" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pruebasUnitarias.test_views &mdash; documentación de ItemManager - 1.0</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="../_static/translations.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Índice" href="../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../search.html" />
+    <link rel="prev" title="pruebasUnitarias.test_urls" href="pruebasUnitarias.test_urls.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> ItemManager
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="login.models.html">login.models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="login.forms.html">login.forms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="login.views.html">login.views</a></li>
+<li class="toctree-l1"><a class="reference internal" href="login.LoginBackEnd.html">login.LoginBackEnd</a></li>
+<li class="toctree-l1"><a class="reference internal" href="login.Register.html">login.Register</a></li>
+<li class="toctree-l1"><a class="reference internal" href="administracion.models.html">administracion.models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="administracion.views.html">administracion.views</a></li>
+<li class="toctree-l1"><a class="reference internal" href="administracion.forms.html">administracion.forms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="desarrollo.models.html">desarrollo.models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="desarrollo.views.html">desarrollo.views</a></li>
+<li class="toctree-l1"><a class="reference internal" href="desarrollo.forms.html">desarrollo.forms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pruebasUnitarias.test_models.html">pruebasUnitarias.test_models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pruebasUnitarias.test_urls.html">pruebasUnitarias.test_urls</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">pruebasUnitarias.test_views</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ItemManager</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>pruebasUnitarias.test_views</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/_autosummary/pruebasUnitarias.test_views.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="pruebasunitarias-test-views">
+<h1>pruebasUnitarias.test_views<a class="headerlink" href="#pruebasunitarias-test-views" title="Enlazar permanentemente con este título">¶</a></h1>
+<p class="rubric">Classes</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pruebasUnitarias.test_views.TestViews" title="pruebasUnitarias.test_views.TestViews"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TestViews</span></code></a>([methodName])</p></td>
+<td><p>Clase para realizar pruebas sobre las vistas del proyecto ItemManager</p></td>
+</tr>
+</tbody>
+</table>
+<span class="target" id="module-pruebasUnitarias.test_views"></span><p>Modulo para hacer test sobre el modulo views.py</p>
+<dl class="py class">
+<dt id="pruebasUnitarias.test_views.TestViews">
+<em class="property">class </em><code class="sig-prename descclassname">pruebasUnitarias.test_views.</code><code class="sig-name descname">TestViews</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">methodName</span><span class="o">=</span><span class="default_value">'runTest'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pruebasUnitarias/test_views.html#TestViews"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#pruebasUnitarias.test_views.TestViews" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Clase para realizar pruebas sobre las vistas del proyecto ItemManager</p>
+<dl class="py method">
+<dt id="pruebasUnitarias.test_views.TestViews.setUpClass">
+<em class="property">classmethod </em><code class="sig-name descname">setUpClass</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pruebasUnitarias/test_views.html#TestViews.setUpClass"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#pruebasUnitarias.test_views.TestViews.setUpClass" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Esta función sobreescribe setUpClass de TestCase y permite definir variables que serán usadas en varias clases</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pruebasUnitarias.test_views.TestViews.test_administrar_comite">
+<code class="sig-name descname">test_administrar_comite</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pruebasUnitarias/test_views.html#TestViews.test_administrar_comite"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#pruebasUnitarias.test_views.TestViews.test_administrar_comite" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>CU 26: Crear comite de aprobacion de cambios
+Este test comprueba que un participante sea efectivamente añadido al comite de un proyecto.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Devuelve</dt>
+<dd class="field-odd"><p>el assert comprueba que en el proyecto exista un participante cuyo id sea igual al nombre del participante que se añadió a proyecto</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pruebasUnitarias.test_views.TestViews.test_administrar_fases_del_proyecto">
+<code class="sig-name descname">test_administrar_fases_del_proyecto</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pruebasUnitarias/test_views.html#TestViews.test_administrar_fases_del_proyecto"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#pruebasUnitarias.test_views.TestViews.test_administrar_fases_del_proyecto" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>CU 19: Editar fases. Iteracion 2
+Este test comprueba que se editen correctamente las propiedades de la fase.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Devuelve</dt>
+<dd class="field-odd"><p>el assert comprueba que las propiedades hayan cambiado</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pruebasUnitarias.test_views.TestViews.test_administrar_participantes">
+<code class="sig-name descname">test_administrar_participantes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pruebasUnitarias/test_views.html#TestViews.test_administrar_participantes"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#pruebasUnitarias.test_views.TestViews.test_administrar_participantes" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>CU 06: crear Usuario de Proyecto y CU 16: administrar participantes del proyecto. Iteración 2
+Este test comprueba que un participante sea efectivamente añadido a un proyecto.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Devuelve</dt>
+<dd class="field-odd"><p>el assert comprueba que en el proyecto exista un participante cuyo id sea igual al nombre del participante que se añadió a proyecto</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pruebasUnitarias.test_views.TestViews.test_aprobar_item">
+<code class="sig-name descname">test_aprobar_item</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pruebasUnitarias/test_views.html#TestViews.test_aprobar_item"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#pruebasUnitarias.test_views.TestViews.test_aprobar_item" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>CU 39: Aprobar ítems. Iteracion 3
+Una vez hecha la solicitud de aprobacion, el item queda en un estado de Pendiente de Aprobacion,
+de ahi, si esta correcto se aprueba y su estado pasa a ser Aprobado</p>
+<dl class="field-list simple">
+<dt class="field-odd">Devuelve</dt>
+<dd class="field-odd"><p>Indica que el item fue correctamente aprobado, envia un mensaje en caso contrario</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pruebasUnitarias.test_views.TestViews.test_crear_admin_sistema">
+<code class="sig-name descname">test_crear_admin_sistema</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pruebasUnitarias/test_views.html#TestViews.test_crear_admin_sistema"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#pruebasUnitarias.test_views.TestViews.test_crear_admin_sistema" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>CU 07: Crear Administrador del sistema. Iteracion 2</p>
+<dl class="field-list simple">
+<dt class="field-odd">Devuelve</dt>
+<dd class="field-odd"><p>True si se crea correctamente el usuario administrador</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pruebasUnitarias.test_views.TestViews.test_crear_fases">
+<code class="sig-name descname">test_crear_fases</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pruebasUnitarias/test_views.html#TestViews.test_crear_fases"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#pruebasUnitarias.test_views.TestViews.test_crear_fases" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>CU 16: crear fase. Iteración 2
+Nuestra implementación permite la creación automática de la cantidad de fases que se defina al crear un proyecto
+en numero_fases. Este test verifica que se creen las fases y la cantidad correcta definida al crear proyecto.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Devuelve</dt>
+<dd class="field-odd"><p>el primer assert retorna True si la lista de fases no está vacía y el segundo retorna True si la cantidad correcta de fases fue creada</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pruebasUnitarias.test_views.TestViews.test_crear_proyecto">
+<code class="sig-name descname">test_crear_proyecto</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pruebasUnitarias/test_views.html#TestViews.test_crear_proyecto"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#pruebasUnitarias.test_views.TestViews.test_crear_proyecto" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>CU 04: crear gerente de proyectos. Iteración 2
+Nuestra implementación de creación de proyecto asigna al usuario que crea el proyecto como el gerente del mismo
+por lo que este test primeramente crea un request que apunta crear_proyecto (view), luego crea un post para
+crear un proyecto y asigna un usuario logueado al request. Finalmente comprueba que se cree el proyecto y que el
+gerente del proyecto sea el usuario que hizo el request.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Devuelve</dt>
+<dd class="field-odd"><p>el primer assert retorna True si el codigo de respuesta es una redirección, en este caso a verProyecto.html. El segundo assert retorna True si el id del gerente es el mismo que el id del usuario que hizo el request</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pruebasUnitarias.test_views.TestViews.test_crear_relacion_items">
+<code class="sig-name descname">test_crear_relacion_items</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pruebasUnitarias/test_views.html#TestViews.test_crear_relacion_items"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#pruebasUnitarias.test_views.TestViews.test_crear_relacion_items" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>CU 43: Desactivar relaciones entre items. Iteracion 3.
+Test que prueba la vista encargada de desactivar las relaciones</p>
+<dl class="field-list simple">
+<dt class="field-odd">Devuelve</dt>
+<dd class="field-odd"><p>True, si la vista logro desactivar la relacion</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pruebasUnitarias.test_views.TestViews.test_crear_rol">
+<code class="sig-name descname">test_crear_rol</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pruebasUnitarias/test_views.html#TestViews.test_crear_rol"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#pruebasUnitarias.test_views.TestViews.test_crear_rol" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>CU 22: Crear rol. Iteracion 2.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Devuelve</dt>
+<dd class="field-odd"><p>Passed, si el Rol se creo de forma correcta</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pruebasUnitarias.test_views.TestViews.test_desactivar_item">
+<code class="sig-name descname">test_desactivar_item</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pruebasUnitarias/test_views.html#TestViews.test_desactivar_item"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#pruebasUnitarias.test_views.TestViews.test_desactivar_item" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>CU 40: Desactivar ítems. Iteracion 3
+Existe la posibilidad en la cual un item creado sea innecesario, por ello requiere ser desactivado,
+para realizar esta accion el mismo debe esta en el estado de en desarrollo y una vez desactivado
+su estado pasa a Desactivado</p>
+<dl class="field-list simple">
+<dt class="field-odd">Devuelve</dt>
+<dd class="field-odd"><p>Indica que el item fue desactivado sin inconvenientes, envia un mensaje en caso contrario</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pruebasUnitarias.test_views.TestViews.test_desactivar_tipo_item">
+<code class="sig-name descname">test_desactivar_tipo_item</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pruebasUnitarias/test_views.html#TestViews.test_desactivar_tipo_item"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#pruebasUnitarias.test_views.TestViews.test_desactivar_tipo_item" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>CU 31: Desactivar tipo de item. Iteracion 3</p>
+<dl class="field-list simple">
+<dt class="field-odd">Devuelve</dt>
+<dd class="field-odd"><p>Passed en caso de que el tipo item quede fuera de la lista de los tipo items del proyecto</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pruebasUnitarias.test_views.TestViews.test_desactivar_usuarios">
+<code class="sig-name descname">test_desactivar_usuarios</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pruebasUnitarias/test_views.html#TestViews.test_desactivar_usuarios"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#pruebasUnitarias.test_views.TestViews.test_desactivar_usuarios" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>CU 08: Desactivar usuarios. Iteracion 2.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Devuelve</dt>
+<dd class="field-odd"><p>True, si desactiva al usuario</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pruebasUnitarias.test_views.TestViews.test_desaprobar_item">
+<code class="sig-name descname">test_desaprobar_item</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pruebasUnitarias/test_views.html#TestViews.test_desaprobar_item"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#pruebasUnitarias.test_views.TestViews.test_desaprobar_item" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>CU 39: Aprobar ítems. Iteracion 3
+En caso de que el item no se encuentre con los requerimientos pertinentes, se desaprueba y tal como
+indica el RF-127, el estado del item pasa de Pendiente de Aprobacion a en desarrollo nuevamente</p>
+<dl class="field-list simple">
+<dt class="field-odd">Devuelve</dt>
+<dd class="field-odd"><p>Indica que el item fue desaprobado, caso contrario envia un mensaje</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pruebasUnitarias.test_views.TestViews.test_desasignar_rol_al_usuario">
+<code class="sig-name descname">test_desasignar_rol_al_usuario</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pruebasUnitarias/test_views.html#TestViews.test_desasignar_rol_al_usuario"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#pruebasUnitarias.test_views.TestViews.test_desasignar_rol_al_usuario" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>CU 24: Desasignar rol x fase a usuario. Iteración 2
+Este test comprueba que un cierto rol sea desasignado a un participante.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Devuelve</dt>
+<dd class="field-odd"><p>el assert comprueba que el objeto rol por fase quede desactivo</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pruebasUnitarias.test_views.TestViews.test_editar_tipo">
+<code class="sig-name descname">test_editar_tipo</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pruebasUnitarias/test_views.html#TestViews.test_editar_tipo"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#pruebasUnitarias.test_views.TestViews.test_editar_tipo" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>CU 30: Editar el tipo de item. Iteracion 3</p>
+<dl class="field-list simple">
+<dt class="field-odd">Devuelve</dt>
+<dd class="field-odd"><p>Passed en caso de que el tipo item quede con los valores cambiados</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pruebasUnitarias.test_views.TestViews.test_eliminar_participante">
+<code class="sig-name descname">test_eliminar_participante</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pruebasUnitarias/test_views.html#TestViews.test_eliminar_participante"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#pruebasUnitarias.test_views.TestViews.test_eliminar_participante" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>CU 16: Administrar Participantes del Proyecto. iteración 2
+Esta prueba primeramente añade un usuario al proyecto y luego lo desasigna del mismo.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Devuelve</dt>
+<dd class="field-odd"><p>el assert comprueba que el usuario no sea participante del proyecto, en caso de ser retorna false</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pruebasUnitarias.test_views.TestViews.test_estado_proyecto_cancelado">
+<code class="sig-name descname">test_estado_proyecto_cancelado</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pruebasUnitarias/test_views.html#TestViews.test_estado_proyecto_cancelado"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#pruebasUnitarias.test_views.TestViews.test_estado_proyecto_cancelado" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>CU 12: Gestionar estados del proyecto. Iteración 2
+Gestión correcta del estado del proyecto, en este estado se pasa algun proyecto a estado de cancelado</p>
+<dl class="field-list simple">
+<dt class="field-odd">Devuelve</dt>
+<dd class="field-odd"><p>Se verifica que el cambio de estado se realizo correctamente, envia un mensaje en caso contrario</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pruebasUnitarias.test_views.TestViews.test_estado_proyecto_ejecucion_finalizado">
+<code class="sig-name descname">test_estado_proyecto_ejecucion_finalizado</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pruebasUnitarias/test_views.html#TestViews.test_estado_proyecto_ejecucion_finalizado"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#pruebasUnitarias.test_views.TestViews.test_estado_proyecto_ejecucion_finalizado" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>CU 14: modificar estado del proyecto a finalizado. Iteración 2
+En este test probamos cambiar el estado del proyecto de iniciado a finalizado. Algo que solo se permite si el
+estado actual del proyecto es en ejecución por lo que el assert verifica que el cambio de estado suceda.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Devuelve</dt>
+<dd class="field-odd"><p>el assert retorna True si el estado del proyecto cambia a finalizado</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pruebasUnitarias.test_views.TestViews.test_estado_proyecto_en_ejecucion">
+<code class="sig-name descname">test_estado_proyecto_en_ejecucion</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pruebasUnitarias/test_views.html#TestViews.test_estado_proyecto_en_ejecucion"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#pruebasUnitarias.test_views.TestViews.test_estado_proyecto_en_ejecucion" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>CU 13: Modificar el estado del proyecto a en ejecución. Iteración 2
+Se modifica el estado del proyecto de iniciado a en ejecucion.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Devuelve</dt>
+<dd class="field-odd"><p>Se verifica que el cambio de estado se realizo correctamente, envia un mensaje en caso contrario</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pruebasUnitarias.test_views.TestViews.test_estado_proyecto_iniciado_cancelado">
+<code class="sig-name descname">test_estado_proyecto_iniciado_cancelado</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pruebasUnitarias/test_views.html#TestViews.test_estado_proyecto_iniciado_cancelado"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#pruebasUnitarias.test_views.TestViews.test_estado_proyecto_iniciado_cancelado" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>CU 15: Modificar estado del proyecto a cancelado. Iteración 2</p>
+<dl class="field-list simple">
+<dt class="field-odd">Devuelve</dt>
+<dd class="field-odd"><p>Passed, si el proyecto pasa a estado cancelado</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pruebasUnitarias.test_views.TestViews.test_estado_proyecto_iniciado_finalizado">
+<code class="sig-name descname">test_estado_proyecto_iniciado_finalizado</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pruebasUnitarias/test_views.html#TestViews.test_estado_proyecto_iniciado_finalizado"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#pruebasUnitarias.test_views.TestViews.test_estado_proyecto_iniciado_finalizado" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>CU 14: modificar estado del proyecto a finalizado. Iteración 2
+En este test probamos cambiar el estado del proyecto de iniciado a finalizado. Algo que no se permite ya
+que solo puede cambiarse al estado finalizado si el estado actual del proyecto es en ejecución por lo que
+el assert verifica que el cambio de estado no suceda.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Devuelve</dt>
+<dd class="field-odd"><p>el assert retorna True si el estado del proyecto no cambia a finalizado</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pruebasUnitarias.test_views.TestViews.test_importar_tipo">
+<code class="sig-name descname">test_importar_tipo</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pruebasUnitarias/test_views.html#TestViews.test_importar_tipo"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#pruebasUnitarias.test_views.TestViews.test_importar_tipo" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>CU 32: Crear tipo de item. Iteracion 2
+Este test comprueba que un participante sea efectivamente añadido al comite de un proyecto.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Devuelve</dt>
+<dd class="field-odd"><p>el assert comprueba que en el proyecto exista un participante cuyo id sea igual al nombre del participante que se añadió a proyecto</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pruebasUnitarias.test_views.TestViews.test_index_usuario_autenticado">
+<code class="sig-name descname">test_index_usuario_autenticado</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pruebasUnitarias/test_views.html#TestViews.test_index_usuario_autenticado"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#pruebasUnitarias.test_views.TestViews.test_index_usuario_autenticado" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>CU 01: acceder al sistema y CU 02: registrar usuario. Iteración 1
+Prueba parecida a la anterior pero con la diferencia de que se utiliza un usuario autenticado.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Devuelve</dt>
+<dd class="field-odd"><p>el assert retornara true si se hace un redireccionamiento y false en otros casos</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pruebasUnitarias.test_views.TestViews.test_index_usuario_no_autenticado">
+<code class="sig-name descname">test_index_usuario_no_autenticado</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pruebasUnitarias/test_views.html#TestViews.test_index_usuario_no_autenticado"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#pruebasUnitarias.test_views.TestViews.test_index_usuario_no_autenticado" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>CU 01: acceder al sistema. Iteración 1
+La vista index tiene la marca de &#64;login_required por lo que si el usuario no se ha logeado
+se redireccionara a login con el codigo 302 de redireccionamiento.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Devuelve</dt>
+<dd class="field-odd"><p>el assert retornara true si se hace un redireccionamiento y false en otros casos</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pruebasUnitarias.test_views.TestViews.test_modificar_estado_item">
+<code class="sig-name descname">test_modificar_estado_item</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pruebasUnitarias/test_views.html#TestViews.test_modificar_estado_item"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#pruebasUnitarias.test_views.TestViews.test_modificar_estado_item" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>CU 37: Modificar estado de ítems. Iteración 3.
+Test para probar que el estado del item no debe ser cambiado a desactivado si el ítem se encuentra
+en estado diferente a “en desarrollo”</p>
+<dl class="field-list simple">
+<dt class="field-odd">Devuelve</dt>
+<dd class="field-odd"><p>el assert retorna True si el estado no es cambiado y false en caso contrario</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pruebasUnitarias.test_views.TestViews.test_modificar_usuarios">
+<code class="sig-name descname">test_modificar_usuarios</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pruebasUnitarias/test_views.html#TestViews.test_modificar_usuarios"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#pruebasUnitarias.test_views.TestViews.test_modificar_usuarios" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>CU 09: Modificar usuarios. Iteracion 2.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Devuelve</dt>
+<dd class="field-odd"><p>Passed si se modifica correcta los datos de los usuarios</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pruebasUnitarias.test_views.TestViews.test_proyectos">
+<code class="sig-name descname">test_proyectos</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pruebasUnitarias/test_views.html#TestViews.test_proyectos"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#pruebasUnitarias.test_views.TestViews.test_proyectos" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>CU 11: Listar proyectos por estado. Iteración 2
+Se listan los proyectos segun su estado actual, los cuales pueden ser iniciado, en ejecucion, finalizado o
+cancelado o por defecto todos, si no se hizo ningun filtro.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Devuelve</dt>
+<dd class="field-odd"><p>Retorna que se realiza correctamente el filtro</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pruebasUnitarias.test_views.TestViews.test_registrar_rol_por_fase">
+<code class="sig-name descname">test_registrar_rol_por_fase</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pruebasUnitarias/test_views.html#TestViews.test_registrar_rol_por_fase"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#pruebasUnitarias.test_views.TestViews.test_registrar_rol_por_fase" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>CU 25: Asignar rol x fase a usuario. Iteración 2
+Este test comprueba que un cierto rol sea asignado a un participante.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Devuelve</dt>
+<dd class="field-odd"><p>el assert comprueba que se cree el objeto rol por fase que representa la asignacion</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pruebasUnitarias.test_views.TestViews.test_solicitud_aprobacion">
+<code class="sig-name descname">test_solicitud_aprobacion</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pruebasUnitarias/test_views.html#TestViews.test_solicitud_aprobacion"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#pruebasUnitarias.test_views.TestViews.test_solicitud_aprobacion" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>CU 38: Solicitar aprobación de ítems. Iteracion 3
+Se envia una solicitud para aprobar cierto item, el mismo debe tener un estado de en desarrollo
+para poder pasar a Pendiente de Aprobacion</p>
+<dl class="field-list simple">
+<dt class="field-odd">Devuelve</dt>
+<dd class="field-odd"><p>Indica que se realizo correctamente la solicitud, envia un mensaje en caso contrario</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pruebasUnitarias.test_views.TestViews.test_ver_fases">
+<code class="sig-name descname">test_ver_fases</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pruebasUnitarias/test_views.html#TestViews.test_ver_fases"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#pruebasUnitarias.test_views.TestViews.test_ver_fases" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>CU 21: Mostrar Fases. Iteración 3.
+Este test prueba que se muestre las fases de un proyecto</p>
+<dl class="field-list simple">
+<dt class="field-odd">Devuelve</dt>
+<dd class="field-odd"><p>retorna true si es posible ver las fases</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pruebasUnitarias.test_views.TestViews.test_ver_item">
+<code class="sig-name descname">test_ver_item</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pruebasUnitarias/test_views.html#TestViews.test_ver_item"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#pruebasUnitarias.test_views.TestViews.test_ver_item" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>CU 35: Listar ítems. Iteración 3
+este test se encarga de probar que si se pasa un id válido de item, la vista renderee la página</p>
+<dl class="field-list simple">
+<dt class="field-odd">Devuelve</dt>
+<dd class="field-odd"><p>retorna true si es posible ver el ítem</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pruebasUnitarias.test_views.TestViews.test_verificar_proyecto">
+<code class="sig-name descname">test_verificar_proyecto</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pruebasUnitarias/test_views.html#TestViews.test_verificar_proyecto"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#pruebasUnitarias.test_views.TestViews.test_verificar_proyecto" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>CU 10: Crear Proyectos. Iteración 2
+Se verifica que el proyecto es creado correctamente y que tambien el url redirecciona a donde debe ir.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Devuelve</dt>
+<dd class="field-odd"><p>el primer assert indica que el proyecto fue creado correctamente, envia un mensaje en casocontrario, y el segundo que el url redirecciona correctamente</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="pruebasUnitarias.test_urls.html" class="btn btn-neutral float-left" title="pruebasUnitarias.test_urls" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Paola Olmedo, Matías López, David Nuñez, Luis Ríos
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

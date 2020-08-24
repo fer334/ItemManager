@@ -1,0 +1,66 @@
+{% extends 'login/loginHeader.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="container">
+        <h1 class="col-12 text-center">Cerrar Fases</h1>
+        <h5 class="col-12 text-center mt-3">
+            Puede cerrar fases desde esta sección
+        </h5>
+
+        {% if not es_gerente %}
+            <div class="alert alert-danger m-3">
+                <h5 class="text-center">
+                    Solo el gerente de proyecto puede cerrar fases
+                </h5>
+            </div>
+        {% endif %}
+
+        <div class="row justify-content-center mt-3">
+            {% if relaciones.count == 0 %}
+                <h3 class="center text-center text-warning">No hay relaciones</h3>
+            {% else %}
+                <form class="row col-sm-9 col-md-9 col-lg-9 pt-6" method="post">
+                    {% csrf_token %}
+
+                    <table class="table users table-hover">
+                        <tr>
+                            <th>Nro de fase</th>
+                            <th>Nombre</th>
+                            <th>Descripcion</th>
+                            <th>Estado</th>
+                            <th></th>
+                        </tr>
+                        {% for fase in fases %}
+                            <tr>
+                                <td><label> {{ fase.nro_de_fase }} </label> </td>
+                                <td><label> {{ fase.nombre }} </label> </td>
+                                <td><label> {{ fase.descripcion }} </label> </td>
+                                <td><label> {{ fase.estado }} </label> </td>
+                                <td>
+                                    {% if fase.cerrable %}
+                                    <button class="btn btn-danger align-middle"
+                                            value="{{ fase.id }}"
+                                            {% if not es_gerente %}
+                                                disabled="disable"
+                                            {% endif %}
+                                            name="cerrar"
+                                            type="submit"
+                                            >
+                                            cerrar
+                                    </button>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </form>
+            {% endif %}
+        </div>
+        <div class="container">
+             <a class="btn btn-primary m-1 float-right"
+                     href="{% url 'desarrollo:verProyecto' id_proyecto %}">
+                 Volver
+             </a>
+        </div>
+    </div>
+{% endblock %}

@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 
 # Create your views here.
 from administracion.models import Proyecto, Fase
-from .models import LineaBase
+from .models import LineaBase, Solicitud
 from desarrollo.models import Item
 from login.models import Usuario
 
@@ -113,3 +113,36 @@ def comite_index(request, id_proyecto):
     """
     proyecto = Proyecto.objects.get(pk=id_proyecto)
     return render(request, 'configuracion/comite_index.html', {'proyecto': proyecto})
+
+
+def solicitud_ruptura(request, id_lineabase):
+    """
+    Vista utilizada para realizar solicitudes de ruptura de LB's
+
+    :param request: objeto tipo diccionario que permite acceder a datos
+    :param id_lineabase: Se recibe como parámetro el id de la linea base
+    :return: objeto que renderea solicitud_ruptura.html
+    :rtype: render
+    """
+    lineabase = LineaBase.objects.get(pk=id_lineabase)
+    if request.POST:
+        solicitud = Solicitud(
+            solicitado_por=request.user,
+            linea_base_id=id_lineabase,
+            justificacion=request.POST['mensaje'],
+        )
+        solicitud.save()
+
+        items_seleccionados = [Item.objects.get(pk=item.split('-')[1]) for item in request.POST if len(item.split('-')) > 1]
+        a_reversionar = items_seleccionados
+        for item in a_reversionar:
+            for relacion in item.relaciones_this_as_inicio.all():
+                a_reversionar.append(relacion.fin)
+        for item in a_reversionar:
+            print(solicitud.items_a_modificar.add(item))
+        solicitud.save()
+        # print(a_reversionar)
+        # print('a_reversionar')
+        return redirect('configuracion:verLineaBase', id_lineabase)
+
+    return render(request, 'configuracion/solicitud_ruptura.html', {'lineabase': lineabase})
