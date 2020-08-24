@@ -84,9 +84,13 @@
                             <td bgcolor="#87cefa">Antecesores</td>
                             <td>
                                 <ul>
-                                    <li>algo</li>
-                                    <li>algo</li>
-                                    <li>algo</li>
+                                    {% for lista_de_relaciones in lista_versiones %}
+                                        {% for item in lista_de_relaciones.relacion_fin%}
+                                            <li>
+                                                {{item.fin}}
+                                            </li>
+                                        {% endfor %}
+                                    {% endfor %}
                                 </ul>
                             </td>
                         </tr>

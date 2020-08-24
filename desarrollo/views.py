@@ -113,6 +113,11 @@ def historial_versiones_item(request, id_proyecto, id_item):
         lista_versiones.append(item_aux.version_anterior)
         # cambiamos al item de la version anterior
         item_aux = item_aux.version_anterior
+    for item_a in lista_versiones:
+        relacion_inicio = Relacion.objects.filter(inicio=item_a)
+        relacion_fin = Relacion.objects.filter(fin=item_a)
+        item_a.relacion_inicio = relacion_inicio
+        item_a.relacion_fin = relacion_fin
     return render(request, 'desarrollo/item_historial_versiones.html', {'lista_versiones': lista_versiones,
                                                                         'item_actual': item, 'proyecto': proyecto,
                                                                         'lista_atributos': lista_atributos})
