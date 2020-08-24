@@ -87,12 +87,25 @@
                                     {% for relacion in item_actual.relaciones_this_as_fin.all %}
                                         {% if not relacion.es_relacion_padrehijo and relacion.is_active %}
                                             <li>
-                                                {{relacion.fin}}
+                                                {{relacion.inicio}}
                                             </li>
                                         {% endif %}
                                     {% endfor %}
                                 </ul>
                             </td>
+                            {% for item in lista_versiones %}
+                                 <td>
+                                    <ul>
+                                        {% for relacion in item.relaciones_this_as_fin.all %}
+                                            {% if not relacion.es_relacion_padrehijo and relacion.is_active %}
+                                                <li>
+                                                    {{relacion.inicio}}
+                                                </li>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </ul>
+                                </td>
+                            {% endfor %}
                         </tr>
                         <tr>
                             <td bgcolor="#87cefa">Sucesores</td>
@@ -107,6 +120,19 @@
                                     {% endfor %}
                                 </ul>
                             </td>
+                            {% for item in lista_versiones %}
+                                 <td>
+                                    <ul>
+                                        {% for relacion in item.relaciones_this_as_inicio.all %}
+                                            {% if not relacion.es_relacion_padrehijo and relacion.is_active %}
+                                                <li>
+                                                    {{relacion.fin}}
+                                                </li>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </ul>
+                                </td>
+                            {% endfor %}
                         </tr>
                         <tr>
                             <td bgcolor="#87cefa">Padres</td>
@@ -121,6 +147,19 @@
                                     {% endfor %}
                                 </ul>
                             </td>
+                            {% for item in lista_versiones %}
+                                 <td>
+                                    <ul>
+                                        {% for relacion in item.relaciones_this_as_fin.all %}
+                                            {% if relacion.es_relacion_padrehijo and relacion.is_active %}
+                                                <li>
+                                                    {{relacion.inicio}}
+                                                </li>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </ul>
+                                </td>
+                            {% endfor %}
                         </tr>
                         <tr>
                             <td bgcolor="#87cefa">Hijos</td>
@@ -135,6 +174,19 @@
                                     {% endfor %}
                                 </ul>
                             </td>
+                            {% for item in lista_versiones %}
+                                 <td>
+                                    <ul>
+                                        {% for relacion in item.relaciones_this_as_inicio.all %}
+                                            {% if relacion.es_relacion_padrehijo and relacion.is_active %}
+                                                <li>
+                                                    {{relacion.fin}}
+                                                </li>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </ul>
+                                </td>
+                            {% endfor %}
                         </tr>
                     </tbody>
                 </table>

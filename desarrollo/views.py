@@ -364,7 +364,7 @@ def desactivar_item(request, id_proyecto, id_item):
 
     if item.estado == Item.ESTADO_DESARROLLO:
         item.estado = Item.ESTADO_DESACTIVADO
-        # desvinculamos el item de la fase
+        # desvinculamos el item y su tipo de item de la fase
         fase = Fase.objects.get(pk=item.fase.id)
         fase.tipos_item.remove(item.tipo_item)
 
@@ -399,6 +399,7 @@ def modificar_item(request, id_proyecto, id_item):
                                 tipo_item=item.tipo_item, numeracion=item.numeracion, estado=item.estado,
                                 version=item.version+1, version_anterior=item)
             item_editado.save()
+
             # también nos encargamos de los atributos particulares
             for atr in lista_atr:
                 if atr.tipo == 'file' and request.FILES:
@@ -407,7 +408,18 @@ def modificar_item(request, id_proyecto, id_item):
                     valor = request.POST[atr.nombre]
                 nuevo_atributo = AtributoParticular(item=item_editado, nombre=atr.nombre, tipo=atr.tipo, valor=valor)
                 nuevo_atributo.save()
+
             # nos encargamos también de vincular las relaciones del ítem anterior con el actual
+            for relacion in item.relaciones_this_as_fin.all():
+                nueva_relacion = Relacion(inicio=relacion.inicio, fin=item_editado)
+                nueva_relacion.save()
+                relacion.is_active = False
+                relacion.save()
+            for relacion in item.relaciones_this_as_inicio.all():
+                nueva_relacion = Relacion(inicio=item_editado, fin=relacion.fin)
+                nueva_relacion.save()
+                relacion.is_active = False
+                relacion.save()
 
             # por ultimo desactivamos la versión anterior (mejorar esta parte)
             item.estado = Item.ESTADO_DESACTIVADO
