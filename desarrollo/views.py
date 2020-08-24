@@ -329,7 +329,7 @@ def desactivar_item(request, id_proyecto, id_item):
         return redirect('desarrollo:verItem', id_proyecto, id_item)
 
     # se deben eliminar sucesores y hijos
-    for relacion_donde_es_ultimo in item.item_desarrollo_fin.all():
+    for relacion_donde_es_ultimo in item.relaciones_this_as_fin.all():
         relacion_donde_es_ultimo.delete()
 
     if item.estado == Item.ESTADO_DESARROLLO:
