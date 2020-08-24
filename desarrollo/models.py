@@ -73,7 +73,7 @@ class Relacion(models.Model):
         default=None,
         help_text='Relacion padre o antecesor',
         blank=False,
-        related_name='item_desarrollo_inicio',
+        related_name='relaciones_this_as_inicio',
         on_delete=models.DO_NOTHING,
     )
 
@@ -83,7 +83,7 @@ class Relacion(models.Model):
         default=None,
         help_text='Relacion hijo o sucesor',
         blank=False,
-        related_name='item_desarrollo_fin',
+        related_name='relaciones_this_as_fin',
         on_delete=models.DO_NOTHING,
 
     )

@@ -17,6 +17,9 @@ from administracion.views import crear_rol, proyectos, desactivar_tipo_item, edi
 from desarrollo.models import Item, AtributoParticular, Relacion
 from desarrollo.views import solicitud_aprobacion, aprobar_item, desaprobar_item, desactivar_item, ver_item, \
     relacionar_item, desactivar_relacion_item, ver_proyecto
+
+from configuracion.models import LineaBase
+from configuracion.views import crear_linea_base, ver_linea_base
 import pytest
 
 
@@ -39,6 +42,8 @@ class TestViews(TestCase):
         cls.fase = Fase.objects.create(nombre='Fase de prueba', proyecto=cls.proyecto)
         cls.rol = Rol.objects.create(nombre='Rol de prueba', proyecto=cls.proyecto)
         cls.tipo = TipoItem.objects.create(nombre='Tipo de item de prueba', prefijo='TIP')
+        cls.item = Item.objects.create(nombre='Item de prueba', complejidad=1, descripcion='Descripcion de prueba', tipo_item=cls.tipo,
+                                  fase=cls.fase, numeracion=1)
 
     def test_index_usuario_no_autenticado(self):
         """
@@ -673,3 +678,43 @@ class TestViews(TestCase):
         request.user = self.usuario
         response = ver_proyecto(request, self.proyecto.id)
         self.assertEqual(response.status_code, 200, 'no se puede ver las fases del proyecto')
+
+    def test_crear_lineabase(self):
+        """
+        CU 45: crear linea base. Iteración 4
+        EL test invoca a la vista encargada de crear linea base y luego verifica si esta se creo con los parametros crrectos
+
+        :return: Se retorna true al validar el creador, lista de items, estado y tipo de la nueva lb
+        """
+        # primero definimos la direccion del view a probar en el test
+        path = reverse('configuracion:crearLineaBase', args=[self.fase.id])
+        # creamos un request de tipo post al que asignamos el path y los datos del proyecto a crear
+        request = RequestFactory().post(path, {
+            'checkItem-' + self.item.id.__str__():'on'
+        })
+        # asignamos el usuario al request
+        request.user = self.usuario
+        # llamamos al view que queramos probar y le pasamos el request y los otros parametros que necesite en otros
+        # casos
+        crear_linea_base(request, self.fase.id)
+        # asignamos a p el proyecto que se creó
+        lb = LineaBase.objects.get(fase=self.fase)
+        self.assertEqual(lb.creador, request.user, 'El creador de la lb no es correcto')
+        self.assertIn(self.item, lb.items.all(), "No se agrego correctamente el item a la lb")
+        self.assertEqual(lb.estado, LineaBase.ESTADO_CERRADA, "El estado de la linea base creada es incorrecto")
+        self.assertEqual(lb.tipo, LineaBase.TIPO_TOTAL, "El tipo de la linea base creada es incorrecto")
+
+    def test_ver_lineabase(self):
+        """
+        CU 48: Ver detalles de linea base. Iteración 4
+        EL test invoca a la vista encargada de mostrar detalles linea base y verifica recibir un 200
+
+        :return: Se retorna true al validar el codigo de respuesta de la vista
+        """
+        lb_nueva = LineaBase(fase=self.fase, creador=self.usuario)
+        lb_nueva.save()
+        path = reverse('configuracion:verLineaBase', args=[lb_nueva.id])
+        request = RequestFactory().get(path)
+        request.user = self.usuario
+        response = ver_linea_base(request, lb_nueva.id)
+        self.assertEqual(response.status_code, 200, 'no se puede ver los detalles de la linea base')

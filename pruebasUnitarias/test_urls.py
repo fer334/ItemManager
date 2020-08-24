@@ -18,6 +18,7 @@ class TestUrls(TestCase):
         :return: el assert retornara True si el path está bien
         """
         path = reverse('login:index')
+
         self.assertEqual(resolve(path).view_name, 'login:index', "La prueba falló porque el nombre del template es "
                                                                  "incorrecto")
 

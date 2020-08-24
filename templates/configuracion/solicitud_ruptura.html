@@ -1,0 +1,35 @@
+{% extends 'login/loginHeader.html' %}
+{% block content %}
+    <div class="container">
+        <h1 class="text-center pt-3 mb-3">{{ lineabase.fase.nombre }} - Linea Base {{ lineabase.id }}</h1>
+
+        <h1 class="text-center pt-3 mb-5">Solicitud de ruptura</h1>
+        <h4 class="mb-5"></h4>
+
+        <form target="{% url 'configuracion:solicitudRuptura' lineabase.id %}" method="post">
+            <div class="form-group">
+                <label>Items de linea base de la fase a modificar (pasarán a revision)</label>
+                {% csrf_token %}
+                {% for item in lineabase.items.all %}
+                    <div  class="form-check">
+                        <input class="form-check-input" type="checkbox" name="checkItem-{{ item.id }}" id="checkItem-{{ item.id }}">
+                        <label class="form-check-label" for="checkItem-{{ item.id }}">
+                            {{ item.tipo_item.prefijo }} {% if item.numeracion < 10 %}0{% endif %}{{ item.numeracion}}-{{ item.nombre }}
+                        </label>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="form-group">
+              <label>Justificacion:</label>
+                <textarea class="form-control" aria-label="With textarea" name="mensaje" placeholder="Justifique el porqué de la ruptura de esta linea base" required></textarea>
+            </div>
+            <div class="mt-5">
+                <button class="btn btn-primary">Enviar solitud</button>
+                <a href="{% url 'configuracion:verProyecto' lineabase.fase.proyecto_id %}" class="btn btn-primary float-right">Volver atrás</a>
+            </div>
+        </form>
+        <div class="mt-3">
+            <a href="{% url 'configuracion:verProyecto' lineabase.fase.proyecto.id %}" class="btn btn-primary">Volver atras</a>
+        </div>
+    </div>
+{% endblock %}
