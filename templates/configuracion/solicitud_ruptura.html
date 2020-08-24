@@ -3,7 +3,7 @@
     <div class="container">
         <h1 class="text-center pt-3 mb-3">{{ lineabase.fase.nombre }} - Linea Base {{ lineabase.id }}</h1>
 
-        <h1 class="text-center pt-3 mb-5">Crear linea base</h1>
+        <h1 class="text-center pt-3 mb-5">Solicitud de ruptura</h1>
         <h4 class="mb-5"></h4>
 
         <form target="{% url 'configuracion:solicitudRuptura' lineabase.id %}" method="post">
@@ -24,7 +24,7 @@
                 <textarea class="form-control" aria-label="With textarea" name="mensaje" placeholder="Justifique el porqué de la ruptura de esta linea base" required></textarea>
             </div>
             <div class="mt-5">
-                <button class="btn btn-primary">Confirmar creacion</button>
+                <button class="btn btn-primary">Enviar solitud</button>
                 <a href="{% url 'configuracion:verProyecto' lineabase.fase.proyecto_id %}" class="btn btn-primary float-right">Volver atrás</a>
             </div>
         </form>
