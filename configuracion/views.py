@@ -112,7 +112,13 @@ def comite_index(request, id_proyecto):
     :rtype: render
     """
     proyecto = Proyecto.objects.get(pk=id_proyecto)
-    return render(request, 'configuracion/comite_index.html', {'proyecto': proyecto})
+    lbs_del_proyecto = []
+    for fase in proyecto.fase_set.all():
+        lbs_del_proyecto = lbs_del_proyecto + [lb for lb in fase.lineabase_set.all()]
+    solicitudes = []
+    for lb in lbs_del_proyecto:
+        solicitudes = solicitudes + [solicitud for solicitud in lb.solicitud_set.all()]
+    return render(request, 'configuracion/comite_index.html', {'proyecto': proyecto, 'solicitudes': solicitudes})
 
 
 def solicitud_ruptura(request, id_lineabase):

@@ -33,3 +33,4 @@ class Solicitud(models.Model):
     solicitado_por = models.ForeignKey('login.Usuario', on_delete=models.CASCADE, default=None, null=True)
     linea_base = models.ForeignKey('configuracion.LineaBase', on_delete=models.CASCADE, default=None, null=True)
     justificacion = models.CharField(max_length=200, null=False)
+    solicitud_activa = models.BooleanField(default=True)

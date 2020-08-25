@@ -2,6 +2,31 @@
 {% block content %}
     <div class="container">
         <h1 class="text-center pt-3 mb-5">Comite de decisiones</h1>
+        <main>
+            <h3 class="mb-5">Solicitudes de ruptura</h3>
+
+                {% for solicitud in solicitudes %}
+                    <div class="card bg-light mb-3" style="max-width: 18rem;">
+                        <div class="card-header">Solicitud {{ solicitud.id }}</div>
+                        <div class="card-body">
+                            <h5 class="card-title font-weight-bold">Ruptura de linea base {{ solicitud.linea_base.id }}</h5>
+                            <p class="card-text">Justificacion: {{solicitud.justificacion}}</p>
+                            <p class="card-text">Solicitante: {{solicitud.solicitado_por.username}}</p>
+                            <p class="card-text">Fecha: {{solicitud.fecha_solicitud}}</p>
+                            Items: <ul class="list-unstyled">
+                                {% for item in solicitud.items_a_modificar.all %}
+                                    <li class="ml-3">{{ item.nombre }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        <div class="card-footer text-muted">
+                            <button class="btn btn-danger">Votar Si</button>
+                            <button class="btn btn-primary">Votar No</button>
+                        </div>
+                    </div>
+                {% endfor %}
+
+        </main>
         <div class="mt-5">
             <button class="btn btn-primary">Confirmar</button>
             <a href="{% url 'configuracion:verProyecto' proyecto.id %}" class="btn btn-primary float-right">Volver atrás</a>
