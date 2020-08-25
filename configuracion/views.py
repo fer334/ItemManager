@@ -134,15 +134,8 @@ def solicitud_ruptura(request, id_lineabase):
         solicitud.save()
 
         items_seleccionados = [Item.objects.get(pk=item.split('-')[1]) for item in request.POST if len(item.split('-')) > 1]
-        a_reversionar = items_seleccionados
-        for item in a_reversionar:
-            for relacion in item.relaciones_this_as_inicio.all():
-                a_reversionar.append(relacion.fin)
-        for item in a_reversionar:
-            print(solicitud.items_a_modificar.add(item))
-        solicitud.save()
-        # print(a_reversionar)
-        # print('a_reversionar')
+        for item in items_seleccionados:
+            solicitud.items_a_modificar.add(item)
         return redirect('configuracion:verLineaBase', id_lineabase)
 
     return render(request, 'configuracion/solicitud_ruptura.html', {'lineabase': lineabase})
