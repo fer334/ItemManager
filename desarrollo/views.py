@@ -411,9 +411,6 @@ def modificar_item(request, id_proyecto, id_item):
     return render(request, 'desarrollo/item_editar.html', {'item': item, 'lista_atr': lista_atr})
 
 
-
-
-
 def cerrar_fase(request, id_proyecto):
     """
     Metodo que se encarga de renderizar la vista cerrar fase,
@@ -427,10 +424,11 @@ def cerrar_fase(request, id_proyecto):
     :rtype: render
     """
     fases = Fase.objects.filter(proyecto=id_proyecto)
-    mensaje_error = ""
 
+    # Para mostrar el numero correcto de la fase
     for i, fase in enumerate(fases):
         fase.nro_de_fase = i + 1
+
     # Ver cual fase se puede cerrar
     for i, fase in enumerate(fases):
         if fase.estado == 'abierta':
@@ -445,21 +443,50 @@ def cerrar_fase(request, id_proyecto):
     else:
         es_gerente = False
 
-    if request.method == "POST":
-
-        clave = int(request.POST['cerrar'])
-        fase = Fase.objects.get(id=clave)
-        i = clave - fases[0].id
-        if fases[i].cerrable:
-            fase.estado = 'cerrada'
-            fase.save()
-        else:
-            mensaje_error = "La fase anterior aun no se cerro"
-        return redirect('desarrollo:cerrarFase', id_proyecto)
+    # Dict a ser enviado a la vista
     content = {
         'id_proyecto': id_proyecto,
         'fases': fases,
         'es_gerente': es_gerente,
-        'mensaje_error': mensaje_error,
+        'mensaje_error': "",
     }
+
+    # Si el request es POST
+    if request.method == "POST":
+        clave = int(request.POST['cerrar'])
+        fase = Fase.objects.get(id=clave)
+        i = clave - fases[0].id
+        items_de_esta_fase = fase.item_set.all()
+
+        # Comprobacion de que la fase anterior este cerrada
+        if not fases[i].cerrable:
+            content['mensaje_error'] = "La fase anterior aun no se cerro"
+            return render(request, 'desarrollo/fase_cerrar.html', content)
+
+        # Comprobacion de que todos los items esten en LB
+        todos_en_lb = True
+        for item in items_de_esta_fase:
+            if item.estado != Item.ESTADO_LINEABASE:
+                todos_en_lb = False
+                break
+        if not todos_en_lb:
+            content['mensaje_error'] = "Todos los items de la fase deben estar en Linea Base para poder cerrarlo"
+            return render(request, 'desarrollo/fase_cerrar.html', content)
+
+        # Comprobacion de que todos los items dentro de la fase tengan antecedentes
+        # se excluye de la condicion a la fase 1
+        todos_tienen_antecedentes = True
+        for item in items_de_esta_fase:
+            if len(item.relaciones_this_as_inicio.all()) == 0:
+                todos_tienen_antecedentes = False
+        if i == 0:
+            todos_tienen_antecedentes = True
+        if not todos_tienen_antecedentes:
+            content['mensaje_error'] = "Todos los items de la fase deben tener una relacion con la fase anterior"
+            return render(request, 'desarrollo/fase_cerrar.html', content)
+
+        # Si cumple los requisitos de las condiciones anteriores, cerrar las fases
+        fase.estado = 'cerrada'
+        fase.save()
+        return redirect('desarrollo:cerrarFase', id_proyecto)
     return render(request, 'desarrollo/fase_cerrar.html', content)
