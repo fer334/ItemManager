@@ -16,7 +16,6 @@ class LineaBase(models.Model):
     fase = models.ForeignKey(Fase, on_delete=models.CASCADE, null=False)
     ESTADO_CERRADA = 'Cerrada'
     ESTADO_ROTA = 'Rota'
-    # ESTADO_SOLICITADO_PARA_RUPTURA='Solicitado'
     TIPO_PARCIAL = 'Parcial'
     TIPO_TOTAL = 'Total'
     tipo = models.CharField(max_length=100, default=TIPO_PARCIAL)
