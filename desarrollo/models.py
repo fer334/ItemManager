@@ -35,6 +35,14 @@ class Item(models.Model):
     ESTADO_LINEABASE = 'En Linea Base'
     ESTADO_DESACTIVADO = 'Desactivado'
 
+    def get_hijos(self):
+        return [relacion.fin for relacion in Relacion.objects.filter(inicio=self) if
+                (relacion.is_active and relacion.es_relacion_padrehijo())]
+
+    def get_sucesores(self):
+        return [relacion.fin for relacion in Relacion.objects.filter(inicio=self) if
+                relacion.is_active and relacion.es_relacion_padrehijo() is False]
+
     def __str__(self):
         return self.nombre
 
@@ -51,6 +59,8 @@ class AtributoParticular(models.Model):
     tipo = models.CharField(max_length=100, null=False)
     #: valor que es almacenado dentro del atributo
     valor = models.CharField(max_length=300)
+
+
 
     def __str__(self):
         return self.nombre
