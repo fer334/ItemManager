@@ -285,8 +285,16 @@ def desactivar_relacion_item(request, id_proyecto):
                 """.format(relacion.fin)
 
         else:
-            relacion.is_active = False
-            relacion.save()
+            # se añade código para que al desactivar una relación cuente como una nueva versión para ambos items
+            item_inicio = relacion.inicio
+            nuevo_item_inicio = versionar_item(item_inicio, request.user)
+            item_fin = relacion.fin
+            nuevo_item_fin = versionar_item(item_fin, request.user)
+
+            # luego se obtiene la relación con las nuevas versiones que es la que se desactivará
+            nueva_relacion = Relacion.objects.get(inicio=nuevo_item_inicio, fin=nuevo_item_fin)
+            nueva_relacion.is_active = False
+            nueva_relacion.save()
 
     content = {
         'relaciones': relaciones,
@@ -294,6 +302,50 @@ def desactivar_relacion_item(request, id_proyecto):
         'mensaje_error': mensaje_error,
     }
     return render(request, 'desarrollo/item_des_relacion.html', content)
+
+
+def versionar_item(item, usuario):
+    """
+    función que se encarga de que al editar un item o sus relaciones se cree un nuevo objeto item que será la versión
+    nueva y se encarga de que todas las relaciones, atributos particulares, etc del ítem anterior pasen al nuevo item
+
+    :param usuario: usuario actual para registrar en caso de archivo
+    :param item: es el item a versionar
+    :return: None
+    """
+    item_editado = Item(nombre=item.nombre, complejidad=item.complejidad, descripcion=item.descripcion, fase=item.fase,
+                        tipo_item=item.tipo_item, numeracion=item.numeracion, estado=item.estado,
+                        version=item.version + 1, version_anterior=item)
+    item_editado.save()
+
+    # también nos encargamos de los atributos particulares
+    lista_atr = AtributoParticular.objects.filter(item=item).order_by('id')
+    for atr in lista_atr:
+        if atr.tipo == 'file':
+            valor = handle_uploaded_file(atr.valor, item.fase.proyecto.id, usuario)
+        else:
+            valor = atr.valor
+        nuevo_atributo = AtributoParticular(item=item_editado, nombre=atr.nombre, tipo=atr.tipo, valor=valor)
+        nuevo_atributo.save()
+
+    # nos encargamos también de vincular las relaciones del ítem anterior con el actual
+    for relacion in item.relaciones_this_as_fin.all():
+        if relacion.is_active:
+            nueva_relacion = Relacion(inicio=relacion.inicio, fin=item_editado)
+            nueva_relacion.save()
+            relacion.is_active = False
+            relacion.save()
+    for relacion in item.relaciones_this_as_inicio.all():
+        if relacion.is_active:
+            nueva_relacion = Relacion(inicio=item_editado, fin=relacion.fin)
+            nueva_relacion.save()
+            relacion.is_active = False
+            relacion.save()
+
+    # por ultimo desactivamos la versión anterior (mejorar esta parte)
+    item.estado = Item.ESTADO_DESACTIVADO
+    item.save()
+    return item_editado
 
 
 def solicitud_aprobacion(request, id_item):
@@ -411,15 +463,17 @@ def modificar_item(request, id_proyecto, id_item):
 
             # nos encargamos también de vincular las relaciones del ítem anterior con el actual
             for relacion in item.relaciones_this_as_fin.all():
-                nueva_relacion = Relacion(inicio=relacion.inicio, fin=item_editado)
-                nueva_relacion.save()
-                relacion.is_active = False
-                relacion.save()
+                if relacion.is_active:
+                    nueva_relacion = Relacion(inicio=relacion.inicio, fin=item_editado)
+                    nueva_relacion.save()
+                    relacion.is_active = False
+                    relacion.save()
             for relacion in item.relaciones_this_as_inicio.all():
-                nueva_relacion = Relacion(inicio=item_editado, fin=relacion.fin)
-                nueva_relacion.save()
-                relacion.is_active = False
-                relacion.save()
+                if relacion.is_active:
+                    nueva_relacion = Relacion(inicio=item_editado, fin=relacion.fin)
+                    nueva_relacion.save()
+                    relacion.is_active = False
+                    relacion.save()
 
             # por ultimo desactivamos la versión anterior (mejorar esta parte)
             item.estado = Item.ESTADO_DESACTIVADO

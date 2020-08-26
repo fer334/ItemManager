@@ -97,7 +97,7 @@
                                  <td>
                                     <ul>
                                         {% for relacion in item.relaciones_this_as_fin.all %}
-                                            {% if not relacion.es_relacion_padrehijo and relacion.is_active %}
+                                            {% if not relacion.es_relacion_padrehijo and not relacion.is_active %}
                                                 <li>
                                                     {{relacion.inicio}}
                                                 </li>
@@ -124,7 +124,7 @@
                                  <td>
                                     <ul>
                                         {% for relacion in item.relaciones_this_as_inicio.all %}
-                                            {% if not relacion.es_relacion_padrehijo and relacion.is_active %}
+                                            {% if not relacion.es_relacion_padrehijo and not relacion.is_active%}
                                                 <li>
                                                     {{relacion.fin}}
                                                 </li>
@@ -151,7 +151,7 @@
                                  <td>
                                     <ul>
                                         {% for relacion in item.relaciones_this_as_fin.all %}
-                                            {% if relacion.es_relacion_padrehijo and relacion.is_active %}
+                                            {% if relacion.es_relacion_padrehijo and not relacion.is_active %}
                                                 <li>
                                                     {{relacion.inicio}}
                                                 </li>
@@ -178,7 +178,7 @@
                                  <td>
                                     <ul>
                                         {% for relacion in item.relaciones_this_as_inicio.all %}
-                                            {% if relacion.es_relacion_padrehijo and relacion.is_active %}
+                                            {% if relacion.es_relacion_padrehijo and not relacion.is_active %}
                                                 <li>
                                                     {{relacion.fin}}
                                                 </li>
