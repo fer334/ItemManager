@@ -27,6 +27,12 @@ class Item(models.Model):
     fase = models.ForeignKey('administracion.Fase', on_delete=models.CASCADE, default=None, blank=True, null=True)
     #: versión anterior a la del item actual
     version_anterior = models.ForeignKey('desarrollo.Item', on_delete=models.CASCADE, default=None, null=True)
+    #: id para identificar a todas las versiones de un mismo ítem
+    id_version = models.IntegerField(null=True)
+    #: atributo que ayuda a identificar si esta versión se creó a partir de una edición, ruptura o creación de relacion
+    operacion_version_str = models.CharField(max_length=50, default='original')
+    #: atributo con datos extra sobre el id del otro ítem que participa en la relación de esta versión
+    operacion_version_int = models.IntegerField(null=True)
     # constantes del modelo
     ESTADO_DESARROLLO = 'En Desarrollo'
     ESTADO_PENDIENTE = 'Pendiente de Aprobacion'
@@ -37,6 +43,32 @@ class Item(models.Model):
 
     def __str__(self):
         return self.nombre
+
+    def mostrar_relaciones_version_no_actual(self):
+        """
+        Esta función calcula que relaciones tenía la versión del ítem que la llame
+
+        :return: lista de relaciones que tenía esa versión
+        """
+        # primero calculamos la lista de versiones anteriores al ítem actual
+        lista_versiones = []
+        item = self
+        while item.version_anterior is not None:
+            lista_versiones.append(item)
+            item = item.version_anterior
+        # añadimos a la lista la versión actual
+        lista_versiones.append(self)
+        # ahora calculamos la lista de relaciones
+        lista_relaciones = []
+        for item in lista_versiones:
+            if item.operacion_version_str == 'relacion':
+                # añadimos a la lista el id_version del ítem
+                lista_relaciones.append(item.operacion_version_int)
+            elif item.operacion_version_str == 'del_relacion':
+                # si fue removida la relación la volvemos a sacar de la lista
+                lista_relaciones.remove(item.operacion_version_int)
+
+        return lista_relaciones
 
 
 class AtributoParticular(models.Model):
@@ -54,6 +86,7 @@ class AtributoParticular(models.Model):
 
     def __str__(self):
         return self.nombre
+
 
 # Posible implementacion de versionamiento
 '''

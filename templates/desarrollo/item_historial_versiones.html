@@ -96,12 +96,11 @@
                             {% for item in lista_versiones %}
                                  <td>
                                     <ul>
-                                        {% for relacion in item.relaciones_this_as_fin.all %}
-                                            {% if not relacion.es_relacion_padrehijo and not relacion.is_active %}
-                                                <li>
-                                                    {{relacion.inicio}}
-                                                </li>
-                                            {% endif %}
+                                        {% for elemento in item.mostrar_relaciones_version_no_actual %}
+                                            <li>
+                                                {{elemento}}
+                                                {{ item.version }}
+                                            </li>
                                         {% endfor %}
                                     </ul>
                                 </td>
