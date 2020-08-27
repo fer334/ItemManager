@@ -16,7 +16,7 @@ from administracion.views import crear_rol, proyectos, desactivar_tipo_item, edi
     administrar_comite, importar_tipo, confirmar_tipo_import, mostrar_tipo_import, administrar_fases_del_proyecto
 from desarrollo.models import Item, AtributoParticular, Relacion
 from desarrollo.views import solicitud_aprobacion, aprobar_item, desaprobar_item, desactivar_item, ver_item, \
-    relacionar_item, desactivar_relacion_item, ver_proyecto
+    relacionar_item, desactivar_relacion_item, ver_proyecto, modificar_item
 
 from configuracion.models import LineaBase
 from configuracion.views import crear_linea_base, ver_linea_base
@@ -42,8 +42,9 @@ class TestViews(TestCase):
         cls.fase = Fase.objects.create(nombre='Fase de prueba', proyecto=cls.proyecto)
         cls.rol = Rol.objects.create(nombre='Rol de prueba', proyecto=cls.proyecto)
         cls.tipo = TipoItem.objects.create(nombre='Tipo de item de prueba', prefijo='TIP')
-        cls.item = Item.objects.create(nombre='Item de prueba', complejidad=1, descripcion='Descripcion de prueba', tipo_item=cls.tipo,
-                                  fase=cls.fase, numeracion=1)
+        cls.item = Item.objects.create(nombre='Item de prueba', complejidad=1, descripcion='Descripcion de prueba',
+                                       tipo_item=cls.tipo,
+                                       fase=cls.fase, numeracion=1)
 
     def test_index_usuario_no_autenticado(self):
         """
@@ -228,8 +229,9 @@ class TestViews(TestCase):
         estado_proyectov2(request, proyecto_iniciado.id, Proyecto.ESTADO_FINALIZADO)
         # sincronizamos el objeto con los nuevos cambios
         proyecto_iniciado = Proyecto.objects.get(pk=proyecto_iniciado.id)
-        self.assertNotEqual(proyecto_iniciado.estado, Proyecto.ESTADO_FINALIZADO, 'el estado del proyecto cambió a finalizado y '
-                                                                 'no debía cambiar de estado')
+        self.assertNotEqual(proyecto_iniciado.estado, Proyecto.ESTADO_FINALIZADO,
+                            'el estado del proyecto cambió a finalizado y '
+                            'no debía cambiar de estado')
 
     def test_estado_proyecto_ejecucion_finalizado(self):
         """
@@ -247,7 +249,8 @@ class TestViews(TestCase):
         estado_proyectov2(request, proyecto_ejecucion.id, Proyecto.ESTADO_FINALIZADO)
         # sincronizamos el objeto con los nuevos cambios
         proyecto_ejecucion = Proyecto.objects.get(pk=proyecto_ejecucion.id)
-        self.assertEqual(proyecto_ejecucion.estado, Proyecto.ESTADO_FINALIZADO, 'el estado del proyecto no cambió a finalizado')
+        self.assertEqual(proyecto_ejecucion.estado, Proyecto.ESTADO_FINALIZADO,
+                         'el estado del proyecto no cambió a finalizado')
 
     def test_eliminar_participante(self):
         """
@@ -593,10 +596,10 @@ class TestViews(TestCase):
                                      gerente=self.usuario.id, numero_fases=3, cant_comite=3)
         tipom = TipoItem.objects.create(nombre='Casom', descripcion='uuuto', prefijo='cm')
         fasem = Fase.objects.create(nombre='Fasem', descripcion='cdshh', estado='abierta',
-                                   proyecto=Proyecto.objects.get(pk=pm.id))
+                                    proyecto=Proyecto.objects.get(pk=pm.id))
         cu_40 = Item.objects.create(nombre='cu_40', estado=Item.ESTADO_DESARROLLO, version=1, complejidad=5,
-                                      descripcion='desactivar item', tipo_item=TipoItem.objects.get(pk=tipom.id),
-                                      fase=Fase.objects.get(pk=fasem.id))
+                                    descripcion='desactivar item', tipo_item=TipoItem.objects.get(pk=tipom.id),
+                                    fase=Fase.objects.get(pk=fasem.id))
         request = RequestFactory()
         request.user = self.usuario
         desactivar_item(request, id_item=cu_40.id, id_proyecto=pm.id)
@@ -627,7 +630,8 @@ class TestViews(TestCase):
 
         :return: el assert retorna True si el estado no es cambiado y false en caso contrario
         """
-        item = Item(nombre='itemdesa', estado=Item.ESTADO_APROBADO, descripcion='descripcion del ítem', tipo_item=self.tipo, fase=self.fase)
+        item = Item(nombre='itemdesa', estado=Item.ESTADO_APROBADO, descripcion='descripcion del ítem',
+                    tipo_item=self.tipo, fase=self.fase)
         item.save()
         path = reverse('desarrollo:desactivarItem', args=[self.proyecto.id, item.id])
         request = RequestFactory().get(path)
@@ -690,7 +694,7 @@ class TestViews(TestCase):
         path = reverse('configuracion:crearLineaBase', args=[self.fase.id])
         # creamos un request de tipo post al que asignamos el path y los datos del proyecto a crear
         request = RequestFactory().post(path, {
-            'checkItem-' + self.item.id.__str__():'on'
+            'checkItem-' + self.item.id.__str__(): 'on'
         })
         # asignamos el usuario al request
         request.user = self.usuario
@@ -718,3 +722,30 @@ class TestViews(TestCase):
         request.user = self.usuario
         response = ver_linea_base(request, lb_nueva.id)
         self.assertEqual(response.status_code, 200, 'no se puede ver los detalles de la linea base')
+
+
+    def test_modificar_item(self):
+        """
+        CU 34: Modificación  Item. Iteración 4
+        El test comprueba que la vista Modificar Item funciona
+
+        :return:
+        """
+        item_1 = Item.objects.create(nombre='Item_1', estado=Item.ESTADO_DESARROLLO, version=1, complejidad=5,
+                                   descripcion='modificacion', tipo_item=self.tipo,
+                                   fase=self.fase)
+        NOMBRE = 'Item'
+        COMPLEJIDAD = '7'
+        DESCRIPCION = 'Item editado'
+        path = reverse('desarrollo:editarItem', args=[self.proyecto.id, self.item.id])
+        request = RequestFactory().post(path, {
+            'nombre': NOMBRE,
+            'complejidad': COMPLEJIDAD,
+            'descripcion': DESCRIPCION
+        })
+        item_editado = Item(pk=item_1.id, nombre=NOMBRE, version=item_1.version+1, complejidad=COMPLEJIDAD,
+                            descripcion=DESCRIPCION)
+        modificar_item(request, self.proyecto.id, self.item.id)
+        self.assertEqual(NOMBRE, item_editado.nombre, "No se edito el nombre")
+        self.assertEqual(COMPLEJIDAD, item_editado.complejidad, "No se edito la complejidad")
+        self.assertEqual(DESCRIPCION, item_editado.descripcion, "No se edito la descripcion")
