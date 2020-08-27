@@ -54,7 +54,7 @@ class Item(models.Model):
         lista_versiones = []
         item = self
         while item.version_anterior is not None:
-            lista_versiones.append(item)
+            lista_versiones.append(item.version_anterior)
             item = item.version_anterior
         # añadimos a la lista la versión actual
         lista_versiones.append(self)

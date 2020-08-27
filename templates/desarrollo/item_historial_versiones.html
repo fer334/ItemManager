@@ -92,16 +92,15 @@
                                         {% endif %}
                                     {% endfor %}
                                 </ul>
+
+                                                {{ item_actual.mostrar_relaciones_version_no_actual }}
                             </td>
                             {% for item in lista_versiones %}
                                  <td>
                                     <ul>
-                                        {% for elemento in item.mostrar_relaciones_version_no_actual %}
-                                            <li>
-                                                {{elemento}}
-                                                {{ item.version }}
-                                            </li>
-                                        {% endfor %}
+                                        <li>
+                                            {{ item.mostrar_relaciones_version_no_actual }}
+                                        </li>
                                     </ul>
                                 </td>
                             {% endfor %}
