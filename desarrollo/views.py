@@ -413,10 +413,13 @@ def modificar_item(request, id_proyecto, id_item):
 
 def cerrar_fase(request, id_proyecto):
     """
-    Metodo que se encarga de renderizar la vista cerrar fase,
-    recibe como parametro dos atributos, el request que es comun entre todas las
-    vistas y el id_proyecto que tiene el numero identificador del proyecto donde
-    se encuentran todas las fases para ese proyecto
+    Metodo que se encarga de renderizar la vista cerrar fase. Las fases se pueden
+    cerrar siempre que la fase anterior fue debidamente cerrada, si los items de
+    esta fase estan todos dentro de una lb y si los items de la fase estan
+    relacionados con items de la fase anterior. El metodo recibe como parametro
+    dos atributos, el request que es comun entre todas las vistas y el id_proyecto
+    que tiene el numero identificador del proyecto donde se encuentran todas
+    las fases para ese proyecto.
 
     :param request: objeto tipo diccionario que permite acceder a datos
     :param id_proyecto: identificador unico por proyecto
@@ -470,19 +473,23 @@ def cerrar_fase(request, id_proyecto):
                 todos_en_lb = False
                 break
         if not todos_en_lb:
-            content['mensaje_error'] = "Todos los items de la fase deben estar en Linea Base para poder cerrarlo"
+            content['mensaje_error'] = """
+            Todos los items de la fase deben estar en Linea Base para poder cerrarlo
+            """
             return render(request, 'desarrollo/fase_cerrar.html', content)
 
         # Comprobacion de que todos los items dentro de la fase tengan antecedentes
         # se excluye de la condicion a la fase 1
         todos_tienen_antecedentes = True
         for item in items_de_esta_fase:
-            if len(item.relaciones_this_as_inicio.all()) == 0:
+            if len([rel for rel in item.relaciones_this_as_inicio.all() if rel.is_active]) == 0:
                 todos_tienen_antecedentes = False
         if i == 0:
             todos_tienen_antecedentes = True
         if not todos_tienen_antecedentes:
-            content['mensaje_error'] = "Todos los items de la fase deben tener una relacion con la fase anterior"
+            content['mensaje_error'] = """
+            Todos los items de la fase deben tener una relacion con la fase anterior
+            """
             return render(request, 'desarrollo/fase_cerrar.html', content)
 
         # Si cumple los requisitos de las condiciones anteriores, cerrar las fases
