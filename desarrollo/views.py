@@ -122,6 +122,31 @@ def historial_versiones_item(request, id_proyecto, id_item):
                                                                         'lista_atributos': lista_atributos})
 
 
+def reversionar_item(request, id_proyecto, id_item, id_version_anterior):
+    """
+    Vista que se encarga de crear una nueva versión de un ítem restaurando los datos de una versión anterior
+
+    :param id_version_anterior: identificador de la versión a restaurar
+    :param request: objeto tipo diccionario que permite acceder a datos
+    :param id_proyecto: identificador del proyecto actual
+    :param id_item:  identificador de la versión actual del ítem
+    :return: redireccion a item_ver.html
+    :rtype: redirect
+    """
+    item_actual = Item.objects.get(pk=id_item)
+    item_version_anterior = Item.objects.get(pk=id_version_anterior)
+    # creamos una nueva versión a partir de la version anterior elegida
+    nuevo_item = versionar_item(item_version_anterior, request.user)
+    # modificamos su version_anterior para que apunte a la ultima versión antes que esta
+    nuevo_item.version_anterior = item_actual
+    # editamos su versión
+    nuevo_item.version = item_actual.version + 1
+    # guardamos los cambios
+    nuevo_item.save()
+
+    return redirect('desarrollo:verItem', id_proyecto=id_proyecto, id_item=nuevo_item.id)
+
+
 def menu_aprobacion(request, id_proyecto):
     """
     Vista que se encarga de mostrar un menú en el cual se permite administrar los ítems pendientes de aprobación

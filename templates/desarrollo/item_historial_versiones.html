@@ -8,12 +8,23 @@
                 <thead>
                     <th></th>
                     <th>Versiones:</th>
-                    <th>{{ item_actual.version }} (actual)</th>
+                    <th>{{ item_actual.version }}</th>
                     {% for item_anterior in lista_versiones %}
-                        <th>{{ item_anterior.version }}</th>
+                        <th>
+                            {{ item_anterior.version }}
+                        </th>
                     {% endfor %}
                 </thead>
                     <tbody>
+                        <tr>
+                            <td></td><td></td><td><a href="#" class="btn btn-outline-info">Version Actual</a></td>
+                            {% for item_anterior in lista_versiones %}
+                                <td>
+                                    <a href="{% url 'desarrollo:reversionarItem' proyecto.id item_actual.id item_anterior.id%}"
+                                       class="btn btn-outline-primary float-right">Reversionar</a>
+                                </td>
+                            {% endfor %}
+                        </tr>
                         <tr>
                             <th rowspan="4" class="text-center align-middle h5">Atributos Comunes</th>
                         </tr>
