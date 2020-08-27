@@ -61,7 +61,7 @@ class Item(models.Model):
         # ahora calculamos la lista de relaciones
         lista_relaciones = []
         for item in lista_versiones:
-            if item.operacion_version_str == 'relacion':
+            if item.operacion_version_str == 'relacion_h' or item.operacion_version_str == 'relacion_p':
                 # añadimos a la lista el id_version del ítem
                 lista_relaciones.append(item.operacion_version_int)
             elif item.operacion_version_str == 'del_relacion':

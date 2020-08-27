@@ -245,8 +245,8 @@ def relacionar_item(request, id_proyecto):
             # creamos una nueva versión de los ítems relacionados
             item_inicio = form.cleaned_data['inicio']
             item_fin = form.cleaned_data['fin']
-            versionar_item(item_inicio, request.user, "relacion", item_fin.id_version)
-            versionar_item(item_fin, request.user, "relacion", item_inicio.id_version)
+            versionar_item(item_inicio, request.user, "relacion_p", item_fin.id_version)
+            versionar_item(item_fin, request.user, "relacion_h", item_inicio.id_version)
 
             return redirect('desarrollo:verProyecto', proyecto.id)
     else:
