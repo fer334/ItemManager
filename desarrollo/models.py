@@ -33,6 +33,13 @@ class Item(models.Model):
     operacion_version_str = models.CharField(max_length=50, default='original')
     #: atributo con datos extra sobre el id del otro ítem que participa en la relación de esta versión
     operacion_version_int = models.IntegerField(null=True)
+
+    # listas para las relaciones del ítem
+    antecesores = models.ManyToManyField('Item', related_name='item_desarrollo_antecesores', blank=True)
+    sucesores = models.ManyToManyField('Item', related_name='item_desarrollo_sucesores', blank=True)
+    padres = models.ManyToManyField('Item', related_name='item_desarrollo_padres', blank=True)
+    hijos = models.ManyToManyField('Item', related_name='item_desarrollo_hijos', blank=True)
+
     # constantes del modelo
     ESTADO_DESARROLLO = 'En Desarrollo'
     ESTADO_PENDIENTE = 'Pendiente de Aprobacion'

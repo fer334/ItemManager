@@ -117,11 +117,6 @@ def historial_versiones_item(request, id_proyecto, id_item):
         lista_versiones.append(item_aux.version_anterior)
         # cambiamos al item de la version anterior
         item_aux = item_aux.version_anterior
-    # for item_a in lista_versiones:
-    #     relacion_inicio = Relacion.objects.filter(inicio=item_a)
-    #     relacion_fin = Relacion.objects.filter(fin=item_a)
-    #     item_a.relacion_inicio = relacion_inicio
-    #     item_a.relacion_fin = relacion_fin
     return render(request, 'desarrollo/item_historial_versiones.html', {'lista_versiones': lista_versiones,
                                                                         'item_actual': item, 'proyecto': proyecto,
                                                                         'lista_atributos': lista_atributos})
@@ -240,14 +235,24 @@ def relacionar_item(request, id_proyecto):
     if request.method == "POST":
         form = RelacionForm(request.POST)
         if form.is_valid():
-            form.save()
             proyecto = form.cleaned_data['inicio'].fase.proyecto
             # creamos una nueva versión de los ítems relacionados
             item_inicio = form.cleaned_data['inicio']
             item_fin = form.cleaned_data['fin']
-            versionar_item(item_inicio, request.user, "relacion_p", item_fin.id_version)
-            versionar_item(item_fin, request.user, "relacion_h", item_inicio.id_version)
+            nuevo_item_inicio = versionar_item(item_inicio, request.user, "relacion_p", item_fin.id_version)
+            nuevo_item_fin = versionar_item(item_fin, request.user, "relacion_h", item_inicio.id_version)
+            # relacionamos las nuevas versiones
+            # si son de la misma fase son padre e hijo y si son de fases diferentes son antecesor y sucesor
+            if nuevo_item_inicio.fase == nuevo_item_fin.fase:
+                nuevo_item_inicio.hijos.add(nuevo_item_fin)
+                nuevo_item_fin.padres.add(nuevo_item_inicio)
+            else:
+                nuevo_item_inicio.sucesores.add(nuevo_item_fin)
+                nuevo_item_fin.antecesores.add(nuevo_item_inicio)
+            nuevo_item_inicio.save()
+            nuevo_item_fin.save()
 
+            form.save()
             return redirect('desarrollo:verProyecto', proyecto.id)
     else:
         form = RelacionForm()
@@ -300,14 +305,22 @@ def desactivar_relacion_item(request, id_proyecto):
             relacion.save()
 
             # se añade código para que al desactivar una relación cuente como una nueva versión para ambos items
-            item_inicio = relacion.inicio
-            item_fin = relacion.fin
-            ##
-            ###
-            ####
-            # ver si como ultimo atributo se va a mandar el id o el id_version
-            versionar_item(item_inicio, request.user, "del_relacion", item_fin.id_version)
-            versionar_item(item_fin, request.user, "del_relacion", item_inicio.id_version)
+            item_inicio = Item.objects.filter(id_version=relacion.inicio.id_version).order_by('id').last()
+            item_fin = Item.objects.filter(id_version=relacion.fin.id_version).order_by('id').last()
+
+            # versionamos los ítems
+            nuevo_item_inicio = versionar_item(item_inicio, request.user, "del_relacion", item_fin.id_version)
+            nuevo_item_fin = versionar_item(item_fin, request.user, "del_relacion", item_inicio.id_version)
+            # eliminamos la relación
+            if nuevo_item_inicio.fase == nuevo_item_fin.fase:
+                # como el padre se versiona primero sigue apuntando a item_fin y no a nuevo_item_fin
+                nuevo_item_inicio.hijos.remove(item_fin)
+                nuevo_item_fin.padres.remove(nuevo_item_inicio)
+            else:
+                nuevo_item_inicio.sucesores.remove(item_fin)
+                nuevo_item_fin.antecesores.remove(nuevo_item_inicio)
+            nuevo_item_inicio.save()
+            nuevo_item_fin.save()
 
     content = {
         'relaciones': relaciones,
@@ -346,18 +359,24 @@ def versionar_item(item, usuario, operacion_str, operacion_id):
         nuevo_atributo.save()
 
     # nos encargamos también de vincular las relaciones del ítem anterior con el actual
-    for relacion in item.relaciones_this_as_fin.all():
-        nueva_relacion = Relacion(inicio=relacion.inicio, fin=item_editado, is_active=relacion.is_active)
-        nueva_relacion.save()
-        relacion.delete()
-    for relacion in item.relaciones_this_as_inicio.all():
-        nueva_relacion = Relacion(inicio=item_editado, fin=relacion.fin, is_active=relacion.is_active)
-        nueva_relacion.save()
-        relacion.delete()
+    for item_relacionado in item.antecesores.all():
+        # primero seleccionamos la versión más actual del ítem y luego añadimos a la lista de la relación
+        item_a_anadir = Item.objects.filter(id_version=item_relacionado.id_version).order_by('id').last()
+        item_editado.antecesores.add(item_a_anadir)
+    for item_relacionado in item.sucesores.all():
+        item_a_anadir = Item.objects.filter(id_version=item_relacionado.id_version).order_by('id').last()
+        item_editado.sucesores.add(item_a_anadir)
+    for item_relacionado in item.padres.all():
+        item_a_anadir = Item.objects.filter(id_version=item_relacionado.id_version).order_by('id').last()
+        item_editado.padres.add(item_a_anadir)
+    for item_relacionado in item.hijos.all():
+        item_a_anadir = Item.objects.filter(id_version=item_relacionado.id_version).order_by('id').last()
+        item_editado.hijos.add(item_a_anadir)
 
     # por ultimo desactivamos la versión anterior (mejorar esta parte)
     item.estado = Item.ESTADO_DESACTIVADO
     item.save()
+    return item_editado
 
 
 def solicitud_aprobacion(request, id_item):
@@ -475,15 +494,18 @@ def modificar_item(request, id_proyecto, id_item):
                 nuevo_atributo.save()
 
             # nos encargamos también de vincular las relaciones del ítem anterior con el actual
-            for relacion in item.relaciones_this_as_fin.all():
-                nueva_relacion = Relacion(inicio=relacion.inicio, fin=item_editado, is_active=relacion.is_active)
-                nueva_relacion.save()
-                # borramos la relación que contiene a la versión antigua
-                relacion.delete()
-            for relacion in item.relaciones_this_as_inicio.all():
-                nueva_relacion = Relacion(inicio=item_editado, fin=relacion.fin, is_active=relacion.is_active)
-                nueva_relacion.save()
-                relacion.delete()
+            for item_relacionado in item.antecesores.all():
+                item_a_anadir = Item.objects.filter(id_version=item_relacionado.id_version).order_by('id').last()
+                item_editado.antecesores.add(item_a_anadir)
+            for item_relacionado in item.sucesores.all():
+                item_a_anadir = Item.objects.filter(id_version=item_relacionado.id_version).order_by('id').last()
+                item_editado.sucesores.add(item_a_anadir)
+            for item_relacionado in item.padres.all():
+                item_a_anadir = Item.objects.filter(id_version=item_relacionado.id_version).order_by('id').last()
+                item_editado.padres.add(item_a_anadir)
+            for item_relacionado in item.hijos.all():
+                item_a_anadir = Item.objects.filter(id_version=item_relacionado.id_version).order_by('id').last()
+                item_editado.hijos.add(item_a_anadir)
 
             # por ultimo desactivamos la versión anterior (mejorar esta parte)
             item.estado = Item.ESTADO_DESACTIVADO

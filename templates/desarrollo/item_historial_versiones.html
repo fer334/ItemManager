@@ -84,23 +84,21 @@
                             <td bgcolor="#87cefa">Antecesores</td>
                             <td>
                                 <ul>
-                                    {% for relacion in item_actual.relaciones_this_as_fin.all %}
-                                        {% if not relacion.es_relacion_padrehijo and relacion.is_active %}
-                                            <li>
-                                                {{relacion.inicio}}
-                                            </li>
-                                        {% endif %}
+                                    {% for antecesor in item_actual.antecesores.all %}
+                                        <li>
+                                            {{antecesor}}
+                                        </li>
                                     {% endfor %}
                                 </ul>
-
-                                {{ item_actual.mostrar_relaciones_version_no_actual }}
                             </td>
                             {% for item in lista_versiones %}
                                  <td>
                                     <ul>
-                                        <li>
-                                            {{ item.mostrar_relaciones_version_no_actual }}
-                                        </li>
+                                        {% for antecesor in item.antecesores.all %}
+                                            <li>
+                                                {{antecesor}}
+                                            </li>
+                                        {% endfor %}
                                     </ul>
                                 </td>
                             {% endfor %}
@@ -109,24 +107,20 @@
                             <td bgcolor="#87cefa">Sucesores</td>
                             <td>
                                 <ul>
-                                    {% for relacion in item_actual.relaciones_this_as_inicio.all %}
-                                        {% if not relacion.es_relacion_padrehijo and relacion.is_active %}
-                                            <li>
-                                                {{relacion.fin}}
-                                            </li>
-                                        {% endif %}
+                                    {% for sucesor in item_actual.sucesores.all %}
+                                        <li>
+                                            {{sucesor}}
+                                        </li>
                                     {% endfor %}
                                 </ul>
                             </td>
                             {% for item in lista_versiones %}
                                  <td>
                                     <ul>
-                                        {% for relacion in item.relaciones_this_as_inicio.all %}
-                                            {% if not relacion.es_relacion_padrehijo and not relacion.is_active%}
-                                                <li>
-                                                    {{relacion.fin}}
-                                                </li>
-                                            {% endif %}
+                                        {% for sucesor in item.sucesores.all %}
+                                            <li>
+                                                {{sucesor}}
+                                            </li>
                                         {% endfor %}
                                     </ul>
                                 </td>
