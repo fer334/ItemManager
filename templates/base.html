@@ -134,7 +134,7 @@
       <hr class="sidebar-divider d-none d-md-block">
 
       <!-- Sidebar Toggler (Sidebar) -->
-      <div class="text-center d-none d-md-inline">
+      <div class="text-center d-none d-md-inline" onclick="toggle()">
         <button class="rounded-circle border-0" id="sidebarToggle"></button>
       </div>
 
@@ -151,7 +151,7 @@
         <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
 
           <!-- Sidebar Toggle (Topbar) -->
-          <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+          <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3" onclick="toggle()">
             <i class="fa fa-bars"></i>
           </button>
 
@@ -389,7 +389,7 @@
   <script src="{% static 'vendor/jquery-easing/jquery.easing.min.js'%}"></script>
 
   <!-- Custom scripts for all pages-->
-  <script src="{% static 'js/sb-admin-2.min.js'%}"></script>
+  <script src="{% static 'js/sb-admin-2.js'%}"></script>
 
   <!-- Page level plugins -->
   <script src="{% static 'vendor/chart.js/Chart.min.js'%}"></script>
