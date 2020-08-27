@@ -33,3 +33,14 @@ class Solicitud(models.Model):
     linea_base = models.ForeignKey('configuracion.LineaBase', on_delete=models.CASCADE, default=None, null=True)
     justificacion = models.CharField(max_length=200, null=False)
     solicitud_activa = models.BooleanField(default=True)
+
+
+class VotoRuptura(models.Model):
+    """
+    Clase que representa un voto del comite
+    """
+    solicitud = models.ForeignKey(Solicitud, null=False, on_delete=models.DO_NOTHING)
+    votante = models.ForeignKey('login.Usuario', null=False, on_delete=models.DO_NOTHING)
+    valor_voto = models.BooleanField(default=False) #TRUE a favor FALSE en contra
+    fecha_voto = models.DateField(default=now)
+
