@@ -239,8 +239,8 @@ def relacionar_item(request, id_proyecto):
             # creamos una nueva versión de los ítems relacionados
             item_inicio = form.cleaned_data['inicio']
             item_fin = form.cleaned_data['fin']
-            nuevo_item_inicio = versionar_item(item_inicio, request.user, "relacion_p", item_fin.id_version)
-            nuevo_item_fin = versionar_item(item_fin, request.user, "relacion_h", item_inicio.id_version)
+            nuevo_item_inicio = versionar_item(item_inicio, request.user)
+            nuevo_item_fin = versionar_item(item_fin, request.user)
             # relacionamos las nuevas versiones
             # si son de la misma fase son padre e hijo y si son de fases diferentes son antecesor y sucesor
             if nuevo_item_inicio.fase == nuevo_item_fin.fase:
@@ -309,8 +309,8 @@ def desactivar_relacion_item(request, id_proyecto):
             item_fin = Item.objects.filter(id_version=relacion.fin.id_version).order_by('id').last()
 
             # versionamos los ítems
-            nuevo_item_inicio = versionar_item(item_inicio, request.user, "del_relacion", item_fin.id_version)
-            nuevo_item_fin = versionar_item(item_fin, request.user, "del_relacion", item_inicio.id_version)
+            nuevo_item_inicio = versionar_item(item_inicio, request.user)
+            nuevo_item_fin = versionar_item(item_fin, request.user)
             # eliminamos la relación
             if nuevo_item_inicio.fase == nuevo_item_fin.fase:
                 # como el padre se versiona primero sigue apuntando a item_fin y no a nuevo_item_fin
@@ -330,21 +330,18 @@ def desactivar_relacion_item(request, id_proyecto):
     return render(request, 'desarrollo/item_des_relacion.html', content)
 
 
-def versionar_item(item, usuario, operacion_str, operacion_id):
+def versionar_item(item, usuario):
     """
     función que se encarga de que al editar un item o sus relaciones se cree un nuevo objeto item que será la versión
     nueva y se encarga de que todas las relaciones, atributos particulares, etc del ítem anterior pasen al nuevo item
 
-    :param operacion_str: cadena que indica el tipo de operación: edicion de item, creación o eliminación de relación
-    :param operacion_id: id que identifica al item del otro lado de la relación, de haberlo
-     :param usuario: usuario actual para registrar en caso de archivo
+    :param usuario: usuario actual para registrar en caso de archivo
     :param item: es el item a versionar
     :return: None
     """
     item_editado = Item(nombre=item.nombre, complejidad=item.complejidad, descripcion=item.descripcion, fase=item.fase,
                         tipo_item=item.tipo_item, numeracion=item.numeracion, estado=item.estado,
-                        version=item.version + 1, version_anterior=item, id_version=item.id_version,
-                        operacion_version_str=operacion_str, operacion_version_int=operacion_id)
+                        version=item.version + 1, version_anterior=item, id_version=item.id_version)
     item_editado.save()
 
     # también nos encargamos de los atributos particulares
@@ -480,8 +477,7 @@ def modificar_item(request, id_proyecto, id_item):
             # creamos un nuevo objeto item que guardará una clave a su versión anterior
             item_editado = Item(nombre=nombre, complejidad=complejidad, descripcion=descripcion, fase=item.fase,
                                 tipo_item=item.tipo_item, numeracion=item.numeracion, estado=item.estado,
-                                version=item.version + 1, version_anterior=item, id_version=item.id_version,
-                                operacion_version_str='edicion', operacion_version_int=None)
+                                version=item.version + 1, version_anterior=item, id_version=item.id_version)
             item_editado.save()
 
             # también nos encargamos de los atributos particulares

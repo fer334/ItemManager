@@ -130,24 +130,20 @@
                             <td bgcolor="#87cefa">Padres</td>
                             <td>
                                 <ul>
-                                    {% for relacion in item_actual.relaciones_this_as_fin.all %}
-                                        {% if relacion.es_relacion_padrehijo and relacion.is_active %}
-                                            <li>
-                                                {{relacion.inicio}}
-                                            </li>
-                                        {% endif %}
+                                    {% for padre in item_actual.padres.all %}
+                                        <li>
+                                            {{padre}}
+                                        </li>
                                     {% endfor %}
                                 </ul>
                             </td>
                             {% for item in lista_versiones %}
                                  <td>
                                     <ul>
-                                        {% for relacion in item.relaciones_this_as_fin.all %}
-                                            {% if relacion.es_relacion_padrehijo and not relacion.is_active %}
-                                                <li>
-                                                    {{relacion.inicio}}
-                                                </li>
-                                            {% endif %}
+                                        {% for padre in item.padres.all %}
+                                            <li>
+                                                {{padre}}
+                                            </li>
                                         {% endfor %}
                                     </ul>
                                 </td>
@@ -157,24 +153,20 @@
                             <td bgcolor="#87cefa">Hijos</td>
                             <td>
                                 <ul>
-                                    {% for relacion in item_actual.relaciones_this_as_inicio.all %}
-                                        {% if relacion.es_relacion_padrehijo and relacion.is_active %}
-                                            <li>
-                                                {{relacion.fin}}
-                                            </li>
-                                        {% endif %}
+                                    {% for hijo in item_actual.hijos.all %}
+                                        <li>
+                                            {{hijo}}
+                                        </li>
                                     {% endfor %}
                                 </ul>
                             </td>
                             {% for item in lista_versiones %}
                                  <td>
                                     <ul>
-                                        {% for relacion in item.relaciones_this_as_inicio.all %}
-                                            {% if relacion.es_relacion_padrehijo and not relacion.is_active %}
-                                                <li>
-                                                    {{relacion.fin}}
-                                                </li>
-                                            {% endif %}
+                                        {% for hijo in item.hijos.all %}
+                                            <li>
+                                                {{hijo}}
+                                            </li>
                                         {% endfor %}
                                     </ul>
                                 </td>
