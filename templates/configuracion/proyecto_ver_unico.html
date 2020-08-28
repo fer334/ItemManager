@@ -46,7 +46,7 @@
                                         {% endif %}
                                     {% endfor %}
                                 </ul>
-                                <ul class="" id="listaEnLB">
+                                <ul class="listaEnLB">
                                     {% for item in fase.item_set.all %}
                                         {% if item.estado == item.ESTADO_LINEABASE%}
                                             <li class="list-group">
@@ -85,10 +85,16 @@
 
     </div>
     <script>
-        const enLB = document.getElementById('listaEnLB');
-        if( enLB.childElementCount > 0){
-            enLB.classList.add('border');
-            enLB.classList.add('border-primary');
+        const pintarLB = ()=>{
+            const enLB = document.getElementsByClassName('listaEnLB');
+            for( i = 0; i < enLB.length; i++){
+                let item = enLB[i];
+                if( item.childElementCount > 0){
+                    item.classList.add('border');
+                    item.classList.add('border-primary');
+                }
+            }
         }
+        pintarLB();
     </script>
 {% endblock %}

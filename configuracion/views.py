@@ -112,7 +112,13 @@ def comite_index(request, id_proyecto):
     :rtype: render
     """
     proyecto = Proyecto.objects.get(pk=id_proyecto)
-    return render(request, 'configuracion/comite_index.html', {'proyecto': proyecto})
+    lbs_del_proyecto = []
+    for fase in proyecto.fase_set.all():
+        lbs_del_proyecto = lbs_del_proyecto + [lb for lb in fase.lineabase_set.all()]
+    solicitudes = []
+    for lb in lbs_del_proyecto:
+        solicitudes = solicitudes + [solicitud for solicitud in lb.solicitud_set.all()]
+    return render(request, 'configuracion/comite_index.html', {'proyecto': proyecto, 'solicitudes': solicitudes})
 
 
 def solicitud_ruptura(request, id_lineabase):
@@ -134,15 +140,8 @@ def solicitud_ruptura(request, id_lineabase):
         solicitud.save()
 
         items_seleccionados = [Item.objects.get(pk=item.split('-')[1]) for item in request.POST if len(item.split('-')) > 1]
-        a_reversionar = items_seleccionados
-        for item in a_reversionar:
-            for relacion in item.relaciones_this_as_inicio.all():
-                a_reversionar.append(relacion.fin)
-        for item in a_reversionar:
-            print(solicitud.items_a_modificar.add(item))
-        solicitud.save()
-        # print(a_reversionar)
-        # print('a_reversionar')
+        for item in items_seleccionados:
+            solicitud.items_a_modificar.add(item)
         return redirect('configuracion:verLineaBase', id_lineabase)
 
     return render(request, 'configuracion/solicitud_ruptura.html', {'lineabase': lineabase})

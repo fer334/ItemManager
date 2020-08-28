@@ -2,6 +2,62 @@
 {% block content %}
     <div class="container">
         <h1 class="text-center pt-3 mb-5">Comite de decisiones</h1>
+        <h3 class="mb-5">Solicitudes de ruptura</h3>
+            <div class="row d-flex justify-content-around">
+            {% for solicitud in solicitudes %}
+                <div class="card bg-light mb-3 col-sm-12  col-md-5">
+                    <div class="card-header">
+                        <h3 class="card-title font-weight-bold text-center">Solicitud {{ solicitud.id }}</h3>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title font-weight-bold">Ruptura de linea base {{ solicitud.linea_base.id }}</h5>
+                        <p class="card-text"><span class="font-weight-bold">Justificacion:</span> {{solicitud.justificacion}}</p>
+                        <p class="card-text"><span class="font-weight-bold">Solicitante:</span> {{solicitud.solicitado_por.username}}</p>
+                        <p class="card-text"><span class="font-weight-bold">Fecha:</span> {{solicitud.fecha_solicitud}}</p>
+                        <hr/>
+                        <h5 class="card-title font-weight-bold">Items:</h5>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Hijos</th>
+                                    <th>Sucesores</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in solicitud.items_a_modificar.all %}
+                                    <tr>
+                                        <td>{{ item.nombre }}</td>
+                                        <td>
+                                            <ul class="list-unstyled">
+                                                {% for hijo in item.get_hijos %}
+                                                    <li>{{ hijo.nombre }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        </td>
+                                        <td>
+                                            <ul class="list-unstyled">
+                                                {% for sucesor in item.get_sucesores %}
+                                                    <li>{{ sucesor.nombre }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="card-footer row">
+                        <div class="col-sm-6">
+                            <button class="btn btn-danger btn-block">Votar Si</button>
+                        </div>
+                        <div class="col-sm-6">
+                            <button class="btn btn-primary btn-block">Votar No</button>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            </div>
         <div class="mt-5">
             <button class="btn btn-primary">Confirmar</button>
             <a href="{% url 'configuracion:verProyecto' proyecto.id %}" class="btn btn-primary float-right">Volver atrás</a>

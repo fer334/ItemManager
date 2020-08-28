@@ -8,7 +8,7 @@
 
         <form target="{% url 'configuracion:solicitudRuptura' lineabase.id %}" method="post">
             <div class="form-group">
-                <label>Items de linea base de la fase a modificar (pasarán a revision)</label>
+                <label>Items de linea base de la fase a modificar (pasarán a desarrollo)</label>
                 {% csrf_token %}
                 {% for item in lineabase.items.all %}
                     <div  class="form-check">
