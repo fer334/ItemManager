@@ -257,41 +257,50 @@ def relacionar_item(request, id_proyecto):
     :return: objeto que renderea relacion_crear.html
     :rtype: render
     """
-    if request.method == "POST":
-        form = RelacionForm(request.POST)
-        if form.is_valid():
-            proyecto = form.cleaned_data['inicio'].fase.proyecto
-            # creamos una nueva versión de los ítems relacionados
-            item_inicio = form.cleaned_data['inicio']
-            item_fin = form.cleaned_data['fin']
-            nuevo_item_inicio = versionar_item(item_inicio, request.user)
-            nuevo_item_fin = versionar_item(item_fin, request.user)
-            # relacionamos las nuevas versiones
-            # si son de la misma fase son padre e hijo y si son de fases diferentes son antecesor y sucesor
-            if nuevo_item_inicio.fase == nuevo_item_fin.fase:
-                nuevo_item_inicio.hijos.add(nuevo_item_fin)
-                nuevo_item_fin.padres.add(nuevo_item_inicio)
-            else:
-                nuevo_item_inicio.sucesores.add(nuevo_item_fin)
-                nuevo_item_fin.antecesores.add(nuevo_item_inicio)
-            nuevo_item_inicio.save()
-            nuevo_item_fin.save()
-
-            form.save()
-            return redirect('desarrollo:verProyecto', proyecto.id)
-    else:
-        form = RelacionForm()
-
+    # Se filtra los items para solo relacionar items aprobados e hijos en desarrollo
     lista_items_padre = Item.objects.filter(
         fase__proyecto_id=id_proyecto, estado=Item.ESTADO_APROBADO
     )
     lista_items_hijo = Item.objects.filter(
         fase__proyecto_id=id_proyecto, estado=Item.ESTADO_DESARROLLO
     )
-    # Se agrega filtro para solo relacionar items aprobados y hijos en desarrollo
-    form.fields["inicio"].queryset = lista_items_padre
-    form.fields["fin"].queryset = lista_items_hijo
-    return render(request, "desarrollo/relacion_crear.html", {'form': form})
+    context = {
+        'lista_items_hijo': lista_items_hijo,
+        'lista_items_padre': lista_items_padre,
+        'error': ""
+    }
+
+    if request.method == "POST":
+        print(request.POST)
+        inicio = Item.objects.get(pk=request.POST['inicio'])
+        fin = Item.objects.get(pk=request.POST['fin'])
+        if inicio.id == fin.id:
+            context['error'] = 'No se puede relacionar un item a si mismo'
+        if abs(inicio.fase.id - fin.fase.id) > 1:
+            context['error'] = 'Solo se puede relacionar items de la misma fase o fases inmediatas'
+        if inicio.fase.id - fin.fase.id == 1:
+            context['error'] = 'Las relaciones entre fases deben ser hacia fases posteriores'
+        if len([x for x in inicio.antecesores.all() if x.id == fin.id] +
+               [x for x in fin.antecesores.all() if x.id == inicio.id]) > 0:
+            context['error'] = 'Esta relacion ya existe'
+
+        if context['error']:
+            return render(request, "desarrollo/relacion_crear.html", context)
+        # Si pasa todas las validaciones...
+        nuevo_item_inicio = versionar_item(inicio, request.user)
+        nuevo_item_fin = versionar_item(fin, request.user)
+        # relacionamos las nuevas versiones
+        # si son de la misma fase son padre e hijo y si son de fases diferentes son antecesor y sucesor
+        if nuevo_item_inicio.fase == nuevo_item_fin.fase:
+            nuevo_item_inicio.hijos.add(nuevo_item_fin)
+            nuevo_item_fin.padres.add(nuevo_item_inicio)
+        else:
+            nuevo_item_inicio.sucesores.add(nuevo_item_fin)
+            nuevo_item_fin.antecesores.add(nuevo_item_inicio)
+        nuevo_item_inicio.save()
+        nuevo_item_fin.save()
+        return redirect('desarrollo:verProyecto', inicio.fase.proyecto.id)
+    return render(request, "desarrollo/relacion_crear.html", context)
 
 
 def desactivar_relacion_item(request, id_proyecto):

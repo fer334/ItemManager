@@ -69,8 +69,6 @@ class AtributoParticular(models.Model):
     #: valor que es almacenado dentro del atributo
     valor = models.CharField(max_length=300)
 
-
-
     def __str__(self):
         return self.nombre
 
