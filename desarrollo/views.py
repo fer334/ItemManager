@@ -3,7 +3,7 @@ Modulo se detalla la logica para las vistas que serán utilizadas por la app
 """
 from django.shortcuts import render, redirect
 from .SubirArchivos import handle_uploaded_file
-from desarrollo.models import Item, AtributoParticular, Relacion
+from desarrollo.models import Item, AtributoParticular
 from administracion.models import Proyecto, TipoItem, Fase, Rol
 from desarrollo.forms import ItemForm, RelacionForm
 from desarrollo.getPermisos import has_permiso
@@ -315,28 +315,32 @@ def desactivar_relacion_item(request, id_proyecto):
     :return: objeto que renderea item_des_relacion.html
     :rtype: render
     """
-    relaciones = Relacion.objects.filter(
-        is_active=True,
-        inicio__fase__proyecto_id=id_proyecto,
-        fin__fase__proyecto_id=id_proyecto,
-    )
+    # relaciones = Relacion.objects.filter(
+    #     is_active=True,
+    #     inicio__fase__proyecto_id=id_proyecto,
+    #     fin__fase__proyecto_id=id_proyecto,
+    # )
     mensaje_error = ""
 
+    # Clase auxiliar para adecuar al algoritmo
+    class Relacion:
+        inicio = Item()
+        fin = Item()
+
     if request.method == "POST":
-
         clave = request.POST['desactivar']
-
-        relacion = Relacion.objects.get(id=clave)
+        print(request.POST)
+        clave = clave.split('-')
+        relacion = Relacion()
+        relacion.inicio = Item.objects.get(pk=clave[0])
+        relacion.fin = Item.objects.get(pk=clave[1])
         if relacion.fin.estado == Item.ESTADO_APROBADO:
             mensaje_error = """
-                El item {} esta 
+                El item {} esta
                 aprobado, por lo cual no se puede desactivar la relacion
                 """.format(relacion.fin)
 
         else:
-            # se desactiva la relación
-            relacion.is_active = False
-            relacion.save()
 
             # se añade código para que al desactivar una relación cuente como una nueva versión para ambos items
             item_inicio = Item.objects.filter(id_version=relacion.inicio.id_version).order_by('id').last()
@@ -356,6 +360,14 @@ def desactivar_relacion_item(request, id_proyecto):
             nuevo_item_inicio.save()
             nuevo_item_fin.save()
 
+    relaciones = []
+    for inicio in Item.objects.all():
+        todos = [i for i in inicio.sucesores.all()] + [i for i in inicio.hijos.all()]
+        for fin in todos:
+            relacion = Relacion()
+            relacion.inicio = inicio
+            relacion.fin = fin
+            relaciones.append(relacion)
     content = {
         'relaciones': relaciones,
         'id_proyecto': id_proyecto,
