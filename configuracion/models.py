@@ -34,6 +34,11 @@ class Solicitud(models.Model):
     justificacion = models.CharField(max_length=200, null=False)
     solicitud_activa = models.BooleanField(default=True)
 
+    def ha_votado(self, votante):
+        for voto in self.votoruptura_set.all():
+            if voto.votante == votante:
+                return True
+        return False
 
 class VotoRuptura(models.Model):
     """
