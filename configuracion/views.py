@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 
 # Create your views here.
 from administracion.models import Proyecto, Fase
-from .models import LineaBase, Solicitud
+from .models import LineaBase, Solicitud, VotoRuptura
 from desarrollo.models import Item
 from login.models import Usuario
 
@@ -117,8 +117,15 @@ def comite_index(request, id_proyecto):
         lbs_del_proyecto = lbs_del_proyecto + [lb for lb in fase.lineabase_set.all()]
     solicitudes = []
     for lb in lbs_del_proyecto:
-        solicitudes = solicitudes + [solicitud for solicitud in lb.solicitud_set.all()]
-    return render(request, 'configuracion/comite_index.html', {'proyecto': proyecto, 'solicitudes': solicitudes})
+        for solicitud in lb.solicitud_set.all():
+            if solicitud.solicitud_activa:
+                solicitud.solicitante_ha_votado = solicitud.ha_votado(request.user)
+                solicitudes.append(solicitud)
+    return render(request, 'configuracion/comite_index.html', {
+        'proyecto': proyecto,
+        'solicitudes': solicitudes,
+        'usuario': request.user
+    })
 
 
 def solicitud_ruptura(request, id_lineabase):
@@ -145,6 +152,27 @@ def solicitud_ruptura(request, id_lineabase):
         return redirect('configuracion:verLineaBase', id_lineabase)
 
     return render(request, 'configuracion/solicitud_ruptura.html', {'lineabase': lineabase})
+
+
+def votar_solicitud(request, id_proyecto, id_solicitud, voto):
+    solicitud = Solicitud.objects.get(pk=id_solicitud)
+    proyecto = Proyecto.objects.get(pk=id_proyecto)
+    nuevo_voto = VotoRuptura(solicitud=solicitud, votante=request.user, valor_voto=(voto == 1))
+    nuevo_voto.save()
+    votos = len(solicitud.votoruptura_set.all())
+    if votos == proyecto.cant_comite:
+        votos_favor = len(solicitud.votoruptura_set.filter(valor_voto=True))
+        if votos_favor > proyecto.cant_comite / 2:
+            solicitud.linea_base.estado = LineaBase.ESTADO_ROTA
+            solicitud.linea_base.save()
+            for item in solicitud.items_a_modificar.all():
+                item.estado = Item.ESTADO_REVISION
+                item.save()
+
+        solicitud.solicitud_activa = False
+        solicitud.save()
+
+    return redirect('configuracion:verIndexComite', id_proyecto)
 
 
 def votacion_item_en_revision(request, id_item, id_lineabase):
