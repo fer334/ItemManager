@@ -329,7 +329,6 @@ def desactivar_relacion_item(request, id_proyecto):
 
     if request.method == "POST":
         clave = request.POST['desactivar']
-        print(request.POST)
         clave = clave.split('-')
         relacion = Relacion()
         relacion.inicio = Item.objects.get(pk=clave[0])
@@ -363,11 +362,12 @@ def desactivar_relacion_item(request, id_proyecto):
     relaciones = []
     for inicio in Item.objects.all():
         todos = [i for i in inicio.sucesores.all()] + [i for i in inicio.hijos.all()]
-        for fin in todos:
-            relacion = Relacion()
-            relacion.inicio = inicio
-            relacion.fin = fin
-            relaciones.append(relacion)
+        if inicio.estado != Item.ESTADO_DESACTIVADO:
+            for fin in todos:
+                relacion = Relacion()
+                relacion.inicio = inicio
+                relacion.fin = fin
+                relaciones.append(relacion)
     content = {
         'relaciones': relaciones,
         'id_proyecto': id_proyecto,
