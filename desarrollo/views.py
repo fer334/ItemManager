@@ -271,7 +271,6 @@ def relacionar_item(request, id_proyecto):
     }
 
     if request.method == "POST":
-        print(request.POST)
         inicio = Item.objects.get(pk=request.POST['inicio'])
         fin = Item.objects.get(pk=request.POST['fin'])
         if inicio.id == fin.id:
@@ -394,7 +393,7 @@ def versionar_item(item, usuario):
     lista_atr = AtributoParticular.objects.filter(item=item).order_by('id')
     for atr in lista_atr:
         if atr.tipo == 'file':
-            # por ahora dejo un link random pero esto hay que arreglar
+            # todo por ahora dejo un link random pero esto hay que arreglar
             valor = "archivo"  # handle_uploaded_file(atr.valor, item.fase.proyecto.id, usuario)
         else:
             valor = atr.valor
@@ -479,9 +478,8 @@ def desactivar_item(request, id_proyecto, id_item):
     :return: redirecciona a los detalles del item
     """
     item = Item.objects.get(pk=id_item)
-    print(Relacion.objects.filter(inicio=item))
-    # se verifica si es sucesor o padre
-    if Relacion.objects.filter(inicio=item):
+    # se verifica si es antecesor o padre
+    if item.sucesores is not None and item.hijos is not None:
         return redirect('desarrollo:verItem', id_proyecto, id_item)
 
     # se deben eliminar sucesores y hijos
