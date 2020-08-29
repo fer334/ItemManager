@@ -5,8 +5,38 @@
         <h1 class="text-center pt-3 mb-3">Relacionar Items</h1>
         <form class="pt-3" method="post">
             {% csrf_token %}
-            {{ form|crispy }}
+            {% if error %}
+            <div class="alert alert-block alert-danger">
+                <ul class="m-0">
+                    <li>{{ error }}</li>
+                </ul>
+            </div>
+            {% endif %}
+            <div id="div_id_inicio" class="form-group"> <label for="id_inicio" class=" requiredField">
+                Inicio<span class="asteriskField">*</span> </label>
+                <div class="">
+                    <select name="inicio" class="select form-control" required="" id="id_inicio">
+                        <option value="" selected="">---------</option>
+                        {% for item in lista_items_padre %}
+                        <option value="{{ item.id }}">{{ item.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                    <small id="hint_id_inicio" class="form-text text-muted">Relacion padre o antecesor</small>
+                </div>
+            </div>
 
+            <div id="div_id_fin" class="form-group"> <label for="id_fin" class=" requiredField">
+                Fin<span class="asteriskField">*</span> </label>
+                <div class="">
+                    <select name="fin" class="select form-control" required="" id="id_fin">
+                       <option value="" selected="">---------</option>
+                        {% for item in lista_items_hijo %}
+                        <option value="{{ item.id }}">{{ item.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                    <small id="hint_id_fin" class="form-text text-muted">Relacion hijo o sucesor</small>
+                </div>
+            </div>
             <div class="row">
                 <div class="col-md-3">
                     <button type="submit" class="btn btn-primary btn-block">Crear Relacion</button>
