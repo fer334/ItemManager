@@ -8,12 +8,23 @@
                 <thead>
                     <th></th>
                     <th>Versiones:</th>
-                    <th>{{ item_actual.version }} (actual)</th>
+                    <th>{{ item_actual.version }}</th>
                     {% for item_anterior in lista_versiones %}
-                        <th>{{ item_anterior.version }}</th>
+                        <th>
+                            {{ item_anterior.version }}
+                        </th>
                     {% endfor %}
                 </thead>
                     <tbody>
+                        <tr>
+                            <td></td><td></td><td><a href="#" class="btn btn-outline-info">Version Actual</a></td>
+                            {% for item_anterior in lista_versiones %}
+                                <td>
+                                    <a href="{% url 'desarrollo:reversionarItem' proyecto.id item_actual.id item_anterior.id%}"
+                                       class="btn btn-outline-primary float-right">Reversionar</a>
+                                </td>
+                            {% endfor %}
+                        </tr>
                         <tr>
                             <th rowspan="4" class="text-center align-middle h5">Atributos Comunes</th>
                         </tr>
@@ -84,23 +95,93 @@
                             <td bgcolor="#87cefa">Antecesores</td>
                             <td>
                                 <ul>
-                                    <li>algo</li>
-                                    <li>algo</li>
-                                    <li>algo</li>
+                                    {% for antecesor in item_actual.antecesores.all %}
+                                        <li>
+                                            {{antecesor}}
+                                        </li>
+                                    {% endfor %}
                                 </ul>
                             </td>
+                            {% for item in lista_versiones %}
+                                 <td>
+                                    <ul>
+                                        {% for antecesor in item.antecesores.all %}
+                                            <li>
+                                                {{antecesor}}
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </td>
+                            {% endfor %}
                         </tr>
                         <tr>
                             <td bgcolor="#87cefa">Sucesores</td>
-                            <td>otro</td>
+                            <td>
+                                <ul>
+                                    {% for sucesor in item_actual.sucesores.all %}
+                                        <li>
+                                            {{sucesor}}
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </td>
+                            {% for item in lista_versiones %}
+                                 <td>
+                                    <ul>
+                                        {% for sucesor in item.sucesores.all %}
+                                            <li>
+                                                {{sucesor}}
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </td>
+                            {% endfor %}
                         </tr>
                         <tr>
                             <td bgcolor="#87cefa">Padres</td>
-                            <td></td>
+                            <td>
+                                <ul>
+                                    {% for padre in item_actual.padres.all %}
+                                        <li>
+                                            {{padre}}
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </td>
+                            {% for item in lista_versiones %}
+                                 <td>
+                                    <ul>
+                                        {% for padre in item.padres.all %}
+                                            <li>
+                                                {{padre}}
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </td>
+                            {% endfor %}
                         </tr>
                         <tr>
                             <td bgcolor="#87cefa">Hijos</td>
-                            <td></td>
+                            <td>
+                                <ul>
+                                    {% for hijo in item_actual.hijos.all %}
+                                        <li>
+                                            {{hijo}}
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </td>
+                            {% for item in lista_versiones %}
+                                 <td>
+                                    <ul>
+                                        {% for hijo in item.hijos.all %}
+                                            <li>
+                                                {{hijo}}
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </td>
+                            {% endfor %}
                         </tr>
                     </tbody>
                 </table>

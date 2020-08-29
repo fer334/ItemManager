@@ -27,6 +27,15 @@ class Item(models.Model):
     fase = models.ForeignKey('administracion.Fase', on_delete=models.CASCADE, default=None, blank=True, null=True)
     #: versión anterior a la del item actual
     version_anterior = models.ForeignKey('desarrollo.Item', on_delete=models.CASCADE, default=None, null=True)
+    #: id para identificar a todas las versiones de un mismo ítem
+    id_version = models.IntegerField(null=True)
+
+    # listas para las relaciones del ítem
+    antecesores = models.ManyToManyField('Item', related_name='item_desarrollo_antecesores', blank=True)
+    sucesores = models.ManyToManyField('Item', related_name='item_desarrollo_sucesores', blank=True)
+    padres = models.ManyToManyField('Item', related_name='item_desarrollo_padres', blank=True)
+    hijos = models.ManyToManyField('Item', related_name='item_desarrollo_hijos', blank=True)
+
     # constantes del modelo
     ESTADO_DESARROLLO = 'En Desarrollo'
     ESTADO_PENDIENTE = 'Pendiente de Aprobacion'
@@ -60,10 +69,9 @@ class AtributoParticular(models.Model):
     #: valor que es almacenado dentro del atributo
     valor = models.CharField(max_length=300)
 
-
-
     def __str__(self):
         return self.nombre
+
 
 # Posible implementacion de versionamiento
 '''
