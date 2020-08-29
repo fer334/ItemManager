@@ -149,71 +149,71 @@ def reversionar_item(request, id_proyecto, id_item, id_version_anterior):
     item_actual.estado = Item.ESTADO_DESACTIVADO
     item_actual.save()
 
-    # # ahora nos encargamos de las relaciones
-    # # primero reversionamos item actual para actualizar los items en sus listas de relaciones a la versión más nueva
-    # nuevo_item_actual = versionar_item(item_actual, request.user)
-    # # desactivamos para que esta versión no cuente como nueva, solo usaremos para las relaciones
-    # nuevo_item_actual.estado = Item.ESTADO_DESACTIVADO
-    # nuevo_item_actual.save()
-    # # para antecesores
-    # # primero hacemos diferencia para ver los ítems que no estában añadidos en la versión anterior
-    # lista_antecesores_add = []
-    # lista_antecesores_add = lista_antecesores_add + nuevo_item.antecesores.difference(nuevo_item_actual.antecesores)
-    # for item_relacion in lista_antecesores_add:
-    #     item_relacion.sucesores.add(nuevo_item)
-    # # para la intersección tenemos que desvincular el item actual del ítem relación y vincular al nuevo_item
-    # lista_antecesores_add = []
-    # lista_antecesores_add = lista_antecesores_add + nuevo_item.antecesores.intersection(nuevo_item_actual.antecesores)
-    # for item_relacion in lista_antecesores_add:
-    #     item_relacion.sucesores.remove(nuevo_item_actual)
-    #     item_relacion.sucesores.add(nuevo_item)
-    # # ahora hacemos la diferencia pero invertida para ver a que items desvincular item actual
-    # lista_antecesores_add = []
-    # lista_antecesores_add = lista_antecesores_add + nuevo_item_actual.antecesores.difference(nuevo_item.antecesores)
-    # for item_relacion in lista_antecesores_add:
-    #     item_relacion.sucesores.remove(nuevo_item_actual)
-    # # para sucesores
-    # lista_sucesores_add = []
-    # lista_sucesores_add = lista_sucesores_add + nuevo_item.sucesores.difference(nuevo_item_actual.sucesores)
-    # for item_relacion in lista_sucesores_add:
-    #     item_relacion.antecesores.add(nuevo_item)
-    # lista_sucesores_add = []
-    # lista_sucesores_add = lista_sucesores_add + nuevo_item.sucesores.intersection(nuevo_item_actual.sucesores)
-    # for item_relacion in lista_sucesores_add:
-    #     item_relacion.antecesores.remove(nuevo_item_actual)
-    #     item_relacion.antecesores.add(nuevo_item)
-    # lista_sucesores_add = []
-    # lista_sucesores_add = lista_sucesores_add + nuevo_item_actual.sucesores.difference(nuevo_item.sucesores)
-    # for item_relacion in lista_sucesores_add:
-    #     item_relacion.antecesores.remove(nuevo_item_actual)
-    # # para padres
-    # lista_padres_add = []
-    # lista_padres_add = lista_padres_add + nuevo_item.padres.difference(nuevo_item_actual.padres)
-    # for item_relacion in lista_padres_add:
-    #     item_relacion.hijos.add(nuevo_item)
-    # lista_padres_add = []
-    # lista_padres_add = lista_padres_add + nuevo_item.padres.intersection(nuevo_item_actual.padres)
-    # for item_relacion in lista_padres_add:
-    #     item_relacion.hijos.remove(nuevo_item_actual)
-    #     item_relacion.hijos.add(nuevo_item)
-    # lista_padres_add = []
-    # lista_padres_add = lista_padres_add + nuevo_item_actual.padres.difference(nuevo_item.padres)
-    # for item_relacion in lista_padres_add:
-    #     item_relacion.hijos.remove(nuevo_item_actual)
-    # # para hijos
-    # lista_hijos_add = []
-    # lista_hijos_add = lista_hijos_add + nuevo_item.hijos.difference(nuevo_item_actual.hijos)
-    # for item_relacion in lista_hijos_add:
-    #     item_relacion.padres.add(nuevo_item)
-    # lista_hijos_add = []
-    # lista_hijos_add = lista_hijos_add + nuevo_item.hijos.intersection(nuevo_item_actual.hijos)
-    # for item_relacion in lista_hijos_add:
-    #     item_relacion.padres.remove(nuevo_item_actual)
-    #     item_relacion.padres.add(nuevo_item)
-    # lista_hijos_add = []
-    # lista_hijos_add = lista_hijos_add + nuevo_item_actual.hijos.difference(nuevo_item.hijos)
-    # for item_relacion in lista_hijos_add:
-    #     item_relacion.padres.remove(nuevo_item_actual)
+    # ahora nos encargamos de las relaciones
+    # primero reversionamos item actual para actualizar los items en sus listas de relaciones a la versión más nueva
+    nuevo_item_actual = versionar_item(item_actual, request.user)
+    # desactivamos para que esta versión no cuente como nueva, solo usaremos para las relaciones
+    nuevo_item_actual.estado = Item.ESTADO_DESACTIVADO
+    nuevo_item_actual.save()
+    # para antecesores
+    # primero hacemos diferencia para ver los ítems que no estában añadidos en la versión anterior
+    lista_antecesores_add = []
+    lista_antecesores_add = nuevo_item.antecesores.all().difference(nuevo_item_actual.antecesores.all())
+    for item_relacion in lista_antecesores_add:
+        item_relacion.sucesores.add(nuevo_item)
+    # para la intersección tenemos que desvincular el item actual del ítem relación y vincular al nuevo_item
+    lista_antecesores_add = []
+    lista_antecesores_add = nuevo_item.antecesores.all().intersection(nuevo_item_actual.antecesores.all())
+    for item_relacion in lista_antecesores_add:
+        item_relacion.sucesores.remove(nuevo_item_actual)
+        item_relacion.sucesores.add(nuevo_item)
+    # ahora hacemos la diferencia pero invertida para ver a que items desvincular item actual
+    lista_antecesores_add = []
+    lista_antecesores_add = nuevo_item_actual.antecesores.all().difference(nuevo_item.antecesores.all())
+    for item_relacion in lista_antecesores_add:
+        item_relacion.sucesores.remove(nuevo_item_actual)
+    # para sucesores
+    lista_sucesores_add = []
+    lista_sucesores_add = nuevo_item.sucesores.all().difference(nuevo_item_actual.sucesores.all())
+    for item_relacion in lista_sucesores_add:
+        item_relacion.antecesores.add(nuevo_item)
+    lista_sucesores_add = []
+    lista_sucesores_add = nuevo_item.sucesores.all().intersection(nuevo_item_actual.sucesores.all())
+    for item_relacion in lista_sucesores_add:
+        item_relacion.antecesores.remove(nuevo_item_actual)
+        item_relacion.antecesores.add(nuevo_item)
+    lista_sucesores_add = []
+    lista_sucesores_add = nuevo_item_actual.sucesores.all().difference(nuevo_item.sucesores.all())
+    for item_relacion in lista_sucesores_add:
+        item_relacion.antecesores.remove(nuevo_item_actual)
+    # para padres
+    lista_padres_add = []
+    lista_padres_add = nuevo_item.padres.all().difference(nuevo_item_actual.padres.all())
+    for item_relacion in lista_padres_add:
+        item_relacion.hijos.add(nuevo_item)
+    lista_padres_add = []
+    lista_padres_add = nuevo_item.padres.all().intersection(nuevo_item_actual.padres.all())
+    for item_relacion in lista_padres_add:
+        item_relacion.hijos.remove(nuevo_item_actual)
+        item_relacion.hijos.add(nuevo_item)
+    lista_padres_add = []
+    lista_padres_add = nuevo_item_actual.padres.all().difference(nuevo_item.padres.all())
+    for item_relacion in lista_padres_add:
+        item_relacion.hijos.remove(nuevo_item_actual)
+    # para hijos
+    lista_hijos_add = []
+    lista_hijos_add = nuevo_item.hijos.all().difference(nuevo_item_actual.hijos.all())
+    for item_relacion in lista_hijos_add:
+        item_relacion.padres.add(nuevo_item)
+    lista_hijos_add = []
+    lista_hijos_add = nuevo_item.hijos.all().intersection(nuevo_item_actual.hijos.all())
+    for item_relacion in lista_hijos_add:
+        item_relacion.padres.remove(nuevo_item_actual)
+        item_relacion.padres.add(nuevo_item)
+    lista_hijos_add = []
+    lista_hijos_add = nuevo_item_actual.hijos.all().difference(nuevo_item.hijos.all())
+    for item_relacion in lista_hijos_add:
+        item_relacion.padres.remove(nuevo_item_actual)
 
     return redirect('desarrollo:verItem', id_proyecto=id_proyecto, id_item=nuevo_item.id)
 
