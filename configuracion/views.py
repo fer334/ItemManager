@@ -175,7 +175,7 @@ def votar_solicitud(request, id_proyecto, id_solicitud, voto):
     return redirect('configuracion:verIndexComite', id_proyecto)
 
 
-def votacion_item_en_revision(request, id_item, id_lineabase):
+def votacion_item_en_revision(request, id_item):
     """
 
     :param request:
@@ -183,22 +183,15 @@ def votacion_item_en_revision(request, id_item, id_lineabase):
     :return:
     """
     item = Item.objects.get(pk=id_item)
-    lb = LineaBase.objects.get(pk=id_lineabase)
+    
     # Se pregunta si el item esta en EN REVISION
     if item.estado == Item.ESTADO_REVISION:
-        # Si esta entre los items a modificar pasa a DESARROLLO
-        if Solicitud.items_a_mofificar == True:
-            item.estado = Item.ESTADO_DESARROLLO
-            # Si el item a modificar pertenece a una linea base, el estado de la linea base pasa a ROTA
-            # y los items sucesores pasan a EN REVISION
-            if item != lb.items:
-                lb.estado = lb.ESTADO_ROTA
-                lb.items.es_relacion_padrehijo = lb.Item.ESTADO_REVISION
+        # Si no se quiere modifcar el item, se pregunta si el item pertenece a una Linea Base
+        if item != Solicitud.items_a_modificar:
+            # Si no pertenece, pasa a estado APROBADO
+            item.estado = Item.ESTADO_APROBADO
         else:
-            # Si no se quiere modifcar el item, se pregunta si el item pertenece a una Linea Base
-            if item != lb.items:
-                # Si no pertenece, pasa a estado APROBADO
-                item.estado = Item.ESTADO_APROBADO
-            else:
-                # Si pertenece, el item pasa a EN LINEA BASE
-                item.estado = Item.ESTADO_LINEABASE
+            # Si pertenece, el item pasa a EN LINEA BASE
+            item.estado = Item.ESTADO_LINEABASE
+
+    return redirect('configuracion:verIndexComite', id_item)
