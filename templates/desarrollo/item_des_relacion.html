@@ -24,7 +24,6 @@
 
                     <table class="table users table-hover">
                         <tr>
-                            <th>Relacion</th>
                             <th>Fase</th>
                             <th>Item1</th>
                             <th>Fase</th>
@@ -33,9 +32,6 @@
                         </tr>
                         {% for relacion in relaciones %}
                             <tr>
-                                <td>
-                                    <label> {{ relacion }}</label>
-                                </td>
                                 <td>
                                     <label> {{ relacion.inicio.fase.id }}</label>
                                 </td>
@@ -50,7 +46,7 @@
                                 </td>
                                 <td>
                                     <button class="btn btn-danger align-middle"
-                                            value="{{ relacion.id }}"
+                                            value="{{ relacion.inicio.id }}-{{ relacion.fin.id }}"
                                             name="desactivar"
                                             type="submit"
                                             >

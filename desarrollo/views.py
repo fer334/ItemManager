@@ -3,7 +3,7 @@ Modulo se detalla la logica para las vistas que serán utilizadas por la app
 """
 from django.shortcuts import render, redirect
 from .SubirArchivos import handle_uploaded_file
-from desarrollo.models import Item, AtributoParticular, Relacion
+from desarrollo.models import Item, AtributoParticular
 from administracion.models import Proyecto, TipoItem, Fase, Rol
 from desarrollo.forms import ItemForm, RelacionForm
 from desarrollo.getPermisos import has_permiso
@@ -50,6 +50,10 @@ def crear_item(request, id_fase, id_tipo):
                 nuevo_item = Item(nombre=nombre, complejidad=complejidad, descripcion=descripcion, tipo_item=tipo,
                                   fase=fase, numeracion=get_numeracion(fase, tipo))
                 nuevo_item.save()
+                # añadimos el id de la primera versión a este campo y se pasará a las versiones posteriores
+                nuevo_item.id_version = nuevo_item.id
+                nuevo_item.save()
+
                 # vinculamos el tipo a la fase
                 if tipo not in fase.tipos_item.all():
                     fase.tipos_item.add(tipo)
@@ -116,6 +120,31 @@ def historial_versiones_item(request, id_proyecto, id_item):
     return render(request, 'desarrollo/item_historial_versiones.html', {'lista_versiones': lista_versiones,
                                                                         'item_actual': item, 'proyecto': proyecto,
                                                                         'lista_atributos': lista_atributos})
+
+
+def reversionar_item(request, id_proyecto, id_item, id_version_anterior):
+    """
+    Vista que se encarga de crear una nueva versión de un ítem restaurando los datos de una versión anterior
+
+    :param id_version_anterior: identificador de la versión a restaurar
+    :param request: objeto tipo diccionario que permite acceder a datos
+    :param id_proyecto: identificador del proyecto actual
+    :param id_item:  identificador de la versión actual del ítem
+    :return: redireccion a item_ver.html
+    :rtype: redirect
+    """
+    item_actual = Item.objects.get(pk=id_item)
+    item_version_anterior = Item.objects.get(pk=id_version_anterior)
+    # creamos una nueva versión a partir de la version anterior elegida
+    nuevo_item = versionar_item(item_version_anterior, request.user)
+    # modificamos su version_anterior para que apunte a la ultima versión antes que esta
+    nuevo_item.version_anterior = item_actual
+    # editamos su versión
+    nuevo_item.version = item_actual.version + 1
+    # guardamos los cambios
+    nuevo_item.save()
+
+    return redirect('desarrollo:verItem', id_proyecto=id_proyecto, id_item=nuevo_item.id)
 
 
 def menu_aprobacion(request, id_proyecto):
@@ -228,25 +257,49 @@ def relacionar_item(request, id_proyecto):
     :return: objeto que renderea relacion_crear.html
     :rtype: render
     """
-    if request.method == "POST":
-        form = RelacionForm(request.POST)
-        if form.is_valid():
-            form.save()
-            proyecto = form.cleaned_data['inicio'].fase.proyecto
-            return redirect('desarrollo:verProyecto', proyecto.id)
-    else:
-        form = RelacionForm()
-
+    # Se filtra los items para solo relacionar items aprobados e hijos en desarrollo
     lista_items_padre = Item.objects.filter(
         fase__proyecto_id=id_proyecto, estado=Item.ESTADO_APROBADO
     )
     lista_items_hijo = Item.objects.filter(
         fase__proyecto_id=id_proyecto, estado=Item.ESTADO_DESARROLLO
     )
-    # Se agrega filtro para solo relacionar items aprobados y hijos en desarrollo
-    form.fields["inicio"].queryset = lista_items_padre
-    form.fields["fin"].queryset = lista_items_hijo
-    return render(request, "desarrollo/relacion_crear.html", {'form': form})
+    context = {
+        'lista_items_hijo': lista_items_hijo,
+        'lista_items_padre': lista_items_padre,
+        'error': ""
+    }
+
+    if request.method == "POST":
+        inicio = Item.objects.get(pk=request.POST['inicio'])
+        fin = Item.objects.get(pk=request.POST['fin'])
+        if inicio.id == fin.id:
+            context['error'] = 'No se puede relacionar un item a si mismo'
+        if abs(inicio.fase.id - fin.fase.id) > 1:
+            context['error'] = 'Solo se puede relacionar items de la misma fase o fases inmediatas'
+        if inicio.fase.id - fin.fase.id == 1:
+            context['error'] = 'Las relaciones entre fases deben ser hacia fases posteriores'
+        if len([x for x in inicio.antecesores.all() if x.id == fin.id] +
+               [x for x in fin.antecesores.all() if x.id == inicio.id]) > 0:
+            context['error'] = 'Esta relacion ya existe'
+
+        if context['error']:
+            return render(request, "desarrollo/relacion_crear.html", context)
+        # Si pasa todas las validaciones...
+        nuevo_item_inicio = versionar_item(inicio, request.user)
+        nuevo_item_fin = versionar_item(fin, request.user)
+        # relacionamos las nuevas versiones
+        # si son de la misma fase son padre e hijo y si son de fases diferentes son antecesor y sucesor
+        if nuevo_item_inicio.fase == nuevo_item_fin.fase:
+            nuevo_item_inicio.hijos.add(nuevo_item_fin)
+            nuevo_item_fin.padres.add(nuevo_item_inicio)
+        else:
+            nuevo_item_inicio.sucesores.add(nuevo_item_fin)
+            nuevo_item_fin.antecesores.add(nuevo_item_inicio)
+        nuevo_item_inicio.save()
+        nuevo_item_fin.save()
+        return redirect('desarrollo:verProyecto', inicio.fase.proyecto.id)
+    return render(request, "desarrollo/relacion_crear.html", context)
 
 
 def desactivar_relacion_item(request, id_proyecto):
@@ -261,34 +314,111 @@ def desactivar_relacion_item(request, id_proyecto):
     :return: objeto que renderea item_des_relacion.html
     :rtype: render
     """
-    relaciones = Relacion.objects.filter(
-        is_active=True,
-        inicio__fase__proyecto_id=id_proyecto,
-        fin__fase__proyecto_id=id_proyecto,
-    )
+    # relaciones = Relacion.objects.filter(
+    #     is_active=True,
+    #     inicio__fase__proyecto_id=id_proyecto,
+    #     fin__fase__proyecto_id=id_proyecto,
+    # )
     mensaje_error = ""
 
+    # Clase auxiliar para adecuar al algoritmo
+    class Relacion:
+        inicio = Item()
+        fin = Item()
+
     if request.method == "POST":
-
         clave = request.POST['desactivar']
-
-        relacion = Relacion.objects.get(id=clave)
+        clave = clave.split('-')
+        relacion = Relacion()
+        relacion.inicio = Item.objects.get(pk=clave[0])
+        relacion.fin = Item.objects.get(pk=clave[1])
         if relacion.fin.estado == Item.ESTADO_APROBADO:
             mensaje_error = """
-                El item {} esta 
+                El item {} esta
                 aprobado, por lo cual no se puede desactivar la relacion
                 """.format(relacion.fin)
 
         else:
-            relacion.is_active = False
-            relacion.save()
 
+            # se añade código para que al desactivar una relación cuente como una nueva versión para ambos items
+            item_inicio = Item.objects.filter(id_version=relacion.inicio.id_version).order_by('id').last()
+            item_fin = Item.objects.filter(id_version=relacion.fin.id_version).order_by('id').last()
+
+            # versionamos los ítems
+            nuevo_item_inicio = versionar_item(item_inicio, request.user)
+            nuevo_item_fin = versionar_item(item_fin, request.user)
+            # eliminamos la relación
+            if nuevo_item_inicio.fase == nuevo_item_fin.fase:
+                # como el padre se versiona primero sigue apuntando a item_fin y no a nuevo_item_fin
+                nuevo_item_inicio.hijos.remove(item_fin)
+                nuevo_item_fin.padres.remove(nuevo_item_inicio)
+            else:
+                nuevo_item_inicio.sucesores.remove(item_fin)
+                nuevo_item_fin.antecesores.remove(nuevo_item_inicio)
+            nuevo_item_inicio.save()
+            nuevo_item_fin.save()
+
+    relaciones = []
+    for inicio in Item.objects.all():
+        todos = [i for i in inicio.sucesores.all()] + [i for i in inicio.hijos.all()]
+        if inicio.estado != Item.ESTADO_DESACTIVADO:
+            for fin in todos:
+                relacion = Relacion()
+                relacion.inicio = inicio
+                relacion.fin = fin
+                relaciones.append(relacion)
     content = {
         'relaciones': relaciones,
         'id_proyecto': id_proyecto,
         'mensaje_error': mensaje_error,
     }
     return render(request, 'desarrollo/item_des_relacion.html', content)
+
+
+def versionar_item(item, usuario):
+    """
+    función que se encarga de que al editar un item o sus relaciones se cree un nuevo objeto item que será la versión
+    nueva y se encarga de que todas las relaciones, atributos particulares, etc del ítem anterior pasen al nuevo item
+
+    :param usuario: usuario actual para registrar en caso de archivo
+    :param item: es el item a versionar
+    :return: None
+    """
+    item_editado = Item(nombre=item.nombre, complejidad=item.complejidad, descripcion=item.descripcion, fase=item.fase,
+                        tipo_item=item.tipo_item, numeracion=item.numeracion, estado=item.estado,
+                        version=item.version + 1, version_anterior=item, id_version=item.id_version)
+    item_editado.save()
+
+    # también nos encargamos de los atributos particulares
+    lista_atr = AtributoParticular.objects.filter(item=item).order_by('id')
+    for atr in lista_atr:
+        if atr.tipo == 'file':
+            # todo por ahora dejo un link random pero esto hay que arreglar
+            valor = "archivo"  # handle_uploaded_file(atr.valor, item.fase.proyecto.id, usuario)
+        else:
+            valor = atr.valor
+        nuevo_atributo = AtributoParticular(item=item_editado, nombre=atr.nombre, tipo=atr.tipo, valor=valor)
+        nuevo_atributo.save()
+
+    # nos encargamos también de vincular las relaciones del ítem anterior con el actual
+    for item_relacionado in item.antecesores.all():
+        # primero seleccionamos la versión más actual del ítem y luego añadimos a la lista de la relación
+        item_a_anadir = Item.objects.filter(id_version=item_relacionado.id_version).order_by('id').last()
+        item_editado.antecesores.add(item_a_anadir)
+    for item_relacionado in item.sucesores.all():
+        item_a_anadir = Item.objects.filter(id_version=item_relacionado.id_version).order_by('id').last()
+        item_editado.sucesores.add(item_a_anadir)
+    for item_relacionado in item.padres.all():
+        item_a_anadir = Item.objects.filter(id_version=item_relacionado.id_version).order_by('id').last()
+        item_editado.padres.add(item_a_anadir)
+    for item_relacionado in item.hijos.all():
+        item_a_anadir = Item.objects.filter(id_version=item_relacionado.id_version).order_by('id').last()
+        item_editado.hijos.add(item_a_anadir)
+
+    # por ultimo desactivamos la versión anterior (mejorar esta parte)
+    item.estado = Item.ESTADO_DESACTIVADO
+    item.save()
+    return item_editado
 
 
 def solicitud_aprobacion(request, id_item):
@@ -348,9 +478,8 @@ def desactivar_item(request, id_proyecto, id_item):
     :return: redirecciona a los detalles del item
     """
     item = Item.objects.get(pk=id_item)
-    print(Relacion.objects.filter(inicio=item))
-    # se verifica si es sucesor o padre
-    if Relacion.objects.filter(inicio=item):
+    # se verifica si es antecesor o padre
+    if item.sucesores is not None and item.hijos is not None:
         return redirect('desarrollo:verItem', id_proyecto, id_item)
 
     # se deben eliminar sucesores y hijos
@@ -359,7 +488,7 @@ def desactivar_item(request, id_proyecto, id_item):
 
     if item.estado == Item.ESTADO_DESARROLLO:
         item.estado = Item.ESTADO_DESACTIVADO
-        # desvinculamos el item de la fase
+        # desvinculamos el item y su tipo de item de la fase
         fase = Fase.objects.get(pk=item.fase.id)
         fase.tipos_item.remove(item.tipo_item)
 
@@ -392,8 +521,9 @@ def modificar_item(request, id_proyecto, id_item):
             # creamos un nuevo objeto item que guardará una clave a su versión anterior
             item_editado = Item(nombre=nombre, complejidad=complejidad, descripcion=descripcion, fase=item.fase,
                                 tipo_item=item.tipo_item, numeracion=item.numeracion, estado=item.estado,
-                                version=item.version+1, version_anterior=item)
+                                version=item.version + 1, version_anterior=item, id_version=item.id_version)
             item_editado.save()
+
             # también nos encargamos de los atributos particulares
             for atr in lista_atr:
                 if atr.tipo == 'file' and request.FILES:
@@ -402,7 +532,20 @@ def modificar_item(request, id_proyecto, id_item):
                     valor = request.POST[atr.nombre]
                 nuevo_atributo = AtributoParticular(item=item_editado, nombre=atr.nombre, tipo=atr.tipo, valor=valor)
                 nuevo_atributo.save()
+
             # nos encargamos también de vincular las relaciones del ítem anterior con el actual
+            for item_relacionado in item.antecesores.all():
+                item_a_anadir = Item.objects.filter(id_version=item_relacionado.id_version).order_by('id').last()
+                item_editado.antecesores.add(item_a_anadir)
+            for item_relacionado in item.sucesores.all():
+                item_a_anadir = Item.objects.filter(id_version=item_relacionado.id_version).order_by('id').last()
+                item_editado.sucesores.add(item_a_anadir)
+            for item_relacionado in item.padres.all():
+                item_a_anadir = Item.objects.filter(id_version=item_relacionado.id_version).order_by('id').last()
+                item_editado.padres.add(item_a_anadir)
+            for item_relacionado in item.hijos.all():
+                item_a_anadir = Item.objects.filter(id_version=item_relacionado.id_version).order_by('id').last()
+                item_editado.hijos.add(item_a_anadir)
 
             # por ultimo desactivamos la versión anterior (mejorar esta parte)
             item.estado = Item.ESTADO_DESACTIVADO
