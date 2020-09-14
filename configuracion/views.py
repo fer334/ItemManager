@@ -138,8 +138,12 @@ def solicitud_ruptura(request, id_lineabase):
             justificacion=request.POST['mensaje'],
         )
         solicitud.save()
-
-        items_seleccionados = [Item.objects.get(pk=item.split('-')[1]) for item in request.POST if len(item.split('-')) > 1]
+        print(request.POST)
+        items_seleccionados = [
+            Item.objects.get(pk=item.split('-')[1])
+            for item in request.POST
+            if len(item.split('-')) > 1
+        ]
         for item in items_seleccionados:
             solicitud.items_a_modificar.add(item)
         return redirect('configuracion:verLineaBase', id_lineabase)
