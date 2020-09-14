@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect
 from .SubirArchivos import handle_uploaded_file
 from desarrollo.models import Item, AtributoParticular
 from administracion.models import Proyecto, TipoItem, Fase, Rol
-from desarrollo.forms import ItemForm, RelacionForm
+from desarrollo.forms import ItemForm
 from desarrollo.getPermisos import has_permiso
 
 
@@ -625,7 +625,9 @@ def cerrar_fase(request, id_proyecto):
         # se excluye de la condicion a la fase 1
         todos_tienen_antecedentes = True
         for item in items_de_esta_fase:
-            if len([rel for rel in item.relaciones_this_as_inicio.all() if rel.is_active]) == 0:
+            if len([rel for rel in item.antecesores.all() if rel.is_active]) == 0:
+                todos_tienen_antecedentes = False
+            if len([rel for rel in item.padres.all() if rel.is_active]) == 0:
                 todos_tienen_antecedentes = False
         if i == 0:
             todos_tienen_antecedentes = True
