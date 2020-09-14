@@ -165,13 +165,13 @@ def reversionar_item(request, id_proyecto, id_item, id_version_anterior):
     lista_antecesores_add = []
     lista_antecesores_add = nuevo_item.antecesores.all().intersection(nuevo_item_actual.antecesores.all())
     for item_relacion in lista_antecesores_add:
-        item_relacion.sucesores.remove(nuevo_item_actual)
+        item_relacion.sucesores.remove(item_relacion.sucesores.get(id_version=nuevo_item_actual.id_version))
         item_relacion.sucesores.add(nuevo_item)
     # ahora hacemos la diferencia pero invertida para ver a que items desvincular item actual
     lista_antecesores_add = []
     lista_antecesores_add = nuevo_item_actual.antecesores.all().difference(nuevo_item.antecesores.all())
     for item_relacion in lista_antecesores_add:
-        item_relacion.sucesores.remove(nuevo_item_actual)
+        item_relacion.sucesores.remove(item_relacion.sucesores.get(id_version=nuevo_item_actual.id_version))
     # para sucesores
     lista_sucesores_add = []
     lista_sucesores_add = nuevo_item.sucesores.all().difference(nuevo_item_actual.sucesores.all())
@@ -180,12 +180,12 @@ def reversionar_item(request, id_proyecto, id_item, id_version_anterior):
     lista_sucesores_add = []
     lista_sucesores_add = nuevo_item.sucesores.all().intersection(nuevo_item_actual.sucesores.all())
     for item_relacion in lista_sucesores_add:
-        item_relacion.antecesores.remove(nuevo_item_actual)
+        item_relacion.antecesores.remove(item_relacion.antecesores.get(id_version=nuevo_item_actual.id_version))
         item_relacion.antecesores.add(nuevo_item)
     lista_sucesores_add = []
     lista_sucesores_add = nuevo_item_actual.sucesores.all().difference(nuevo_item.sucesores.all())
     for item_relacion in lista_sucesores_add:
-        item_relacion.antecesores.remove(nuevo_item_actual)
+        item_relacion.antecesores.remove(item_relacion.antecesores.get(id_version=nuevo_item_actual.id_version))
     # para padres
     lista_padres_add = []
     lista_padres_add = nuevo_item.padres.all().difference(nuevo_item_actual.padres.all())
@@ -194,12 +194,12 @@ def reversionar_item(request, id_proyecto, id_item, id_version_anterior):
     lista_padres_add = []
     lista_padres_add = nuevo_item.padres.all().intersection(nuevo_item_actual.padres.all())
     for item_relacion in lista_padres_add:
-        item_relacion.hijos.remove(nuevo_item_actual)
+        item_relacion.hijos.remove(item_relacion.hijos.get(id_version=nuevo_item_actual.id_version))
         item_relacion.hijos.add(nuevo_item)
     lista_padres_add = []
     lista_padres_add = nuevo_item_actual.padres.all().difference(nuevo_item.padres.all())
     for item_relacion in lista_padres_add:
-        item_relacion.hijos.remove(nuevo_item_actual)
+        item_relacion.hijos.remove(item_relacion.hijos.get(id_version=nuevo_item_actual.id_version))
     # para hijos
     lista_hijos_add = []
     lista_hijos_add = nuevo_item.hijos.all().difference(nuevo_item_actual.hijos.all())
@@ -208,12 +208,12 @@ def reversionar_item(request, id_proyecto, id_item, id_version_anterior):
     lista_hijos_add = []
     lista_hijos_add = nuevo_item.hijos.all().intersection(nuevo_item_actual.hijos.all())
     for item_relacion in lista_hijos_add:
-        item_relacion.padres.remove(nuevo_item_actual)
+        item_relacion.padres.remove(item_relacion.padres.get(id_version=nuevo_item_actual.id_version))
         item_relacion.padres.add(nuevo_item)
     lista_hijos_add = []
     lista_hijos_add = nuevo_item_actual.hijos.all().difference(nuevo_item.hijos.all())
     for item_relacion in lista_hijos_add:
-        item_relacion.padres.remove(nuevo_item_actual)
+        item_relacion.padres.remove(item_relacion.padres.get(id_version=nuevo_item_actual.id_version))
 
     return redirect('desarrollo:verItem', id_proyecto=id_proyecto, id_item=nuevo_item.id)
 
@@ -471,7 +471,7 @@ def versionar_item(item, usuario):
     lista_atr = AtributoParticular.objects.filter(item=item).order_by('id')
     for atr in lista_atr:
         if atr.tipo == 'file':
-            # todo por ahora dejo un link random pero esto hay que arreglar
+            # por ahora dejo un link random pero esto hay que arreglar
             valor = "archivo"  # handle_uploaded_file(atr.valor, item.fase.proyecto.id, usuario)
         else:
             valor = atr.valor
