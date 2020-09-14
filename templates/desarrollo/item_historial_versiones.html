@@ -21,7 +21,7 @@
                             {% for item_anterior in lista_versiones %}
                                 <td>
                                     <a href="{% url 'desarrollo:reversionarItem' proyecto.id item_actual.id item_anterior.id%}"
-                                       class="btn btn-outline-primary float-right">Reversionar</a>
+                                       class="btn btn-outline-primary float-right">Revertir</a>
                                 </td>
                             {% endfor %}
                         </tr>
