@@ -576,9 +576,11 @@ def desactivar_item(request, id_proyecto, id_item):
 
     for antecesor in item.antecesores.all():
         # borramos al item de la lista en el antecesor
-        antecesor.sucesores.remove(antecesor.sucesores.get(id_version=item.id_version))
+        item_remover = antecesor.sucesores.get(id_version=item.id_version)
+        antecesor.sucesores.remove(item_remover)
         # borramos al antecesor de la lista en el item
-        item.antecesores.remove(item.sucesores.get(id_version=antecesor.id_version))
+        antecesor_remover = item.antecesores.get(id_version=antecesor.id_version)
+        item.antecesores.remove(antecesor_remover)
 
     item.save()
 
