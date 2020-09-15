@@ -2,7 +2,7 @@
 Formularios para la aplicacion administración
 """
 from django import forms
-from desarrollo.models import Item, AtributoParticular, Relacion
+from desarrollo.models import Item
 
 
 class ItemForm(forms.ModelForm):
@@ -37,44 +37,6 @@ class ItemForm(forms.ModelForm):
         if complejidad > 10 or complejidad < 1:
             raise forms.ValidationError('Tiene que estar en el rango de [1,10].')
         return complejidad
-
-
-class RelacionForm(forms.ModelForm):
-    """
-    Formulario para la creacion de relaciones entre items
-    """
-
-    class Meta:
-        model = Relacion
-        fields = ('inicio', 'fin')
-
-    def clean(self):
-        """
-        Verifica los datos del formulario.
-
-        :return: los datos limpiados
-        """
-        data = super().clean()
-        inicio = data['inicio']
-        fin = data['fin']
-
-        # no se puede relacionar a si mismo
-        if inicio.id == fin.id:
-            raise forms.ValidationError('No se puede relacionar un item a si mismo')
-        if abs(inicio.fase.id - fin.fase.id) > 1:
-            raise forms.ValidationError(
-                'Solo se puede relacionar items de la misma fase o fases inmediatas'
-            )
-        if inicio.fase.id - fin.fase.id == 1:
-            raise forms.ValidationError(
-                'Las relaciones entre fases deben ser hacia fases posteriores'
-            )
-        if Relacion.objects.filter(inicio=inicio, fin=fin, is_active=True).count() > 0:
-            raise forms.ValidationError(
-                'Esta relacion ya existe'
-            )
-
-        return data
 
 
 class EditarItemForm(forms.Form):
