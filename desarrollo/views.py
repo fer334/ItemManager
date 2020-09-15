@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect
 from .SubirArchivos import handle_uploaded_file
 from desarrollo.models import Item, AtributoParticular
 from administracion.models import Proyecto, TipoItem, Fase, Rol
-from desarrollo.forms import ItemForm, RelacionForm
+from desarrollo.forms import ItemForm
 from desarrollo.getPermisos import has_permiso
 
 
@@ -555,7 +555,8 @@ def desactivar_item(request, id_proyecto, id_item):
     :param id_item: identificador del item en cuestion
     :return: redirecciona a los detalles del item
     """
-    item = Item.objects.get(pk=id_item)
+    it = Item.objects.get(pk=id_item)
+    item = versionar_item(it, request.user)
     # se verifica si es antecesor o padre
     if item.sucesores.count() != 0 or item.hijos.count() != 0:
         return redirect('desarrollo:verItem', id_proyecto, id_item)
@@ -567,16 +568,17 @@ def desactivar_item(request, id_proyecto, id_item):
         fase.tipos_item.remove(item.tipo_item)
 
     # se deben eliminar relaciones donde el item es sucesor o hijo
-    for antecesor in item.antecesores.all():
-        # borramos al item de la lista en el antecesor
-        antecesor.sucesores.remove(item)
-        # borramos al antecesor de la lista en el item
-        item.antecesores.remove(antecesor)
     for padre in item.padres.all():
         # borramos al item de la lista en el padre
-        padre.hijos.remove(item)
+        padre.hijos.remove(padre.hijos.get(id_version=item.id_version))
         # borramos al padre de la lista en el item
-        item.padres.remove(padre)
+        item.padres.remove(item.padres.get(id_version=padre.id_version))
+
+    for antecesor in item.antecesores.all():
+        # borramos al item de la lista en el antecesor
+        antecesor.sucesores.remove(antecesor.sucesores.get(id_version=item.id_version))
+        # borramos al antecesor de la lista en el item
+        item.antecesores.remove(item.sucesores.get(id_version=antecesor.id_version))
 
     item.save()
 
