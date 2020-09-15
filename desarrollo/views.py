@@ -680,7 +680,7 @@ def cerrar_fase(request, id_proyecto):
         clave = int(request.POST['cerrar'])
         fase = Fase.objects.get(id=clave)
         i = clave - fases[0].id
-        items_de_esta_fase = fase.item_set.all()
+        items_de_esta_fase = fase.item_set.exclude(estado=Item.ESTADO_DESACTIVADO).all()
 
         # Comprobacion de que la fase anterior este cerrada
         if not fases[i].cerrable:
@@ -702,11 +702,23 @@ def cerrar_fase(request, id_proyecto):
         # Comprobacion de que todos los items dentro de la fase tengan antecedentes
         # se excluye de la condicion a la fase 1
         todos_tienen_antecedentes = True
+        items_sin_relacion_directa=[]
         for item in items_de_esta_fase:
-            if len([rel for rel in item.antecesores.all() if rel.is_active]) == 0:
-                todos_tienen_antecedentes = False
-            if len([rel for rel in item.padres.all() if rel.is_active]) == 0:
-                todos_tienen_antecedentes = False
+            if len(item.antecesores.all()) == 0:
+                items_sin_relacion_directa.append(item)
+
+        for itema in items_sin_relacion_directa:
+            itema.tiene_rel_ind=False
+            todos_los_ancestros_del_itema=itema.padres.all()
+            for itemb in todos_los_ancestros_del_itema:
+                todos_los_ancestros_del_itema.union(itemb.padres.all())
+            for itemb in todos_los_ancestros_del_itema:
+                if len(itemb.antecesores.all()) != 0:
+                    itema.tiene_rel_ind=True
+                    break
+        for item in items_sin_relacion_directa:
+            if not item.tiene_rel_ind:
+                todos_tienen_antecedentes=False
         if i == 0:
             todos_tienen_antecedentes = True
         if not todos_tienen_antecedentes:
