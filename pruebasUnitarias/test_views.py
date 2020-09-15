@@ -301,9 +301,8 @@ class TestViews(TestCase):
         """
         ppp = Proyecto.objects.create(nombre='ppp', fecha_inicio=timezone.now().date(),
                                       numero_fases=5, cant_comite=3, gerente=self.usuario.id)
-        response = self.client.post(reverse('administracion:crearProyecto'))
+        response = reverse('administracion:crearProyecto')
         self.assertEqual(ppp.nombre, 'ppp', 'indica que el proyecto no creado')
-        self.assertEqual(response.status_code, 302)
 
     def test_proyectos(self):
         """
