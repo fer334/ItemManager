@@ -557,12 +557,8 @@ def desactivar_item(request, id_proyecto, id_item):
     """
     item = Item.objects.get(pk=id_item)
     # se verifica si es antecesor o padre
-    if item.sucesores is not None and item.hijos is not None:
+    if item.sucesores.count() != 0 or item.hijos.count() != 0:
         return redirect('desarrollo:verItem', id_proyecto, id_item)
-
-    # se deben eliminar sucesores y hijos
-    for relacion_donde_es_ultimo in item.relaciones_this_as_fin.all():
-        relacion_donde_es_ultimo.delete()
 
     if item.estado == Item.ESTADO_DESARROLLO:
         item.estado = Item.ESTADO_DESACTIVADO
@@ -570,7 +566,20 @@ def desactivar_item(request, id_proyecto, id_item):
         fase = Fase.objects.get(pk=item.fase.id)
         fase.tipos_item.remove(item.tipo_item)
 
-        item.save()
+    # se deben eliminar relaciones donde el item es sucesor o hijo
+    for antecesor in item.antecesores.all():
+        # borramos al item de la lista en el antecesor
+        antecesor.sucesores.remove(item)
+        # borramos al antecesor de la lista en el item
+        item.antecesores.remove(antecesor)
+    for padre in item.padres.all():
+        # borramos al item de la lista en el padre
+        padre.hijos.remove(item)
+        # borramos al padre de la lista en el item
+        item.padres.remove(padre)
+
+    item.save()
+
     return redirect('desarrollo:verItem', id_proyecto, id_item)
 
 
