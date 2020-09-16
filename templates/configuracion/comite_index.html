@@ -30,14 +30,14 @@
                                         <td>{{ item.nombre }}</td>
                                         <td>
                                             <ul class="list-unstyled">
-                                                {% for hijo in item.get_hijos %}
+                                                {% for hijo in item.hijos.all %}
                                                     <li>{{ hijo.nombre }}</li>
                                                 {% endfor %}
                                             </ul>
                                         </td>
                                         <td>
                                             <ul class="list-unstyled">
-                                                {% for sucesor in item.get_sucesores %}
+                                                {% for sucesor in item.sucesores.all %}
                                                     <li>{{ sucesor.nombre }}</li>
                                                 {% endfor %}
                                             </ul>

@@ -4,7 +4,7 @@
         <h1 class="text-center pt-3 mb-5">Crear linea base</h1>
         <h4 class="mb-5">Seleccione los items a incluir en la linea base de la fase "{{ fase.nombre }}"</h4>
 
-        <form target="{% url 'configuracion:crearLineaBase' fase.id %}" method="post">
+        <form method="post">
             {% csrf_token %}
             {% for item in fase.item_set.all %}
                 {% if item.estado == item.ESTADO_APROBADO %}
