@@ -4,192 +4,194 @@
         <div class="row justify-content-center">
             <div class="col-sm-12 col-md-8 col-lg-8 ">
                 <h3 class="text-center mt-3 mb-5">Historial de Versiones de {{item_actual.tipo_item.prefijo}}_{{item_actual.nombre}} </h3>
-                <table class="table">
-                <thead>
-                    <th></th>
-                    <th>Versiones:</th>
-                    <th>{{ item_actual.version }}</th>
-                    {% for item_anterior in lista_versiones %}
-                        <th>
-                            {{ item_anterior.version }}
-                        </th>
-                    {% endfor %}
-                </thead>
-                    <tbody>
-                        <tr>
-                            <td></td><td></td><td><a href="#" class="btn btn-outline-info">Version Actual</a></td>
-                            {% for item_anterior in lista_versiones %}
-                                <td>
-                                    <a href="{% url 'desarrollo:reversionarItem' proyecto.id item_actual.id item_anterior.id%}"
-                                       class="btn btn-outline-primary float-right">Revertir</a>
-                                </td>
-                            {% endfor %}
-                        </tr>
-                        <tr>
-                            <th rowspan="4" class="text-center align-middle h5">Atributos Comunes</th>
-                        </tr>
-                        <tr>
-                            <td bgcolor="#87cefa">Nombre</td>
-                            <td style="font-weight: bold">{{ item_actual.nombre }}</td>
-                            {% for item_anterior in lista_versiones %}
-                                <td>{{ item_anterior.nombre }}</td>
-                            {% endfor %}
-                        </tr>
-                        <tr>
-                            <td bgcolor="#87cefa">Complejidad</td>
-                            <td style="font-weight: bold">{{ item_actual.complejidad }}</td>
-                            {% for item_anterior in lista_versiones %}
-                                <td>{{ item_anterior.complejidad }}</td>
-                            {% endfor %}
-                        </tr>
-                        <tr>
-                            <td bgcolor="#87cefa">Descripcion</td>
-                            <td style="font-weight: bold">{{ item_actual.descripcion }}</td>
-                            {% for item_anterior in lista_versiones %}
-                                <td>{{ item_anterior.descripcion }}</td>
-                            {% endfor %}
-                        </tr>
-                        {% if lista_atributos %}
+                <div style="overflow-x: auto;">
+                    <table class="table">
+                    <thead>
+                        <th></th>
+                        <th>Versiones:</th>
+                        <th>{{ item_actual.version }}</th>
+                        {% for item_anterior in lista_versiones %}
+                            <th>
+                                {{ item_anterior.version }}
+                            </th>
+                        {% endfor %}
+                    </thead>
+                        <tbody>
                             <tr>
-                                <th rowspan="2" class="text-center align-middle h5">Atributos particulares</th>
+                                <td></td><td></td><td><a href="#" class="btn btn-outline-info">Version Actual</a></td>
+                                {% for item_anterior in lista_versiones %}
+                                    <td>
+                                        {% if item_actual.estado == desarrollo %}
+                                            <a href="{% url 'desarrollo:reversionarItem' proyecto.id item_actual.id item_anterior.id%}"
+                                             class="btn btn-outline-primary float-right">Revertir</a>
+                                        {% else %}
+                                            <a href="#" class="btn btn-outline-secondary">Anterior</a>
+                                        {% endif %}
+                                    </td>
+                                {% endfor %}
                             </tr>
                             <tr>
-                                <td bgcolor="#87cefa">
-                                    <ul>
-                                        {% for atributo in lista_atributos %}
-                                            <li>{{ atributo.nombre }}</li>
-                                        {% endfor %}
-                                    </ul>
-                                </td>
-                                    <td style="font-weight: bold">
+                                <th rowspan="4" class="text-center align-middle h5">Atributos Comunes</th>
+                            </tr>
+                            <tr>
+                                <td bgcolor="#87cefa">Nombre</td>
+                                <td style="font-weight: bold">{{ item_actual.nombre }}</td>
+                                {% for item_anterior in lista_versiones %}
+                                    <td>{{ item_anterior.nombre }}</td>
+                                {% endfor %}
+                            </tr>
+                            <tr>
+                                <td bgcolor="#87cefa">Complejidad</td>
+                                <td style="font-weight: bold">{{ item_actual.complejidad }}</td>
+                                {% for item_anterior in lista_versiones %}
+                                    <td>{{ item_anterior.complejidad }}</td>
+                                {% endfor %}
+                            </tr>
+                            <tr>
+                                <td bgcolor="#87cefa">Descripcion</td>
+                                <td style="font-weight: bold">{{ item_actual.descripcion }}</td>
+                                {% for item_anterior in lista_versiones %}
+                                    <td>{{ item_anterior.descripcion }}</td>
+                                {% endfor %}
+                            </tr>
+                            {% if lista_atributos %}
+                                <tr>
+                                    <th rowspan="2" class="text-center align-middle h5">Atributos particulares</th>
+                                </tr>
+                                <tr>
+                                    <td bgcolor="#87cefa">
                                         <ul>
                                             {% for atributo in lista_atributos %}
-                                                {% if atributo.tipo == 'file' %}
-                                                    <li><a href="{{ atributo.valor }}" target="_blank">Archivo</a></li>
-                                                {% else %}
-                                                    <li>{{ atributo.valor }}</li>
-                                                {% endif %}
+                                                <li>{{ atributo.nombre }}</li>
                                             {% endfor %}
                                         </ul>
                                     </td>
-                                    {% for item_anterior in lista_versiones %}
-                                    <td>
-                                        <ul>
-                                            {% for atributo in item_anterior.atributoparticular_set.all %}
-                                                {% if atributo.tipo == 'file' %}
-                                                    <li><a href="{{ atributo.valor }}" target="_blank">Archivo</a></li>
-                                                {% else %}
-                                                    <li>{{ atributo.valor }}</li>
-                                                {% endif %}
-                                            {% endfor %}
-                                        </ul>
-                                    </td>
-                                    {% endfor %}
-                                </tr>
+                                        <td style="font-weight: bold">
+                                            <ul>
+                                                {% for atributo in lista_atributos %}
+                                                    {% if atributo.tipo == 'file' %}
+                                                        <li><a href="{{ atributo.valor }}" target="_blank">Archivo</a></li>
+                                                    {% else %}
+                                                        <li>{{ atributo.valor }}</li>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </ul>
+                                        </td>
+                                        {% for item_anterior in lista_versiones %}
+                                        <td>
+                                            <ul>
+                                                {% for atributo in item_anterior.atributoparticular_set.all %}
+                                                    {% if atributo.tipo == 'file' %}
+                                                        <li><a href="{{ atributo.valor }}" target="_blank">Archivo</a></li>
+                                                    {% else %}
+                                                        <li>{{ atributo.valor }}</li>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </ul>
+                                        </td>
+                                        {% endfor %}
+                                    </tr>
 
-                        {% endif %}
-                        <tr>
-                            <th rowspan="5" class="text-center align-middle h5">Relaciones</th>
-                        </tr>
-                        <tr>
-                            <td bgcolor="#87cefa">Antecesores</td>
-                            <td>
-                                <ul>
-                                    {% for antecesor in item_actual.antecesores.all %}
-                                        <li>
-                                            {{antecesor}}
-                                        </li>
-                                    {% endfor %}
-                                </ul>
-                            </td>
-                            {% for item in lista_versiones %}
-                                 <td>
+                            {% endif %}
+                            <tr>
+                                <th rowspan="5" class="text-center align-middle h5">Relaciones</th>
+                            </tr>
+                            <tr>
+                                <td bgcolor="#87cefa">Antecesores</td>
+                                <td>
                                     <ul>
-                                        {% for antecesor in item.antecesores.all %}
+                                        {% for antecesor in item_actual.antecesores.all %}
                                             <li>
                                                 {{antecesor}}
                                             </li>
                                         {% endfor %}
                                     </ul>
                                 </td>
-                            {% endfor %}
-                        </tr>
-                        <tr>
-                            <td bgcolor="#87cefa">Sucesores</td>
-                            <td>
-                                <ul>
-                                    {% for sucesor in item_actual.sucesores.all %}
-                                        <li>
-                                            {{sucesor}}
-                                        </li>
-                                    {% endfor %}
-                                </ul>
-                            </td>
-                            {% for item in lista_versiones %}
-                                 <td>
+                                {% for item in lista_versiones %}
+                                     <td>
+                                        <ul>
+                                            {% for antecesor in item.antecesores.all %}
+                                                <li>
+                                                    {{antecesor}}
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </td>
+                                {% endfor %}
+                            </tr>
+                            <tr>
+                                <td bgcolor="#87cefa">Sucesores</td>
+                                <td>
                                     <ul>
-                                        {% for sucesor in item.sucesores.all %}
+                                        {% for sucesor in item_actual.sucesores.all %}
                                             <li>
                                                 {{sucesor}}
                                             </li>
                                         {% endfor %}
                                     </ul>
                                 </td>
-                            {% endfor %}
-                        </tr>
-                        <tr>
-                            <td bgcolor="#87cefa">Padres</td>
-                            <td>
-                                <ul>
-                                    {% for padre in item_actual.padres.all %}
-                                        <li>
-                                            {{padre}}
-                                        </li>
-                                    {% endfor %}
-                                </ul>
-                            </td>
-                            {% for item in lista_versiones %}
-                                 <td>
+                                {% for item in lista_versiones %}
+                                     <td>
+                                        <ul>
+                                            {% for sucesor in item.sucesores.all %}
+                                                <li>
+                                                    {{sucesor}}
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </td>
+                                {% endfor %}
+                            </tr>
+                            <tr>
+                                <td bgcolor="#87cefa">Padres</td>
+                                <td>
                                     <ul>
-                                        {% for padre in item.padres.all %}
+                                        {% for padre in item_actual.padres.all %}
                                             <li>
                                                 {{padre}}
                                             </li>
                                         {% endfor %}
                                     </ul>
                                 </td>
-                            {% endfor %}
-                        </tr>
-                        <tr>
-                            <td bgcolor="#87cefa">Hijos</td>
-                            <td>
-                                <ul>
-                                    {% for hijo in item_actual.hijos.all %}
-                                        <li>
-                                            {{hijo}}
-                                        </li>
-                                    {% endfor %}
-                                </ul>
-                            </td>
-                            {% for item in lista_versiones %}
-                                 <td>
+                                {% for item in lista_versiones %}
+                                     <td>
+                                        <ul>
+                                            {% for padre in item.padres.all %}
+                                                <li>
+                                                    {{padre}}
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </td>
+                                {% endfor %}
+                            </tr>
+                            <tr>
+                                <td bgcolor="#87cefa">Hijos</td>
+                                <td>
                                     <ul>
-                                        {% for hijo in item.hijos.all %}
+                                        {% for hijo in item_actual.hijos.all %}
                                             <li>
                                                 {{hijo}}
                                             </li>
                                         {% endfor %}
                                     </ul>
                                 </td>
-                            {% endfor %}
-                        </tr>
-                    </tbody>
-                </table>
+                                {% for item in lista_versiones %}
+                                     <td>
+                                        <ul>
+                                            {% for hijo in item.hijos.all %}
+                                                <li>
+                                                    {{hijo}}
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </td>
+                                {% endfor %}
+                            </tr>
+                        </tbody>
+                    </table>
+            </div>
                 <hr>
-                <div class="col-sm-5">
-                    <input type="range" class="custom-range" id="customRange1">
-                    <button type="submit" class="btn btn-primary">Ver más versiones</button>
-                </div>
                 <div class="col-sm-12 mt-4">
                     <a href="{% url 'desarrollo:verItem' proyecto.id item_actual.id%}" class="btn btn-primary float-right">Volver atrás</a>
                 </div>

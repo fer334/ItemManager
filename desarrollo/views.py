@@ -1,6 +1,7 @@
 """
 Modulo se detalla la logica para las vistas que serán utilizadas por la app
 """
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from .SubirArchivos import handle_uploaded_file
 from desarrollo.models import Item, AtributoParticular
@@ -119,7 +120,24 @@ def historial_versiones_item(request, id_proyecto, id_item):
         item_aux = item_aux.version_anterior
     return render(request, 'desarrollo/item_historial_versiones.html', {'lista_versiones': lista_versiones,
                                                                         'item_actual': item, 'proyecto': proyecto,
-                                                                        'lista_atributos': lista_atributos})
+                                                                        'lista_atributos': lista_atributos,
+                                                                        'desarrollo': Item.ESTADO_DESARROLLO})
+
+
+def validar_reversion(id_item, id_version_anterior):
+    """
+    Función que se encarga de validar que se cumplan las restricciones para poder reversionar un item
+
+    :param id_item: identificador de la version actual
+    :param id_version_anterior: identificador de la versión a reversionar
+    :return: variable booleana que retorna true si se cumplen todas las restricciones y false si no
+    """
+    valido = True
+    item_actual = Item.objects.get(pk=id_item)
+    # si el estado del ítem no es en desarrollo no se debe poder reversionar
+    if item_actual.estado != Item.ESTADO_DESARROLLO:
+        valido = False
+    return valido
 
 
 def reversionar_item(request, id_proyecto, id_item, id_version_anterior):
@@ -133,89 +151,111 @@ def reversionar_item(request, id_proyecto, id_item, id_version_anterior):
     :return: redireccion a item_ver.html
     :rtype: redirect
     """
-    item_actual = Item.objects.get(pk=id_item)
-    item_version_anterior = Item.objects.get(pk=id_version_anterior)
-    # creamos una nueva versión a partir de la version anterior elegida
-    nuevo_item = versionar_item(item_version_anterior, request.user)
-    # modificamos su version_anterior para que apunte a la ultima versión antes que esta
-    nuevo_item.version_anterior = item_actual
-    # editamos su versión
-    nuevo_item.version = item_actual.version + 1
-    # pasamos su estado a En Desarrollo porque la versión no actual siempre está en estado desactivado
-    nuevo_item.estado = item_actual.estado
-    # guardamos los cambios
-    nuevo_item.save()
-    # también debemos cambiar el estado de item_actual a desactivado
-    item_actual.estado = Item.ESTADO_DESACTIVADO
-    item_actual.save()
+    if validar_reversion(id_item, id_version_anterior):
+        item_actual = Item.objects.get(pk=id_item)
+        item_version_anterior = Item.objects.get(pk=id_version_anterior)
+        # creamos una nueva versión a partir de la version anterior elegida
+        nuevo_item = versionar_item(item_version_anterior, request.user)
+        # modificamos su version_anterior para que apunte a la ultima versión antes que esta
+        nuevo_item.version_anterior = item_actual
+        # editamos su versión
+        nuevo_item.version = item_actual.version + 1
+        # pasamos su estado a En Desarrollo porque la versión no actual siempre está en estado desactivado
+        nuevo_item.estado = item_actual.estado
+        # guardamos los cambios
+        nuevo_item.save()
+        # también debemos cambiar el estado de item_actual a desactivado
+        item_actual.estado = Item.ESTADO_DESACTIVADO
+        item_actual.save()
 
-    # ahora nos encargamos de las relaciones
-    # primero reversionamos item actual para actualizar los items en sus listas de relaciones a la versión más nueva
-    nuevo_item_actual = versionar_item(item_actual, request.user)
-    # desactivamos para que esta versión no cuente como nueva, solo usaremos para las relaciones
-    nuevo_item_actual.estado = Item.ESTADO_DESACTIVADO
-    nuevo_item_actual.save()
-    # para antecesores
-    # primero hacemos diferencia para ver los ítems que no estában añadidos en la versión anterior
-    lista_antecesores_add = []
-    lista_antecesores_add = nuevo_item.antecesores.all().difference(nuevo_item_actual.antecesores.all())
-    for item_relacion in lista_antecesores_add:
-        item_relacion.sucesores.add(nuevo_item)
-    # para la intersección tenemos que desvincular el item actual del ítem relación y vincular al nuevo_item
-    lista_antecesores_add = []
-    lista_antecesores_add = nuevo_item.antecesores.all().intersection(nuevo_item_actual.antecesores.all())
-    for item_relacion in lista_antecesores_add:
-        item_relacion.sucesores.remove(item_relacion.sucesores.get(id_version=nuevo_item_actual.id_version))
-        item_relacion.sucesores.add(nuevo_item)
-    # ahora hacemos la diferencia pero invertida para ver a que items desvincular item actual
-    lista_antecesores_add = []
-    lista_antecesores_add = nuevo_item_actual.antecesores.all().difference(nuevo_item.antecesores.all())
-    for item_relacion in lista_antecesores_add:
-        item_relacion.sucesores.remove(item_relacion.sucesores.get(id_version=nuevo_item_actual.id_version))
-    # para sucesores
-    lista_sucesores_add = []
-    lista_sucesores_add = nuevo_item.sucesores.all().difference(nuevo_item_actual.sucesores.all())
-    for item_relacion in lista_sucesores_add:
-        item_relacion.antecesores.add(nuevo_item)
-    lista_sucesores_add = []
-    lista_sucesores_add = nuevo_item.sucesores.all().intersection(nuevo_item_actual.sucesores.all())
-    for item_relacion in lista_sucesores_add:
-        item_relacion.antecesores.remove(item_relacion.antecesores.get(id_version=nuevo_item_actual.id_version))
-        item_relacion.antecesores.add(nuevo_item)
-    lista_sucesores_add = []
-    lista_sucesores_add = nuevo_item_actual.sucesores.all().difference(nuevo_item.sucesores.all())
-    for item_relacion in lista_sucesores_add:
-        item_relacion.antecesores.remove(item_relacion.antecesores.get(id_version=nuevo_item_actual.id_version))
-    # para padres
-    lista_padres_add = []
-    lista_padres_add = nuevo_item.padres.all().difference(nuevo_item_actual.padres.all())
-    for item_relacion in lista_padres_add:
-        item_relacion.hijos.add(nuevo_item)
-    lista_padres_add = []
-    lista_padres_add = nuevo_item.padres.all().intersection(nuevo_item_actual.padres.all())
-    for item_relacion in lista_padres_add:
-        item_relacion.hijos.remove(item_relacion.hijos.get(id_version=nuevo_item_actual.id_version))
-        item_relacion.hijos.add(nuevo_item)
-    lista_padres_add = []
-    lista_padres_add = nuevo_item_actual.padres.all().difference(nuevo_item.padres.all())
-    for item_relacion in lista_padres_add:
-        item_relacion.hijos.remove(item_relacion.hijos.get(id_version=nuevo_item_actual.id_version))
-    # para hijos
-    lista_hijos_add = []
-    lista_hijos_add = nuevo_item.hijos.all().difference(nuevo_item_actual.hijos.all())
-    for item_relacion in lista_hijos_add:
-        item_relacion.padres.add(nuevo_item)
-    lista_hijos_add = []
-    lista_hijos_add = nuevo_item.hijos.all().intersection(nuevo_item_actual.hijos.all())
-    for item_relacion in lista_hijos_add:
-        item_relacion.padres.remove(item_relacion.padres.get(id_version=nuevo_item_actual.id_version))
-        item_relacion.padres.add(nuevo_item)
-    lista_hijos_add = []
-    lista_hijos_add = nuevo_item_actual.hijos.all().difference(nuevo_item.hijos.all())
-    for item_relacion in lista_hijos_add:
-        item_relacion.padres.remove(item_relacion.padres.get(id_version=nuevo_item_actual.id_version))
+        # ahora nos encargamos de las relaciones
+        # primero reversionamos item actual para actualizar los items en sus listas de relaciones a la versión más nueva
+        nuevo_item_actual = versionar_item(item_actual, request.user)
+        # desactivamos para que esta versión no cuente como nueva, solo usaremos para las relaciones
+        nuevo_item_actual.estado = Item.ESTADO_DESACTIVADO
+        nuevo_item_actual.save()
+        # para antecesores
+        # primero hacemos diferencia para ver los ítems que no estában añadidos en la versión anterior
+        lista_antecesores_add = []
+        lista_antecesores_add = nuevo_item.antecesores.all().difference(nuevo_item_actual.antecesores.all())
+        for item_relacion in lista_antecesores_add:
+            item_relacion.sucesores.add(nuevo_item)
+        # para la intersección tenemos que desvincular el item actual del ítem relación y vincular al nuevo_item
+        lista_antecesores_add = []
+        lista_antecesores_add = nuevo_item.antecesores.all().intersection(nuevo_item_actual.antecesores.all())
+        for item_relacion in lista_antecesores_add:
+            item_relacion.sucesores.remove(item_relacion.sucesores.get(id_version=nuevo_item_actual.id_version))
+            item_relacion.sucesores.add(nuevo_item)
+        # ahora hacemos la diferencia pero invertida para ver a que items desvincular item actual
+        lista_antecesores_add = []
+        lista_antecesores_add = nuevo_item_actual.antecesores.all().difference(nuevo_item.antecesores.all())
+        for item_relacion in lista_antecesores_add:
+            item_relacion.sucesores.remove(item_relacion.sucesores.get(id_version=nuevo_item_actual.id_version))
+        # para sucesores
+        lista_sucesores_add = []
+        lista_sucesores_add = nuevo_item.sucesores.all().difference(nuevo_item_actual.sucesores.all())
+        for item_relacion in lista_sucesores_add:
+            item_relacion.antecesores.add(nuevo_item)
+        lista_sucesores_add = []
+        lista_sucesores_add = nuevo_item.sucesores.all().intersection(nuevo_item_actual.sucesores.all())
+        for item_relacion in lista_sucesores_add:
+            item_relacion.antecesores.remove(item_relacion.antecesores.get(id_version=nuevo_item_actual.id_version))
+            item_relacion.antecesores.add(nuevo_item)
+        lista_sucesores_add = []
+        lista_sucesores_add = nuevo_item_actual.sucesores.all().difference(nuevo_item.sucesores.all())
+        for item_relacion in lista_sucesores_add:
+            item_relacion.antecesores.remove(item_relacion.antecesores.get(id_version=nuevo_item_actual.id_version))
+        # para padres
+        lista_padres_add = []
+        lista_padres_add = nuevo_item.padres.all().difference(nuevo_item_actual.padres.all())
+        for item_relacion in lista_padres_add:
+            item_relacion.hijos.add(nuevo_item)
+        lista_padres_add = []
+        lista_padres_add = nuevo_item.padres.all().intersection(nuevo_item_actual.padres.all())
+        for item_relacion in lista_padres_add:
+            item_relacion.hijos.remove(item_relacion.hijos.get(id_version=nuevo_item_actual.id_version))
+            item_relacion.hijos.add(nuevo_item)
+        lista_padres_add = []
+        lista_padres_add = nuevo_item_actual.padres.all().difference(nuevo_item.padres.all())
+        for item_relacion in lista_padres_add:
+            item_relacion.hijos.remove(item_relacion.hijos.get(id_version=nuevo_item_actual.id_version))
+        # para hijos
+        lista_hijos_add = []
+        lista_hijos_add = nuevo_item.hijos.all().difference(nuevo_item_actual.hijos.all())
+        for item_relacion in lista_hijos_add:
+            item_relacion.padres.add(nuevo_item)
+        lista_hijos_add = []
+        lista_hijos_add = nuevo_item.hijos.all().intersection(nuevo_item_actual.hijos.all())
+        for item_relacion in lista_hijos_add:
+            item_relacion.padres.remove(item_relacion.padres.get(id_version=nuevo_item_actual.id_version))
+            item_relacion.padres.add(nuevo_item)
+        lista_hijos_add = []
+        lista_hijos_add = nuevo_item_actual.hijos.all().difference(nuevo_item.hijos.all())
+        for item_relacion in lista_hijos_add:
+            item_relacion.padres.remove(item_relacion.padres.get(id_version=nuevo_item_actual.id_version))
 
-    return redirect('desarrollo:verItem', id_proyecto=id_proyecto, id_item=nuevo_item.id)
+        # ahora validamos que todas las relaciones creadas para el item reversionado sean con items no desactivados
+        validar_relaciones_desactivadas(nuevo_item.antecesores, nuevo_item.antecesores.all())
+        validar_relaciones_desactivadas(nuevo_item.sucesores, nuevo_item.sucesores.all())
+        validar_relaciones_desactivadas(nuevo_item.padres, nuevo_item.padres.all())
+        validar_relaciones_desactivadas(nuevo_item.hijos, nuevo_item.hijos.all())
+
+        return redirect('desarrollo:verItem', id_proyecto=id_proyecto, id_item=nuevo_item.id)
+    else:
+        return HttpResponse("No es posible revertir a esta versión porque no cumple con las restricciones")
+
+
+def validar_relaciones_desactivadas(manytomany, lista_relaciones):
+    """
+    función que valida que no se reversionen relaciones con items desactivados
+
+    :param manytomany:
+    :param lista_relaciones:
+    :return:
+    """
+    for item in lista_relaciones:
+        if item.estado == Item.ESTADO_DESACTIVADO:
+            manytomany.remove(item)
 
 
 def menu_aprobacion(request, id_proyecto):
@@ -470,12 +510,7 @@ def versionar_item(item, usuario):
     # también nos encargamos de los atributos particulares
     lista_atr = AtributoParticular.objects.filter(item=item).order_by('id')
     for atr in lista_atr:
-        if atr.tipo == 'file':
-            # por ahora dejo un link random pero esto hay que arreglar
-            valor = "archivo"  # handle_uploaded_file(atr.valor, item.fase.proyecto.id, usuario)
-        else:
-            valor = atr.valor
-        nuevo_atributo = AtributoParticular(item=item_editado, nombre=atr.nombre, tipo=atr.tipo, valor=valor)
+        nuevo_atributo = AtributoParticular(item=item_editado, nombre=atr.nombre, tipo=atr.tipo, valor=atr.valor)
         nuevo_atributo.save()
 
     # nos encargamos también de vincular las relaciones del ítem anterior con el actual
@@ -617,8 +652,10 @@ def modificar_item(request, id_proyecto, id_item):
 
             # también nos encargamos de los atributos particulares
             for atr in lista_atr:
-                if atr.tipo == 'file' and request.FILES:
-                    valor = handle_uploaded_file(request.FILES[atr.nombre], fase.proyecto.id, request.user)
+                if atr.tipo == 'file':
+                    valor = atr.valor
+                    if request.FILES:
+                        valor = handle_uploaded_file(request.FILES[atr.nombre], id_proyecto, request.user)
                 else:
                     valor = request.POST[atr.nombre]
                 nuevo_atributo = AtributoParticular(item=item_editado, nombre=atr.nombre, tipo=atr.tipo, valor=valor)
