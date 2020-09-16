@@ -14,7 +14,7 @@ from administracion.views import crear_rol, proyectos, desactivar_tipo_item, edi
     eliminar_participante_y_comite, crear_proyecto, \
     administrar_participantes, registrar_rol_por_fase, asignar_rol_por_fase, desasignar_rol_al_usuario, \
     administrar_comite, importar_tipo, confirmar_tipo_import, mostrar_tipo_import, administrar_fases_del_proyecto
-from desarrollo.models import Item, AtributoParticular, Relacion
+from desarrollo.models import Item, AtributoParticular
 from desarrollo.views import solicitud_aprobacion, aprobar_item, desaprobar_item, desactivar_item, ver_item, \
     relacionar_item, desactivar_relacion_item, ver_proyecto, modificar_item
 
@@ -595,10 +595,10 @@ class TestViews(TestCase):
                                      gerente=self.usuario.id, numero_fases=3, cant_comite=3)
         tipom = TipoItem.objects.create(nombre='Casom', descripcion='uuuto', prefijo='cm')
         fasem = Fase.objects.create(nombre='Fasem', descripcion='cdshh', estado='abierta',
-                                    proyecto=Proyecto.objects.get(pk=pm.id))
+                                   proyecto=Proyecto.objects.get(pk=pm.id))
         cu_40 = Item.objects.create(nombre='cu_40', estado=Item.ESTADO_DESARROLLO, version=1, complejidad=5,
-                                    descripcion='desactivar item', tipo_item=TipoItem.objects.get(pk=tipom.id),
-                                    fase=Fase.objects.get(pk=fasem.id))
+                                      descripcion='desactivar item', tipo_item=TipoItem.objects.get(pk=tipom.id),
+                                      fase=Fase.objects.get(pk=fasem.id))
         request = RequestFactory()
         request.user = self.usuario
         desactivar_item(request, id_item=cu_40.id, id_proyecto=pm.id)
@@ -657,17 +657,14 @@ class TestViews(TestCase):
             tipo_item=self.tipo,
             fase=self.fase
         )
-        relacion = Relacion.objects.create(inicio=item1, fin=item2)
-        path = reverse('desarrollo:desactivarRelacion', args=[self.proyecto.id])
-        data = {"desactivar": relacion.id}
+        item1.save()
+        item2.save()
 
-        request = RequestFactory().post(path, data)
-        request.user = self.usuario
+        # creamos una relacion antecesor-sucesor entre los items
+        item1.sucesores.add(item2)
+        item2.antecesores.add(item1)
 
-        desactivar_relacion_item(request, self.proyecto.id)
-        relacion = Relacion.objects.get(id=relacion.id)
-
-        self.assertEqual(relacion.is_active, False, 'el estado cambió a desactivado')
+        self.assertEqual(item1.sucesores.get(id=item2.id), item2, 'No se ha creado correctamente la relacion')
 
     def test_ver_fases(self):
         """

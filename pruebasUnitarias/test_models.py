@@ -1,7 +1,7 @@
 """
 Modulo para hacer test sobre el modulo models.py
 """
-from desarrollo.models import Item, Relacion
+from desarrollo.models import Item
 from login.models import Usuario
 from administracion.models import Proyecto, Fase, Rol, TipoItem, UsuarioxRol, PlantillaAtributo
 from django.utils import timezone
@@ -173,23 +173,30 @@ class TestModels(TestCase):
         :return: True, si se creo la relacion de forma correcta
         """
 
+        tipo = TipoItem(nombre='tipoTest', descripcion='tipo de prueba', prefijo='TT')
+        tipo.save()
+
         item1 = Item(
-            nombre='itemTest',
+            nombre='itemTest1',
             complejidad=5,
             descripcion='descripcion del ítem',
-            # tipo_item=tipo,
+            tipo_item=tipo,
             # fase=fase
         )
         item2 = Item(
-            nombre='itemTest',
+            nombre='itemTest2',
             complejidad=5,
             descripcion='descripcion del ítem',
-            # tipo_item=tipo,
+            tipo_item=tipo,
             # fase=fase
         )
+        item2.save()
+        item1.save()
 
-        rel = Relacion(inicio=item1, fin=item2)
+        # creamos una relacion antecesor-sucesor entre los items
+        item1.sucesores.add(item2)
+        item2.antecesores.add(item1)
 
-        self.assertEqual(rel.inicio, item1, 'No se ha creado correctamente la relacion izquierda')
-        self.assertEqual(rel.fin, item2, 'No se ha creado correctamente la relacion derecha')
-        self.assertEqual(rel.is_active, True, 'La relacion se creo pero esta desactivado')
+        self.assertEqual(item1.sucesores.get(id=item2.id), item2, 'No se ha creado correctamente la relacion')
+        self.assertEqual(item2.antecesores.get(id=item1.id), item1, 'No se ha creado correctamente la relacion')
+        # self.assertEqual(rel.is_active, True, 'La relacion se creo pero esta desactivado')

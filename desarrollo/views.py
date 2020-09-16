@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect
 from .SubirArchivos import handle_uploaded_file
 from desarrollo.models import Item, AtributoParticular
 from administracion.models import Proyecto, TipoItem, Fase, Rol
-from desarrollo.forms import ItemForm, RelacionForm
+from desarrollo.forms import ItemForm
 from desarrollo.getPermisos import has_permiso
 
 
@@ -555,14 +555,11 @@ def desactivar_item(request, id_proyecto, id_item):
     :param id_item: identificador del item en cuestion
     :return: redirecciona a los detalles del item
     """
-    item = Item.objects.get(pk=id_item)
+    it = Item.objects.get(pk=id_item)
+    item = versionar_item(it, request.user)
     # se verifica si es antecesor o padre
-    if item.sucesores is not None and item.hijos is not None:
+    if item.sucesores.count() != 0 or item.hijos.count() != 0:
         return redirect('desarrollo:verItem', id_proyecto, id_item)
-
-    # se deben eliminar sucesores y hijos
-    for relacion_donde_es_ultimo in item.relaciones_this_as_fin.all():
-        relacion_donde_es_ultimo.delete()
 
     if item.estado == Item.ESTADO_DESARROLLO:
         item.estado = Item.ESTADO_DESACTIVADO
@@ -570,7 +567,23 @@ def desactivar_item(request, id_proyecto, id_item):
         fase = Fase.objects.get(pk=item.fase.id)
         fase.tipos_item.remove(item.tipo_item)
 
-        item.save()
+    # se deben eliminar relaciones donde el item es sucesor o hijo
+    for padre in item.padres.all():
+        # borramos al item de la lista en el padre
+        padre.hijos.remove(padre.hijos.get(id_version=item.id_version))
+        # borramos al padre de la lista en el item
+        item.padres.remove(item.padres.get(id_version=padre.id_version))
+
+    for antecesor in item.antecesores.all():
+        # borramos al item de la lista en el antecesor
+        item_remover = antecesor.sucesores.get(id_version=item.id_version)
+        antecesor.sucesores.remove(item_remover)
+        # borramos al antecesor de la lista en el item
+        antecesor_remover = item.antecesores.get(id_version=antecesor.id_version)
+        item.antecesores.remove(antecesor_remover)
+
+    item.save()
+
     return redirect('desarrollo:verItem', id_proyecto, id_item)
 
 
@@ -703,7 +716,9 @@ def cerrar_fase(request, id_proyecto):
         # se excluye de la condicion a la fase 1
         todos_tienen_antecedentes = True
         for item in items_de_esta_fase:
-            if len([rel for rel in item.relaciones_this_as_inicio.all() if rel.is_active]) == 0:
+            if len([rel for rel in item.antecesores.all() if rel.is_active]) == 0:
+                todos_tienen_antecedentes = False
+            if len([rel for rel in item.padres.all() if rel.is_active]) == 0:
                 todos_tienen_antecedentes = False
         if i == 0:
             todos_tienen_antecedentes = True
