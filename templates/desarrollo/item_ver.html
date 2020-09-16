@@ -75,7 +75,7 @@
                     <a class="btn btn-info" href="{% url 'desarrollo:editarItem' proyecto.id item.id%}">Editar</a>
 
                     <a class="btn btn-success" href="{% url 'desarrollo:solicitarAprobacion' item.id %}" >Solicitar Aprobación</a>
-                    {% if item.item_desarrollo_inicio.count != 0 %}
+                    {% if item.sucesores.count != 0 and item.hijos.count != 0 %}
                         <button type="button" class="btn btn-secondary" onclick="showAlert()">Desactivar Ítem</button>
                     {% else %}
                         <a class="btn btn-danger" href="{% url 'desarrollo:desactivarItem' proyecto.id item.id %}">Desactivar Ítem</a>
