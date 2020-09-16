@@ -17,5 +17,6 @@ urlpatterns = [
     path('lineabase/<int:id_lineabase>', views.solicitud_ruptura, name='solicitudRuptura'),
 
     # URLs de Pao
-
+    path('proyectos/<int:id_proyecto>/items/<int:id_item>', views.ver_item, name='verItem'),
+    path('item/<int:id_item>', views.votacion_item_en_revision, name="votacionItem")
 ]
