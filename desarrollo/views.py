@@ -612,8 +612,10 @@ def modificar_item(request, id_proyecto, id_item):
 
             # también nos encargamos de los atributos particulares
             for atr in lista_atr:
-                if atr.tipo == 'file' and request.FILES:
-                    valor = handle_uploaded_file(request.FILES[atr.nombre], fase.proyecto.id, request.user)
+                if atr.tipo == 'file':
+                    valor = atr.valor
+                    if request.FILES:
+                        valor = handle_uploaded_file(request.FILES[atr.nombre], fase.proyecto.id, request.user)
                 else:
                     valor = request.POST[atr.nombre]
                 nuevo_atributo = AtributoParticular(item=item_editado, nombre=atr.nombre, tipo=atr.tipo, valor=valor)
