@@ -470,12 +470,7 @@ def versionar_item(item, usuario):
     # también nos encargamos de los atributos particulares
     lista_atr = AtributoParticular.objects.filter(item=item).order_by('id')
     for atr in lista_atr:
-        if atr.tipo == 'file':
-            # por ahora dejo un link random pero esto hay que arreglar
-            valor = "archivo"  # handle_uploaded_file(atr.valor, item.fase.proyecto.id, usuario)
-        else:
-            valor = atr.valor
-        nuevo_atributo = AtributoParticular(item=item_editado, nombre=atr.nombre, tipo=atr.tipo, valor=valor)
+        nuevo_atributo = AtributoParticular(item=item_editado, nombre=atr.nombre, tipo=atr.tipo, valor=atr.valor)
         nuevo_atributo.save()
 
     # nos encargamos también de vincular las relaciones del ítem anterior con el actual
