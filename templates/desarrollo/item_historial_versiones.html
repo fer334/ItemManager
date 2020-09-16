@@ -21,8 +21,12 @@
                                 <td></td><td></td><td><a href="#" class="btn btn-outline-info">Version Actual</a></td>
                                 {% for item_anterior in lista_versiones %}
                                     <td>
-                                        <a href="{% url 'desarrollo:reversionarItem' proyecto.id item_actual.id item_anterior.id%}"
-                                           class="btn btn-outline-primary float-right">Revertir</a>
+                                        {% if item_actual.estado == desarrollo %}
+                                            <a href="{% url 'desarrollo:reversionarItem' proyecto.id item_actual.id item_anterior.id%}"
+                                             class="btn btn-outline-primary float-right">Revertir</a>
+                                        {% else %}
+                                            <a href="#" class="btn btn-outline-secondary">Anterior</a>
+                                        {% endif %}
                                     </td>
                                 {% endfor %}
                             </tr>
