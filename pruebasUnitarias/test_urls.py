@@ -31,7 +31,7 @@ class TestUrls(TestCase):
         """
         path = reverse('login:index')
         self.assertEqual(resolve(path).view_name, 'login:index', "La prueba falló porque el nombre del template es "
-                                                                  "incorrecto")
+                                                                 "incorrecto")
 
         # self.assertEqual(resolve(path).view_name, 'login:indexx', "La prueba falló porque el nombre del template es "
         #                                                          "incorrecto")

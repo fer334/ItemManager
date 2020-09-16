@@ -2,7 +2,7 @@
 Modulo para hacer test sobre el modulo views.py
 """
 from django.test import RequestFactory
-from django.urls import reverse
+from django.urls import reverse, resolve
 from django.utils import timezone
 from django.contrib.auth.models import AnonymousUser
 from django.test import TestCase
@@ -16,7 +16,8 @@ from administracion.views import crear_rol, proyectos, desactivar_tipo_item, edi
     administrar_comite, importar_tipo, confirmar_tipo_import, mostrar_tipo_import, administrar_fases_del_proyecto
 from desarrollo.models import Item, AtributoParticular
 from desarrollo.views import solicitud_aprobacion, aprobar_item, desaprobar_item, desactivar_item, ver_item, \
-    relacionar_item, desactivar_relacion_item, ver_proyecto, modificar_item
+    relacionar_item, desactivar_relacion_item, ver_proyecto, modificar_item, versionar_item, reversionar_item, \
+    validar_reversion
 
 from configuracion.models import LineaBase
 from configuracion.views import crear_linea_base, ver_linea_base
@@ -595,10 +596,10 @@ class TestViews(TestCase):
                                      gerente=self.usuario.id, numero_fases=3, cant_comite=3)
         tipom = TipoItem.objects.create(nombre='Casom', descripcion='uuuto', prefijo='cm')
         fasem = Fase.objects.create(nombre='Fasem', descripcion='cdshh', estado='abierta',
-                                   proyecto=Proyecto.objects.get(pk=pm.id))
+                                    proyecto=Proyecto.objects.get(pk=pm.id))
         cu_40 = Item.objects.create(nombre='cu_40', estado=Item.ESTADO_DESARROLLO, version=1, complejidad=5,
-                                      descripcion='desactivar item', tipo_item=TipoItem.objects.get(pk=tipom.id),
-                                      fase=Fase.objects.get(pk=fasem.id))
+                                    descripcion='desactivar item', tipo_item=TipoItem.objects.get(pk=tipom.id),
+                                    fase=Fase.objects.get(pk=fasem.id))
         request = RequestFactory()
         request.user = self.usuario
         desactivar_item(request, id_item=cu_40.id, id_proyecto=pm.id)
@@ -719,7 +720,6 @@ class TestViews(TestCase):
         response = ver_linea_base(request, lb_nueva.id)
         self.assertEqual(response.status_code, 200, 'no se puede ver los detalles de la linea base')
 
-
     def test_modificar_item(self):
         """
         CU 34: Modificación  Item. Iteración 4
@@ -728,8 +728,8 @@ class TestViews(TestCase):
         :return:
         """
         item_1 = Item.objects.create(nombre='Item_1', estado=Item.ESTADO_DESARROLLO, version=1, complejidad=5,
-                                   descripcion='modificacion', tipo_item=self.tipo,
-                                   fase=self.fase)
+                                     descripcion='modificacion', tipo_item=self.tipo,
+                                     fase=self.fase)
         NOMBRE = 'Item'
         COMPLEJIDAD = '7'
         DESCRIPCION = 'Item editado'
@@ -739,9 +739,70 @@ class TestViews(TestCase):
             'complejidad': COMPLEJIDAD,
             'descripcion': DESCRIPCION
         })
-        item_editado = Item(pk=item_1.id, nombre=NOMBRE, version=item_1.version+1, complejidad=COMPLEJIDAD,
+        item_editado = Item(pk=item_1.id, nombre=NOMBRE, version=item_1.version + 1, complejidad=COMPLEJIDAD,
                             descripcion=DESCRIPCION)
         modificar_item(request, self.proyecto.id, self.item.id)
         self.assertEqual(NOMBRE, item_editado.nombre, "No se edito el nombre")
         self.assertEqual(COMPLEJIDAD, item_editado.complejidad, "No se edito la complejidad")
         self.assertEqual(DESCRIPCION, item_editado.descripcion, "No se edito la descripcion")
+
+    def test_versionar_item(self):
+        """
+        CU 36: Reversionar Items. Iteración 4
+        Este test comprueba el correcto funcionamiento de la función versionar_item que se encarga de crear
+        una nueva versión de un ítem
+
+        :return: el assert retornerá false si las versiones son iguales y true si son diferentes
+        """
+        item_original = Item(nombre='item original', complejidad=5, descripcion='version original',
+                             tipo_item=self.tipo, fase=self.fase, version=1, estado=Item.ESTADO_DESARROLLO)
+        item_original.save()
+        version_nueva = versionar_item(item_original, self.usuario)
+        self.assertNotEqual(item_original.version, version_nueva.version, 'no se realizó la reversion')
+
+    def test_reversionar_item(self):
+        """
+        CU 36: Reversionar Items. Iteración 4
+        Este test se encarga de probar la vista reversionar_item la cual elije una versión anterior y la convierte en
+        la versión actual. Primero creamos un ítem, luego versionamos a su versión 2, seguidamente llamamos a la
+        vista para poder volver a pasar a su versión 1.
+
+        :return: el assert retornará true si el nombre del ítem volvió a ser el nombre de la 1era versión
+        """
+        item_original = Item(nombre='item original', complejidad=5, descripcion='version original',
+                             tipo_item=self.tipo, fase=self.fase, version=1, estado=Item.ESTADO_DESARROLLO)
+        item_original.save()
+        version_nueva = versionar_item(item_original, self.usuario)
+        version_nueva.nombre = 'item modificado'
+        version_nueva.save()
+        path = reverse('desarrollo:reversionarItem', args=[self.proyecto.id, version_nueva.id, item_original.id])
+        request = RequestFactory().get(path)
+        request.user = self.usuario
+        reversionar_item(request, self.proyecto.id, version_nueva.id, item_original.id)
+        # obtenemos la versión reversionada
+        item_reversionado = Item.objects.filter(id_version=item_original.id_version,
+                                                estado=Item.ESTADO_DESARROLLO).order_by('id').last()
+        # for item in Item.objects.all():
+        #     print(item.nombre, '(', item.id, ')', item.version, '+', item.estado)
+        self.assertEqual(item_reversionado.nombre, item_original.nombre, 'no se pudo reversionar')
+
+    def test_historial_versiones(self):
+        """
+        CU 44: Mostrar Historial de Versiones del Ítem. Iteración 4
+        test que se encarga de verificar el correcto funcionamiento del path a la vista historial_versiones_item
+
+        :return: el assert retornará true si el path es correcto
+        """
+        path = reverse('desarrollo:histVersionesItem', args=[self.proyecto.id, self.item.id])
+        self.assertEqual(resolve(path).view_name, 'desarrollo:histVersionesItem', 'la prueba falló porque el path es'
+                                                                                  'incorrecto')
+
+    def test_validar_reversion(self):
+        """
+        CU 36: Reversionar Items. Iteración 4
+        Test que verifica el correcto funcionamiento de la función que aplica las restricciones a las reversiones
+
+        :return:
+        """
+        valido = validar_reversion(self.item.id, self.item.id)
+        self.assertTrue(valido, 'el item no cumple con las restricciones para ser reversionado')
