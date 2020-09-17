@@ -17,7 +17,8 @@ from administracion.views import crear_rol, proyectos, desactivar_tipo_item, edi
 from desarrollo.models import Item, AtributoParticular
 from desarrollo.views import solicitud_aprobacion, aprobar_item, desaprobar_item, desactivar_item, ver_item, \
     relacionar_item, desactivar_relacion_item, ver_proyecto, modificar_item, versionar_item, reversionar_item, \
-    validar_reversion
+    validar_reversion, votacion_item_en_revision_desarrollo, votacion_item_en_revision_aprobado,\
+    votacion_item_en_revision_lineaBase
 
 from configuracion.models import LineaBase, Solicitud, VotoRuptura
 from configuracion.views import crear_linea_base, ver_linea_base, votar_solicitud
@@ -823,3 +824,57 @@ class TestViews(TestCase):
         votar_solicitud(request, self.proyecto.id, solicitud.id, 1)
         self.assertEqual(solicitud.votoruptura_set.all().count(), 1, 'No se registro el voto')
         self.assertEqual(solicitud.votoruptura_set.all()[0].valor_voto, True, 'No se registro el valor correcto')
+
+
+    def test_votacion_item_en_revision_desarrollo(self):
+        """
+        CU 28: Votación de modificación de items en estado de "En revisión". Iteracion 4
+        El test prueba que el item pasa de estadado en Revision a estado en Desarrollo,
+        teniendo la oportunidad de modificar el item.
+
+        :return: Retrona true si cambio a Desarrollo
+        """
+        cu_28_1 = Item.objects.create(nombre='item_1', estado=Item.ESTADO_REVISION, version=1,
+                                      complejidad=5,descripcion='Revision a Desarrollo',
+                                      tipo_item=self.tipo, fase=self.fase)
+        request = RequestFactory()
+        request.user = self.usuario
+        votacion_item_en_revision_desarrollo(request, id_item=cu_28_1.id)
+        cu_28_1 = Item.objects.get(pk=cu_28_1.id)
+        self.assertEqual(cu_28_1.estado, Item.ESTADO_DESARROLLO, 'No se puede realizar la accion ')
+
+
+    def test_votacion_item_en_revision_aprobado(self):
+        """
+        CU 28: Votación de modificación de items en estado de "En revisión". Iteracion 4
+        El test prueba que el item pasa de estadado en Revision a estado Aprobado,
+        si es que no necesita modificaciones, pudiendo asi añadirlo a una nueva linea base.
+
+        :return: Retrona true si cambio a Aprobado
+        """
+        cu_28_2 = Item.objects.create(nombre='item_2', estado=Item.ESTADO_REVISION, version=2,
+                                      complejidad=5, descripcion='Revision a Aprobado',
+                                      tipo_item=self.tipo, fase=self.fase)
+        request = RequestFactory()
+        request.user = self.usuario
+        votacion_item_en_revision_aprobado(request, id_item=cu_28_2.id)
+        cu_28_2 = Item.objects.get(pk=cu_28_2.id)
+        self.assertEqual(cu_28_2.estado, Item.ESTADO_APROBADO, 'No se puede realizar la accion ')
+
+
+    def test_votacion_item_en_revision_linea_base(self):
+        """
+        CU 28: Votación de modificación de items en estado de "En revisión". Iteracion 4
+        El test prueba que el item pasa de estadado en Revision a estado Linea Base,
+        si es que no necesita modificaciones, si se quiere conservar en la Linea Base.
+
+        :return: Retrona true si cambio a en Linea Base
+        """
+        cu_28_3 = Item.objects.create(nombre='item_3', estado=Item.ESTADO_REVISION, version=2,
+                                      complejidad=5, descripcion='Revision a Linea Base',
+                                      tipo_item=self.tipo, fase=self.fase)
+        request = RequestFactory()
+        request.user = self.usuario
+        votacion_item_en_revision_lineaBase(request, id_item=cu_28_3.id)
+        cu_28_3 = Item.objects.get(pk=cu_28_3.id)
+        self.assertEqual(cu_28_3.estado, Item.ESTADO_LINEABASE, 'No se puede realizar la accion ')
