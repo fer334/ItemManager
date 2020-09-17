@@ -770,3 +770,56 @@ def cerrar_fase(request, id_proyecto):
         fase.save()
         return redirect('desarrollo:cerrarFase', id_proyecto)
     return render(request, 'desarrollo/fase_cerrar.html', content)
+
+
+def votacion_item_en_revision_desarrollo(request, id_item):
+    """
+    Vista que se encarga de pasar un item del  estado de Revision al estado de Desarrollo,
+    si se necesita realizarle cambios.
+
+    :param request:objeto tipo diccionario que permite acceder a datos.
+    :param id_item: identificador del item.
+    :return: redireccion a los detalles del item
+    """
+    item = Item.objects.get(pk=id_item)
+    # Se pregunta si el item esta en EN REVISION
+    if item.estado == Item.ESTADO_REVISION:
+        item.estado = Item.ESTADO_DESARROLLO
+        item.save()
+
+    return redirect('desarrollo:verItem',  item.fase.proyecto_id, id_item)
+
+
+def votacion_item_en_revision_aprobado(request, id_item):
+    """
+    Vista que se encarga de pasar un item del  estado de Revision al estado de Aprobado,
+    si no necesita realizarle cambios.
+
+    :param request: objeto tipo diccionario que permite acceder a datos.
+    :param id_item: identificador del item.
+    :return: redireccion a los detalles del item
+    """
+    item = Item.objects.get(pk=id_item)
+    if item.estado == Item.ESTADO_REVISION:
+        item.estado = Item.ESTADO_APROBADO
+        item.save()
+
+    return redirect('desarrollo:verItem',  item.fase.proyecto_id, id_item)
+
+
+def votacion_item_en_revision_lineaBase(request, id_item):
+    """
+    Vista que se encarga de pasar un item del  estado de Revision al estado de Linea Base,
+    cuando quiera pasarse a linea base directo.
+
+    :param request: objeto tipo diccionario que permite acceder a datos.
+    :param id_item: identificador del item.
+    :return: redireccion a los detalles del item
+    """
+    item = Item.objects.get(pk=id_item)
+    # Se pregunta si el item esta en EN REVISION
+    if item.estado == Item.ESTADO_REVISION:
+        item.estado = Item.ESTADO_LINEABASE
+        item.save()
+
+    return redirect('desarrollo:verItem', item.fase.proyecto_id, id_item)

@@ -24,5 +24,8 @@ urlpatterns = [
     path('proyectos/<int:id_proyecto>/items/<int:id_item>/desactivar', views.desactivar_item, name='desactivarItem'),
     path('items/<int:id_item>/aprobar', views.aprobar_item, name='aprobarItem'),
     path('items/<int:id_item>/desaprobar', views.desaprobar_item, name='desaprobarItem'),
-    path('proyectos/<int:id_proyecto>/items/<int:id_item>/editar', views.modificar_item, name='editarItem')
+    path('proyectos/<int:id_proyecto>/items/<int:id_item>/editar', views.modificar_item, name='editarItem'),
+    path('items/<int:id_item>/votar', views.votacion_item_en_revision_desarrollo, name='votacionItem'),
+    path('items/<int:id_item>/votar2', views.votacion_item_en_revision_aprobado, name='votacionItem2'),
+    path('items/<int:id_item>/votar3', views.votacion_item_en_revision_lineaBase, name='votacionItem3')
 ]

@@ -80,6 +80,19 @@
                     {% else %}
                         <a class="btn btn-danger" href="{% url 'desarrollo:desactivarItem' proyecto.id item.id %}">Desactivar Ítem</a>
                     {% endif %}
+
+                {% endif %}
+
+                {% if item.estado == 'En Revision' %}
+                    <a class="btn btn-primary" href="{% url 'desarrollo:votacionItem' item.id %}" >En Desarrollo</a>
+                {% endif %}
+
+                {% if item.estado == 'En Revision' %}
+                    <a class="btn btn-info" href="{% url 'desarrollo:votacionItem2' item.id %}">Aprobar</a>
+                {% endif %}
+
+                {% if item.estado == 'En Revision' %}
+                    <a class="btn btn-success" href="{% url 'desarrollo:votacionItem3' item.id %}" >En Linea Base</a>
                 {% endif %}
             </div>
             <div class="mt-4 alert alert-warning" id="alertarelaciones" style="visibility: hidden;">

@@ -179,42 +179,6 @@ def votar_solicitud(request, id_proyecto, id_solicitud, voto):
     return redirect('configuracion:verIndexComite', id_proyecto)
 
 
-def ver_item(request, id_proyecto, id_item):
-    """
-    vista que se encarga de mostrar un ítem con todos sus datos, atributos comunes y particulares y proyecto y fase
-    a la que pertenece
-
-    :param id_proyecto: identificador del proyecto
-    :param request: objeto tipo diccionario que permite acceder a datos
-    :param id_item: identificador del ítem a mostrar
-    :return: objeto que se encarga de renderear item_ver.html
-    :rtype: render
-    """
-    item = Item.objects.get(pk=id_item)
-    lista_atributos = AtributoParticular.objects.filter(item=item)
-    fase = item.fase
-    proyecto = Proyecto.objects.get(pk=id_proyecto)
-    return render(request, 'configuracion/item_ver.html', {'item': item, 'lista_atributos': lista_atributos, 'fase': fase,
-                                                        'proyecto': proyecto, 'revision': Item.ESTADO_REVISION,
-                                                        'estado': Proyecto.ESTADO_EN_EJECUCION})
 
 
-def votacion_item_en_revision(request, id_item, id_lineabase):
-    """
 
-    :param request:
-    :param id_item:
-    :return:
-    """
-    item = Item.objects.get(pk=id_item)
-    lb = LineaBase.objects.get(pk=id_lineabase)
-    # Se pregunta si el item esta en EN REVISION
-    if lb.estado == LineaBase.ESTADO_ROTA and item.estado == Item.ESTADO_REVISION:
-        # Si no pertenece, pasa a estado APROBADO
-        item.estado = Item.ESTADO_APROBADO
-        item.save()
-    else:
-        # Si pertenece, el item pasa a EN LINEA BASE
-        item.estado = Item.ESTADO_LINEABASE
-        item.save()
-    return redirect('configuracion:votacionItem', item.fase.proyecto_id)
