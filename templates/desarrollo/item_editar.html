@@ -2,7 +2,7 @@
 {% block content %}
     <div class="container">
         <h1 class="text-center pt-3 mb-3">Editar Item</h1>
-        <form class="pt-3" METHOD="post">
+        <form class="pt-3" METHOD="post" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="form-row">
                 <div class="form-group col-sm-12 col-md-8">
