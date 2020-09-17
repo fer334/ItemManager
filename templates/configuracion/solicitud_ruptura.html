@@ -6,7 +6,7 @@
         <h1 class="text-center pt-3 mb-5">Solicitud de ruptura</h1>
         <h4 class="mb-5"></h4>
 
-        <form target="{% url 'configuracion:solicitudRuptura' lineabase.id %}" method="post">
+        <form method="post">
             <div class="form-group">
                 <label>Items de linea base de la fase a modificar (pasarán a desarrollo)</label>
                 {% csrf_token %}
