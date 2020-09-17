@@ -138,6 +138,7 @@ def solicitud_ruptura(request, id_lineabase):
     :rtype: render
     """
     lineabase = LineaBase.objects.get(pk=id_lineabase)
+
     if request.POST:
         solicitud = Solicitud(
             solicitado_por=request.user,
@@ -145,7 +146,6 @@ def solicitud_ruptura(request, id_lineabase):
             justificacion=request.POST['mensaje'],
         )
         solicitud.save()
-        print(request.POST)
         items_seleccionados = [
             Item.objects.get(pk=item.split('-')[1])
             for item in request.POST

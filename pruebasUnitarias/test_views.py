@@ -19,8 +19,8 @@ from desarrollo.views import solicitud_aprobacion, aprobar_item, desaprobar_item
     relacionar_item, desactivar_relacion_item, ver_proyecto, modificar_item, versionar_item, reversionar_item, \
     validar_reversion, cerrar_fase
 
-from configuracion.models import LineaBase
-from configuracion.views import crear_linea_base, ver_linea_base
+from configuracion.models import LineaBase, Solicitud
+from configuracion.views import crear_linea_base, ver_linea_base, solicitud_ruptura
 import pytest
 
 
@@ -858,4 +858,29 @@ class TestViews(TestCase):
         request.user = self.usuario
         cerrar_fase(request, self.proyecto.id)
         fase2nueva = Fase.objects.get(pk=fase2.pk)
+
+        # Agg nuevamente los atributos borrados
+        self.fase = Fase.objects.create(nombre='Fase de prueba', proyecto=self.proyecto)
+        self.item = Item.objects.create(nombre='Item de prueba', complejidad=1, descripcion='Descripcion de prueba',
+                                       tipo_item=self.tipo,
+                                       fase=self.fase, numeracion=1)
+
         self.assertEqual(fase2nueva.estado, 'cerrada', 'La prueba fallo, la fase no esta cerrada')
+
+    def test_solicitud_ruptura_lb(self):
+        """
+        CU 46: Solicitar ruptura de linea base. Iteración 4
+        Test que verifica el correcto funcionamiento de vista cerrar fase
+
+        :return: el assert retornará true si puede crear correctamente la Solicitud de ruptura
+        """
+        lb = LineaBase.objects.create(fase=self.fase,creador=self.usuario)
+        lb.items.add(self.item)
+        lb.save()
+
+        path = reverse('configuracion:solicitudRuptura', args=[lb.pk])
+        request = RequestFactory().post(path, {f'checkItem-{self.item.pk}': ['on'],'mensaje': ['dfas']})
+        request.user = self.usuario
+
+        solicitud_ruptura(request, lb.pk)
+        self.assertNotEquals(len(Solicitud.objects.all()), 0, 'La prueba fallo, la fase no esta cerrada')
