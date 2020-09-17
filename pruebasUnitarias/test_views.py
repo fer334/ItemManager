@@ -17,11 +17,10 @@ from administracion.views import crear_rol, proyectos, desactivar_tipo_item, edi
 from desarrollo.models import Item, AtributoParticular
 from desarrollo.views import solicitud_aprobacion, aprobar_item, desaprobar_item, desactivar_item, ver_item, \
     relacionar_item, desactivar_relacion_item, ver_proyecto, modificar_item, versionar_item, reversionar_item, \
-    validar_reversion, votacion_item_en_revision_desarrollo, votacion_item_en_revision_aprobado,\
-    votacion_item_en_revision_lineaBase
+    validar_reversion
 
-from configuracion.models import LineaBase, Solicitud, VotoRuptura
-from configuracion.views import crear_linea_base, ver_linea_base, votar_solicitud
+from configuracion.models import LineaBase
+from configuracion.views import crear_linea_base, ver_linea_base
 import pytest
 
 
@@ -807,6 +806,82 @@ class TestViews(TestCase):
         """
         valido = validar_reversion(self.item.id, self.item.id)
         self.assertTrue(valido, 'el item no cumple con las restricciones para ser reversionado')
+
+    def test_cerrar_fase(self):
+        """
+        CU 21: Cerrar Fase. Iteración 4
+        Test que verifica el correcto funcionamiento de vista cerrar fase
+
+        :return: el assert retornará true si puede cerrar correctamente la fase 2 de prueba
+        """
+        p = Proyecto.objects.create(
+            nombre='proyectoTestGeneral',
+            fecha_inicio=timezone.now().date(),
+            numero_fases = 5,
+            cant_comite=3, gerente=self.usuario.id
+        )
+        fase1 = Fase(nombre='Fase1', estado='cerrada', proyecto=p)
+        fase2 = Fase(nombre='Fase2', estado='abierta', proyecto=p)
+        itema = Item(
+            nombre='A',
+            complejidad=5,
+            tipo_item=self.tipo,
+            fase=fase1,
+            version=1,
+            estado=Item.ESTADO_LINEABASE
+        )
+        itemb = Item(
+            nombre='B',
+            complejidad=5,
+            tipo_item=self.tipo,
+            fase=fase2,
+            version=1,
+            estado=Item.ESTADO_LINEABASE
+        )
+        itemc = Item(
+            nombre='C',
+            complejidad=5,
+            tipo_item=self.tipo,
+            fase=fase2,
+            version=1,
+            estado=Item.ESTADO_LINEABASE
+        )
+
+        fase1.save()
+        fase2.save()
+        itema.save()
+        itemb.save()
+        itemc.save()
+        itema.sucesores.add(itemb)
+        itemb.antecesores.add(itema)
+        itemb.hijos.add(itemc)
+        itemc.padres.add(itemb)
+
+        path = reverse('desarrollo:cerrarFase', args=[p.id])
+        request = RequestFactory().post(path, {'cerrar': fase2.pk})
+        request.user = self.usuario
+        cerrar_fase(request, p.id)
+        fase2nueva = Fase.objects.get(pk=fase2.pk)
+
+        self.assertEqual(fase2nueva.estado, 'cerrada', 'La prueba fallo, la fase no esta cerrada')
+
+    def test_solicitud_ruptura_lb(self):
+        """
+        CU 46: Solicitar ruptura de linea base. Iteración 4
+        Test que verifica el correcto funcionamiento de vista cerrar fase
+
+        :return: el assert retornará true si puede crear correctamente la Solicitud de ruptura
+        """
+        lb = LineaBase.objects.create(fase=self.fase,creador=self.usuario)
+        lb.items.add(self.item)
+        lb.save()
+
+        path = reverse('configuracion:solicitudRuptura', args=[lb.pk])
+        request = RequestFactory().post(path, {f'checkItem-{self.item.pk}': ['on'],'mensaje': ['dfas']})
+        request.user = self.usuario
+
+        solicitud_ruptura(request, lb.pk)
+        self.assertNotEquals(len(Solicitud.objects.all()), 0, 'La prueba fallo, la fase no esta cerrada')
 
     def test_votar_ruptura(self):
         """
