@@ -476,8 +476,15 @@ def desactivar_relacion_item(request, id_proyecto):
             nuevo_item_inicio.save()
             nuevo_item_fin.save()
 
+    # codigo para ver los ítems actuales de un proyecto
+    items = []
+    proyecto = Proyecto.objects.get(id=id_proyecto)
+    for fase in proyecto.fase_set.all():
+        for item in fase.item_set.all():
+            items.append(item)
+
     relaciones = []
-    for inicio in Item.objects.all():
+    for inicio in items:
         todos = [i for i in inicio.sucesores.all()] + [i for i in inicio.hijos.all()]
         if inicio.estado != Item.ESTADO_DESACTIVADO:
             for fin in todos:
