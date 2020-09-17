@@ -17,10 +17,11 @@ from administracion.views import crear_rol, proyectos, desactivar_tipo_item, edi
 from desarrollo.models import Item, AtributoParticular
 from desarrollo.views import solicitud_aprobacion, aprobar_item, desaprobar_item, desactivar_item, ver_item, \
     relacionar_item, desactivar_relacion_item, ver_proyecto, modificar_item, versionar_item, reversionar_item, \
-    validar_reversion
+    validar_reversion, votacion_item_en_revision_desarrollo, votacion_item_en_revision_aprobado, \
+    votacion_item_en_revision_lineaBase, cerrar_fase
 
-from configuracion.models import LineaBase
-from configuracion.views import crear_linea_base, ver_linea_base
+from configuracion.models import LineaBase, Solicitud
+from configuracion.views import crear_linea_base, ver_linea_base, solicitud_ruptura, votar_solicitud
 import pytest
 
 
