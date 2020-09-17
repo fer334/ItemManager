@@ -18,8 +18,8 @@ from desarrollo.models import Item, AtributoParticular
 from desarrollo.views import solicitud_aprobacion, aprobar_item, desaprobar_item, desactivar_item, ver_item, \
     relacionar_item, desactivar_relacion_item, ver_proyecto
 
-from configuracion.models import LineaBase
-from configuracion.views import crear_linea_base, ver_linea_base
+from configuracion.models import LineaBase, Solicitud, VotoRuptura
+from configuracion.views import crear_linea_base, ver_linea_base, votar_solicitud
 import pytest
 
 
@@ -715,3 +715,20 @@ class TestViews(TestCase):
         request.user = self.usuario
         response = ver_linea_base(request, lb_nueva.id)
         self.assertEqual(response.status_code, 200, 'no se puede ver los detalles de la linea base')
+
+    def test_votar_ruptura(self):
+        """
+        CU 27: Votar sobre ruptura de LB. Iteración 4
+        EL test invoca a la vista encargada de contabilizar los votos por ruptura de lb
+        :return: Se retorna true al validar la votacion
+        """
+        lb_nueva = LineaBase(fase=self.fase, creador=self.usuario)
+        lb_nueva.save()
+        solicitud = Solicitud(linea_base=lb_nueva, justificacion='Porque si', solicitado_por=self.usuario)
+        solicitud.save()
+        path = reverse('configuracion:votarSolicitud', args=[self.proyecto.id, solicitud.id, 1])
+        request = RequestFactory().post(path)
+        request.user = self.usuario
+        votar_solicitud(request, self.proyecto.id, solicitud.id, 1)
+        self.assertEqual(solicitud.votoruptura_set.all().count(), 1, 'No se registro el voto')
+        self.assertEqual(solicitud.votoruptura_set.all()[0].valor_voto, True, 'No se registro el valor correcto')
