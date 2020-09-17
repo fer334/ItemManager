@@ -702,6 +702,7 @@ def cerrar_fase(request, id_proyecto):
     # Para mostrar el numero correcto de la fase
     for i, fase in enumerate(fases):
         fase.nro_de_fase = i + 1
+        fase.cerrable=False
 
     # Ver cual fase se puede cerrar
     for i, fase in enumerate(fases):

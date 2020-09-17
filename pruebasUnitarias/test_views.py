@@ -814,10 +814,14 @@ class TestViews(TestCase):
 
         :return: el assert retornará true si puede cerrar correctamente la fase 2 de prueba
         """
-        self.fase.delete()
-        self.item.delete()
-        fase1 = Fase(nombre='Fase1', estado='cerrada', proyecto=self.proyecto)
-        fase2 = Fase(nombre='Fase2', estado='abierta', proyecto=self.proyecto)
+        p = Proyecto.objects.create(
+            nombre='proyectoTestGeneral',
+            fecha_inicio=timezone.now().date(),
+            numero_fases = 5,
+            cant_comite=3, gerente=self.usuario.id
+        )
+        fase1 = Fase(nombre='Fase1', estado='cerrada', proyecto=p)
+        fase2 = Fase(nombre='Fase2', estado='abierta', proyecto=p)
         itema = Item(
             nombre='A',
             complejidad=5,
@@ -853,17 +857,11 @@ class TestViews(TestCase):
         itemb.hijos.add(itemc)
         itemc.padres.add(itemb)
 
-        path = reverse('desarrollo:cerrarFase', args=[self.proyecto.id])
+        path = reverse('desarrollo:cerrarFase', args=[p.id])
         request = RequestFactory().post(path, {'cerrar': fase2.pk})
         request.user = self.usuario
-        cerrar_fase(request, self.proyecto.id)
+        cerrar_fase(request, p.id)
         fase2nueva = Fase.objects.get(pk=fase2.pk)
-
-        # Agg nuevamente los atributos borrados
-        self.fase = Fase.objects.create(nombre='Fase de prueba', proyecto=self.proyecto)
-        self.item = Item.objects.create(nombre='Item de prueba', complejidad=1, descripcion='Descripcion de prueba',
-                                       tipo_item=self.tipo,
-                                       fase=self.fase, numeracion=1)
 
         self.assertEqual(fase2nueva.estado, 'cerrada', 'La prueba fallo, la fase no esta cerrada')
 
