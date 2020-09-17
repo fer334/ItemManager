@@ -17,7 +17,7 @@ from administracion.views import crear_rol, proyectos, desactivar_tipo_item, edi
 from desarrollo.models import Item, AtributoParticular
 from desarrollo.views import solicitud_aprobacion, aprobar_item, desaprobar_item, desactivar_item, ver_item, \
     relacionar_item, desactivar_relacion_item, ver_proyecto, modificar_item, versionar_item, reversionar_item, \
-    validar_reversion
+    validar_reversion, cerrar_fase
 
 from configuracion.models import LineaBase
 from configuracion.views import crear_linea_base, ver_linea_base
@@ -806,3 +806,56 @@ class TestViews(TestCase):
         """
         valido = validar_reversion(self.item.id, self.item.id)
         self.assertTrue(valido, 'el item no cumple con las restricciones para ser reversionado')
+
+    def test_cerrar_fase(self):
+        """
+        CU 21: Cerrar Fase. Iteración 4
+        Test que verifica el correcto funcionamiento de vista cerrar fase
+
+        :return: el assert retornará true si puede cerrar correctamente la fase 2 de prueba
+        """
+        self.fase.delete()
+        self.item.delete()
+        fase1 = Fase(nombre='Fase1', estado='cerrada', proyecto=self.proyecto)
+        fase2 = Fase(nombre='Fase2', estado='abierta', proyecto=self.proyecto)
+        itema = Item(
+            nombre='A',
+            complejidad=5,
+            tipo_item=self.tipo,
+            fase=fase1,
+            version=1,
+            estado=Item.ESTADO_LINEABASE
+        )
+        itemb = Item(
+            nombre='B',
+            complejidad=5,
+            tipo_item=self.tipo,
+            fase=fase2,
+            version=1,
+            estado=Item.ESTADO_LINEABASE
+        )
+        itemc = Item(
+            nombre='C',
+            complejidad=5,
+            tipo_item=self.tipo,
+            fase=fase2,
+            version=1,
+            estado=Item.ESTADO_LINEABASE
+        )
+
+        fase1.save()
+        fase2.save()
+        itema.save()
+        itemb.save()
+        itemc.save()
+        itema.sucesores.add(itemb)
+        itemb.antecesores.add(itema)
+        itemb.hijos.add(itemc)
+        itemc.padres.add(itemb)
+
+        path = reverse('desarrollo:cerrarFase', args=[self.proyecto.id])
+        request = RequestFactory().post(path, {'cerrar': fase2.pk})
+        request.user = self.usuario
+        cerrar_fase(request, self.proyecto.id)
+        fase2nueva = Fase.objects.get(pk=fase2.pk)
+        self.assertEqual(fase2nueva.estado, 'cerrada', 'La prueba fallo, la fase no esta cerrada')
