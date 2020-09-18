@@ -13,6 +13,9 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+import dj_database_url
+from decouple import config
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 print("SE ENCUENTRAN EN EL AMBIENTE DE PRODUCCION")
 
@@ -23,11 +26,12 @@ print("SE ENCUENTRAN EN EL AMBIENTE DE PRODUCCION")
 SECRET_KEY = 'a0h8$%)-y#p#=d*2-^%#xcs#u_hxtib1s!j^zpa46913o3w6e='
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = config('DJANGO_DEBUG', default=True, cast=bool)
 
 ALLOWED_HOSTS = [
-    'obscure-river-81564.herokuapp.com',
-    '127.0.0.1'
+    'team-is2.herokuapp.com',
+    '127.0.0.1',
+    '*',
 ]
 
 # Application definition
@@ -49,7 +53,6 @@ INSTALLED_APPS = [
 
 SITE = 1
 
-
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -60,6 +63,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'ItemManager.middleware.ActiveAccountMiddleware',
     'ItemManager.middleware.EstadoProyectoMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 
 ]
 
@@ -83,21 +87,15 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'ItemManager.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'd9kba9iahfs8lp',
-        'USER': 'kwpecmocttvflw',
-        'PASSWORD': 'e3c7f531fd4d79c2727d386375c98ed693874412189466ab214f664e4a0733a2',
-        'HOST': 'ec2-52-23-14-156.compute-1.amazonaws.com',
-        'PORT': '5432',
-    }
-}
 
+DATABASES = {
+    'default': dj_database_url.config(
+        default=config('DATABASE_URL')
+    )
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
@@ -116,7 +114,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 
@@ -131,15 +128,16 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 STATIC_URL = "/static/"
-STATIC_ROOT = os.path.join(BASE_DIR, "static")
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "staticDir"),
+    os.path.join(BASE_DIR, "static"),
 ]
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 LOGIN_URL = '/login'
 AUTH_USER_MODEL = 'login.Usuario'
 AUTHENTICATION_BACKENDS = {
@@ -148,4 +146,3 @@ AUTHENTICATION_BACKENDS = {
 }
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
-
