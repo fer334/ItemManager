@@ -23,7 +23,7 @@ print("SE ENCUENTRAN EN EL AMBIENTE DE PRODUCCION")
 SECRET_KEY = 'a0h8$%)-y#p#=d*2-^%#xcs#u_hxtib1s!j^zpa46913o3w6e='
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [
     'team-is2.herokuapp.com',
@@ -103,7 +103,6 @@ DATABASES = {
         # 'HOST': 'ec2-52-23-14-156.compute-1.amazonaws.com',
         'PORT': '5432',
         # 'PORT': '5432',
-
     }
 }
 
