@@ -92,11 +92,17 @@ WSGI_APPLICATION = 'ItemManager.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'd9kba9iahfs8lp',
-        'USER': 'kwpecmocttvflw',
-        'PASSWORD': 'e3c7f531fd4d79c2727d386375c98ed693874412189466ab214f664e4a0733a2',
-        'HOST': 'ec2-52-23-14-156.compute-1.amazonaws.com',
+        # 'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'd6l919ossi9cde',
+        # 'NAME': 'd9kba9iahfs8lp',
+        'USER': 'vvniusgsbknnmp',
+        # 'USER': 'kwpecmocttvflw',
+        'PASSWORD': '41195478b75714ded1d339065b37824c6e9e88f6cbc586bd661a9442ecf57466',
+        # 'PASSWORD': 'e3c7f531fd4d79c2727d386375c98ed693874412189466ab214f664e4a0733a2',
+        'HOST': 'ec2-54-157-234-29.compute-1.amazonaws.com',
+        # 'HOST': 'ec2-52-23-14-156.compute-1.amazonaws.com',
         'PORT': '5432',
+        # 'PORT': '5432',
     }
 }
 
