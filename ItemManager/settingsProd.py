@@ -26,8 +26,9 @@ SECRET_KEY = 'a0h8$%)-y#p#=d*2-^%#xcs#u_hxtib1s!j^zpa46913o3w6e='
 DEBUG = False
 
 ALLOWED_HOSTS = [
-    'obscure-river-81564.herokuapp.com',
-    '127.0.0.1'
+    'team-is2.herokuapp.com',
+    '127.0.0.1',
+    '*',
 ]
 
 # Application definition
