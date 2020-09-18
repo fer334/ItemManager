@@ -94,8 +94,7 @@ from decouple import config
 
 DATABASES = {
     'default': dj_database_url.config(
-        default=config('postgres://vvniusgsbknnmp:41195478b75714ded1d339065b37824c6e9e88f6cbc586bd661a9442ecf57466'
-                       '@ec2-54-157-234-29.compute-1.amazonaws.com:5432/d6l919ossi9cde')
+        default=config('DATABASE_URL')
     )
 }
 
