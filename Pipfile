@@ -15,6 +15,7 @@ sphinx = "*"
 gunicorn = "*"
 django-crispy-forms = "*"
 sphinx-rtd-theme = "*"
+whitenoise = "*"
 
 [requires]
 python_version = "3.8"
