@@ -18,6 +18,7 @@ sphinx-rtd-theme = "*"
 whitenoise = "*"
 dj-database-url = "*"
 python-decouple = "*"
+config = "*"
 
 [requires]
 python_version = "3.8"

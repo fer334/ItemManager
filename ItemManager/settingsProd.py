@@ -13,6 +13,9 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+import dj_database_url
+from decouple import config
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 print("SE ENCUENTRAN EN EL AMBIENTE DE PRODUCCION")
 
@@ -23,7 +26,7 @@ print("SE ENCUENTRAN EN EL AMBIENTE DE PRODUCCION")
 SECRET_KEY = 'a0h8$%)-y#p#=d*2-^%#xcs#u_hxtib1s!j^zpa46913o3w6e='
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DJANGO_DEBUG', default=True, cast=bool)
 
 ALLOWED_HOSTS = [
     'team-is2.herokuapp.com',
@@ -49,7 +52,6 @@ INSTALLED_APPS = [
 ]
 
 SITE = 1
-
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -85,19 +87,15 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'ItemManager.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
-import dj_database_url
-from decouple import config
 
 DATABASES = {
     'default': dj_database_url.config(
         default=config('DATABASE_URL')
     )
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
@@ -116,7 +114,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 
@@ -130,7 +127,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
@@ -150,4 +146,3 @@ AUTHENTICATION_BACKENDS = {
 }
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
-
