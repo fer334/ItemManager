@@ -882,7 +882,7 @@ class TestViews(TestCase):
         request.user = self.usuario
 
         solicitud_ruptura(request, lb.pk)
-        self.assertNotEquals(len(Solicitud.objects.all()), 0, 'La prueba fallo, la fase no esta cerrada')
+        self.assertNotEqual(len(Solicitud.objects.all()), 0, 'La prueba fallo, la fase no esta cerrada')
 
     def test_votar_ruptura(self):
         """

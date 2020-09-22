@@ -11,13 +11,6 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-#PRODUCCION:
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ItemManager.settingsProd')
-os.environ.setdefault('DESARROLLO', 'false')
-
-#DESARROLLO
-#os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ItemManager.settings')
-#os.environ.setdefault('DESARROLLO', 'true')
-
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ItemManager.settings')
 
 application = get_wsgi_application()
