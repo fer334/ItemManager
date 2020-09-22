@@ -51,7 +51,8 @@ def user_login(request):
             message = 'Credenciales invalidas'
             return render(request, 'login/login.html', {'error_message': message})
         login(request, user)
-        request.session.set_expiry(3600)
+        #request.session.set_expiry(3600)
+        #SE SACA EL SESSION TIMEOUT DE CADA USUSARIO
         return redirect('login:index')
 
     return render(request, 'login/login.html')

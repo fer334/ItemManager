@@ -106,12 +106,15 @@ class Fase(models.Model):
     """
     Esta clase representa las fases
     """
+
+    FASE_ESTADO_CERRADA = 'cerrada'
+    FASE_ESTADO_ABIERTA = 'abierta'
     #: Se almacena el nombre de la fase
     nombre = models.CharField(max_length=200, null=False)
     #: Descripcion de la fase
     descripcion = models.CharField(max_length=400, null=True)
     #: Estado de la fase, iniciada, cerrada etc.
-    estado = models.CharField(max_length=200, default='abierta')
+    estado = models.CharField(max_length=200, default=FASE_ESTADO_ABIERTA)
     #: Proyecto asociado a la fase
     proyecto = models.ForeignKey('Proyecto', on_delete=models.CASCADE)
     #: lista de tipos de ítem

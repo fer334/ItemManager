@@ -80,6 +80,9 @@
             {% if es_comite %}
                 <a class="btn btn-primary" href="{% url 'configuracion:verIndexComite' proyecto.id %}">Comite de decisiones</a>
             {% endif %}
+            {% if es_gerente %}
+                <a class="btn btn-primary" href="{% url 'configuracion:cerrarProyecto' proyecto.id %}">Cerrar proyecto</a>
+            {% endif %}
             <a href="{% url 'configuracion:indexConfiguracion' 'todos' %}" class="btn btn-primary float-right">Volver atrás</a>
         </div>
 

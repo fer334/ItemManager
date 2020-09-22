@@ -5,7 +5,7 @@ from administracion.models import Proyecto, Fase
 from .models import LineaBase, Solicitud, VotoRuptura
 from desarrollo.models import Item, AtributoParticular
 from login.models import Usuario
-
+from django.utils.timezone import now
 
 def index(request, filtro):
     """
@@ -52,11 +52,14 @@ def ver_proyecto(request, id_proyecto):
     :rtype: render
     """
     proyecto = Proyecto.objects.get(pk=id_proyecto)
-    es_comite = False
-    if request.user in proyecto.comite.all():
-        es_comite = True
+    es_comite = request.user in proyecto.comite.all()
+    es_gerente = request.user.id == proyecto.gerente
 
-    return render(request, 'configuracion/proyecto_ver_unico.html', {'proyecto': proyecto, 'es_comite': es_comite})
+    return render(request, 'configuracion/proyecto_ver_unico.html', {
+        'proyecto': proyecto,
+        'es_comite': es_comite,
+        'es_gerente': es_gerente
+    })
 
 
 def crear_linea_base(request, id_fase):
@@ -159,6 +162,16 @@ def solicitud_ruptura(request, id_lineabase):
 
 
 def votar_solicitud(request, id_proyecto, id_solicitud, voto):
+    """
+    Metodo que se encarga de registrar un voto en la solicitudes en la base de datos.
+
+    :param request: objeto tipo diccionario que permite acceder a datos
+    :param id_proyecto: identificador unico por proyecto
+    :param id_solicitud: identificador unico por proyecto
+    :param voto: valor numerico que simboliza el voto, 1 para Voto a favor, 0 para voto en contra
+    :return: objeto que renderea verIndexComite.html
+    :rtype: render
+    """
     solicitud = Solicitud.objects.get(pk=id_solicitud)
     proyecto = Proyecto.objects.get(pk=id_proyecto)
     nuevo_voto = VotoRuptura(solicitud=solicitud, votante=request.user, valor_voto=(voto == 1))
@@ -177,6 +190,48 @@ def votar_solicitud(request, id_proyecto, id_solicitud, voto):
         solicitud.save()
 
     return redirect('configuracion:verIndexComite', id_proyecto)
+
+
+def cerrar_proyecto(request, id_proyecto):
+    """
+    Metodo que se encarga de renderizar la vista cerrar proyecto. El proyecto solo se puede cerrar si lo solicita
+    el gerente y si todas las fases estan cerradas. Si recibe un post verifica nuevamente si el proyecto es cerrable y
+    lo cierra
+
+    :param request: objeto tipo diccionario que permite acceder a datos
+    :param id_proyecto: identificador unico por proyecto
+    :return: objeto que renderea item_des_relacion.html
+    :rtype: render
+    """
+    proyecto = Proyecto.objects.get(pk=id_proyecto)
+    fases = proyecto.fase_set.all()
+
+    # Para mostrar el numero correcto de la fase
+    for i, fase in enumerate(fases):
+        fase.nro_de_fase = i + 1
+        fase.cerrable = False
+
+    # Comprobacion de gerencia de proyecto
+    es_gerente = proyecto.gerente == request.user.id
+    es_cerrable = len(fases.filter(estado=Fase.FASE_ESTADO_CERRADA)) == proyecto.numero_fases
+    # Dict a ser enviado a la vista
+    content = {
+        'proyecto': proyecto,
+        'fases': fases,
+        'es_gerente': es_gerente,
+        'es_cerrable': es_cerrable,
+        'mensaje_error': "",
+    }
+
+    # Si el request es POST cierra el proyecto
+    if request.method == "POST":
+        if es_cerrable and es_gerente:
+            proyecto.estado = proyecto.ESTADO_FINALIZADO
+            proyecto.fecha_finalizado = now()
+            proyecto.save()
+            return redirect('login:index')
+
+    return render(request, 'configuracion/proyecto_cerrar.html', content)
 
 
 
