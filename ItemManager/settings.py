@@ -11,31 +11,29 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+from decouple import config
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-os.environ.setdefault('DESARROLLO', 'true')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'a0h8$%)-y#p#=d*2-^%#xcs#u_hxtib1s!j^zpa46913o3w6e='
+SECRET_KEY = config('SECRET_KEY', default='a0h8$%)-y#p#=d*2-^%#xcs#u_hxtib1s!j^zpa46913o3w6e=')
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DJANGO_DEBUG', default=True, cast=bool)
 
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
-    'obscure-river-81564.herokuapp.com',
     '0.0.0.0',
-    '192.168.0.105'
 ]
 
 # Application definition
-print("SE ENCUENTRAN EN EL AMBIENTE DE DESARROLLO")
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -139,10 +137,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
-STATIC_URL = "/static/"
-STATIC_ROOT = os.path.join(BASE_DIR, "static")
+STATIC_URL = "/staticfiles/"
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "staticDir"),
+    os.path.join(BASE_DIR, "static"),
 ]
 LOGIN_URL = '/login/'
 AUTH_USER_MODEL = 'login.Usuario'
@@ -151,6 +149,12 @@ AUTHENTICATION_BACKENDS = {
     'login.LoginBackEnd.LoginBackEnd'
 }
 
-
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+if config('DESARROLLO', default=True, cast=bool):
+    print("SE ENCUENTRAN EN EL AMBIENTE DE DESARROLLO")
+else:
+    print("SE ENCUENTRAN EN EL AMBIENTE DE PRODUCCION")
+    from .settingsProd import *
+
 
