@@ -40,6 +40,7 @@ class Solicitud(models.Model):
                 return True
         return False
 
+
 class VotoRuptura(models.Model):
     """
     Clase que representa un voto del comite
