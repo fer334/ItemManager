@@ -3,9 +3,10 @@ from django.shortcuts import render, redirect
 # Create your views here.
 from administracion.models import Proyecto, Fase
 from .models import LineaBase, Solicitud, VotoRuptura
-from desarrollo.models import Item, AtributoParticular
+from desarrollo.models import Item
 from login.models import Usuario
 from django.utils.timezone import now
+
 
 def index(request, filtro):
     """
@@ -68,7 +69,7 @@ def crear_linea_base(request, id_fase):
     caso de recibir un request POST
 
     :param request: objeto tipo diccionario que permite acceder a datos
-    :param id_proyecto: Se recibe como parámetro la fase en la que se creara la linea base
+    :param id_fase: Se recibe como parámetro la fase en la que se creara la linea base
     :return: objeto que renderea lineabase_crear.html
     :rtype: render
     """
@@ -232,8 +233,3 @@ def cerrar_proyecto(request, id_proyecto):
             return redirect('login:index')
 
     return render(request, 'configuracion/proyecto_cerrar.html', content)
-
-
-
-
-
