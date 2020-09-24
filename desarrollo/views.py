@@ -93,9 +93,10 @@ def ver_item(request, id_proyecto, id_item):
     lista_atributos = AtributoParticular.objects.filter(item=item)
     fase = item.fase
     proyecto = Proyecto.objects.get(pk=id_proyecto)
+    impacto = calcular_impacto_recursivo(item)
     return render(request, 'desarrollo/item_ver.html', {'item': item, 'lista_atributos': lista_atributos, 'fase': fase,
                                                         'proyecto': proyecto, 'desarrollo': Item.ESTADO_DESARROLLO,
-                                                        'estado': Proyecto.ESTADO_EN_EJECUCION})
+                                                        'estado': Proyecto.ESTADO_EN_EJECUCION, 'impacto': impacto})
 
 
 def historial_versiones_item(request, id_proyecto, id_item):
@@ -845,11 +846,12 @@ def votacion_item_en_revision_lineaBase(request, id_item):
     return redirect('desarrollo:verItem', item.fase.proyecto_id, id_item)
 
 
-def calculo_de_impacto(request, id_item):
-    item = Item.objects.get(pk=id_item)
-    impacto = calcular_impacto_recursivo(item)
-    # return HttpResponse('el calculo de impacto para este Item tiene valor de ' + str(impacto))
-    return render(request, 'desarrollo/item_calculo_impacto_popup.html', {'item': item, 'impacto': impacto})
+# en vez de esta vista voy a integrar el calculo de impacto a la vista de ver_item
+# def calculo_de_impacto(request, id_item):
+#     item = Item.objects.get(pk=id_item)
+#     impacto = calcular_impacto_recursivo(item)
+#     # return HttpResponse('el calculo de impacto para este Item tiene valor de ' + str(impacto))
+#     return render(request, 'desarrollo/item_calculo_impacto_popup.html', {'item': item, 'impacto': impacto})
 
 
 def calcular_impacto_recursivo(item):

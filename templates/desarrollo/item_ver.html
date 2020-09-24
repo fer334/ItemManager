@@ -37,9 +37,34 @@
                         <tr>
                             <td>Complejidad</td>
                             <td>{{ item.complejidad }}
-                                <a class="btn btn-outline-primary" href="#"
-                                   onClick="PopupCalculoImp=window.open('{% url 'desarrollo:calculoDeImpacto' item.id %}','PopupCalculoImp','width=600,height=300,top=300,left=750');
-                                   return false;" >Cálculo de Impacto</a>
+                                <a class="btn btn-outline-primary" data-toggle="modal" data-target="#myModal">
+                                    Cálculo de Impacto
+                                </a>
+                                <!-- Modal -->
+                                <div id="myModal" class="modal fade" role="dialog">
+                                    <div class="modal-dialog">
+                                    <!-- Modal content-->
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">Resultado del Cálculo</h4>
+                                                <a class="close btn-outline-danger" data-dismiss="modal">&times;</a>
+                                            </div>
+                                            <div class="modal-body">
+                                                <h5 class="text-info m-3 font-weight-bold" align="middle">
+                                                    El Cálculo de Impacto para el item "{{ item.nombre }}" genera un resultado igual a:
+                                                </h5>
+                                                <div class="alert alert-warning m-3">
+                                                    <h5 align="middle">
+                                                        {{ impacto }}
+                                                    </h5>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Cerrar</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </td>
                         </tr>
                         <tr>
