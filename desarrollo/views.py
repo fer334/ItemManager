@@ -847,13 +847,28 @@ def votacion_item_en_revision_lineaBase(request, id_item):
 
 def calculo_de_impacto(request, id_item):
     item = Item.objects.get(pk=id_item)
+    impacto = calcular_impacto_recursivo(item)
+    return HttpResponse('el calculo de impacto para este Item tiene valor de ' + str(impacto))
+
+
+def calcular_impacto_recursivo(item):
+    """
+    función recursiva para ir sumando la complejidad de todos los hijos y antecesores directos e indirectos de un ítem.
+    Suma su complejidad con la de sus hijos y sucesores y se vuelve a llamar para cada hijo y sucesor
+
+    :param item: el item del cual se sumará su complejidad y la de sus hijos y sucesores
+    :return: returna el impacto que es la suma de complejidades
+    """
     impacto = item.complejidad
     for hijo in item.hijos.all():
-        # nos aseguramos de tener la versión más actual del hijo
-        hijo_actual = Item.objects.filter(id_version=hijo.id_version, estado__regex='^(?!'+Item.ESTADO_DESACTIVADO+')').order_by('id').last()
-        impacto += hijo_actual.complejidad
+        # nos aseguramos de tener la versión más actual del hijo que no esté desactivada
+        hijo_actual = Item.objects.filter(id_version=hijo.id_version,
+                                          estado__regex='^(?!' + Item.ESTADO_DESACTIVADO + ')').order_by('id').last()
+        # al impacto le sumamos el impacto que retorne la llamada recursiva con el hijo de parametro
+        impacto += calcular_impacto_recursivo(hijo_actual)
     for sucesor in item.sucesores.all():
         # regex opcional : ^(((?!Desactivado).)*$)
-        sucesor_actual = Item.objects.filter(id_version=sucesor.id_version, estado__regex='^(?!'+Item.ESTADO_DESACTIVADO+')').order_by('id').last()
-        impacto += sucesor_actual.complejidad
-    return HttpResponse('el calculo de impacto para este Item tiene valor de ' + str(impacto))
+        sucesor_actual = Item.objects.filter(id_version=sucesor.id_version,
+                                             estado__regex='^(?!' + Item.ESTADO_DESACTIVADO + ')').order_by('id').last()
+        impacto += calcular_impacto_recursivo(sucesor_actual)
+    return impacto
