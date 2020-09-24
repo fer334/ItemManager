@@ -806,23 +806,32 @@ def votacion_item_en_revision_desarrollo(request, id_item):
     if item.estado == Item.ESTADO_REVISION:
         item.estado = Item.ESTADO_DESARROLLO
         item.save()
+    def pasar_a_revision(lista_items):
+        for item in lista_items:
+            item_hijo = Item.objects.filter(id_version=item.id_version,
+                                            estado__regex='^(?!' + Item.ESTADO_DESACTIVADO + ')').order_by('id').last()
+            if item_hijo.estado == Item.ESTADO_APROBADO or item_hijo.estado == Item.ESTADO_LINEABASE:
+                item_hijo.estado = Item.ESTADO_REVISION
+                item_hijo.save()
 
     #Luego de pasar el item a desarrollo se debe ver como quedan sus hijos y sucesores
-    for item_hijo in item.hijos.all():
-        if item_hijo.estado == Item.ESTADO_APROBADO or item_hijo.estado == Item.ESTADO_LINEABASE:
-            item_hijo.estado = Item.ESTADO_REVISION
-            item_hijo.save()
-    for item_sucesor in item.sucesores.all():
-        if item_sucesor.estado == Item.ESTADO_APROBADO or item_sucesor.estado == Item.ESTADO_LINEABASE:
-            item_sucesor.estado = Item.ESTADO_REVISION
-            item_sucesor.save()
+    pasar_a_revision(item.hijos.all())
+    pasar_a_revision(item.sucesores.all())
 
+    #Luego se ve si el item pertenece a una linea base y se ajusta los items de esa linea base
     for linea_base in item.lineabase_set.all():
         if linea_base.estado == linea_base.ESTADO_CERRADA:
             #Si marque un item en estado en desarrollo, se debe romper la lb
-            #OBS, los items ya deberian estar en estado ENREVISION
             linea_base.estado = linea_base.ESTADO_ROTA
-
+            linea_base.save()
+            for item in linea_base.items.all():
+                """LOS ITEMS DE LA LINEA BASE SIGUEN LA SIGUIENTE LOGICA
+                LINEA BASE -> APROBADO
+                REVISION -> REVISION
+                """
+                if item.estado == Item.ESTADO_LINEABASE:
+                    item.estado = Item.ESTADO_APROBADO
+                    item.save()
 
 
     return redirect('desarrollo:verItem',  item.fase.proyecto_id, id_item)
