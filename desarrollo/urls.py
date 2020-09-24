@@ -12,6 +12,7 @@ urlpatterns = [
     path('proyectos/<int:id_proyecto>/aprobacion', views.menu_aprobacion, name='menuAprobacion'),
     path('proyectos/<int:id_proyecto>/items/<int:id_item>/reversionar/<int:id_version_anterior>', views.reversionar_item,
          name='reversionarItem'),
+    path('items/<int:id_item>/calculo_impacto', views.calculo_de_impacto, name='calculoDeImpacto'),
     # URLs de David
     path('<str:filtro>', views.index, name='indexDesarrollo'),
     path('proyectos/<int:id_proyecto>/', views.ver_proyecto, name='verProyecto'),

@@ -36,7 +36,9 @@
                         </tr>
                         <tr>
                             <td>Complejidad</td>
-                            <td>{{ item.complejidad }}</td>
+                            <td>{{ item.complejidad }}
+                                <a class="btn btn-outline-primary" href="{% url 'desarrollo:calculoDeImpacto' item.id %}" >Cálculo de Impacto</a>
+                            </td>
                         </tr>
                         <tr>
                             <td>Version</td>

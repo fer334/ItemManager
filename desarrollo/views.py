@@ -709,7 +709,7 @@ def cerrar_fase(request, id_proyecto):
     # Para mostrar el numero correcto de la fase
     for i, fase in enumerate(fases):
         fase.nro_de_fase = i + 1
-        fase.cerrable=False
+        fase.cerrable = False
 
     # Ver cual fase se puede cerrar
     for i, fase in enumerate(fases):
@@ -760,23 +760,23 @@ def cerrar_fase(request, id_proyecto):
         # Comprobacion de que todos los items dentro de la fase tengan antecedentes
         # se excluye de la condicion a la fase 1
         todos_tienen_antecedentes = True
-        items_sin_relacion_directa=[]
+        items_sin_relacion_directa = []
         for item in items_de_esta_fase:
             if len(item.antecesores.all()) == 0:
                 items_sin_relacion_directa.append(item)
 
         for itema in items_sin_relacion_directa:
-            itema.tiene_rel_ind=False
-            todos_los_ancestros_del_itema=itema.padres.all()
+            itema.tiene_rel_ind = False
+            todos_los_ancestros_del_itema = itema.padres.all()
             for itemb in todos_los_ancestros_del_itema:
                 todos_los_ancestros_del_itema.union(itemb.padres.all())
             for itemb in todos_los_ancestros_del_itema:
                 if len(itemb.antecesores.all()) != 0:
-                    itema.tiene_rel_ind=True
+                    itema.tiene_rel_ind = True
                     break
         for item in items_sin_relacion_directa:
             if not item.tiene_rel_ind:
-                todos_tienen_antecedentes=False
+                todos_tienen_antecedentes = False
         if i == 0:
             todos_tienen_antecedentes = True
         if not todos_tienen_antecedentes:
@@ -807,7 +807,7 @@ def votacion_item_en_revision_desarrollo(request, id_item):
         item.estado = Item.ESTADO_DESARROLLO
         item.save()
 
-    return redirect('desarrollo:verItem',  item.fase.proyecto_id, id_item)
+    return redirect('desarrollo:verItem', item.fase.proyecto_id, id_item)
 
 
 def votacion_item_en_revision_aprobado(request, id_item):
@@ -824,7 +824,7 @@ def votacion_item_en_revision_aprobado(request, id_item):
         item.estado = Item.ESTADO_APROBADO
         item.save()
 
-    return redirect('desarrollo:verItem',  item.fase.proyecto_id, id_item)
+    return redirect('desarrollo:verItem', item.fase.proyecto_id, id_item)
 
 
 def votacion_item_en_revision_lineaBase(request, id_item):
@@ -843,3 +843,17 @@ def votacion_item_en_revision_lineaBase(request, id_item):
         item.save()
 
     return redirect('desarrollo:verItem', item.fase.proyecto_id, id_item)
+
+
+def calculo_de_impacto(request, id_item):
+    item = Item.objects.get(pk=id_item)
+    impacto = item.complejidad
+    for hijo in item.hijos.all():
+        # nos aseguramos de tener la versión más actual del hijo
+        hijo_actual = Item.objects.filter(id_version=hijo.id_version, estado__regex='^(?!'+Item.ESTADO_DESACTIVADO+')').order_by('id').last()
+        impacto += hijo_actual.complejidad
+    for sucesor in item.sucesores.all():
+        # regex opcional : ^(((?!Desactivado).)*$)
+        sucesor_actual = Item.objects.filter(id_version=sucesor.id_version, estado__regex='^(?!'+Item.ESTADO_DESACTIVADO+')').order_by('id').last()
+        impacto += sucesor_actual.complejidad
+    return HttpResponse('el calculo de impacto para este Item tiene valor de ' + str(impacto))
