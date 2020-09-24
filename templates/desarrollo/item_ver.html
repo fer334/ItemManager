@@ -86,7 +86,6 @@
                 {% if item.estado == 'En Revision' %}
                     <a class="btn btn-primary" href="{% url 'desarrollo:votacionItem' item.id %}" >En Desarrollo</a>
                     <a class="btn btn-info" href="{% url 'desarrollo:votacionItem2' item.id %}">Aprobar</a>
-                    <a class="btn btn-success" href="{% url 'desarrollo:votacionItem3' item.id %}" >En Linea Base</a>
                 {% endif %}
 
             </div>

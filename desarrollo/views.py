@@ -807,6 +807,24 @@ def votacion_item_en_revision_desarrollo(request, id_item):
         item.estado = Item.ESTADO_DESARROLLO
         item.save()
 
+    #Luego de pasar el item a desarrollo se debe ver como quedan sus hijos y sucesores
+    for item_hijo in item.hijos.all():
+        if item_hijo.estado == Item.ESTADO_APROBADO or item_hijo.estado == Item.ESTADO_LINEABASE:
+            item_hijo.estado = Item.ESTADO_REVISION
+            item_hijo.save()
+    for item_sucesor in item.sucesores.all():
+        if item_sucesor.estado == Item.ESTADO_APROBADO or item_sucesor.estado == Item.ESTADO_LINEABASE:
+            item_sucesor.estado = Item.ESTADO_REVISION
+            item_sucesor.save()
+
+    for linea_base in item.lineabase_set.all():
+        if linea_base.estado == linea_base.ESTADO_CERRADA:
+            #Si marque un item en estado en desarrollo, se debe romper la lb
+            #OBS, los items ya deberian estar en estado ENREVISION
+            linea_base.estado = linea_base.ESTADO_ROTA
+
+
+
     return redirect('desarrollo:verItem',  item.fase.proyecto_id, id_item)
 
 
@@ -823,6 +841,14 @@ def votacion_item_en_revision_aprobado(request, id_item):
     if item.estado == Item.ESTADO_REVISION:
         item.estado = Item.ESTADO_APROBADO
         item.save()
+    #TODO Muchas cosas jeje
+    for linea_base in item.lineabase_set.all():
+        if linea_base.estado == linea_base.ESTADO_CERRADA:
+            # Si aprobe todos los items de la LB, todos pasan a estado EN LB
+            if len(linea_base.items.filter(estado=Item.ESTADO_APROBADO)) == len(linea_base.items.all()):
+                for item in linea_base.items.all():
+                    item.estado = Item.ESTADO_LINEABASE
+                    item.save()
 
     return redirect('desarrollo:verItem',  item.fase.proyecto_id, id_item)
 
