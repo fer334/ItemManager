@@ -18,9 +18,11 @@
                                 </button>
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                     {% for lb in fase.lineabase_set.all %}
-                                        <a class="dropdown-item" role="button" href="{% url 'configuracion:verLineaBase' lb.id %}"  >
-                                            Linea Base {{ lb.id }}
-                                        </a>
+                                        {% if lb.estado == lb.ESTADO_CERRADA %}
+                                            <a class="dropdown-item" role="button" href="{% url 'configuracion:verLineaBase' lb.id %}"  >
+                                                Linea Base {{ lb.id }}
+                                            </a>
+                                        {% endif %}
                                     {% endfor %}
                                 </div>
                             </div>
