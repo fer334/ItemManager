@@ -848,7 +848,8 @@ def votacion_item_en_revision_lineaBase(request, id_item):
 def calculo_de_impacto(request, id_item):
     item = Item.objects.get(pk=id_item)
     impacto = calcular_impacto_recursivo(item)
-    return HttpResponse('el calculo de impacto para este Item tiene valor de ' + str(impacto))
+    # return HttpResponse('el calculo de impacto para este Item tiene valor de ' + str(impacto))
+    return render(request, 'desarrollo/item_calculo_impacto_popup.html', {'item': item, 'impacto': impacto})
 
 
 def calcular_impacto_recursivo(item):
