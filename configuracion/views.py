@@ -183,10 +183,12 @@ def votar_solicitud(request, id_proyecto, id_solicitud, voto):
         if votos_favor > proyecto.cant_comite / 2:
             solicitud.linea_base.estado = LineaBase.ESTADO_ROTA
             solicitud.linea_base.save()
-            for item in solicitud.items_a_modificar.all():
-                item.estado = Item.ESTADO_REVISION
+            for item in solicitud.linea_base.items.all():
+                if item in solicitud.items_a_modificar.all():
+                    item.estado = Item.ESTADO_REVISION
+                else:
+                    item.estado = Item.ESTADO_APROBADO
                 item.save()
-
         solicitud.solicitud_activa = False
         solicitud.save()
 
