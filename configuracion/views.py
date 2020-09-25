@@ -6,6 +6,7 @@ from .models import LineaBase, Solicitud, VotoRuptura
 from desarrollo.models import Item
 from login.models import Usuario
 from django.utils.timezone import now
+from desarrollo.views import calcular_impacto_recursivo
 
 
 def index(request, filtro):
@@ -142,7 +143,9 @@ def solicitud_ruptura(request, id_lineabase):
     :rtype: render
     """
     lineabase = LineaBase.objects.get(pk=id_lineabase)
-
+    lista_calculo_impacto = []
+    for item_en_lb in lineabase.items.all():
+        lista_calculo_impacto.append(calcular_impacto_recursivo(item_en_lb))
     if request.POST:
         solicitud = Solicitud(
             solicitado_por=request.user,
@@ -155,11 +158,13 @@ def solicitud_ruptura(request, id_lineabase):
             for item in request.POST
             if len(item.split('-')) > 1
         ]
+
         for item in items_seleccionados:
             solicitud.items_a_modificar.add(item)
         return redirect('configuracion:verLineaBase', id_lineabase)
 
-    return render(request, 'configuracion/solicitud_ruptura.html', {'lineabase': lineabase})
+    return render(request, 'configuracion/solicitud_ruptura.html', {'lineabase': lineabase,
+                                                                    'lista_impacto': lista_calculo_impacto})
 
 
 def votar_solicitud(request, id_proyecto, id_solicitud, voto):
