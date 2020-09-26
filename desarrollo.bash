@@ -11,10 +11,11 @@ git clone https://github.com/fer334/ItemManager/ || { echo "Error al clonar el r
 echo "Ingresando al proyecto"
 cd ItemManager || { echo "El directorio ItemManager no existe" ; exit; }
 
-echo "Creando el entorno virtual e instalando las librerias necesarias"
-pipenv install --dev || { echo "Error al crear el entorno virtual verfique la instalacion de pipenv"; exit;}
+ echo "Creando el entorno virtual e instalando las librerias necesarias"
+ pipenv install --dev || { echo "Error al crear el entorno virtual verfique la instalacion de pipenv"; exit;}
 
 echo "Creando la base de datos itemmanagerdb (necesita permisos de administrador)"
+
 sudo -u postgres PGPASSWORD=postgres createdb itemmanagerdb --username=postgres --host=localhost --port=5432 || {
   echo 'Posiblemente la base de datos itemmanagerdb ya exite, favor confirme esto con "si"'
   read -r -n 2 Respuesta;
@@ -25,8 +26,6 @@ sudo -u postgres PGPASSWORD=postgres createdb itemmanagerdb --username=postgres 
   fi
 }
 
-# TODO poblar la bd
-
 echo "Limpiando cache de migraciones"
 ./clean_migrations.bash
 
@@ -35,6 +34,13 @@ pipenv run ./manage.py makemigrations
 
 echo "Migrando"
 pipenv run ./manage.py migrate
+
+echo "Poblando la base de datos"
+sudo PGPASSWORD=postgres psql -U createdb itemmanagerdb --username=postgres --host=localhost --port=5432 -f poblacion_bd.sql ||{
+    pwd
+    echo "Error al poblar la base de Datos";
+    exit;
+}
 
 echo "Corriendo el servidor"
 pipenv run ./manage.py runserver
