@@ -6,7 +6,7 @@ from .models import LineaBase, Solicitud, VotoRuptura
 from desarrollo.models import Item
 from login.models import Usuario
 from django.utils.timezone import now
-from desarrollo.views import calcular_impacto_recursivo
+from desarrollo.views import calcular_impacto_recursivo, crear_lista_relaciones_del_proyecto
 
 
 def index(request, filtro):
@@ -240,3 +240,70 @@ def cerrar_proyecto(request, id_proyecto):
             return redirect('login:index')
 
     return render(request, 'configuracion/proyecto_cerrar.html', content)
+
+
+def trazabilidad(request, id_proyecto, id_item):
+    """
+    Vista que se encarga de calcular y mostrar la gráfica de trazabilidad de una determinada variable
+
+    :param request: objeto tipo diccionario que permite acceder a datos
+    :param id_proyecto: identificador del proyecto actual
+    :param id_item: identificador del ítem sobre el cual se calculará la trazabilidad
+    :return: objeto que renderea item_trazabilidad.html
+    :rtype: render
+    """
+    proyecto = Proyecto.objects.get(pk=id_proyecto)
+    fases = proyecto.fase_set.all().order_by('id')
+    item = Item.objects.get(pk=id_item)
+    relaciones = crear_lista_relaciones_del_proyecto(id_proyecto)
+    # primero creamos una lista que contiene solo al primer item
+    items = [item]
+    # luego con funciones recursivas vamos añadiendo los demás elementos a la lista
+    items += ramas_recursivas_trazabilidad(item, 'izquierda', item.antecesores.all())
+    items += ramas_recursivas_trazabilidad(item, 'izquierda', item.padres.all())
+    items += ramas_recursivas_trazabilidad(item, 'derecha', item.sucesores.all())
+    items += ramas_recursivas_trazabilidad(item, 'derecha', item.hijos.all())
+    return render(request, 'configuracion/item_trazabilidad.html', {'item': item, 'fases': fases, 'lista_items': items,
+                                                                    'desactivado': Item.ESTADO_DESACTIVADO,
+                                                                    'relaciones': relaciones})
+
+
+def ramas_recursivas_trazabilidad(item, caso, lista):
+    """
+    función recursiva que se va expandiendo y añadiendo items a la lista ya sea hacia la izquierda o hacia
+    la derecha del arbol de relaciones de un ítem determinado
+
+    :param item: item sobre el que se calculara sus items relacionado
+    :param caso: el caso indica si estamos viendo las ramificaciones de la derecha o las de la izquierda
+    :param lista: la lista ya sea de antecesores, sucesores, padres o hijos del ítem elegido
+    :return: lista de items
+    """
+    lista_items = []
+    for antecesor in lista:
+        # nos aseguramos de tener la versión más actual del hijo que no esté desactivada
+        item_actual = Item.objects.filter(id_version=antecesor.id_version,
+                                          estado__regex='^(?!' + Item.ESTADO_DESACTIVADO + ')').order_by(
+            'id').last()
+        lista_items.append(item_actual)
+        # sumamos las listas para luego retornarlas
+        if caso == 'izquierda':
+            lista_items += ramas_recursivas_trazabilidad(item_actual, caso, item_actual.antecesores.all())
+            lista_items += ramas_recursivas_trazabilidad(item_actual, caso, item_actual.padres.all())
+        elif caso == 'derecha':
+            lista_items += ramas_recursivas_trazabilidad(item_actual, caso, item_actual.sucesores.all())
+            lista_items += ramas_recursivas_trazabilidad(item_actual, caso, item_actual.hijos.all())
+    return lista_items
+
+# posible implementación para la parte gráfica de ver items en las fases con sus relaciones
+# def trazabilidad(request, id_proyecto, id_item):
+#     proyecto = Proyecto.objects.get(pk=id_proyecto)
+#     fases = proyecto.fase_set.all().order_by('id')
+#     item = Item.objects.get(pk=id_item)
+#     relaciones = crear_lista_relaciones_del_proyecto(id_proyecto)
+#     items = []
+#     for fase in proyecto.fase_set.all():
+#         for item in fase.item_set.all():
+#             items.append(item)
+#     return render(request, 'configuracion/item_trazabilidad.html', {'item': item,'fases': fases, 'lista_items': items,
+#                                                                     'desactivado': Item.ESTADO_DESACTIVADO,
+#                                                                     'relaciones': relaciones})

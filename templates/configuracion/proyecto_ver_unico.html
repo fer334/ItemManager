@@ -41,7 +41,7 @@
                                         {% if item.estado == item.ESTADO_APROBADO %}
                                             <li class="list-group">
                                                 <a class="align-baseline"
-                                                   href="#" >
+                                                   href="{% url 'configuracion:trazabilidad' proyecto.id item.id %}" >
                                                    {{ item.tipo_item.prefijo }} {% if item.numeracion < 10 %}0{% endif %}{{ item.numeracion    }}-{{ item.nombre }}
                                                 </a>
                                             </li>
@@ -53,7 +53,7 @@
                                         {% if item.estado == item.ESTADO_LINEABASE%}
                                             <li class="list-group">
                                                 <a class="align-baseline"
-                                                   href="#" >
+                                                   href="{% url 'configuracion:trazabilidad' proyecto.id item.id %}" >
                                                    {{ item.tipo_item.prefijo }} {% if item.numeracion < 10 %}0{% endif %}{{ item.numeracion    }}-{{ item.nombre }}
                                                 </a>
                                             </li>

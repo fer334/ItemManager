@@ -421,6 +421,15 @@ def relacionar_item(request, id_proyecto):
     return render(request, "desarrollo/relacion_crear.html", context)
 
 
+# Clase auxiliar para adecuar al algoritmo
+class Relacion:
+    """
+    Clase auxiliar que indica una relación
+    """
+    inicio = Item()
+    fin = Item()
+
+
 def desactivar_relacion_item(request, id_proyecto):
     """
     Metodo que se encarga de renderizar la vista desactivar relacion de items,
@@ -439,11 +448,6 @@ def desactivar_relacion_item(request, id_proyecto):
     #     fin__fase__proyecto_id=id_proyecto,
     # )
     mensaje_error = ""
-
-    # Clase auxiliar para adecuar al algoritmo
-    class Relacion:
-        inicio = Item()
-        fin = Item()
 
     if request.method == "POST":
         clave = request.POST['desactivar']
@@ -477,6 +481,24 @@ def desactivar_relacion_item(request, id_proyecto):
             nuevo_item_inicio.save()
             nuevo_item_fin.save()
 
+    relaciones = crear_lista_relaciones_del_proyecto(id_proyecto)
+
+    content = {
+        'relaciones': relaciones,
+        'id_proyecto': id_proyecto,
+        'mensaje_error': mensaje_error,
+    }
+    return render(request, 'desarrollo/item_des_relacion.html', content)
+
+
+def crear_lista_relaciones_del_proyecto(id_proyecto):
+    """
+    función auxiliar que crea una lista de todas las relaciones de un proyecto utilizando la clase auxiliar
+    'relaciones'
+
+    :param id_proyecto: identificador del proyecto
+    :return: lista de objetos relacion que son las relaciones del proyecto
+    """
     # codigo para ver los ítems actuales de un proyecto
     items = []
     proyecto = Proyecto.objects.get(id=id_proyecto)
@@ -493,12 +515,7 @@ def desactivar_relacion_item(request, id_proyecto):
                 relacion.inicio = inicio
                 relacion.fin = fin
                 relaciones.append(relacion)
-    content = {
-        'relaciones': relaciones,
-        'id_proyecto': id_proyecto,
-        'mensaje_error': mensaje_error,
-    }
-    return render(request, 'desarrollo/item_des_relacion.html', content)
+    return relaciones
 
 
 def versionar_item(item, usuario):

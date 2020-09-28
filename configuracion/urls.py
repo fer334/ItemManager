@@ -6,6 +6,7 @@ app_name = 'configuracion'
 urlpatterns = [
     # URLs de Mati
     path('<str:filtro>', views.index, name='indexConfiguracion'),
+    path('proyectos/<int:id_proyecto>/item/<int:id_item>/trazabilidad', views.trazabilidad, name='trazabilidad'),
 
     # URLs de David
     path('proyectos/<int:id_proyecto>/', views.ver_proyecto, name='verProyecto'),
