@@ -57,10 +57,15 @@
                                     <td>{{ atributo.nombre }}</td>
                                     <td>
                                         {% if atributo.tipo == 'file' %}
-                                            <a href="{{ atributo.valor }}" target="_blank">Archivo</a>
+                                            {% if not atributo.valor %}
+                                                <a href="#" class="btn disabled">Archivo (vacio)</a>
+                                                {% else %}
+                                                <a href="{{ atributo.valor }}" target="_blank" >Archivo</a>
+                                                {% endif %}
                                         {% else %}
                                             {{ atributo.valor }}
                                         {% endif %}
+
                                     </td>
                                 </tr>
                             {% endfor %}
