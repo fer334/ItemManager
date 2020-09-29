@@ -70,7 +70,11 @@
                                             <ul>
                                                 {% for atributo in lista_atributos %}
                                                     {% if atributo.tipo == 'file' %}
-                                                        <li><a href="{{ atributo.valor }}" target="_blank">Archivo</a></li>
+                                                        {% if not atributo.valor %}
+                                                            <li><a href="#" class="btn disabled">Archivo (vacio)</a></li>
+                                                            {% else %}
+                                                            <li><a href="{{ atributo.valor }}" target="_blank">Archivo</a></li>
+                                                            {% endif %}
                                                     {% else %}
                                                         <li>{{ atributo.valor }}</li>
                                                     {% endif %}
@@ -82,7 +86,11 @@
                                             <ul>
                                                 {% for atributo in item_anterior.atributoparticular_set.all %}
                                                     {% if atributo.tipo == 'file' %}
-                                                        <li><a href="{{ atributo.valor }}" target="_blank">Archivo</a></li>
+                                                        {% if not atributo.valor %}
+                                                            <li><a href="#" class="btn disabled">Archivo (vacio)</a></li>
+                                                            {% else %}
+                                                            <li><a href="{{ atributo.valor }}" target="_blank">Archivo</a></li>
+                                                            {% endif %}
                                                     {% else %}
                                                         <li>{{ atributo.valor }}</li>
                                                     {% endif %}
