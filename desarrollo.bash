@@ -6,13 +6,12 @@
 #### pipenv
 ## postgres
 
-# todo usar parametros
-dbname="itemmanagerdb"
-username="postgres"
-pass="postgres"
-filename="poblacion_bd.sql"
-port="5432"
-gitclone="false"
+dbname="$1"
+username="$2"
+pass="$3"
+filename="$4"
+port="$5"
+gitclone="$6"
 
 if [[ $gitclone == "true" ]]
 then
@@ -40,8 +39,8 @@ sudo -u postgres PGPASSWORD=$pass createdb $dbname --username=$username --host=l
 
 echo "Modificando las configuraciones de django"
 sed -i -e "0,/'NAME': 'itemmanagerdb'/ s/itemmanagerdb/$dbname/" ItemManager/settings.py
-sed -i -e "0,/'USER': 'postgres'/ s/postgres/$username/" ItemManager/settings.py
-sed -i -e "0,/'PASSWORD': 'postgres'/ s/postgres/$pass/" ItemManager/settings.py
+sed -i -e "0,/'USER': 'postgres'/ s/postgres/$username/" ItemManager/settings.py 
+sed -i -e "0,/'PASSWORD': 'postgres'/ s/postgres/$pass/" ItemManager/settings.py 
 
 
 echo "Limpiando cache de migraciones"
@@ -62,3 +61,4 @@ sudo PGPASSWORD=$pass psql -U createdb $dbname --username=$username --host=local
 
 echo "Corriendo el servidor"
 pipenv run ./manage.py runserver
+
