@@ -6,6 +6,7 @@ app_name = 'configuracion'
 urlpatterns = [
     # URLs de Mati
     path('<str:filtro>', views.index, name='indexConfiguracion'),
+    path('proyectos/<int:id_proyecto>/item/<int:id_item>/trazabilidad', views.trazabilidad, name='trazabilidad'),
 
     # URLs de David
     path('proyectos/<int:id_proyecto>/', views.ver_proyecto, name='verProyecto'),
@@ -13,6 +14,7 @@ urlpatterns = [
     path('proyectos/fase/lineabase/<int:id_lineabase>', views.ver_linea_base, name='verLineaBase'),
     path('proyectos/<int:id_proyecto>/comite/', views.comite_index, name='verIndexComite'),
     path('proyectos/<int:id_proyecto>/comite/<int:id_solicitud>/votar/<int:voto>', views.votar_solicitud, name='votarSolicitud'),
+    path('proyectos/<int:id_proyecto>/cerrar', views.cerrar_proyecto, name='cerrarProyecto'),
     # URLs de Fer
     path('lineabase/<int:id_lineabase>', views.solicitud_ruptura, name='solicitudRuptura'),
 

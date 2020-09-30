@@ -93,9 +93,10 @@ def ver_item(request, id_proyecto, id_item):
     lista_atributos = AtributoParticular.objects.filter(item=item)
     fase = item.fase
     proyecto = Proyecto.objects.get(pk=id_proyecto)
+    impacto = calcular_impacto_recursivo(item)
     return render(request, 'desarrollo/item_ver.html', {'item': item, 'lista_atributos': lista_atributos, 'fase': fase,
                                                         'proyecto': proyecto, 'desarrollo': Item.ESTADO_DESARROLLO,
-                                                        'estado': Proyecto.ESTADO_EN_EJECUCION})
+                                                        'estado': Proyecto.ESTADO_EN_EJECUCION, 'impacto': impacto})
 
 
 def historial_versiones_item(request, id_proyecto, id_item):
@@ -420,6 +421,15 @@ def relacionar_item(request, id_proyecto):
     return render(request, "desarrollo/relacion_crear.html", context)
 
 
+# Clase auxiliar para adecuar al algoritmo
+class Relacion:
+    """
+    Clase auxiliar que indica una relación
+    """
+    inicio = Item()
+    fin = Item()
+
+
 def desactivar_relacion_item(request, id_proyecto):
     """
     Metodo que se encarga de renderizar la vista desactivar relacion de items,
@@ -438,11 +448,6 @@ def desactivar_relacion_item(request, id_proyecto):
     #     fin__fase__proyecto_id=id_proyecto,
     # )
     mensaje_error = ""
-
-    # Clase auxiliar para adecuar al algoritmo
-    class Relacion:
-        inicio = Item()
-        fin = Item()
 
     if request.method == "POST":
         clave = request.POST['desactivar']
@@ -476,6 +481,24 @@ def desactivar_relacion_item(request, id_proyecto):
             nuevo_item_inicio.save()
             nuevo_item_fin.save()
 
+    relaciones = crear_lista_relaciones_del_proyecto(id_proyecto)
+
+    content = {
+        'relaciones': relaciones,
+        'id_proyecto': id_proyecto,
+        'mensaje_error': mensaje_error,
+    }
+    return render(request, 'desarrollo/item_des_relacion.html', content)
+
+
+def crear_lista_relaciones_del_proyecto(id_proyecto):
+    """
+    función auxiliar que crea una lista de todas las relaciones de un proyecto utilizando la clase auxiliar
+    'relaciones'
+
+    :param id_proyecto: identificador del proyecto
+    :return: lista de objetos relacion que son las relaciones del proyecto
+    """
     # codigo para ver los ítems actuales de un proyecto
     items = []
     proyecto = Proyecto.objects.get(id=id_proyecto)
@@ -492,12 +515,7 @@ def desactivar_relacion_item(request, id_proyecto):
                 relacion.inicio = inicio
                 relacion.fin = fin
                 relaciones.append(relacion)
-    content = {
-        'relaciones': relaciones,
-        'id_proyecto': id_proyecto,
-        'mensaje_error': mensaje_error,
-    }
-    return render(request, 'desarrollo/item_des_relacion.html', content)
+    return relaciones
 
 
 def versionar_item(item, usuario):
@@ -709,7 +727,7 @@ def cerrar_fase(request, id_proyecto):
     # Para mostrar el numero correcto de la fase
     for i, fase in enumerate(fases):
         fase.nro_de_fase = i + 1
-        fase.cerrable=False
+        fase.cerrable = False
 
     # Ver cual fase se puede cerrar
     for i, fase in enumerate(fases):
@@ -760,23 +778,23 @@ def cerrar_fase(request, id_proyecto):
         # Comprobacion de que todos los items dentro de la fase tengan antecedentes
         # se excluye de la condicion a la fase 1
         todos_tienen_antecedentes = True
-        items_sin_relacion_directa=[]
+        items_sin_relacion_directa = []
         for item in items_de_esta_fase:
             if len(item.antecesores.all()) == 0:
                 items_sin_relacion_directa.append(item)
 
         for itema in items_sin_relacion_directa:
-            itema.tiene_rel_ind=False
-            todos_los_ancestros_del_itema=itema.padres.all()
+            itema.tiene_rel_ind = False
+            todos_los_ancestros_del_itema = itema.padres.all()
             for itemb in todos_los_ancestros_del_itema:
                 todos_los_ancestros_del_itema.union(itemb.padres.all())
             for itemb in todos_los_ancestros_del_itema:
                 if len(itemb.antecesores.all()) != 0:
-                    itema.tiene_rel_ind=True
+                    itema.tiene_rel_ind = True
                     break
         for item in items_sin_relacion_directa:
             if not item.tiene_rel_ind:
-                todos_tienen_antecedentes=False
+                todos_tienen_antecedentes = False
         if i == 0:
             todos_tienen_antecedentes = True
         if not todos_tienen_antecedentes:
@@ -806,8 +824,35 @@ def votacion_item_en_revision_desarrollo(request, id_item):
     if item.estado == Item.ESTADO_REVISION:
         item.estado = Item.ESTADO_DESARROLLO
         item.save()
+    def pasar_a_revision(lista_items):
+        for item in lista_items:
+            item_hijo = Item.objects.filter(id_version=item.id_version,
+                                            estado__regex='^(?!' + Item.ESTADO_DESACTIVADO + ')').order_by('id').last()
+            if item_hijo.estado == Item.ESTADO_APROBADO or item_hijo.estado == Item.ESTADO_LINEABASE:
+                item_hijo.estado = Item.ESTADO_REVISION
+                item_hijo.save()
 
-    return redirect('desarrollo:verItem',  item.fase.proyecto_id, id_item)
+    #Luego de pasar el item a desarrollo se debe ver como quedan sus hijos y sucesores
+    pasar_a_revision(item.hijos.all())
+    pasar_a_revision(item.sucesores.all())
+
+    #Luego se ve si el item pertenece a una linea base y se ajusta los items de esa linea base
+    for linea_base in item.lineabase_set.all():
+        if linea_base.estado == linea_base.ESTADO_CERRADA:
+            #Si marque un item en estado en desarrollo, se debe romper la lb
+            linea_base.estado = linea_base.ESTADO_ROTA
+            linea_base.save()
+            for item in linea_base.items.all():
+                """LOS ITEMS DE LA LINEA BASE SIGUEN LA SIGUIENTE LOGICA
+                LINEA BASE -> APROBADO
+                REVISION -> REVISION
+                """
+                if item.estado == Item.ESTADO_LINEABASE:
+                    item.estado = Item.ESTADO_APROBADO
+                    item.save()
+
+
+    return redirect('desarrollo:verItem', item.fase.proyecto_id, id_item)
 
 
 def votacion_item_en_revision_aprobado(request, id_item):
@@ -823,8 +868,16 @@ def votacion_item_en_revision_aprobado(request, id_item):
     if item.estado == Item.ESTADO_REVISION:
         item.estado = Item.ESTADO_APROBADO
         item.save()
+    #TODO Muchas cosas jeje
+    for linea_base in item.lineabase_set.all():
+        if linea_base.estado == linea_base.ESTADO_CERRADA:
+            # Si aprobe todos los items de la LB, todos pasan a estado EN LB
+            if len(linea_base.items.filter(estado=Item.ESTADO_APROBADO)) == len(linea_base.items.all()):
+                for item in linea_base.items.all():
+                    item.estado = Item.ESTADO_LINEABASE
+                    item.save()
 
-    return redirect('desarrollo:verItem',  item.fase.proyecto_id, id_item)
+    return redirect('desarrollo:verItem', item.fase.proyecto_id, id_item)
 
 
 def votacion_item_en_revision_lineaBase(request, id_item):
@@ -843,3 +896,34 @@ def votacion_item_en_revision_lineaBase(request, id_item):
         item.save()
 
     return redirect('desarrollo:verItem', item.fase.proyecto_id, id_item)
+
+
+# en vez de esta vista voy a integrar el calculo de impacto a la vista de ver_item
+# def calculo_de_impacto(request, id_item):
+#     item = Item.objects.get(pk=id_item)
+#     impacto = calcular_impacto_recursivo(item)
+#     # return HttpResponse('el calculo de impacto para este Item tiene valor de ' + str(impacto))
+#     return render(request, 'desarrollo/item_calculo_impacto_popup.html', {'item': item, 'impacto': impacto})
+
+
+def calcular_impacto_recursivo(item):
+    """
+    función recursiva para ir sumando la complejidad de todos los hijos y antecesores directos e indirectos de un ítem.
+    Suma su complejidad con la de sus hijos y sucesores y se vuelve a llamar para cada hijo y sucesor
+
+    :param item: el item del cual se sumará su complejidad y la de sus hijos y sucesores
+    :return: returna el impacto que es la suma de complejidades
+    """
+    impacto = item.complejidad
+    for hijo in item.hijos.all():
+        # nos aseguramos de tener la versión más actual del hijo que no esté desactivada
+        hijo_actual = Item.objects.filter(id_version=hijo.id_version,
+                                          estado__regex='^(?!' + Item.ESTADO_DESACTIVADO + ')').order_by('id').last()
+        # al impacto le sumamos el impacto que retorne la llamada recursiva con el hijo de parametro
+        impacto += calcular_impacto_recursivo(hijo_actual)
+    for sucesor in item.sucesores.all():
+        # regex opcional : ^(((?!Desactivado).)*$)
+        sucesor_actual = Item.objects.filter(id_version=sucesor.id_version,
+                                             estado__regex='^(?!' + Item.ESTADO_DESACTIVADO + ')').order_by('id').last()
+        impacto += calcular_impacto_recursivo(sucesor_actual)
+    return impacto

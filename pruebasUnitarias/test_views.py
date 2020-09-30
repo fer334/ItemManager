@@ -21,7 +21,7 @@ from desarrollo.views import solicitud_aprobacion, aprobar_item, desaprobar_item
     votacion_item_en_revision_lineaBase, cerrar_fase
 
 from configuracion.models import LineaBase, Solicitud
-from configuracion.views import crear_linea_base, ver_linea_base, solicitud_ruptura, votar_solicitud
+from configuracion.views import crear_linea_base, ver_linea_base, solicitud_ruptura, votar_solicitud, cerrar_proyecto
 import pytest
 
 
@@ -937,7 +937,6 @@ class TestViews(TestCase):
         cu_28_2 = Item.objects.get(pk=cu_28_2.id)
         self.assertEqual(cu_28_2.estado, Item.ESTADO_APROBADO, 'No se puede realizar la accion ')
 
-
     def test_votacion_item_en_revision_linea_base(self):
         """
         CU 28: Votación de modificación de items en estado de "En revisión". Iteracion 4
@@ -954,3 +953,20 @@ class TestViews(TestCase):
         votacion_item_en_revision_lineaBase(request, id_item=cu_28_3.id)
         cu_28_3 = Item.objects.get(pk=cu_28_3.id)
         self.assertEqual(cu_28_3.estado, Item.ESTADO_LINEABASE, 'No se puede realizar la accion ')
+
+    def test_cerrar_proyecto(self):
+        """
+        CU 53: Se crean un proyecto y una fase ficticias y luego se llama a la vista cerrar proyecto, finalmente
+        se verifica si el estado del proyecto cambio.
+
+        :return: Retrona true si el estado del proyecto es finalizado
+        """
+        proyecto_nuevo = Proyecto.objects.create(nombre='proyectoTestCerrar', fecha_inicio=timezone.now().date(),
+                                               numero_fases=1, cant_comite=3, gerente=self.usuario.id)
+        fase_nueva = Fase.objects.create(nombre='Fase de prueba', proyecto=proyecto_nuevo, estado=Fase.FASE_ESTADO_CERRADA)
+        path = reverse('configuracion:cerrarProyecto', args=[proyecto_nuevo.id])
+        request = RequestFactory().post(path)
+        request.user = self.usuario
+        cerrar_proyecto(request, id_proyecto=proyecto_nuevo.id)
+        proyecto_nuevo = Proyecto.objects.get(pk=proyecto_nuevo.id)
+        self.assertEqual(Proyecto.ESTADO_FINALIZADO, proyecto_nuevo.estado, 'El proyecto no se pudo finalizar')

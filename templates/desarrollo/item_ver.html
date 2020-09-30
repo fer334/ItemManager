@@ -36,7 +36,36 @@
                         </tr>
                         <tr>
                             <td>Complejidad</td>
-                            <td>{{ item.complejidad }}</td>
+                            <td>{{ item.complejidad }}
+                                <a class="btn btn-outline-primary" data-toggle="modal" data-target="#myModal">
+                                    Cálculo de Impacto
+                                </a>
+                                <!-- Modal -->
+                                <div id="myModal" class="modal fade" role="dialog">
+                                    <div class="modal-dialog">
+                                    <!-- Modal content-->
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">Resultado del Cálculo</h4>
+                                                <a class="close btn-outline-danger" data-dismiss="modal">&times;</a>
+                                            </div>
+                                            <div class="modal-body">
+                                                <h5 class="text-info m-3 font-weight-bold" align="middle">
+                                                    El Cálculo de Impacto para el item "{{ item.nombre }}" genera un resultado igual a:
+                                                </h5>
+                                                <div class="alert alert-warning m-3">
+                                                    <h5 align="middle">
+                                                        {{ impacto }}
+                                                    </h5>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Cerrar</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
                         </tr>
                         <tr>
                             <td>Version</td>
@@ -75,7 +104,7 @@
                     <a class="btn btn-info" href="{% url 'desarrollo:editarItem' proyecto.id item.id%}">Editar</a>
 
                     <a class="btn btn-success" href="{% url 'desarrollo:solicitarAprobacion' item.id %}" >Solicitar Aprobación</a>
-                    {% if item.sucesores.count != 0 and item.hijos.count != 0 %}
+                    {% if item.sucesores.count != 0 or item.hijos.count != 0 %}
                         <button type="button" class="btn btn-secondary" onclick="showAlert()">Desactivar Ítem</button>
                     {% else %}
                         <a class="btn btn-danger" href="{% url 'desarrollo:desactivarItem' proyecto.id item.id %}">Desactivar Ítem</a>
@@ -85,15 +114,9 @@
 
                 {% if item.estado == 'En Revision' %}
                     <a class="btn btn-primary" href="{% url 'desarrollo:votacionItem' item.id %}" >En Desarrollo</a>
-                {% endif %}
-
-                {% if item.estado == 'En Revision' %}
                     <a class="btn btn-info" href="{% url 'desarrollo:votacionItem2' item.id %}">Aprobar</a>
                 {% endif %}
 
-                {% if item.estado == 'En Revision' %}
-                    <a class="btn btn-success" href="{% url 'desarrollo:votacionItem3' item.id %}" >En Linea Base</a>
-                {% endif %}
             </div>
             <div class="mt-4 alert alert-warning" id="alertarelaciones" style="visibility: hidden;">
                 No se puede desactivar por que es antecesor/padre de otros items

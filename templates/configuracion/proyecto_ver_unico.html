@@ -18,9 +18,11 @@
                                 </button>
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                     {% for lb in fase.lineabase_set.all %}
-                                        <a class="dropdown-item" role="button" href="{% url 'configuracion:verLineaBase' lb.id %}"  >
-                                            Linea Base {{ lb.id }}
-                                        </a>
+                                        {% if lb.estado == lb.ESTADO_CERRADA %}
+                                            <a class="dropdown-item" role="button" href="{% url 'configuracion:verLineaBase' lb.id %}"  >
+                                                Linea Base {{ lb.id }}
+                                            </a>
+                                        {% endif %}
                                     {% endfor %}
                                 </div>
                             </div>
@@ -39,7 +41,7 @@
                                         {% if item.estado == item.ESTADO_APROBADO %}
                                             <li class="list-group">
                                                 <a class="align-baseline"
-                                                   href="#" >
+                                                   href="{% url 'configuracion:trazabilidad' proyecto.id item.id %}" >
                                                    {{ item.tipo_item.prefijo }} {% if item.numeracion < 10 %}0{% endif %}{{ item.numeracion    }}-{{ item.nombre }}
                                                 </a>
                                             </li>
@@ -51,7 +53,7 @@
                                         {% if item.estado == item.ESTADO_LINEABASE%}
                                             <li class="list-group">
                                                 <a class="align-baseline"
-                                                   href="#" >
+                                                   href="{% url 'configuracion:trazabilidad' proyecto.id item.id %}" >
                                                    {{ item.tipo_item.prefijo }} {% if item.numeracion < 10 %}0{% endif %}{{ item.numeracion    }}-{{ item.nombre }}
                                                 </a>
                                             </li>
@@ -79,6 +81,9 @@
         <div class="col-sm-12 mt-4">
             {% if es_comite %}
                 <a class="btn btn-primary" href="{% url 'configuracion:verIndexComite' proyecto.id %}">Comite de decisiones</a>
+            {% endif %}
+            {% if es_gerente %}
+                <a class="btn btn-primary" href="{% url 'configuracion:cerrarProyecto' proyecto.id %}">Cerrar proyecto</a>
             {% endif %}
             <a href="{% url 'configuracion:indexConfiguracion' 'todos' %}" class="btn btn-primary float-right">Volver atrás</a>
         </div>

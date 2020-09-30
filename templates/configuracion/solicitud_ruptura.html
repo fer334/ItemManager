@@ -10,14 +10,27 @@
             <div class="form-group">
                 <label>Items de linea base de la fase a modificar (pasarán a desarrollo)</label>
                 {% csrf_token %}
-                {% for item in lineabase.items.all %}
-                    <div  class="form-check">
-                        <input class="form-check-input" type="checkbox" name="checkItem-{{ item.id }}" id="checkItem-{{ item.id }}">
-                        <label class="form-check-label" for="checkItem-{{ item.id }}">
-                            {{ item.tipo_item.prefijo }} {% if item.numeracion < 10 %}0{% endif %}{{ item.numeracion}}-{{ item.nombre }}
-                        </label>
+                <div class="row">
+                    <div class="col-sm">
+                        Ítem
+                        {% for item in lineabase.items.all %}
+                            <div  class="form-check">
+                                <input class="form-check-input" type="checkbox" name="checkItem-{{ item.id }}" id="checkItem-{{ item.id }}">
+                                <label class="form-check-label" for="checkItem-{{ item.id }}">
+                                    {{ item.tipo_item.prefijo }} {% if item.numeracion < 10 %}0{% endif %}{{ item.numeracion}}-{{ item.nombre }}
+                                </label>
+                            </div>
+                        {% endfor %}
                     </div>
-                {% endfor %}
+                    <div class="col-sm">
+                        Cálculo de Impacto
+                        {% for valor in lista_impacto %}
+                            <div>
+                                {{ valor }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
             <div class="form-group">
               <label>Justificacion:</label>
@@ -28,8 +41,5 @@
                 <a href="{% url 'configuracion:verProyecto' lineabase.fase.proyecto_id %}" class="btn btn-primary float-right">Volver atrás</a>
             </div>
         </form>
-        <div class="mt-3">
-            <a href="{% url 'configuracion:verProyecto' lineabase.fase.proyecto.id %}" class="btn btn-primary">Volver atras</a>
-        </div>
     </div>
 {% endblock %}

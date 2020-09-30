@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Custom fonts for this template-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+<body>
+    {% block content %}
+        <div class="container">
+            <div class="center-block col-md-12 p-3">
+                <h3 class="text-secondary m-3 font-weight-bold" align="middle">
+                    El Cálculo de Impacto para el item "{{ item.nombre }}" genera un resultado igual a:
+                </h3>
+                <div class="alert alert-warning m-3">
+                    <h5 align="middle">
+                        {{ impacto }}
+                    </h5>
+                </div>
+            </div>
+            <div class="button">
+                <a class="btn btn-primary mt-3" onclick="window.close()" role="button" style="color: white">
+                    Cerrar
+                </a>
+            </div>
+        </div>
+    {% endblock %}
+</body>
+</html>
