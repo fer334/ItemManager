@@ -131,14 +131,16 @@
       this.alignment = go.GridLayout.Position;
       // This sorts based on the location of each Group.
       // This is useful when Groups can be moved up and down in order to change their order.
-      this.comparer = function(a, b) {
-        var ax = a.location.x;
-        var bx = b.location.x;
-        if (isNaN(ax) || isNaN(bx)) return 0;
-        if (ax < bx) return -1;
-        if (ax > bx) return 1;
-        return 0;
-      };
+        //COMENTÉ LO DE ABAJO QUE ES LO QUE PERMITE CAMBIAR EL ORDEN MANUALMENTE DE LAS FASES PERO TAMBIÉN
+        //HACÍA QUE SE ORDENEN LAS FASES POR TAMAÑO DEL TITULO Y NO POR EL ID
+      //this.comparer = function(a, b) {
+      //  var ax = a.location.x;
+      //  var bx = b.location.x;
+      //  if (isNaN(ax) || isNaN(bx)) return 0;
+      //  if (ax < bx) return -1;
+      //  if (ax > bx) return 1;
+      //  return 0;
+      //};
     }
     go.Diagram.inherit(PoolLayout, go.GridLayout);
 
@@ -402,7 +404,7 @@
         [ // node data
             { key: "Grafo1", text: "Trazabilidad de {{ item.nombre }}", isGroup: true, category: "Pool" },
             {% for fase in fases %}
-                { key: "{{ fase.id }}", text: "{{ fase.id }}){{ fase.nombre }}", isGroup: true, group: "Grafo1", color: "lightblue"}, // { if fase.id != 0 %}"lightblue"{ else %}"lightyellow"{ endif %} },
+                { key: "{{ fase.id }}", text: "{{ fase.id }}) {{ fase.nombre }}", isGroup: true, group: "Grafo1", color: "lightblue"}, // { if fase.id != 0 %}"lightblue"{ else %}"lightyellow"{ endif %} },
             {% endfor %}
             {% for item in lista_items %}
                 {% if item.estado != desactivado %}
