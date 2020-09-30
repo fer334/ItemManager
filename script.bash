@@ -74,7 +74,7 @@ echo $port
 echo $gitclone
 echo $branch
 
-if [[ proc == "true" ]]; then
+if [[ $proc == "true" ]]; then
     ./produccion.bash $branch $filename
 else
     ./desarrollo.bash $dbname $username $pass $filename $port $gitclone

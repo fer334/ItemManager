@@ -1,8 +1,8 @@
 #!/bin/bash
 
 
-branch="master"
-linktofilerestore="https://raw.githubusercontent.com/fer334/ItemManager/fer/poblacion_bd.sql"
+branch=$1
+backupfile=$2
 
 git push heroku $branch
 
