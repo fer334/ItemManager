@@ -4,9 +4,6 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
-
-[packages]
-django = "*"
 psycopg2-binary = "*"
 pytest = "*"
 pytest-django = "*"
@@ -15,6 +12,17 @@ sphinx = "*"
 gunicorn = "*"
 django-crispy-forms = "*"
 sphinx-rtd-theme = "*"
+whitenoise = "*"
+dj-database-url = "*"
+python-decouple = "*"
+config = "*"
+
+[packages]
+django = "*"
+psycopg2-binary = "*"
+pyrebase = "*"
+gunicorn = "*"
+django-crispy-forms = "*"
 whitenoise = "*"
 dj-database-url = "*"
 python-decouple = "*"
