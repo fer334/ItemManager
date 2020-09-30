@@ -4,15 +4,8 @@
 branch=$1
 backupfile=$2
 
+echo "Realizando el push a la rama de heroku"
 git push heroku $branch
-
-heroku run echo "Limpiando cache de migraciones"
-heroku run ./clean_migrations.bash
-
-heroku run echo "Realizando migraciones"
-heroku run ./manage.py makemigrations
-heroku run python manage.py migrate
-
+echo "Poblando la base de datos"
 heroku pg:psql < $backupfile
-gunicorn ItemManager.wsgi
 
