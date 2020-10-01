@@ -1,5 +1,36 @@
 #!/bin/bash
 
+Help(){
+     # Display Help
+     echo "Script that initializes the project and the postgres database."
+     echo
+     echo "Usage: script [OPTIONS]"
+     echo "Options:"
+     echo "-D --dbname        Specify the postgres DB name"
+     echo "-U --username      Specify the postgres username"
+     echo "-P --dbpass        Specify the postgres password"
+     echo "--port --dbport    Specify the postgres port"
+     echo "-F --backupfile    File to use for initialize the DB"
+     echo "-c --gitclone      Specify if it will be used the command git clone"
+     echo "-p --production    Specify if is going to run in production mode"
+     echo "-d --dev           Specify if is going to run in developer mode"
+     echo "-h --help          Show this output and exit"
+     echo "-b --branch        This is the heroku branch to use on pushing into heroku"
+     exit
+}
+
+PrintDefault(){
+    echo 'dbname=>"itemmanagerdb"'
+    echo 'username=>"postgres"'
+    echo 'pass=>"postgres"'
+    echo 'filename=>"poblacion_bd.sql"'
+    echo 'port=>"5432"'
+    echo 'gitclone=>"false"'
+    echo 'prod=>"false"'
+    echo 'dev=>"false"'
+    echo 'branch=>"master"'
+    exit;
+}
 
 POSITIONAL=()
 dbname="itemmanagerdb"
@@ -8,7 +39,8 @@ pass="postgres"
 filename="poblacion_bd.sql"
 port="5432"
 gitclone="false"
-proc="false"
+prod="false"
+dev="false"
 branch="master"
 
 while [[ $# -gt 0 ]]
@@ -16,27 +48,27 @@ do
     key="$1"
 
     case $key in
-	-d|--dbname)
+	-D|--dbname)
 	    dbname="$2"
 	    shift # past argument
 	    shift # past value
 	    ;;
-	-u|--username)
+	-U|--username)
 	    username="$2"
 	    shift # past argument
 	    shift # past value
 	    ;;
-	-dp|--dbpass)
+	-P|--dbpass)
 	    pass="$2"
 	    shift # past argument
 	    shift # past value
 	    ;;
-	-bf|--backupfile)
+	-F|--backupfile)
 	    filename="$2"
 	    shift # past argument
 	    shift # past value
 	    ;;
-	-p|--dbport)
+	--port|--dbport)
 	    port="$2"
 	    shift # past argument
 	    shift # past value
@@ -45,9 +77,16 @@ do
 	    gitclone=true
 	    shift # past argument
 	    ;;
-	--produc|--produccion|--pro)
-	    proc=true
+	-p|--produc|--produccion|--pro|--production)
+	    prod=true
 	    shift # past argument
+	    ;;
+	-d|--dev|--developer|--desarrollo)
+	    dev=true
+	    shift # past argument
+	    ;;
+	-h|--help|--ayuda)
+	    Help; exit;
 	    ;;
 	-b|--branch)
 	    branch="$2"
@@ -55,8 +94,8 @@ do
 	    shift # past value
 	    ;;
 	--default)
-	    DEFAULT=YES
-	    shift # past argument
+	  echo "Fa"
+	    PrintDefault; exit;
 	    ;;
 	*)    # unknown option
 	    POSITIONAL+=("$1") # save it in an array for later
@@ -74,9 +113,11 @@ set -- "${POSITIONAL[@]}" # restore positional parameters
 #echo $gitclone
 #echo $branch
 
-if [[ $proc == "true" ]]; then
+if [[ $prod == "true" ]]; then
     ./produccion.bash $branch $filename
-else
+elif [[ $dev == "true" ]]; then
     ./desarrollo.bash $dbname $username $pass $filename $port $gitclone
+else
+      echo "You need to specify the mode Developer or Production"
+      Help
 fi
-
