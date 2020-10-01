@@ -882,7 +882,7 @@ class TestViews(TestCase):
         request.user = self.usuario
 
         solicitud_ruptura(request, lb.pk)
-        self.assertNotEqual(len(Solicitud.objects.all()), 0, 'La prueba fallo, la fase no esta cerrada')
+        self.assertNotEqual(len(Solicitud.objects.all()), 0, 'La prueba fallo, la solicitud no fue creada')
 
     def test_votar_ruptura(self):
         """
@@ -901,7 +901,6 @@ class TestViews(TestCase):
         self.assertEqual(solicitud.votoruptura_set.all().count(), 1, 'No se registro el voto')
         self.assertEqual(solicitud.votoruptura_set.all()[0].valor_voto, True, 'No se registro el valor correcto')
 
-
     def test_votacion_item_en_revision_desarrollo(self):
         """
         CU 28: Votación de modificación de items en estado de "En revisión". Iteracion 4
@@ -919,6 +918,29 @@ class TestViews(TestCase):
         cu_28_1 = Item.objects.get(pk=cu_28_1.id)
         self.assertEqual(cu_28_1.estado, Item.ESTADO_DESARROLLO, 'No se puede realizar la accion ')
 
+    def test_votacion_item_en_revision_desarrollo_hijos(self):
+            """
+            CU 28: Votación de modificación de items en estado de "En revisión". Iteracion 4
+            El test prueba que el item pasa de estadado en Revision a estado en Desarrollo,
+            teniendo la oportunidad de modificar el item.
+
+            :return: Retrona true si cambio a Desarrollo
+            """
+            cu_28_1 = Item.objects.create(nombre='item_1', estado=Item.ESTADO_REVISION, version=1,
+                                          complejidad=5, descripcion='Revision a Desarrollo',
+                                          tipo_item=self.tipo, fase=self.fase)
+            item_hijo = Item.objects.create(nombre='hijo_item_1', estado=Item.ESTADO_APROBADO, version=1,
+                                          complejidad=5, descripcion='Aprobado a Revision',
+                                          tipo_item=self.tipo, fase=self.fase)
+            cu_28_1.hijos.add(item_hijo);
+            cu_28_1.save()
+            request = RequestFactory()
+            request.user = self.usuario
+            votacion_item_en_revision_desarrollo(request, id_item=cu_28_1.id)
+            cu_28_1 = Item.objects.get(pk=cu_28_1.id)
+            item_hijo = Item.objects.get(pk=item_hijo.id)
+            self.assertEqual(Item.ESTADO_DESARROLLO, cu_28_1.estado, 'No se pudo modificar el estado del item')
+            self.assertEqual(Item.ESTADO_REVISION, item_hijo.estado,  'No se modifico el estado del hijo')
 
     def test_votacion_item_en_revision_aprobado(self):
         """
