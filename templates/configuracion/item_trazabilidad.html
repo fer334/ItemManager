@@ -1,5 +1,6 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
+{% block content %}
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -11,8 +12,13 @@
   <meta name="description" content="Vertical swim lanes and pools with collapsible lanes and limited dragging." />
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
+  <!-- Bootstrap-->
+    <!-- CSS only -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+
   <script src="https://unpkg.com/gojs/release/go.js"></script>
   <script src="https://unpkg.com/gojs/release/goSamples.js"></script>  <!-- this is only for the GoJS Samples framework -->
+
   <script id="code">
     // These parameters need to be set before defining the templates.
     var MINLENGTH = 200;  // this controls the minimum length of any swimlane
@@ -434,17 +440,27 @@
   </script>
 </head>
 <body onload="init()">
-<div id="sample">
-  <div id="myDiagramDiv" style="border: solid 1px black; width:100%; height:600px;"></div>
-  <p>
-    Gráfica de trazabilidad arriba y Json abajo, ¿dejo el Json?
-  </p>
-  <button onclick="relayoutLanes()">Layout</button>
-  <button id="SaveButton" onclick="save()">Save</button>
-  <button onclick="load()">Load</button>
-  Diagram Model saved in JSON format:
-  <br />
-  <textarea id="mySavedModel" style="width:100%;height:300px"></textarea>
-</div>
+    <div id="sample">
+        <div class="tab-content" id="myDiagramDiv" style=" width:100%; height:600px;"></div>
+        <br>
+        <div class="row">
+            <div class="col-10">
+                <a href="#" class="btn btn-primary float-right">Generar Reporte</a>
+            </div>
+            <br>
+            <br>
+            <div class="col-10">
+                <a href="{% url 'configuracion:verProyecto' proyecto.id %}" class="btn btn-primary float-right">Volver atrás</a>
+            </div>
+        </div>
+        {#    por si se quiera mostrar los datos json descomentar lo de abajo#}
+        {#  <button onclick="relayoutLanes()">Layout</button>#}
+        {#  <button id="SaveButton" onclick="save()">Save</button>#}
+        {#  <button onclick="load()">Load</button>#}
+        {#  Diagram Model saved in JSON format:#}
+        {#  <br />#}
+        {#  <textarea id="mySavedModel" style="width:100%;height:300px"></textarea>#}
+    </div>
 </body>
+{% endblock %}
 </html>

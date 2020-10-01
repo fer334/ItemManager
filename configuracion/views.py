@@ -266,7 +266,7 @@ def trazabilidad(request, id_proyecto, id_item):
     # ahora eliminamos elementos duplicados con los sets de python
     setitems = set(items)
     return render(request, 'configuracion/item_trazabilidad.html', {'item': item, 'fases': fases,
-                                                                    'lista_items': setitems,
+                                                                    'lista_items': setitems, 'proyecto': proyecto,
                                                                     'desactivado': Item.ESTADO_DESACTIVADO,
                                                                     'relaciones': relaciones})
 
@@ -282,11 +282,10 @@ def ramas_recursivas_trazabilidad(item, caso, lista):
     :return: lista de items
     """
     lista_items = []
-    for antecesor in lista:
+    for item_relacionado in lista:
         # nos aseguramos de tener la versión más actual del hijo que no esté desactivada
-        item_actual = Item.objects.filter(id_version=antecesor.id_version,
-                                          estado__regex='^(?!' + Item.ESTADO_DESACTIVADO + ')').order_by(
-            'id').last()
+        item_actual = Item.objects.filter(id_version=item_relacionado.id_version,
+                                          estado__regex='^(?!' + Item.ESTADO_DESACTIVADO + ')').order_by('id').last()
         lista_items.append(item_actual)
         # sumamos las listas para luego retornarlas
         if caso == 'izquierda':
