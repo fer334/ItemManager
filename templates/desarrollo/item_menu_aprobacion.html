@@ -28,10 +28,40 @@
                                                             <a class="align-baseline" href="{% url 'desarrollo:verItem' proyecto.id item.id %}" >
                                                                {{ item.tipo_item.prefijo }}_{{ item.nombre }}
                                                             </a>
+
+                                                            {% if item.antecesores.count != 0 or  item.padres.count != 0 or item.fase.id == primera_fase.id %}
                                                             <a class="btn btn-success" href="{% url 'desarrollo:aprobarItem' item.id %}" >
                                                                Aprobar
                                                             </a>
-                                                            <a class="btn btn-danger" href="{% url 'desarrollo:desaprobarItem' item.id %}" >
+                                                                {% else %}
+                                                                <button type="button" class="btn btn-secondary"
+                                                                        data-toggle="modal" data-target="#myModal">
+                                                                    Aprobar
+                                                                    </button>
+
+                                                                <div id="myModal" class="modal fade" role="dialog">
+                                                                    <div class="modal-dialog">
+                                                                        <div class="modal-content">
+                                                                            <div class="modal-header ">
+                                                                                <h4 class="modal-title font-weight-bold">
+                                                                                    No puede aprobarse este item
+                                                                                </h4>
+                                                                            </div>
+                                                                            <div class="modal-body">
+                                                                                <p>El item no posee padres ni antecesores.
+                                                                                </p>
+                                                                            </div>
+                                                                            <div class="modal-footer">
+                                                                                <button type="button" class="btn btn-info"
+                                                                                    data-dismiss="modal">
+                                                                                    Cerrar
+                                                                                </button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                {% endif %}
+                                                            <a class="btn btn-danger mt-2" href="{% url 'desarrollo:desaprobarItem' item.id %}" >
                                                                Desaprobar
                                                             </a>
                                                         </li>

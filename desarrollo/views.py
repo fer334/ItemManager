@@ -269,6 +269,7 @@ def menu_aprobacion(request, id_proyecto):
     :rtype: render
     """
     proyecto = Proyecto.objects.get(pk=id_proyecto)
+    primera_fase = proyecto.fase_set.all().order_by('id').first()
     lista_items = Item.objects.all()
     # lista de fases en las que el usuario tiene permisos de aprobador
     lista_fases = []
@@ -282,7 +283,8 @@ def menu_aprobacion(request, id_proyecto):
                 lista_fases.append(fase)
     return render(request, 'desarrollo/item_menu_aprobacion.html', {'proyecto': proyecto, 'lista_items': lista_items,
                                                                     'estado': Item.ESTADO_PENDIENTE,
-                                                                    'lista_fases': lista_fases})
+                                                                    'lista_fases': lista_fases,
+                                                                    'primera_fase': primera_fase})
 
 
 def index(request, filtro):
@@ -565,6 +567,7 @@ def aprobar_item(request, id_item):
     :return: redirecciona al menu de aprobacion del item
     """
     item = Item.objects.get(pk=id_item)
+
     if item.estado == Item.ESTADO_PENDIENTE:
         item.estado = Item.ESTADO_APROBADO
         item.save()
