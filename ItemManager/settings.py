@@ -98,15 +98,6 @@ DATABASES = {
         'HOST': 'localhost',
         'PORT': '5432',
     }
-    # comentar lo de arriba y descomentar lo de abajo si se quiere probar bd de produccion
-    # 'default': {
-    #         'ENGINE': 'django.db.backends.postgresql',
-    #         'NAME': 'd6l919ossi9cde',
-    #         'USER': 'vvniusgsbknnmp',
-    #         'PASSWORD': '41195478b75714ded1d339065b37824c6e9e88f6cbc586bd661a9442ecf57466',
-    #         'HOST': 'ec2-54-157-234-29.compute-1.amazonaws.com',
-    #         'PORT': '5432',
-    #     }
 }
 
 

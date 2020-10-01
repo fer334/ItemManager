@@ -94,7 +94,6 @@ do
 	    shift # past value
 	    ;;
 	--default)
-	  echo "Fa"
 	    PrintDefault; exit;
 	    ;;
 	*)    # unknown option
