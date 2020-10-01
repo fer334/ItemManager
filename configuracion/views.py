@@ -296,6 +296,7 @@ def ramas_recursivas_trazabilidad(item, caso, lista):
             lista_items += ramas_recursivas_trazabilidad(item_actual, caso, item_actual.hijos.all())
     return lista_items
 
+
 # posible implementación para la parte gráfica de ver items en las fases con sus relaciones
 # def trazabilidad(request, id_proyecto, id_item):
 #     proyecto = Proyecto.objects.get(pk=id_proyecto)
@@ -309,3 +310,17 @@ def ramas_recursivas_trazabilidad(item, caso, lista):
 #     return render(request, 'configuracion/item_trazabilidad.html', {'item': item,'fases': fases, 'lista_items': items,
 #                                                                     'desactivado': Item.ESTADO_DESACTIVADO,
 #                                                                     'relaciones': relaciones})
+
+
+def reporte_trazabilidad(request, id_proyecto, id_item):
+    """
+    futura implementación de generar reporte de trazabilidad
+
+    :param request:
+    :param id_item:
+    :param id_proyecto:
+    :return:
+    """
+
+    return render(request, 'configuracion/item_trazabilidad_reporte.html', {'id_proyecto': id_proyecto,
+                                                                            'id_item': id_item})
