@@ -381,6 +381,10 @@ def relacionar_item(request, id_proyecto):
     # Se filtra los items para solo relacionar items aprobados e hijos en desarrollo
     lista_items_padre = Item.objects.filter(
         fase__proyecto_id=id_proyecto, estado=Item.ESTADO_APROBADO
+    ).union(
+        Item.objects.filter(
+            fase__proyecto_id=id_proyecto,estado=Item.ESTADO_LINEABASE
+        )
     )
     lista_items_hijo = Item.objects.filter(
         fase__proyecto_id=id_proyecto, estado=Item.ESTADO_DESARROLLO

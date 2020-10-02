@@ -7,6 +7,7 @@ urlpatterns = [
     # URLs de Mati
     path('<str:filtro>', views.index, name='indexConfiguracion'),
     path('proyectos/<int:id_proyecto>/item/<int:id_item>/trazabilidad', views.trazabilidad, name='trazabilidad'),
+    path('proyectos/<int:id_proyecto>/item/<int:id_item>/trazabilidad/reporte', views.reporte_trazabilidad, name='reporteTrazabilidad'),
 
     # URLs de David
     path('proyectos/<int:id_proyecto>/', views.ver_proyecto, name='verProyecto'),

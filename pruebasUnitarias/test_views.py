@@ -18,10 +18,11 @@ from desarrollo.models import Item, AtributoParticular
 from desarrollo.views import solicitud_aprobacion, aprobar_item, desaprobar_item, desactivar_item, ver_item, \
     relacionar_item, desactivar_relacion_item, ver_proyecto, modificar_item, versionar_item, reversionar_item, \
     validar_reversion, votacion_item_en_revision_desarrollo, votacion_item_en_revision_aprobado, \
-    votacion_item_en_revision_lineaBase, cerrar_fase
+    votacion_item_en_revision_lineaBase, cerrar_fase, calcular_impacto_recursivo
 
 from configuracion.models import LineaBase, Solicitud
-from configuracion.views import crear_linea_base, ver_linea_base, solicitud_ruptura, votar_solicitud, cerrar_proyecto
+from configuracion.views import crear_linea_base, ver_linea_base, solicitud_ruptura, votar_solicitud, cerrar_proyecto, \
+    ramas_recursivas_trazabilidad
 import pytest
 
 
@@ -818,7 +819,7 @@ class TestViews(TestCase):
         p = Proyecto.objects.create(
             nombre='proyectoTestGeneral',
             fecha_inicio=timezone.now().date(),
-            numero_fases = 5,
+            numero_fases=5,
             cant_comite=3, gerente=self.usuario.id
         )
         fase1 = Fase(nombre='Fase1', estado='cerrada', proyecto=p)
@@ -873,12 +874,12 @@ class TestViews(TestCase):
 
         :return: el assert retornará true si puede crear correctamente la Solicitud de ruptura
         """
-        lb = LineaBase.objects.create(fase=self.fase,creador=self.usuario)
+        lb = LineaBase.objects.create(fase=self.fase, creador=self.usuario)
         lb.items.add(self.item)
         lb.save()
 
         path = reverse('configuracion:solicitudRuptura', args=[lb.pk])
-        request = RequestFactory().post(path, {f'checkItem-{self.item.pk}': ['on'],'mensaje': ['dfas']})
+        request = RequestFactory().post(path, {f'checkItem-{self.item.pk}': ['on'], 'mensaje': ['dfas']})
         request.user = self.usuario
 
         solicitud_ruptura(request, lb.pk)
@@ -910,7 +911,7 @@ class TestViews(TestCase):
         :return: Retrona true si cambio a Desarrollo
         """
         cu_28_1 = Item.objects.create(nombre='item_1', estado=Item.ESTADO_REVISION, version=1,
-                                      complejidad=5,descripcion='Revision a Desarrollo',
+                                      complejidad=5, descripcion='Revision a Desarrollo',
                                       tipo_item=self.tipo, fase=self.fase)
         request = RequestFactory()
         request.user = self.usuario
@@ -919,28 +920,28 @@ class TestViews(TestCase):
         self.assertEqual(cu_28_1.estado, Item.ESTADO_DESARROLLO, 'No se puede realizar la accion ')
 
     def test_votacion_item_en_revision_desarrollo_hijos(self):
-            """
+        """
             CU 28: Votación de modificación de items en estado de "En revisión". Iteracion 4
             El test prueba que el item pasa de estadado en Revision a estado en Desarrollo,
             teniendo la oportunidad de modificar el item.
 
             :return: Retrona true si cambio a Desarrollo
             """
-            cu_28_1 = Item.objects.create(nombre='item_1', estado=Item.ESTADO_REVISION, version=1,
-                                          complejidad=5, descripcion='Revision a Desarrollo',
-                                          tipo_item=self.tipo, fase=self.fase)
-            item_hijo = Item.objects.create(nombre='hijo_item_1', estado=Item.ESTADO_APROBADO, version=1,
-                                          complejidad=5, descripcion='Aprobado a Revision',
-                                          tipo_item=self.tipo, fase=self.fase)
-            cu_28_1.hijos.add(item_hijo);
-            cu_28_1.save()
-            request = RequestFactory()
-            request.user = self.usuario
-            votacion_item_en_revision_desarrollo(request, id_item=cu_28_1.id)
-            cu_28_1 = Item.objects.get(pk=cu_28_1.id)
-            item_hijo = Item.objects.get(pk=item_hijo.id)
-            self.assertEqual(Item.ESTADO_DESARROLLO, cu_28_1.estado, 'No se pudo modificar el estado del item')
-            self.assertEqual(Item.ESTADO_REVISION, item_hijo.estado,  'No se modifico el estado del hijo')
+        cu_28_1 = Item.objects.create(nombre='item_1', estado=Item.ESTADO_REVISION, version=1,
+                                      complejidad=5, descripcion='Revision a Desarrollo',
+                                      tipo_item=self.tipo, fase=self.fase)
+        item_hijo = Item.objects.create(nombre='hijo_item_1', estado=Item.ESTADO_APROBADO, version=1,
+                                        complejidad=5, descripcion='Aprobado a Revision',
+                                        tipo_item=self.tipo, fase=self.fase)
+        cu_28_1.hijos.add(item_hijo);
+        cu_28_1.save()
+        request = RequestFactory()
+        request.user = self.usuario
+        votacion_item_en_revision_desarrollo(request, id_item=cu_28_1.id)
+        cu_28_1 = Item.objects.get(pk=cu_28_1.id)
+        item_hijo = Item.objects.get(pk=item_hijo.id)
+        self.assertEqual(Item.ESTADO_DESARROLLO, cu_28_1.estado, 'No se pudo modificar el estado del item')
+        self.assertEqual(Item.ESTADO_REVISION, item_hijo.estado, 'No se modifico el estado del hijo')
 
     def test_votacion_item_en_revision_aprobado(self):
         """
@@ -984,11 +985,103 @@ class TestViews(TestCase):
         :return: Retrona true si el estado del proyecto es finalizado
         """
         proyecto_nuevo = Proyecto.objects.create(nombre='proyectoTestCerrar', fecha_inicio=timezone.now().date(),
-                                               numero_fases=1, cant_comite=3, gerente=self.usuario.id)
-        fase_nueva = Fase.objects.create(nombre='Fase de prueba', proyecto=proyecto_nuevo, estado=Fase.FASE_ESTADO_CERRADA)
+                                                 numero_fases=1, cant_comite=3, gerente=self.usuario.id)
+        fase_nueva = Fase.objects.create(nombre='Fase de prueba', proyecto=proyecto_nuevo,
+                                         estado=Fase.FASE_ESTADO_CERRADA)
         path = reverse('configuracion:cerrarProyecto', args=[proyecto_nuevo.id])
         request = RequestFactory().post(path)
         request.user = self.usuario
         cerrar_proyecto(request, id_proyecto=proyecto_nuevo.id)
         proyecto_nuevo = Proyecto.objects.get(pk=proyecto_nuevo.id)
         self.assertEqual(Proyecto.ESTADO_FINALIZADO, proyecto_nuevo.estado, 'El proyecto no se pudo finalizar')
+
+    def test_trazabilidad(self):
+        """
+        CU 49: Calculo de trazabilidad. Iteración 5.
+        El test comprueba el correcto funcionamiento de la función recursiva de trazabilidad que trae todos
+        los items relacionados al elegido.
+
+        :return: los primeros dos asserts retornan true si los items relacionados son parte de la lista, el último
+        assert retorna true si el item sin relacion con el resto no es parte de la lista
+        """
+        item_principal = Item(nombre='principal', estado=Item.ESTADO_APROBADO, complejidad=5, descripcion='principal',
+                              tipo_item=self.tipo, fase=self.fase, id_version=2)
+        item_principal.save()
+        item_hijo = Item(nombre='hijo', estado=Item.ESTADO_DESARROLLO, complejidad=5, descripcion='hijo relacionado',
+                         tipo_item=self.tipo, fase=self.fase, id_version=3)
+        item_hijo.save()
+        item_antecesor = Item(nombre='antecesor', estado=Item.ESTADO_DESARROLLO, complejidad=5, descripcion='antecesor',
+                              tipo_item=self.tipo, fase=self.fase, id_version=4)
+        item_antecesor.save()
+        item_no_relacionado = Item(nombre='NoRelacionado', estado=Item.ESTADO_APROBADO, complejidad=5, id_version=5,
+                                   descripcion='item no relacionado al resto', tipo_item=self.tipo, fase=self.fase)
+        item_no_relacionado.save()
+        # creamos las relaciones
+        item_principal.hijos.add(item_hijo)
+        item_hijo.padres.add(item_principal)
+        item_principal.antecesores.add(item_antecesor)
+        item_antecesor.sucesores.add(item_principal)
+        # creamos la lista de items para la gráfica de trazabilidad
+        lista_items = [item_principal]
+        lista_items += ramas_recursivas_trazabilidad(item_principal, 'izquierda', item_principal.antecesores.all())
+        lista_items += ramas_recursivas_trazabilidad(item_principal, 'derecha', item_principal.hijos.all())
+        # comprobamos que en la lista estén los ítems adecuados
+        self.assertIn(item_hijo, lista_items, 'el elemento no está en la lista para la trazabilidad')
+        self.assertIn(item_antecesor, lista_items, 'el elemento no está en la lista para la trazabilidad')
+        self.assertNotIn(item_no_relacionado, lista_items, 'el elemento se encuentra en la lista')
+
+    def test_trazabilidad_relaciones_indirectas(self):
+        """
+        CU 49: Calculo de trazabilidad. Iteración 5.
+        El test comprueba el correcto funcionamiento de la función recursiva de trazabilidad que trae todos
+        los items relacionados de manera directa e indirecta.
+
+        :return: El primer assert retorna true si el hijo directo del ítem está en la lista para graficar la
+        trazabilidad, el segundo assert retorna true si el hijo indirecto del item está en la lista.
+        """
+        item_principal = Item(nombre='principal', estado=Item.ESTADO_APROBADO, complejidad=3, descripcion='principal',
+                              tipo_item=self.tipo, fase=self.fase, id_version=2)
+        item_principal.save()
+        item_hijo = Item(nombre='hijo', estado=Item.ESTADO_DESARROLLO, complejidad=5, descripcion='hijo relacionado',
+                         tipo_item=self.tipo, fase=self.fase, id_version=3)
+        item_hijo.save()
+        item_hijo_de_hijo = Item(nombre='hijo de hijo', estado=Item.ESTADO_DESARROLLO, complejidad=5,
+                                 descripcion='antecesor', tipo_item=self.tipo, fase=self.fase, id_version=4)
+        item_hijo_de_hijo.save()
+        # creamos las relaciones
+        item_principal.hijos.add(item_hijo)
+        item_hijo.padres.add(item_principal)
+        item_hijo.hijos.add(item_hijo_de_hijo)
+        item_hijo_de_hijo.padres.add(item_hijo)
+        # creamos la lista de items para la gráfica de trazabilidad
+        lista_items = [item_principal]
+        lista_items += ramas_recursivas_trazabilidad(item_principal, 'derecha', item_principal.hijos.all())
+        # comprobamos que en la lista estén los ítems adecuados
+        self.assertIn(item_hijo, lista_items, 'el elemento no está en la lista para la trazabilidad')
+        self.assertIn(item_hijo_de_hijo, lista_items, 'el elemento no está en la lista para la trazabilidad')
+
+    def test_calculo_de_impacto(self):
+        """
+        CU 50: Calculo de Impacto. Iteración 5.
+        Este test comprueba que la función recursiva calcule correctamente el calculo de impacto de un ítem,
+        creamos 3 items con distintos pesos y los relacionamos.
+
+        :return: El assert retornará true si la suma de los pesos de los items se realizó correctamente
+        """
+        item_peso_cinco = Item(nombre='peso 5', estado=Item.ESTADO_APROBADO, complejidad=5, descripcion='cinco',
+                               tipo_item=self.tipo, fase=self.fase, id_version=20)
+        item_peso_cinco.save()
+        item_peso_tres = Item(nombre='peso 3', estado=Item.ESTADO_APROBADO, complejidad=3, descripcion='tres',
+                              tipo_item=self.tipo, fase=self.fase, id_version=21)
+        item_peso_tres.save()
+        item_peso_ocho = Item(nombre='peso 8', estado=Item.ESTADO_APROBADO, complejidad=8, descripcion='ocho',
+                              tipo_item=self.tipo, fase=self.fase, id_version=22)
+        item_peso_ocho.save()
+        # creamos las relaciones
+        item_peso_cinco.hijos.add(item_peso_tres)
+        item_peso_tres.padres.add(item_peso_cinco)
+        item_peso_tres.hijos.add(item_peso_ocho)
+        item_peso_ocho.padres.add(item_peso_tres)
+        # llamamos a la función
+        calculo_impacto = calcular_impacto_recursivo(item_peso_cinco)
+        self.assertEqual(calculo_impacto, 16, 'el calculo de impacto no se calculó correctamente')

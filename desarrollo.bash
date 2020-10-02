@@ -38,9 +38,9 @@ sudo -u postgres PGPASSWORD=$pass createdb $dbname --username=$username --host=l
 }
 
 echo "Modificando las configuraciones de django"
-sed -i -e "0,/'NAME': 'itemmanagerdb'/ s/itemmanagerdb/$dbname/" ItemManager/settings.py
-sed -i -e "0,/'USER': 'postgres'/ s/postgres/$username/" ItemManager/settings.py 
-sed -i -e "0,/'PASSWORD': 'postgres'/ s/postgres/$pass/" ItemManager/settings.py 
+sed -i -e "0,/'NAME'/s/:.*/: '$dbname'/" ItemManager/settings.py
+sed -i -e "0,/'USER'/s/:.*/: '$username'/" ItemManager/settings.py
+sed -i -e "0,/'PASSWORD'/s/:.*/: '$pass'/" ItemManager/settings.py
 
 
 echo "Limpiando cache de migraciones"
