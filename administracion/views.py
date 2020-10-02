@@ -437,6 +437,9 @@ def editar_tipo(request, id_proyecto, id_tipo):
                 tipo.save()
                 return redirect('administracion:tipoItemPorProyecto', id_proyecto=id_proyecto)
         form = EditarTipoItemForm()
+        form.fields['nombre'].widget.attrs['value'] = tipo.nombre
+        form.fields['prefijo'].widget.attrs['value'] = tipo.prefijo
+        form.fields['descripcion'].initial = tipo.descripcion
         return render(request, 'administracion/editarTipoItem.html', {'form': form, 'tipo':tipo})
 
 
