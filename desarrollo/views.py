@@ -11,8 +11,16 @@ from desarrollo.getPermisos import has_permiso
 
 
 def get_numeracion(fase, tipo):
-    items_del_tipo = [item for item in fase.item_set.all() if item.tipo_item == tipo]
-    return len(items_del_tipo) + 1
+    items_del_tipo = fase.item_set.filter(tipo_item=tipo, estado__in=(Item.ESTADO_REVISION,
+                                                     Item.ESTADO_APROBADO,
+                                                     Item.ESTADO_LINEABASE,
+                                                     Item.ESTADO_DESARROLLO,
+                                                     Item.ESTADO_PENDIENTE))
+    if( items_del_tipo):
+        ultimo_numero = items_del_tipo.order_by('numeracion').last().numeracion
+        return ultimo_numero + 1
+    else:
+        return 1
 
 
 def crear_item(request, id_fase, id_tipo):
