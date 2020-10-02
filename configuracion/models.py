@@ -1,3 +1,6 @@
+"""
+Models del modulo de configuracion
+"""
 from django.db import models
 from desarrollo.models import Item
 from django.utils.timezone import now

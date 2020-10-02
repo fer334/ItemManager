@@ -1,3 +1,6 @@
+"""
+Vistas del modulo de configuracion
+"""
 from django.shortcuts import render, redirect
 
 # Create your views here.
