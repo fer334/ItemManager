@@ -12,11 +12,11 @@ from desarrollo.getPermisos import has_permiso
 
 def get_numeracion(fase, tipo):
     items_del_tipo = fase.item_set.filter(tipo_item=tipo, estado__in=(Item.ESTADO_REVISION,
-                                                     Item.ESTADO_APROBADO,
-                                                     Item.ESTADO_LINEABASE,
-                                                     Item.ESTADO_DESARROLLO,
-                                                     Item.ESTADO_PENDIENTE))
-    if( items_del_tipo):
+                                                                      Item.ESTADO_APROBADO,
+                                                                      Item.ESTADO_LINEABASE,
+                                                                      Item.ESTADO_DESARROLLO,
+                                                                      Item.ESTADO_PENDIENTE))
+    if (items_del_tipo):
         ultimo_numero = items_del_tipo.order_by('numeracion').last().numeracion
         return ultimo_numero + 1
     else:
@@ -391,7 +391,7 @@ def relacionar_item(request, id_proyecto):
         fase__proyecto_id=id_proyecto, estado=Item.ESTADO_APROBADO
     ).union(
         Item.objects.filter(
-            fase__proyecto_id=id_proyecto,estado=Item.ESTADO_LINEABASE
+            fase__proyecto_id=id_proyecto, estado=Item.ESTADO_LINEABASE
         )
     )
     lista_items_hijo = Item.objects.filter(
@@ -638,9 +638,14 @@ def desactivar_item(request, id_proyecto, id_item):
 
     if item.estado == Item.ESTADO_DESARROLLO:
         item.estado = Item.ESTADO_DESACTIVADO
-        # desvinculamos el item y su tipo de item de la fase
+        # desvinculamos el item y su tipo de item de la fase (solo si no hay otro item con el mismo tipo)
         fase = Fase.objects.get(pk=item.fase.id)
-        fase.tipos_item.remove(item.tipo_item)
+        # primero consultamos la cantidad de items con ese tipo de item en la fase(que no estén desactivados).
+        cantidad_items = Item.objects.filter(fase=fase, estado__regex='^(?!' + Item.ESTADO_DESACTIVADO + ')',
+                                             tipo_item=item.tipo_item)
+        # si la cantidad es diferente a 1 si se puede desvincular el tipo de item de la fase
+        if cantidad_items.count() == 1:
+            fase.tipos_item.remove(item.tipo_item)
 
     # se deben eliminar relaciones donde el item es sucesor o hijo
     for padre in item.padres.all():
@@ -839,6 +844,7 @@ def votacion_item_en_revision_desarrollo(request, id_item):
     if item.estado == Item.ESTADO_REVISION:
         item.estado = Item.ESTADO_DESARROLLO
         item.save()
+
     def pasar_a_revision(lista_items):
         for item in lista_items:
             item_hijo = Item.objects.filter(id_version=item.id_version,
@@ -847,14 +853,14 @@ def votacion_item_en_revision_desarrollo(request, id_item):
                 item_hijo.estado = Item.ESTADO_REVISION
                 item_hijo.save()
 
-    #Luego de pasar el item a desarrollo se debe ver como quedan sus hijos y sucesores
+    # Luego de pasar el item a desarrollo se debe ver como quedan sus hijos y sucesores
     pasar_a_revision(item.hijos.all())
     pasar_a_revision(item.sucesores.all())
 
-    #Luego se ve si el item pertenece a una linea base y se ajusta los items de esa linea base
+    # Luego se ve si el item pertenece a una linea base y se ajusta los items de esa linea base
     for linea_base in item.lineabase_set.all():
         if linea_base.estado == linea_base.ESTADO_CERRADA:
-            #Si marque un item en estado en desarrollo, se debe romper la lb
+            # Si marque un item en estado en desarrollo, se debe romper la lb
             linea_base.estado = linea_base.ESTADO_ROTA
             linea_base.save()
             for item in linea_base.items.all():
@@ -865,7 +871,6 @@ def votacion_item_en_revision_desarrollo(request, id_item):
                 if item.estado == Item.ESTADO_LINEABASE:
                     item.estado = Item.ESTADO_APROBADO
                     item.save()
-
 
     return redirect('desarrollo:verItem', item.fase.proyecto_id, id_item)
 
@@ -883,7 +888,7 @@ def votacion_item_en_revision_aprobado(request, id_item):
     if item.estado == Item.ESTADO_REVISION:
         item.estado = Item.ESTADO_APROBADO
         item.save()
-    #TODO Muchas cosas jeje
+    # TODO Muchas cosas jeje
     for linea_base in item.lineabase_set.all():
         if linea_base.estado == linea_base.ESTADO_CERRADA:
             # Si aprobe todos los items de la LB, todos pasan a estado EN LB
