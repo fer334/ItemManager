@@ -11,21 +11,6 @@
                     {% for fase in proyecto.fase_set.all %}
                         <th class="">
                             <div>{{ fase.nombre }}</div>
-                            <div class="dropdown">
-                                <button type="button" class="btn btn-secondary dropdown-toggle" id="dropdownMenuButton"
-                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Ver Lineas Base
-                                </button>
-                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    {% for lb in fase.lineabase_set.all %}
-                                        {% if lb.estado == lb.ESTADO_CERRADA %}
-                                            <a class="dropdown-item" role="button" href="{% url 'configuracion:verLineaBase' lb.id %}"  >
-                                                Linea Base {{ lb.id }}
-                                            </a>
-                                        {% endif %}
-                                    {% endfor %}
-                                </div>
-                            </div>
                         </th>
                     {% endfor %}
 
@@ -51,9 +36,14 @@
                                 {% for linea_base in fase.lineabase_set.all %}
                                     {% if linea_base.estado == linea_base.ESTADO_CERRADA and linea_base.items.count >= 1 %}
                                         <ul class="listaEnLB">
+                                        <h5 class="fieldset-title">
+                                            <a class="text-primary" href="{% url 'configuracion:verLineaBase' linea_base.id %}"  >
+                                                Linea Base {{ linea_base.id }}
+                                            </a>
+                                        </h5>
                                         {% for item in linea_base.items.all %}
                                             <li class="list-group">
-                                                <a class="align-baseline"
+                                                <a class="align-baseline text-secondary"
                                                    href="{% url 'configuracion:trazabilidad' proyecto.id item.id %}" >
                                                    {{ item.tipo_item.prefijo }} {% if item.numeracion < 10 %}0{% endif %}{{ item.numeracion    }}-{{ item.nombre }}
                                                 </a>
