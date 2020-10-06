@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
 
   <script src="https://unpkg.com/gojs/release/go.js"></script>
-  <script src="https://unpkg.com/gojs/release/goSamples.js"></script>  <!-- this is only for the GoJS Samples framework -->
+{#  <script src="https://unpkg.com/gojs/release/goSamples.js"></script>  <!-- this is only for the GoJS Samples framework -->#}
 
   <script id="code">
     // These parameters need to be set before defining the templates.
@@ -410,18 +410,18 @@
         [ // node data
             { key: "Grafo1", text: "Trazabilidad de {{ item.nombre }}", isGroup: true, category: "Pool" },
             {% for fase in fases %}
-                { key: "{{ fase.id }}", text: "{{ fase.id }}) {{ fase.nombre }}", isGroup: true, group: "Grafo1", color: "lightblue"}, // { if fase.id != 0 %}"lightblue"{ else %}"lightyellow"{ endif %} },
+                { key: "{{ fase.id }}", text: "{{ fase.nombre }}", isGroup: true, group: "Grafo1", color: "lightblue"}, // { if fase.id != 0 %}"lightblue"{ else %}"lightyellow"{ endif %} },
             {% endfor %}
             {% for item in lista_items %}
                 {% if item.estado != desactivado %}
                 // console.log('{ item.fase.nombre }}'),
-                    { key: "{{item.nombre}}", group: "{{ item.fase.id }}" },
+                    { key: "{{ item.tipo_item.prefijo }}_{{ item.nombre }}[{{ item.complejidad }}]", group: "{{ item.fase.id }}" },
                 {% endif %}
             {% endfor %}
         ],
         [ // link data
             {% for relacion in relaciones %}
-                { from: "{{ relacion.inicio }}", to: "{{ relacion.fin }}" },
+                { from: "{{ relacion.inicio.tipo_item.prefijo }}_{{ relacion.inicio.nombre }}[{{ relacion.inicio.complejidad }}]", to: "{{ relacion.fin.tipo_item.prefijo }}_{{ relacion.fin.nombre }}[{{ relacion.inicio.complejidad }}]" },
             {% endfor %}
         ]);
       // force all lanes' layouts to be performed
