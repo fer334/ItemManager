@@ -8,7 +8,7 @@ from desarrollo.models import Item, AtributoParticular
 from administracion.models import Proyecto, TipoItem, Fase, Rol
 from desarrollo.forms import ItemForm
 from desarrollo.getPermisos import has_permiso
-
+from configuracion.models import Solicitud, LineaBase
 
 def get_numeracion(fase, tipo):
     items_del_tipo = fase.item_set.filter(tipo_item=tipo, estado__in=(Item.ESTADO_REVISION,
@@ -799,6 +799,14 @@ def cerrar_fase(request, id_proyecto):
             content['mensaje_error'] = """
             Todos los items de la fase deben estar en Linea Base para poder cerrarlo
             """
+
+            return render(request, 'desarrollo/fase_cerrar.html', content)
+
+        ##Si hay una solicitud activa, no se permite cerrar la fase
+        lineas_base = fase.lineabase_set.filter(estado=LineaBase.ESTADO_CERRADA)
+        if Solicitud.objects.filter(linea_base__in=lineas_base, solicitud_activa=True).count():
+            content['mensaje_error'] = """Hay solicitudes activas en la fase"""
+
             return render(request, 'desarrollo/fase_cerrar.html', content)
 
         # Comprobacion de que todos los items dentro de la fase tengan antecedentes
