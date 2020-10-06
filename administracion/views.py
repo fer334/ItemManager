@@ -32,7 +32,8 @@ def acceso_denegado(request, id_proyecto, caso):
                                                                                                  'tiene estado actual: ' + proyecto.estado,
         'gerente': 'El usuario actual no puede acceder a esta URL porque no es el Gerente del Proyecto actual',
         'tiimportado': 'No se puede editar este tipo de ítem porque se utiliza en otros proyectos',
-        'tiponovalido': 'El tipo seleccionado no es válido para esta fase'
+        'tiponovalido': 'El tipo seleccionado no es válido para esta fase',
+        'permisos': 'El Rol del usuario actual no cuenta con los permisos necesarios para realizar esta acción'
     }
     mensaje = posibles_casos.get(caso)
 

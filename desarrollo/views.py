@@ -36,6 +36,10 @@ def crear_item(request, id_fase, id_tipo):
     :rtype: render, redirect
     """
     fase = Fase.objects.get(pk=id_fase)
+    # primero verificamos que cumpla con el permiso
+    if not has_permiso(fase=fase, usuario=request.user, permiso=Rol.CREAR_ITEM):
+        return redirect('administracion:accesoDenegado', id_proyecto=fase.proyecto.id, caso='permisos')
+
     tipo = TipoItem.objects.get(pk=id_tipo)
     plantilla_atr = tipo.plantillaatributo_set.all().order_by('id')
 
@@ -681,8 +685,11 @@ def modificar_item(request, id_proyecto, id_item):
     :return: redirecciona a los detalles del item
     :return: renderea a la platilla de edición del item
     """
-    item = Item.objects.get(pk=id_item)
     fase = Item.fase
+    # primero verificamos que cumpla con el permiso
+    if not has_permiso(fase=fase, usuario=request.user, permiso=Rol.CREAR_ITEM):
+        return redirect('administracion:accesoDenegado', id_proyecto=id_proyecto, caso='permisos')
+    item = Item.objects.get(pk=id_item)
     lista_atr = AtributoParticular.objects.filter(item=item).order_by('id')
     if Item.ESTADO_DESARROLLO == item.estado:
         if request.method == 'POST':
