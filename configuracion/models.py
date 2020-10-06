@@ -24,6 +24,8 @@ class LineaBase(models.Model):
     tipo = models.CharField(max_length=100, default=TIPO_PARCIAL)
     #: estado actual de la linea base
     estado = models.CharField(max_length=100, default=ESTADO_CERRADA, null=False)
+    #: atributo para enumerar las lineas base dentro de un proyecto
+    numeracion = models.IntegerField(default=1)
 
 
 class Solicitud(models.Model):
