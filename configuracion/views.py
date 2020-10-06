@@ -67,6 +67,14 @@ def ver_proyecto(request, id_proyecto):
     })
 
 
+def numeracion_lb_en_proyecto(proyecto):
+    ultima_lb = LineaBase.objects.filter(fase__proyecto=proyecto, estado__regex='^(?!' + LineaBase.ESTADO_ROTA + ')').order_by('numeracion').last()
+    if ultima_lb:
+        return ultima_lb.numeracion + 1
+    else:
+        return 1
+
+
 def crear_linea_base(request, id_fase):
     """
     Esta vista despliega el template para iniciar la creacion de una linea base y se encarga de la creacion de una en
@@ -84,6 +92,7 @@ def crear_linea_base(request, id_fase):
             nueva_linea_base = LineaBase()
             nueva_linea_base.fase = fase
             nueva_linea_base.creador = Usuario.objects.get(pk=request.user.id)
+            nueva_linea_base.numeracion = numeracion_lb_en_proyecto(fase.proyecto)
             if len(items) == len(fase.item_set.all()):
                 nueva_linea_base.tipo = LineaBase.TIPO_TOTAL
 
@@ -268,7 +277,7 @@ def trazabilidad(request, id_proyecto, id_item):
     items += ramas_recursivas_trazabilidad(item, 'derecha', item.hijos.all())
     # ahora eliminamos elementos duplicados con los sets de python
     setitems = set(items)
-    return render(request, 'configuracion/item_trazabilidad.html', {'item': item, 'fases': fases,
+    return render(request, 'configuracion/item_trazabilidad.html', {'item_principal': item, 'fases': fases,
                                                                     'lista_items': setitems, 'proyecto': proyecto,
                                                                     'desactivado': Item.ESTADO_DESACTIVADO,
                                                                     'relaciones': relaciones})

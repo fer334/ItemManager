@@ -38,7 +38,7 @@
                                         <ul class="listaEnLB">
                                         <h5 class="fieldset-title">
                                             <a class="text-primary" href="{% url 'configuracion:verLineaBase' linea_base.id %}"  >
-                                                Linea Base {{ linea_base.id }}
+                                                Linea Base {% if linea_base.numeracion < 10 %}0{% endif %}{{ linea_base.numeracion }}
                                             </a>
                                         </h5>
                                         {% for item in linea_base.items.all %}
