@@ -478,7 +478,10 @@ def desactivar_relacion_item(request, id_proyecto):
                 El item {} esta
                 aprobado, por lo cual no se puede desactivar la relacion
                 """.format(relacion.fin)
-
+        elif relacion.inicio.estado in (Item.ESTADO_LINEABASE):
+            mensaje_error = """
+                El item {} esta en linea base, por lo que no se puede desactivar la relacion
+            """.format(relacion.inicio)
         else:
 
             # se añade código para que al desactivar una relación cuente como una nueva versión para ambos items
