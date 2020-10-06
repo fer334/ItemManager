@@ -682,7 +682,7 @@ def asignar_rol_por_fase(request, id_fase, id_usuario):
     lista_usr_x_rol = UsuarioxRol.objects.filter(usuario=participante, fase=fase, activo=True)
     roles_fase_actual = [obj.rol for obj in lista_usr_x_rol]
     roles_proyecto = Rol.objects.filter(proyecto=fase.proyecto)
-    roles_disponibles = [rol for rol in roles_proyecto if not (rol in roles_fase_actual)]
+    roles_disponibles = [rol for rol in roles_proyecto if (not (rol in roles_fase_actual) )and rol.activo]
     return render(request, 'administracion/asignarRol.html', {
         'participante': participante,
         'fase': fase,

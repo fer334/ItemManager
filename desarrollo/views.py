@@ -347,7 +347,7 @@ def ver_proyecto(request, id_proyecto):
     """
     proyecto = Proyecto.objects.get(pk=id_proyecto)
     # lista de items
-    lista_items = Item.objects.all()
+    lista_items = Item.objects.all().order_by('numeracion')
     # filtro de tipos de items que aún no fueron usados (para todas las fases)
     tipos_de_items_usados = []
     for fase in proyecto.fase_set.all():
