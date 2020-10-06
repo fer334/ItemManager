@@ -265,7 +265,7 @@ def estado_proyectov2(request, id_proyecto, estado):
         return HttpResponseRedirect(reverse('administracion:accesoDenegado', args=[id_proyecto, 'gerente']))
     else:
         if estado == 'iniciado' or estado == 'en ejecucion' or estado == 'finalizado' or estado == 'cancelado':
-            if not(estado == 'finalizado' and proyecto.estado != 'en ejecucion'):
+            if not (estado == 'finalizado' and proyecto.estado != 'en ejecucion'):
                 # se modifica el estado
                 proyecto.estado = estado
                 # se añade la fecha de modificación
@@ -440,7 +440,7 @@ def editar_tipo(request, id_proyecto, id_tipo):
         form.fields['nombre'].widget.attrs['value'] = tipo.nombre
         form.fields['prefijo'].widget.attrs['value'] = tipo.prefijo
         form.fields['descripcion'].initial = tipo.descripcion
-        return render(request, 'administracion/editarTipoItem.html', {'form': form, 'tipo':tipo})
+        return render(request, 'administracion/editarTipoItem.html', {'form': form, 'tipo': tipo})
 
 
 def ver_tipo(request, id_proyecto, id_tipo):
@@ -590,11 +590,20 @@ def crear_rol(request, id_proyecto):
                 crear_relaciones_ph = form.cleaned_data['crear_relaciones_ph']
                 crear_relaciones_as = form.cleaned_data['crear_relaciones_as']
                 borrar_relaciones = form.cleaned_data['borrar_relaciones']
+                ver_item = form.cleaned_data['ver_item']
+                crear_linea_base = form.cleaned_data['crear_linea_base']
+                cerrar_fase = form.cleaned_data['cerrar_fase']
+                cerrar_proyecto = form.cleaned_data['cerrar_proyecto']
+                ver_el_proyecto = form.cleaned_data['ver_proyecto']
+                solicitar_ruptura_lb = form.cleaned_data['solicitar_ruptura_lb']
                 nuevo_rol = Rol(nombre=nombre, crear_item=crear_item, modificar_item=modificar_item,
                                 desactivar_item=desactivar_item,
                                 aprobar_item=aprobar_item, reversionar_item=reversionar_item,
                                 crear_relaciones_as=crear_relaciones_as, crear_relaciones_ph=crear_relaciones_ph,
-                                borrar_relaciones=borrar_relaciones, proyecto=proyecto)
+                                borrar_relaciones=borrar_relaciones, proyecto=proyecto, ver_item=ver_item,
+                                crear_linea_base=crear_linea_base, cerrar_fase=cerrar_fase,
+                                cerrar_proyecto=cerrar_proyecto, ver_el_proyecto=ver_el_proyecto,
+                                solicitar_ruptura_lb=solicitar_ruptura_lb)
                 nuevo_rol.save()
                 return redirect('administracion:administrarRoles', id_proyecto=id_proyecto)
         form = RolForm()
