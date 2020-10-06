@@ -15,8 +15,12 @@ git checkout $tag
 
 echo "Loggeando en heroku"
 heroku login
+echo "Agregando el repositorio a la app"
+heroku git:remote -a team-is2
+echo "Reseteando la base de datos"
+heroku pg:reset HEROKU_POSTGRESQL_RED_URL --confirm team-is2
 echo "Realizando el push a la rama de heroku"
-git push heroku $branch:$tag
+git push -f heroku HEAD:$branch
 echo "Poblando la base de datos"
-heroku pg:psql < $backupfile
+heroku pg:psql < ../$backupfile
 
