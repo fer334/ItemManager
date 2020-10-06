@@ -670,7 +670,6 @@ def desactivar_item(request, id_proyecto, id_item):
 
     return redirect('desarrollo:verItem', id_proyecto, id_item)
 
-
 def modificar_item(request, id_proyecto, id_item):
     """
     Vista en la cual se modifican los Item, para hacerlo el mismo aún debe
@@ -685,11 +684,11 @@ def modificar_item(request, id_proyecto, id_item):
     :return: redirecciona a los detalles del item
     :return: renderea a la platilla de edición del item
     """
-    fase = Item.fase
-    # primero verificamos que cumpla con el permiso
-    if not has_permiso(fase=fase, usuario=request.user, permiso=Rol.CREAR_ITEM):
-        return redirect('administracion:accesoDenegado', id_proyecto=id_proyecto, caso='permisos')
     item = Item.objects.get(pk=id_item)
+    fase = item.fase
+    # primero verificamos que cumpla con el permiso
+    if not has_permiso(fase=fase, usuario=request.user, permiso=Rol.MODIFICAR_ITEM):
+        return redirect('administracion:accesoDenegado', id_proyecto=id_proyecto, caso='permisos')
     lista_atr = AtributoParticular.objects.filter(item=item).order_by('id')
     if Item.ESTADO_DESARROLLO == item.estado:
         if request.method == 'POST':

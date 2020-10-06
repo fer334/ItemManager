@@ -603,7 +603,7 @@ def crear_rol(request, id_proyecto):
                                 crear_relaciones_as=crear_relaciones_as, crear_relaciones_ph=crear_relaciones_ph,
                                 borrar_relaciones=borrar_relaciones, proyecto=proyecto, ver_item=ver_item,
                                 crear_linea_base=crear_linea_base, cerrar_fase=cerrar_fase,
-                                cerrar_proyecto=cerrar_proyecto, ver_el_proyecto=ver_el_proyecto,
+                                cerrar_proyecto=cerrar_proyecto, ver_proyecto=ver_el_proyecto,
                                 solicitar_ruptura_lb=solicitar_ruptura_lb)
                 nuevo_rol.save()
                 return redirect('administracion:administrarRoles', id_proyecto=id_proyecto)
