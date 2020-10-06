@@ -268,7 +268,7 @@ def trazabilidad(request, id_proyecto, id_item):
     items += ramas_recursivas_trazabilidad(item, 'derecha', item.hijos.all())
     # ahora eliminamos elementos duplicados con los sets de python
     setitems = set(items)
-    return render(request, 'configuracion/item_trazabilidad.html', {'item': item, 'fases': fases,
+    return render(request, 'configuracion/item_trazabilidad.html', {'item_principal': item, 'fases': fases,
                                                                     'lista_items': setitems, 'proyecto': proyecto,
                                                                     'desactivado': Item.ESTADO_DESACTIVADO,
                                                                     'relaciones': relaciones})

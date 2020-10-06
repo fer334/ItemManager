@@ -530,8 +530,8 @@ def crear_lista_relaciones_del_proyecto(id_proyecto):
         if inicio.estado != Item.ESTADO_DESACTIVADO:
             for fin in todos:
                 relacion = Relacion()
-                relacion.inicio = inicio
-                relacion.fin = fin
+                relacion.inicio = inicio.get_ultima_version()
+                relacion.fin = fin.get_ultima_version()
                 relaciones.append(relacion)
     return relaciones
 
