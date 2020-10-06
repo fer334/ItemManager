@@ -106,9 +106,17 @@ def ver_item(request, id_proyecto, id_item):
     fase = item.fase
     proyecto = Proyecto.objects.get(pk=id_proyecto)
     impacto = calcular_impacto_recursivo(item)
+    lista_impacto = calcular_lista_items_impacto_recursivo(item)
+    lista_fases_impacto = []
+    for items_impacto in lista_impacto:
+        lista_fases_impacto.append(items_impacto.fase)
+    # convertimos en set para que no hayan repetidos
+    lista_fases_impacto = set(lista_fases_impacto)
     return render(request, 'desarrollo/item_ver.html', {'item': item, 'lista_atributos': lista_atributos, 'fase': fase,
                                                         'proyecto': proyecto, 'desarrollo': Item.ESTADO_DESARROLLO,
-                                                        'estado': Proyecto.ESTADO_EN_EJECUCION, 'impacto': impacto})
+                                                        'estado': Proyecto.ESTADO_EN_EJECUCION, 'impacto': impacto,
+                                                        'lista_impacto': lista_impacto, 'lista_fases_impacto':
+                                                            lista_fases_impacto})
 
 
 def historial_versiones_item(request, id_proyecto, id_item):
@@ -670,6 +678,7 @@ def desactivar_item(request, id_proyecto, id_item):
 
     return redirect('desarrollo:verItem', id_proyecto, id_item)
 
+
 def modificar_item(request, id_proyecto, id_item):
     """
     Vista en la cual se modifican los Item, para hacerlo el mismo aún debe
@@ -952,4 +961,20 @@ def calcular_impacto_recursivo(item):
         sucesor_actual = Item.objects.filter(id_version=sucesor.id_version,
                                              estado__regex='^(?!' + Item.ESTADO_DESACTIVADO + ')').order_by('id').last()
         impacto += calcular_impacto_recursivo(sucesor_actual)
+    return impacto
+
+
+def calcular_lista_items_impacto_recursivo(item):
+    """
+    esta función se encarga de listar todos los ítems que se suman para el cálculo de impacto
+
+    :param item: el item del cual se sumará su complejidad y la de sus hijos y sucesores
+    :return: returna el impacto que es la suma de complejidades
+    """
+    impacto = [item]
+    for hijo in item.hijos.all():
+        # al impacto le sumamos el impacto que retorne la llamada recursiva con el hijo de parametro
+        impacto += calcular_lista_items_impacto_recursivo(hijo.get_ultima_version())
+    for sucesor in item.sucesores.all():
+        impacto += calcular_lista_items_impacto_recursivo(sucesor.get_ultima_version())
     return impacto
