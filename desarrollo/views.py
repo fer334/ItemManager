@@ -172,6 +172,12 @@ def reversionar_item(request, id_proyecto, id_item, id_version_anterior):
     :return: redireccion a item_ver.html
     :rtype: redirect
     """
+    it = Item.objects.get(pk=id_item)
+    fase = it.fase
+    # primero verificamos que cumpla con el permiso
+    if not has_permiso(fase=fase, usuario=request.user, permiso=Rol.REVERSIONAR_ITEM):
+        return redirect('administracion:accesoDenegado', id_proyecto=fase.proyecto.id, caso='permisos')
+
     if validar_reversion(id_item, id_version_anterior):
         item_actual = Item.objects.get(pk=id_item)
         item_version_anterior = Item.objects.get(pk=id_version_anterior)
@@ -427,6 +433,13 @@ def relacionar_item(request, id_proyecto):
         if len([x for x in inicio.antecesores.all() if x.id == fin.id] +
                [x for x in fin.antecesores.all() if x.id == inicio.id]) > 0:
             context['error'] = 'Esta relacion ya existe'
+        # verificamos que el usuario tenga permisos de crear relaciones padre hijo
+        if not has_permiso(fase=inicio.fase, usuario=request.user, permiso=Rol.CREAR_RELACIONES_PH) and inicio.fase == fin.fase:
+            context['error'] = 'El Rol del Usuario Actual no tiene permisos para crear Relaciones de tipo Padre-Hijo'
+        # verificamos que el usuario tenga permisos de crear relaciones antecesor sucesor
+        if not has_permiso(fase=inicio.fase, usuario=request.user, permiso=Rol.CREAR_RELACIONES_AS) and inicio.fase != fin.fase:
+            context['error'] = 'El Rol del Usuario Actual no tiene permisos para crear Relaciones de tipo ' \
+                               'Antecesor-Sucesor '
 
         if context['error']:
             return render(request, "desarrollo/relacion_crear.html", context)
@@ -478,6 +491,13 @@ def desactivar_relacion_item(request, id_proyecto):
     if request.method == "POST":
         clave = request.POST['desactivar']
         clave = clave.split('-')
+
+        # primero verificamos que cumpla con el permiso
+        proy = Proyecto.objects.get(pk=id_proyecto)
+        it_ini = Item.objects.get(pk=clave[0])
+        if not has_permiso(fase=it_ini.fase, usuario=request.user, permiso=Rol.BORRAR_RELACIONES):
+            return redirect('administracion:accesoDenegado', id_proyecto=proy.id, caso='permisos')
+
         relacion = Relacion()
         relacion.inicio = Item.objects.get(pk=clave[0])
         relacion.fin = Item.objects.get(pk=clave[1])
@@ -609,6 +629,10 @@ def aprobar_item(request, id_item):
     :return: redirecciona al menu de aprobacion del item
     """
     item = Item.objects.get(pk=id_item)
+    fase = item.fase
+    # primero verificamos que cumpla con el permiso
+    if not has_permiso(fase=fase, usuario=request.user, permiso=Rol.APROBAR_ITEM):
+        return redirect('administracion:accesoDenegado', id_proyecto=fase.proyecto.id, caso='permisos')
 
     if item.estado == Item.ESTADO_PENDIENTE:
         item.estado = Item.ESTADO_APROBADO
@@ -625,6 +649,11 @@ def desaprobar_item(request, id_item):
     :return: redirecciona al menu de aprobacion del item
     """
     item = Item.objects.get(pk=id_item)
+    fase = item.fase
+    # primero verificamos que cumpla con el permiso
+    if not has_permiso(fase=fase, usuario=request.user, permiso=Rol.APROBAR_ITEM):
+        return redirect('administracion:accesoDenegado', id_proyecto=fase.proyecto.id, caso='permisos')
+
     if item.estado == Item.ESTADO_PENDIENTE:
         item.estado = Item.ESTADO_DESARROLLO
         item.save()
@@ -643,6 +672,10 @@ def desactivar_item(request, id_proyecto, id_item):
     :return: redirecciona a los detalles del item
     """
     it = Item.objects.get(pk=id_item)
+    fase = it.fase
+    # primero verificamos que cumpla con el permiso
+    if not has_permiso(fase=fase, usuario=request.user, permiso=Rol.DESACTIVAR_ITEM):
+        return redirect('administracion:accesoDenegado', id_proyecto=id_proyecto, caso='permisos')
     item = versionar_item(it, request.user)
     # se verifica si es antecesor o padre
     if item.sucesores.count() != 0 or item.hijos.count() != 0:
