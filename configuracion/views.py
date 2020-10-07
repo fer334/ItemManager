@@ -324,3 +324,31 @@ def reporte_trazabilidad(request, id_proyecto, id_item):
 
     return render(request, 'configuracion/item_trazabilidad_reporte.html', {'id_proyecto': id_proyecto,
                                                                             'id_item': id_item})
+
+
+def solicitud_modificacion_estado(request, id_item, id_proyecto):
+    """
+    Funcion en donde se realiza la solicitud de modificacion de estado
+    :param request:
+    :param id_item:
+    :param id_proyecto:
+    :return:
+    """
+    item = Item.objects.get(pk=id_item)
+    if request.POST:
+        solicitud = Solicitud(
+            solicitado_por=request.user,
+            items_a_modificar=id_item,
+            justificacion=request.POST['mensaje'],
+        )
+        solicitud.save()
+        item.estado.all = [
+                Item.objects.get(pk=item.split('-')[1])
+                for item in request.POST
+                if len(item.split('-')) > 1
+            ]
+        for item in item.estado:
+            solicitud.items_a_modificar.add(item)
+        return redirect('configuracion:verProyecto', id_item, id_proyecto)
+    return render(request, 'configuracion/solicitud_modificacion_estado_item.html', {'item': item,
+                                                                                     'estado': item.estado})

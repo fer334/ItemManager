@@ -81,6 +81,7 @@
         </table>
 
         <div class="col-sm-12 mt-4">
+             <a class="btn btn-primary" href="{% url 'configuracion:solicitarModificarEstado' proyecto.id%}">Lista de Items</a>
             {% if es_comite %}
                 <a class="btn btn-primary" href="{% url 'configuracion:verIndexComite' proyecto.id %}">Comite de decisiones</a>
             {% endif %}

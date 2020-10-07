@@ -1,0 +1,50 @@
+{% extends 'login/loginHeader.html' %}
+{% block content %}
+    <div class="container">
+        <h1 class="text-center pt-3 mb-5">Solicitud de modificacion de estado</h1>
+        <form method="post">
+            <div class="form-group">
+                <label>Lista de Items</label>
+                        <div class="row">
+                            <div class="col-sm">
+                                Ítem
+                                {% for item in item_set.all %}
+                                    <li class="list-group">
+                                    <div  class="form-check">
+                                        <input class="form-check-input" type="checkbox"
+                                               name="checkItem-{{ item.id }}" id="checkItem-{{ item.id }}">
+                                            <label class="form-check-label" for="checkItem-{{ item.id }}">
+                                                {{ item.tipo_item.prefijo }}
+                                                {% if item.numeracion < 10 %}0
+                                                {% endif %}{{ item.numeracion}}-{{ item.nombre }}
+                                            </label>
+                                    </div>
+                                    </li>
+                                {% endfor %}
+                            </div>
+                            <div class="col-sm">
+                                Estado
+                            {% for estado in item.estado.all  %}
+                            <div>
+                                {{ item.estado }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                        </div>
+                </div>
+            <div class="form-group">
+              <label>Justificacion:</label>
+                <textarea class="form-control" aria-label="With textarea" name="mensaje"
+                          placeholder="Justifique el porqué modificar el item" required></textarea>
+            </div>
+            <div class="mt-5">
+                <button class="btn btn-primary">Enviar solitud</button>
+                <a href="{% url 'configuracion:verProyecto' proyecto.id %}" class="btn btn-primary float-right">
+                    Volver atrás
+                </a>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+
+
