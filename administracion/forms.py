@@ -24,7 +24,7 @@ class ProyectoForm(forms.Form):
                                      help_text='obs: nro. impar >=3',
                                      widget=forms.TextInput(attrs={'placeholder': 'Ej. 3', 'size': 35}))
 
-    def clean_cant_comite(self):  
+    def clean_cant_comite(self):
         """
         Método que comprueba que la cantidad de miembros del comité sea impar
 
@@ -40,6 +40,7 @@ class RolForm(forms.Form):
     """
     Formulario para la creacion de Roles del Usuario
     """
+
     def __init__(self, *args, **kwargs):
         super(RolForm, self).__init__(*args, **kwargs)
 
@@ -60,6 +61,18 @@ class RolForm(forms.Form):
                                              widget=forms.CheckboxInput(attrs={'class': 'custom-control-input'}))
     borrar_relaciones = forms.BooleanField(required=False,
                                            widget=forms.CheckboxInput(attrs={'class': 'custom-control-input'}))
+    ver_item = forms.BooleanField(required=False,
+                                  widget=forms.CheckboxInput(attrs={'class': 'custom-control-input'}))
+    crear_linea_base = forms.BooleanField(required=False,
+                                          widget=forms.CheckboxInput(attrs={'class': 'custom-control-input'}))
+    cerrar_fase = forms.BooleanField(required=False,
+                                     widget=forms.CheckboxInput(attrs={'class': 'custom-control-input'}))
+    cerrar_proyecto = forms.BooleanField(required=False,
+                                         widget=forms.CheckboxInput(attrs={'class': 'custom-control-input'}))
+    ver_proyecto = forms.BooleanField(required=False,
+                                      widget=forms.CheckboxInput(attrs={'class': 'custom-control-input'}))
+    solicitar_ruptura_lb = forms.BooleanField(required=False,
+                                              widget=forms.CheckboxInput(attrs={'class': 'custom-control-input'}))
 
 
 class ParticipanteForm(forms.Form):
@@ -77,5 +90,6 @@ class EditarTipoItemForm(forms.Form):
     nombre = forms.CharField(required=True, widget=forms.TextInput(attrs={'class': 'form-control'}))
     prefijo = forms.CharField(required=True, widget=forms.TextInput(attrs={'class': 'form-control'}))
     descripcion = forms.CharField(required=True, widget=forms.Textarea(attrs={'class': 'form-control', 'rows': '3'}))
+
     def __init__(self, *args, **kwargs):
         super(EditarTipoItemForm, self).__init__(*args, **kwargs)

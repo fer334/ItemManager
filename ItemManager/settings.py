@@ -157,4 +157,3 @@ else:
     print("SE ENCUENTRAN EN EL AMBIENTE DE PRODUCCION")
     from .settingsProd import *
 
-

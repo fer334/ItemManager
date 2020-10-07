@@ -8,11 +8,19 @@ from desarrollo.models import Item, AtributoParticular
 from administracion.models import Proyecto, TipoItem, Fase, Rol
 from desarrollo.forms import ItemForm
 from desarrollo.getPermisos import has_permiso
-
+from configuracion.models import Solicitud, LineaBase
 
 def get_numeracion(fase, tipo):
-    items_del_tipo = [item for item in fase.item_set.all() if item.tipo_item == tipo]
-    return len(items_del_tipo) + 1
+    items_del_tipo = fase.item_set.filter(tipo_item=tipo, estado__in=(Item.ESTADO_REVISION,
+                                                                      Item.ESTADO_APROBADO,
+                                                                      Item.ESTADO_LINEABASE,
+                                                                      Item.ESTADO_DESARROLLO,
+                                                                      Item.ESTADO_PENDIENTE))
+    if (items_del_tipo):
+        ultimo_numero = items_del_tipo.order_by('numeracion').last().numeracion
+        return ultimo_numero + 1
+    else:
+        return 1
 
 
 def crear_item(request, id_fase, id_tipo):
@@ -28,6 +36,10 @@ def crear_item(request, id_fase, id_tipo):
     :rtype: render, redirect
     """
     fase = Fase.objects.get(pk=id_fase)
+    # primero verificamos que cumpla con el permiso
+    if not has_permiso(fase=fase, usuario=request.user, permiso=Rol.CREAR_ITEM):
+        return redirect('administracion:accesoDenegado', id_proyecto=fase.proyecto.id, caso='permisos')
+
     tipo = TipoItem.objects.get(pk=id_tipo)
     plantilla_atr = tipo.plantillaatributo_set.all().order_by('id')
 
@@ -94,9 +106,17 @@ def ver_item(request, id_proyecto, id_item):
     fase = item.fase
     proyecto = Proyecto.objects.get(pk=id_proyecto)
     impacto = calcular_impacto_recursivo(item)
+    lista_impacto = calcular_lista_items_impacto_recursivo(item)
+    lista_fases_impacto = []
+    for items_impacto in lista_impacto:
+        lista_fases_impacto.append(items_impacto.fase)
+    # convertimos en set para que no hayan repetidos
+    lista_fases_impacto = set(lista_fases_impacto)
     return render(request, 'desarrollo/item_ver.html', {'item': item, 'lista_atributos': lista_atributos, 'fase': fase,
                                                         'proyecto': proyecto, 'desarrollo': Item.ESTADO_DESARROLLO,
-                                                        'estado': Proyecto.ESTADO_EN_EJECUCION, 'impacto': impacto})
+                                                        'estado': Proyecto.ESTADO_EN_EJECUCION, 'impacto': impacto,
+                                                        'lista_impacto': lista_impacto, 'lista_fases_impacto':
+                                                            lista_fases_impacto})
 
 
 def historial_versiones_item(request, id_proyecto, id_item):
@@ -335,7 +355,7 @@ def ver_proyecto(request, id_proyecto):
     """
     proyecto = Proyecto.objects.get(pk=id_proyecto)
     # lista de items
-    lista_items = Item.objects.all()
+    lista_items = Item.objects.all().order_by('numeracion')
     # filtro de tipos de items que aún no fueron usados (para todas las fases)
     tipos_de_items_usados = []
     for fase in proyecto.fase_set.all():
@@ -383,7 +403,7 @@ def relacionar_item(request, id_proyecto):
         fase__proyecto_id=id_proyecto, estado=Item.ESTADO_APROBADO
     ).union(
         Item.objects.filter(
-            fase__proyecto_id=id_proyecto,estado=Item.ESTADO_LINEABASE
+            fase__proyecto_id=id_proyecto, estado=Item.ESTADO_LINEABASE
         )
     )
     lista_items_hijo = Item.objects.filter(
@@ -466,7 +486,10 @@ def desactivar_relacion_item(request, id_proyecto):
                 El item {} esta
                 aprobado, por lo cual no se puede desactivar la relacion
                 """.format(relacion.fin)
-
+        elif relacion.inicio.estado in (Item.ESTADO_LINEABASE):
+            mensaje_error = """
+                El item {} esta en linea base, por lo que no se puede desactivar la relacion
+            """.format(relacion.inicio)
         else:
 
             # se añade código para que al desactivar una relación cuente como una nueva versión para ambos items
@@ -518,8 +541,8 @@ def crear_lista_relaciones_del_proyecto(id_proyecto):
         if inicio.estado != Item.ESTADO_DESACTIVADO:
             for fin in todos:
                 relacion = Relacion()
-                relacion.inicio = inicio
-                relacion.fin = fin
+                relacion.inicio = inicio.get_ultima_version()
+                relacion.fin = fin.get_ultima_version()
                 relaciones.append(relacion)
     return relaciones
 
@@ -630,9 +653,14 @@ def desactivar_item(request, id_proyecto, id_item):
 
     if item.estado == Item.ESTADO_DESARROLLO:
         item.estado = Item.ESTADO_DESACTIVADO
-        # desvinculamos el item y su tipo de item de la fase
+        # desvinculamos el item y su tipo de item de la fase (solo si no hay otro item con el mismo tipo)
         fase = Fase.objects.get(pk=item.fase.id)
-        fase.tipos_item.remove(item.tipo_item)
+        # primero consultamos la cantidad de items con ese tipo de item en la fase(que no estén desactivados).
+        cantidad_items = Item.objects.filter(fase=fase, estado__regex='^(?!' + Item.ESTADO_DESACTIVADO + ')',
+                                             tipo_item=item.tipo_item)
+        # si la cantidad es diferente a 1 si se puede desvincular el tipo de item de la fase
+        if cantidad_items.count() == 1:
+            fase.tipos_item.remove(item.tipo_item)
 
     # se deben eliminar relaciones donde el item es sucesor o hijo
     for padre in item.padres.all():
@@ -669,7 +697,10 @@ def modificar_item(request, id_proyecto, id_item):
     :return: renderea a la platilla de edición del item
     """
     item = Item.objects.get(pk=id_item)
-    fase = Item.fase
+    fase = item.fase
+    # primero verificamos que cumpla con el permiso
+    if not has_permiso(fase=fase, usuario=request.user, permiso=Rol.MODIFICAR_ITEM):
+        return redirect('administracion:accesoDenegado', id_proyecto=id_proyecto, caso='permisos')
     lista_atr = AtributoParticular.objects.filter(item=item).order_by('id')
     if Item.ESTADO_DESARROLLO == item.estado:
         if request.method == 'POST':
@@ -780,6 +811,14 @@ def cerrar_fase(request, id_proyecto):
             content['mensaje_error'] = """
             Todos los items de la fase deben estar en Linea Base para poder cerrarlo
             """
+
+            return render(request, 'desarrollo/fase_cerrar.html', content)
+
+        ##Si hay una solicitud activa, no se permite cerrar la fase
+        lineas_base = fase.lineabase_set.filter(estado=LineaBase.ESTADO_CERRADA)
+        if Solicitud.objects.filter(linea_base__in=lineas_base, solicitud_activa=True).count():
+            content['mensaje_error'] = """Hay solicitudes activas en la fase"""
+
             return render(request, 'desarrollo/fase_cerrar.html', content)
 
         # Comprobacion de que todos los items dentro de la fase tengan antecedentes
@@ -831,6 +870,7 @@ def votacion_item_en_revision_desarrollo(request, id_item):
     if item.estado == Item.ESTADO_REVISION:
         item.estado = Item.ESTADO_DESARROLLO
         item.save()
+
     def pasar_a_revision(lista_items):
         for item in lista_items:
             item_hijo = Item.objects.filter(id_version=item.id_version,
@@ -839,14 +879,14 @@ def votacion_item_en_revision_desarrollo(request, id_item):
                 item_hijo.estado = Item.ESTADO_REVISION
                 item_hijo.save()
 
-    #Luego de pasar el item a desarrollo se debe ver como quedan sus hijos y sucesores
+    # Luego de pasar el item a desarrollo se debe ver como quedan sus hijos y sucesores
     pasar_a_revision(item.hijos.all())
     pasar_a_revision(item.sucesores.all())
 
-    #Luego se ve si el item pertenece a una linea base y se ajusta los items de esa linea base
+    # Luego se ve si el item pertenece a una linea base y se ajusta los items de esa linea base
     for linea_base in item.lineabase_set.all():
         if linea_base.estado == linea_base.ESTADO_CERRADA:
-            #Si marque un item en estado en desarrollo, se debe romper la lb
+            # Si marque un item en estado en desarrollo, se debe romper la lb
             linea_base.estado = linea_base.ESTADO_ROTA
             linea_base.save()
             for item in linea_base.items.all():
@@ -857,7 +897,6 @@ def votacion_item_en_revision_desarrollo(request, id_item):
                 if item.estado == Item.ESTADO_LINEABASE:
                     item.estado = Item.ESTADO_APROBADO
                     item.save()
-
 
     return redirect('desarrollo:verItem', item.fase.proyecto_id, id_item)
 
@@ -875,7 +914,7 @@ def votacion_item_en_revision_aprobado(request, id_item):
     if item.estado == Item.ESTADO_REVISION:
         item.estado = Item.ESTADO_APROBADO
         item.save()
-    #TODO Muchas cosas jeje
+    # TODO Muchas cosas jeje
     for linea_base in item.lineabase_set.all():
         if linea_base.estado == linea_base.ESTADO_CERRADA:
             # Si aprobe todos los items de la LB, todos pasan a estado EN LB
@@ -933,4 +972,20 @@ def calcular_impacto_recursivo(item):
         sucesor_actual = Item.objects.filter(id_version=sucesor.id_version,
                                              estado__regex='^(?!' + Item.ESTADO_DESACTIVADO + ')').order_by('id').last()
         impacto += calcular_impacto_recursivo(sucesor_actual)
+    return impacto
+
+
+def calcular_lista_items_impacto_recursivo(item):
+    """
+    esta función se encarga de listar todos los ítems que se suman para el cálculo de impacto
+
+    :param item: el item del cual se sumará su complejidad y la de sus hijos y sucesores
+    :return: returna el impacto que es la suma de complejidades
+    """
+    impacto = [item]
+    for hijo in item.hijos.all():
+        # al impacto le sumamos el impacto que retorne la llamada recursiva con el hijo de parametro
+        impacto += calcular_lista_items_impacto_recursivo(hijo.get_ultima_version())
+    for sucesor in item.sucesores.all():
+        impacto += calcular_lista_items_impacto_recursivo(sucesor.get_ultima_version())
     return impacto

@@ -34,8 +34,6 @@
                         {{ form.desactivar_item }}
                         <label class="custom-control-label" for="id_desactivar_item">Desactivar item</label>
                     </div>
-                </div>
-                <div class="col-sm-12 col-md-6">
                     <div class="custom-control custom-checkbox">
                         {{ form.crear_relaciones_ph }}
                         <label class="custom-control-label" for="id_crear_relaciones_ph">Crear relaciones padre-hijo</label>
@@ -44,9 +42,35 @@
                         {{ form.crear_relaciones_as }}
                         <label class="custom-control-label" for="id_crear_relaciones_as">Crear relaciones antecesor-sucesor</label>
                     </div>
+                </div>
+                <div class="col-sm-12 col-md-6">
                     <div class="custom-control custom-checkbox">
                         {{ form.borrar_relaciones }}
                         <label class="custom-control-label" for="id_borrar_relaciones">Desactivar relaciones</label>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                        {{ form.ver_item }}
+                        <label class="custom-control-label" for="id_borrar_relaciones">Ver Item</label>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                        {{ form.crear_linea_base }}
+                        <label class="custom-control-label" for="id_borrar_relaciones">Crear Línea Base</label>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                        {{ form.cerrar_fase }}
+                        <label class="custom-control-label" for="id_borrar_relaciones">Cerrar Fase</label>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                        {{ form.cerrar_proyecto }}
+                        <label class="custom-control-label" for="id_borrar_relaciones">Cerrar Proyecto</label>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                        {{ form.ver_proyecto }}
+                        <label class="custom-control-label" for="id_borrar_relaciones">Ver Proyecto</label>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                        {{ form.solicitar_ruptura_lb }}
+                        <label class="custom-control-label" for="id_borrar_relaciones">Solicitar Ruptura de Línea Base</label>
                     </div>
                 </div>
             </div>

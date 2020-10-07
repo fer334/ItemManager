@@ -142,13 +142,26 @@ class Rol(models.Model):
     aprobar_item = models.BooleanField(default=False)
     #: Cambiar version de un item
     reversionar_item = models.BooleanField(default=False)
-    #:
+    #: crear relaciones de tipo padre e hijo
     crear_relaciones_ph = models.BooleanField(default=False)
-    #:
+    #: crear relaciones de tipo antecesor y sucesor
     crear_relaciones_as = models.BooleanField(default=False)
-    #:
+    #: borrar relaciones del proyecto
     borrar_relaciones = models.BooleanField(default=False)
-    #:
+    #: ver Items del proyecto
+    ver_item = models.BooleanField(default=False)
+    #: crear lineas base en el proyecto
+    crear_linea_base = models.BooleanField(default=False)
+    #: cerrar fases del proyecto
+    cerrar_fase = models.BooleanField(default=False)
+    #: cerrar el proyecto
+    cerrar_proyecto = models.BooleanField(default=False)
+    #: ver proyecto
+    ver_proyecto = models.BooleanField(default=False)
+    #: solicitar ruptura de linea base
+    solicitar_ruptura_lb = models.BooleanField(default=False)
+
+    #: ver si el rol está activo
     activo = models.BooleanField(default=True)
 
     CREAR_ITEM = 'CREAR_ITEM'
@@ -159,6 +172,12 @@ class Rol(models.Model):
     CREAR_RELACIONES_PH = 'CREAR_RELACIONES_PH'
     CREAR_RELACIONES_AS = 'CREAR_RELACIONES_AS'
     BORRAR_RELACIONES = 'BORRAR_RELACIONES'
+    VER_ITEM = 'VER_ITEM'
+    CREAR_LINEA_BASE = 'CREAR_LINEA_BASE'
+    CERRAR_FASE = 'CERRAR_FASE'
+    CERRAR_PROYECTO = 'CERRAR_PROYECTO'
+    VER_PROYECTO = 'VER_PROYECTO'
+    SOLICITAR_RUPTURA_LB = 'SOLICITAR_RUPTURA'
 
     def get_permisos_clean(self):
         """
@@ -174,6 +193,13 @@ class Rol(models.Model):
         permisos = permisos + (['Crear Relaciones Padre Hijo'] if self.crear_relaciones_ph else [])
         permisos = permisos + (['Crear Relaciones Antecesor Sucesor'] if self.crear_relaciones_as else [])
         permisos = permisos + (['Borrar Relaciones'] if self.borrar_relaciones else [])
+        permisos = permisos + (['Ver Item'] if self.ver_item else [])
+        permisos = permisos + (['Crear Linea Base'] if self.crear_linea_base else [])
+        permisos = permisos + (['Cerrar Fase'] if self.cerrar_fase else [])
+        permisos = permisos + (['Cerrar Proyecto'] if self.cerrar_proyecto else [])
+        permisos = permisos + (['Ver Proyecto'] if self.ver_proyecto else [])
+        permisos = permisos + (['Solicitar Ruptura Linea Base'] if self.solicitar_ruptura_lb else [])
+
         return permisos
 
     def __str__(self):

@@ -1,6 +1,5 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
-{% block content %}
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -12,13 +11,8 @@
   <meta name="description" content="Vertical swim lanes and pools with collapsible lanes and limited dragging." />
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <!-- Bootstrap-->
-    <!-- CSS only -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
-
   <script src="https://unpkg.com/gojs/release/go.js"></script>
-{#  <script src="https://unpkg.com/gojs/release/goSamples.js"></script>  <!-- this is only for the GoJS Samples framework -->#}
-
+  <script src="https://unpkg.com/gojs/release/goSamples.js"></script>  <!-- this is only for the GoJS Samples framework -->
   <script id="code">
     // These parameters need to be set before defining the templates.
     var MINLENGTH = 200;  // this controls the minimum length of any swimlane
@@ -137,16 +131,14 @@
       this.alignment = go.GridLayout.Position;
       // This sorts based on the location of each Group.
       // This is useful when Groups can be moved up and down in order to change their order.
-        //COMENTÉ LO DE ABAJO QUE ES LO QUE PERMITE CAMBIAR EL ORDEN MANUALMENTE DE LAS FASES PERO TAMBIÉN
-        //HACÍA QUE SE ORDENEN LAS FASES POR TAMAÑO DEL TITULO Y NO POR EL ID
-      //this.comparer = function(a, b) {
-      //  var ax = a.location.x;
-      //  var bx = b.location.x;
-      //  if (isNaN(ax) || isNaN(bx)) return 0;
-      //  if (ax < bx) return -1;
-      //  if (ax > bx) return 1;
-      //  return 0;
-      //};
+      this.comparer = function(a, b) {
+        var ax = a.location.x;
+        var bx = b.location.x;
+        if (isNaN(ax) || isNaN(bx)) return 0;
+        if (ax < bx) return -1;
+        if (ax > bx) return 1;
+        return 0;
+      };
     }
     go.Diagram.inherit(PoolLayout, go.GridLayout);
 
@@ -408,24 +400,20 @@
       // define some sample graphs in some of the lanes
       myDiagram.model = new go.GraphLinksModel(
         [ // node data
-            { key: "Grafo1", text: "Trazabilidad de {{ item_principal.nombre }}", isGroup: true, category: "Pool" },
+            { key: "Grafo1", text: "Trazabilidad de {{ item.nombre }}", isGroup: true, category: "Pool" },
             {% for fase in fases %}
-                { key: "{{ fase.id }}", text: "{{ fase.nombre }}", isGroup: true, group: "Grafo1", color: "lightblue"}, // { if fase.id != 0 %}"lightblue"{ else %}"lightyellow"{ endif %} },
+                { key: "{{ fase.id }}", text: "{{ fase.id }}){{ fase.nombre }}", isGroup: true, group: "Grafo1", color: "lightblue"}, // { if fase.id != 0 %}"lightblue"{ else %}"lightyellow"{ endif %} },
             {% endfor %}
             {% for item in lista_items %}
                 {% if item.estado != desactivado %}
                 // console.log('{ item.fase.nombre }}'),
-                    {% if item.id == item_principal.id %}
-                        { key: "{{ item.tipo_item.prefijo }}_{{ item.nombre }} [{{ item.complejidad }}]", text: "{{ item.tipo_item.prefijo }}_{{ item.nombre }} ({{ item.complejidad }}) ", group: "{{ item.fase.id }}", color: "lightgreen", isGroup: true, category: "Pool" },
-                    {% else %}
-                        { key: "{{ item.tipo_item.prefijo }}_{{ item.nombre }} [{{ item.complejidad }}]", group: "{{ item.fase.id }}" },
-                    {% endif %}
+                    { key: "{{item.nombre}}", group: "{{ item.fase.id }}" },
                 {% endif %}
             {% endfor %}
         ],
         [ // link data
             {% for relacion in relaciones %}
-                { from: "{{ relacion.inicio.tipo_item.prefijo }}_{{ relacion.inicio.nombre }} [{{ relacion.inicio.complejidad }}]", to: "{{ relacion.fin.tipo_item.prefijo }}_{{ relacion.fin.nombre }} [{{ relacion.fin.complejidad }}]" },
+                { from: "{{ relacion.inicio }}", to: "{{ relacion.fin }}" },
             {% endfor %}
         ]);
       // force all lanes' layouts to be performed
@@ -444,23 +432,17 @@
   </script>
 </head>
 <body onload="init()">
-    <div id="sample">
-        <div class="tab-content" id="myDiagramDiv" style=" width:100%; height:600px;"></div>
-        <br>
-        <div class="container">
-            <div class="col-sm-12 mt-4">
-                <a href="{% url 'configuracion:verProyecto' proyecto.id %}" class="btn btn-primary float-right">Volver atrás</a>
-                <a href="{% url 'configuracion:reporteTrazabilidad' proyecto.id item_principal.id %}" class="btn btn-info float-left">Generar Reporte</a>
-            </div>
-        </div>
-        {#    por si se quiera mostrar los datos json descomentar lo de abajo#}
-{#          <button onclick="relayoutLanes()">Layout</button>#}
-{#          <button id="SaveButton" onclick="save()">Save</button>#}
-{#          <button onclick="load()">Load</button>#}
-{#          Diagram Model saved in JSON format:#}
-{#          <br />#}
-{#          <textarea id="mySavedModel" style="width:100%;height:300px"></textarea>#}
-    </div>
+<div id="sample">
+  <div id="myDiagramDiv" style="border: solid 1px black; width:100%; height:600px;"></div>
+  <p>
+    Gráfica de trazabilidad arriba y Json abajo, ¿dejo el Json?
+  </p>
+  <button onclick="relayoutLanes()">Layout</button>
+  <button id="SaveButton" onclick="save()">Save</button>
+  <button onclick="load()">Load</button>
+  Diagram Model saved in JSON format:
+  <br />
+  <textarea id="mySavedModel" style="width:100%;height:300px"></textarea>
+</div>
 </body>
-{% endblock %}
 </html>

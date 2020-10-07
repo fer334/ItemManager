@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="postgres@localhost" uuid="d5774c90-5b34-4f5e-b7d6-6492b444e6b3">
-      <driver-ref>postgresql</driver-ref>
-      <synchronize>true</synchronize>
-      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
-      <jdbc-url>jdbc:postgresql://localhost:5432/postgres</jdbc-url>
-    </data-source>
     <data-source source="LOCAL" name="itemmanagerdb@localhost" uuid="8d3b4192-506e-4401-922b-c1c97e7e6d97">
       <driver-ref>postgresql</driver-ref>
       <synchronize>true</synchronize>
@@ -18,6 +12,12 @@
       <synchronize>true</synchronize>
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>
       <jdbc-url>jdbc:postgresql://ec2-54-157-234-29.compute-1.amazonaws.com:5432/d6l919ossi9cde</jdbc-url>
+    </data-source>
+    <data-source source="LOCAL" name="dbdesarrollo@localhost" uuid="076d8510-a109-444a-9a24-2da0cccced96">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://localhost:5432/dbdesarrollo</jdbc-url>
     </data-source>
   </component>
 </project>
