@@ -343,7 +343,6 @@ def solicitud_modificacion_estado(request, id_item, id_proyecto):
     Funcion en donde se realiza la solicitud de modificacion de estado
     :param request:
     :param id_item:
-    :param id_proyecto:
     :return:
     """
     item = Item.objects.get(pk=id_item)
