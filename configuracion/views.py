@@ -157,6 +157,9 @@ def solicitud_ruptura(request, id_lineabase):
     :rtype: render
     """
     lineabase = LineaBase.objects.get(pk=id_lineabase)
+    fase = lineabase.fase;
+    if not has_permiso(fase=fase, usuario=request.user, permiso=Rol.SOLICITAR_RUPTURA_LB):
+        return redirect('administracion:accesoDenegado', id_proyecto=fase.proyecto.id, caso='permisos')
     lista_calculo_impacto = []
     for item_en_lb in lineabase.items.all():
         lista_calculo_impacto.append(calcular_impacto_recursivo(item_en_lb))
