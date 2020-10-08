@@ -104,6 +104,9 @@ def ver_item(request, id_proyecto, id_item):
     item = Item.objects.get(pk=id_item)
     lista_atributos = AtributoParticular.objects.filter(item=item)
     fase = item.fase
+    if not has_permiso(fase=fase, usuario=request.user, permiso=Rol.VER_ITEM):
+        return redirect('administracion:accesoDenegado', id_proyecto=fase.proyecto.id, caso='permisos')
+
     proyecto = Proyecto.objects.get(pk=id_proyecto)
     impacto = calcular_impacto_recursivo(item)
     lista_impacto = calcular_lista_items_impacto_recursivo(item)
