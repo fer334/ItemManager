@@ -1,7 +1,8 @@
 {% extends 'login/loginHeader.html' %}
 {% block content %}
     <div class="container">
-        <h1 class="text-center pt-3 mb-5">{{ proyecto.nombre }}</h1>
+        <h1 class="text-center pt-3 mb-3">{{ proyecto.nombre }}</h1>
+        <h4 class="text-center">(Se muestran los items aprobados y en Linea Base)</h4>
         <div class="btn float-right">
 
         </div>
@@ -71,7 +72,6 @@
         </table>
 
         <div class="col-sm-12 mt-4">
-             <a class="btn btn-primary" href="{% url 'configuracion:solicitarModificarEstado' proyecto.id%}">Lista de Items</a>
             {% if es_comite %}
                 <a class="btn btn-primary" href="{% url 'configuracion:verIndexComite' proyecto.id %}">Comite de decisiones</a>
             {% endif %}

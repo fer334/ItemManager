@@ -68,7 +68,9 @@ def ver_proyecto(request, id_proyecto):
 
 
 def numeracion_lb_en_proyecto(proyecto):
-    ultima_lb = LineaBase.objects.filter(fase__proyecto=proyecto, estado__regex='^(?!' + LineaBase.ESTADO_ROTA + ')').order_by('numeracion').last()
+    ultima_lb = LineaBase.objects.filter(fase__proyecto=proyecto,
+                                         estado__regex='^(?!' + LineaBase.ESTADO_ROTA + ')').order_by(
+        'numeracion').last()
     if ultima_lb:
         return ultima_lb.numeracion + 1
     else:
@@ -138,9 +140,14 @@ def comite_index(request, id_proyecto):
             if solicitud.solicitud_activa:
                 solicitud.solicitante_ha_votado = solicitud.ha_votado(request.user)
                 solicitudes.append(solicitud)
+    # parte para desaprobar items
+    desaprobaciones = []
+    for solicitud_desaprobar in Solicitud.objects.filter(linea_base=None):
+        desaprobaciones.append(solicitud_desaprobar)
     return render(request, 'configuracion/comite_index.html', {
         'proyecto': proyecto,
         'solicitudes': solicitudes,
+        'desaprobaciones': desaprobaciones,
         'usuario': request.user
     })
 
@@ -338,9 +345,10 @@ def reporte_trazabilidad(request, id_proyecto, id_item):
                                                                             'id_item': id_item})
 
 
-def solicitud_modificacion_estado(request, id_item, id_proyecto):
+def solicitud_modificacion_estado(request, id_proyecto, id_item):
     """
-    Funcion en donde se realiza la solicitud de modificacion de estado
+    Funcion en donde se realiza la solicitud de desaprobación
+
     :param request:
     :param id_item:
     :param id_proyecto:
@@ -348,19 +356,16 @@ def solicitud_modificacion_estado(request, id_item, id_proyecto):
     """
     item = Item.objects.get(pk=id_item)
     if request.POST:
+        print(request.POST)
         solicitud = Solicitud(
             solicitado_por=request.user,
-            items_a_modificar=id_item,
             justificacion=request.POST['mensaje'],
         )
         solicitud.save()
-        item.estado.all = [
-                Item.objects.get(pk=item.split('-')[1])
-                for item in request.POST
-                if len(item.split('-')) > 1
-            ]
-        for item in item.estado:
+        items_seleccionados = [
+            Item.objects.get(pk=item.id)
+        ]
+
+        for item in items_seleccionados:
             solicitud.items_a_modificar.add(item)
-        return redirect('configuracion:verProyecto', id_item, id_proyecto)
-    return render(request, 'configuracion/solicitud_modificacion_estado_item.html', {'item': item,
-                                                                                     'estado': item.estado})
+        return redirect('configuracion:verProyecto', id_proyecto=id_proyecto)

@@ -78,8 +78,65 @@
             </div>
     </div>
     <div id="solicitudItem" class="container tab-pane fade"><br>
-      <h3>Menu 1</h3>
-      <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+        {% for solicitud in desaprobaciones %}
+            <div class="card bg-light mb-3 col-sm-12  col-md-5">
+                <div class="card-header">
+                    <h3 class="card-title font-weight-bold text-center">Solicitud {{ solicitud.id }}</h3>
+                </div>
+                <div class="card-body">
+                    {% for item in solicitud.items_a_modificar.all %}
+                        <h5 class="card-title font-weight-bold">Desaprobación de Item{{ item.nombre }}</h5>
+                    {% endfor %}
+                    <p class="card-text"><span class="font-weight-bold">Justificacion:</span> {{solicitud.justificacion}}</p>
+                    <p class="card-text"><span class="font-weight-bold">Solicitante:</span> {{solicitud.solicitado_por.username}}</p>
+                    <p class="card-text"><span class="font-weight-bold">Fecha:</span> {{solicitud.fecha_solicitud}}</p>
+                    <hr/>
+                    <h5 class="card-title font-weight-bold">Relaciones:</h5>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Hijos</th>
+                                <th>Sucesores</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in solicitud.items_a_modificar.all %}
+                                <tr>
+                                    <td>{{ item.nombre }}</td>
+                                    <td>
+                                        <ul class="list-unstyled">
+                                            {% for hijo in item.hijos.all %}
+                                                <li>{{ hijo.nombre }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    </td>
+                                    <td>
+                                        <ul class="list-unstyled">
+                                            {% for sucesor in item.sucesores.all %}
+                                                <li>{{ sucesor.nombre }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% if not solicitud.solicitante_ha_votado %}
+                    <div class="card-footer row">
+                        <div class="col-sm-6">
+                            <a href="{% url 'configuracion:votarSolicitud' proyecto.id solicitud.id 1 %}" class="btn btn-danger btn-block text-white">Votar Si</a>
+                        </div>
+                        <div class="col-sm-6">
+                            <a href="{% url 'configuracion:votarSolicitud' proyecto.id solicitud.id 0 %}" class="btn btn-primary btn-block text-white" >Votar No</a>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="alert alert-info text-center">Usted ya ha votado</div>
+                {% endif %}
+            </div>
+        {% endfor %}
     </div>
 
   </div>
