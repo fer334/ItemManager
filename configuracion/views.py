@@ -4,13 +4,13 @@ Vistas del modulo de configuracion
 from django.shortcuts import render, redirect
 
 # Create your views here.
-from administracion.models import Proyecto, Fase
+from administracion.models import Proyecto, Fase, Rol
 from .models import LineaBase, Solicitud, VotoRuptura
 from desarrollo.models import Item
 from login.models import Usuario
 from django.utils.timezone import now
 from desarrollo.views import calcular_impacto_recursivo, crear_lista_relaciones_del_proyecto
-
+from desarrollo.getPermisos import has_permiso
 
 def index(request, filtro):
     """
@@ -86,6 +86,8 @@ def crear_linea_base(request, id_fase):
     :rtype: render
     """
     fase = Fase.objects.get(pk=id_fase)
+    if not has_permiso(fase=fase, usuario=request.user, permiso=Rol.CREAR_LINEA_BASE):
+        return redirect('administracion:accesoDenegado', id_proyecto=fase.proyecto.id, caso='permisos')
     if request.method == 'POST':
         items = [Item.objects.get(pk=item.split('-')[1]) for item in request.POST if len(item.split('-')) > 1]
         if len(items) > 0:
