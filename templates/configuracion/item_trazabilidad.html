@@ -451,6 +451,15 @@
             <div class="col-sm-12 mt-4">
                 <a href="{% url 'configuracion:verProyecto' proyecto.id %}" class="btn btn-primary float-right">Volver atrás</a>
                 <a href="{% url 'configuracion:reporteTrazabilidad' proyecto.id item_principal.id %}" class="btn btn-info float-left">Generar Reporte</a>
+                <form method="post" class="pt-3" METHOD="post" ACTION="{% url 'configuracion:solicitarModificarEstado' proyecto.id  item_principal.id%}">
+                <br>
+                {% csrf_token %}
+                    <div class="form-group">
+                        <label for="mensaje">Justificacion</label>
+                        <textarea class="form-control" id="mensaje" rows="3" name="mensaje"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-danger float-center">Solicitar Desaprobación</button>
+                </form>
             </div>
         </div>
         {#    por si se quiera mostrar los datos json descomentar lo de abajo#}
