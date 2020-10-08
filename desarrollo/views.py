@@ -796,6 +796,9 @@ def cerrar_fase(request, id_proyecto):
     if request.method == "POST":
         clave = int(request.POST['cerrar'])
         fase = Fase.objects.get(id=clave)
+        if not has_permiso(fase=fase, usuario=request.user, permiso=Rol.CERRAR_FASE):
+            return redirect('administracion:accesoDenegado', id_proyecto=fase.proyecto.id, caso='permisos')
+
         i = clave - fases[0].id
         items_de_esta_fase = fase.item_set.exclude(estado=Item.ESTADO_DESACTIVADO).all()
 
