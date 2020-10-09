@@ -136,11 +136,11 @@
                 {% if not solicitud.solicitante_ha_votado %}
                     <div class="card-footer row">
                         <div class="col-sm-6">
-                            <a href="{% url 'configuracion:votarSolicitudDesaprobacion' proyecto.id solicitud.id 1 %}"
+                            <a href="{% url 'configuracion:votarSolicitud' proyecto.id solicitud.id 1 %}"
                                class="btn btn-danger btn-block text-white">Votar Si</a>
                         </div>
                         <div class="col-sm-6">
-                            <a href="{% url 'configuracion:votarSolicitudDesaprobacion' proyecto.id solicitud.id 0 %}"
+                            <a href="{% url 'configuracion:votarSolicitud' proyecto.id solicitud.id 0 %}"
                                class="btn btn-primary btn-block text-white" >Votar No</a>
                         </div>
                     </div>
