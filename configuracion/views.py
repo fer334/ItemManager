@@ -363,7 +363,10 @@ def reporte_trazabilidad(request, id_proyecto, id_item):
 
 def solicitud_modificacion_estado(request, id_proyecto, id_item):
     """
-    Funcion en donde se realiza la solicitud de desaprobación de un item, para poder modificar su estado.
+    Funcion en donde se realiza la solicitud de desaprobación de un item al comite,
+    para poder modificar su estado, esto es posible si el item esta en estado APROBADO,
+    luego se lleva a votacion por el comite y si se aprueba en su mayoria el item pasa a
+    estado EN DESARROLLO, para poder modificarlo a gusto.
 
     :param request: objeto tipo diccionario que permite acceder a datos
     :param id_proyecto: identificador del item
