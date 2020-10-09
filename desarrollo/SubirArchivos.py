@@ -15,15 +15,19 @@ def generar_nombre(nombre):
 
 
 def handle_uploaded_file(archivo, id_proyecto, user):
+
     final_storage_path = f'{id_proyecto}/{generar_nombre(archivo)}'
     final_path = f'{TEMP_FILES_DIR}/{generar_nombre(archivo)}'
     user_obj = Usuario.objects.get(username=user)
     with open(final_path, 'wb+') as destination:
-        for chunk in archivo.chunks():
-            destination.write(chunk)
-        storage = firebase.storage()
-        storage.child(final_storage_path).put(final_path)
-        os.remove(final_path)
-        url = storage.child(final_storage_path).get_url(user_obj.id_token)
-        return url
+        try:
+            for chunk in archivo.chunks():
+                destination.write(chunk)
+            storage = firebase.storage()
+            storage.child(final_storage_path).put(final_path)
+            os.remove(final_path)
+            url = storage.child(final_storage_path).get_url(user_obj.id_token)
+            return url
+        except:
+            return None
     return None
