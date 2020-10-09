@@ -7,6 +7,7 @@ from django.utils import timezone
 from django.contrib.auth.models import AnonymousUser
 from django.test import TestCase
 
+from desarrollo.getPermisos import get_permisos
 from login.views import index, user_register, users_access, user_update
 from login.models import Usuario
 from administracion.models import Proyecto, Fase, Rol, UsuarioxRol, TipoItem
@@ -43,11 +44,16 @@ class TestViews(TestCase):
         cls.proyecto = Proyecto.objects.create(nombre='proyectoTestGeneral', fecha_inicio=timezone.now().date(),
                                                numero_fases=5, cant_comite=3, gerente=cls.usuario.id)
         cls.fase = Fase.objects.create(nombre='Fase de prueba', proyecto=cls.proyecto)
-        cls.rol = Rol.objects.create(nombre='Rol de prueba', proyecto=cls.proyecto)
+        cls.rol = Rol.objects.create(nombre='Rol de prueba', proyecto=cls.proyecto, crear_item=True, aprobar_item=True,
+                                     desactivar_item=True, modificar_item=True, reversionar_item=True, ver_item=True,
+                                     crear_relaciones_as=True, crear_relaciones_ph=True, borrar_relaciones=True,
+                                     ver_proyecto=True, crear_linea_base=True, cerrar_fase=True, cerrar_proyecto=True,
+                                     solicitar_ruptura_lb=True, activo=True)
         cls.tipo = TipoItem.objects.create(nombre='Tipo de item de prueba', prefijo='TIP')
         cls.item = Item.objects.create(nombre='Item de prueba', complejidad=1, descripcion='Descripcion de prueba',
                                        tipo_item=cls.tipo,
                                        fase=cls.fase, numeracion=1)
+        cls.rol_asignado = UsuarioxRol(fase=cls.fase, rol=cls.rol, usuario=cls.usuario)
 
     def test_index_usuario_no_autenticado(self):
         """
@@ -780,6 +786,7 @@ class TestViews(TestCase):
         path = reverse('desarrollo:reversionarItem', args=[self.proyecto.id, version_nueva.id, item_original.id])
         request = RequestFactory().get(path)
         request.user = self.usuario
+        print(get_permisos(usuario=request.user, fase=self.fase))
         reversionar_item(request, self.proyecto.id, version_nueva.id, item_original.id)
         # obtenemos la versión reversionada
         item_reversionado = Item.objects.filter(id_version=item_original.id_version,
