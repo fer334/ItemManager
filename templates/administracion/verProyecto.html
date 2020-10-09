@@ -122,7 +122,6 @@
                         >Pasar a en ejecucion</button>
                         <button onclick="show_modal('{% url 'administracion:estadoProyecto2' proyecto.id 'cancelado' %}')" class="btn btn-danger">Pasar a cancelado</button>
                     {% elif proyecto.estado == 'en ejecucion' %}
-                        <button onclick="show_modal('{% url 'administracion:estadoProyecto2' proyecto.id 'finalizado' %}')" class="btn btn-primary">Pasar a finalizado</button>
                         <button onclick="show_modal('{% url 'administracion:estadoProyecto2' proyecto.id 'cancelado' %}')" class="btn btn-danger">Pasar a cancelado</button>
                     {% endif %}
                 {% else %}

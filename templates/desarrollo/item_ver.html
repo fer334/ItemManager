@@ -86,7 +86,11 @@
                                     <td>{{ atributo.nombre }}</td>
                                     <td>
                                         {% if atributo.tipo == 'file' %}
-                                            <a href="{{ atributo.valor }}" target="_blank">Archivo</a>
+                                            {% if not atributo.valor %}
+                                                <a href="#" class="btn disabled">Archivo (vacio)</a>
+                                                {% else %}
+                                                <a href="{{ atributo.valor }}" target="_blank" >Archivo</a>
+                                                {% endif %}
                                         {% else %}
                                             {{ atributo.valor }}
                                         {% endif %}
@@ -104,7 +108,7 @@
                     <a class="btn btn-info" href="{% url 'desarrollo:editarItem' proyecto.id item.id%}">Editar</a>
 
                     <a class="btn btn-success" href="{% url 'desarrollo:solicitarAprobacion' item.id %}" >Solicitar Aprobación</a>
-                    {% if item.sucesores.count != 0 or item.hijos.count != 0 %}
+                    {% if item.antecesores.count != 0 or item.padres.count != 0 %}
                         <button type="button" class="btn btn-secondary" onclick="showAlert()">Desactivar Ítem</button>
                     {% else %}
                         <a class="btn btn-danger" href="{% url 'desarrollo:desactivarItem' proyecto.id item.id %}">Desactivar Ítem</a>

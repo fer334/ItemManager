@@ -42,6 +42,7 @@ gitclone="false"
 prod="false"
 dev="false"
 branch="master"
+tag="master"
 
 while [[ $# -gt 0 ]]
 do
@@ -93,8 +94,12 @@ do
 	    shift # past argument
 	    shift # past value
 	    ;;
+	-t|--tag)
+	    tag="$2"
+	    shift # past argument
+	    shift # past value
+	    ;;
 	--default)
-	  echo "Fa"
 	    PrintDefault; exit;
 	    ;;
 	*)    # unknown option
@@ -114,7 +119,7 @@ set -- "${POSITIONAL[@]}" # restore positional parameters
 #echo $branch
 
 if [[ $prod == "true" ]]; then
-    ./produccion.bash $branch $filename
+    ./produccion.bash $branch $filename $tag
 elif [[ $dev == "true" ]]; then
     ./desarrollo.bash $dbname $username $pass $filename $port $gitclone
 else

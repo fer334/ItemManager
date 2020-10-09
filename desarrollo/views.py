@@ -11,8 +11,16 @@ from desarrollo.getPermisos import has_permiso
 
 
 def get_numeracion(fase, tipo):
-    items_del_tipo = [item for item in fase.item_set.all() if item.tipo_item == tipo]
-    return len(items_del_tipo) + 1
+    items_del_tipo = fase.item_set.filter(tipo_item=tipo, estado__in=(Item.ESTADO_REVISION,
+                                                     Item.ESTADO_APROBADO,
+                                                     Item.ESTADO_LINEABASE,
+                                                     Item.ESTADO_DESARROLLO,
+                                                     Item.ESTADO_PENDIENTE))
+    if( items_del_tipo):
+        ultimo_numero = items_del_tipo.order_by('numeracion').last().numeracion
+        return ultimo_numero + 1
+    else:
+        return 1
 
 
 def crear_item(request, id_fase, id_tipo):
@@ -270,6 +278,7 @@ def menu_aprobacion(request, id_proyecto):
     :rtype: render
     """
     proyecto = Proyecto.objects.get(pk=id_proyecto)
+    primera_fase = proyecto.fase_set.all().order_by('id').first()
     lista_items = Item.objects.all()
     # lista de fases en las que el usuario tiene permisos de aprobador
     lista_fases = []
@@ -283,7 +292,8 @@ def menu_aprobacion(request, id_proyecto):
                 lista_fases.append(fase)
     return render(request, 'desarrollo/item_menu_aprobacion.html', {'proyecto': proyecto, 'lista_items': lista_items,
                                                                     'estado': Item.ESTADO_PENDIENTE,
-                                                                    'lista_fases': lista_fases})
+                                                                    'lista_fases': lista_fases,
+                                                                    'primera_fase': primera_fase})
 
 
 def index(request, filtro):
@@ -333,7 +343,7 @@ def ver_proyecto(request, id_proyecto):
     """
     proyecto = Proyecto.objects.get(pk=id_proyecto)
     # lista de items
-    lista_items = Item.objects.all()
+    lista_items = Item.objects.all().order_by('numeracion')
     # filtro de tipos de items que aún no fueron usados (para todas las fases)
     tipos_de_items_usados = []
     for fase in proyecto.fase_set.all():
@@ -379,6 +389,10 @@ def relacionar_item(request, id_proyecto):
     # Se filtra los items para solo relacionar items aprobados e hijos en desarrollo
     lista_items_padre = Item.objects.filter(
         fase__proyecto_id=id_proyecto, estado=Item.ESTADO_APROBADO
+    ).union(
+        Item.objects.filter(
+            fase__proyecto_id=id_proyecto,estado=Item.ESTADO_LINEABASE
+        )
     )
     lista_items_hijo = Item.objects.filter(
         fase__proyecto_id=id_proyecto, estado=Item.ESTADO_DESARROLLO
@@ -583,6 +597,7 @@ def aprobar_item(request, id_item):
     :return: redirecciona al menu de aprobacion del item
     """
     item = Item.objects.get(pk=id_item)
+
     if item.estado == Item.ESTADO_PENDIENTE:
         item.estado = Item.ESTADO_APROBADO
         item.save()

@@ -46,6 +46,15 @@ class Item(models.Model):
 
     def __str__(self):
         return self.nombre
+        
+    def es_ultima_version(self):
+        ultima_item_version = Item.objects.filter(id_version=self.id_version, estado__regex='^(?!' + Item.ESTADO_DESACTIVADO + ')'
+                                   ).order_by('version').last()
+        return ultima_item_version.version == self.version
+
+    def get_ultima_version(self):
+        return Item.objects.filter(id_version=self.id_version, estado__regex='^(?!' + Item.ESTADO_DESACTIVADO + ')'
+                                   ).order_by('version').last()
 
 
 class AtributoParticular(models.Model):

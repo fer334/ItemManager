@@ -22,6 +22,8 @@ Sistema de gestion de Items
    desarrollo.models
    desarrollo.views
    desarrollo.forms
+   configuracion.models
+   configuracion.views   
    pruebasUnitarias.test_models
    pruebasUnitarias.test_urls
    pruebasUnitarias.test_views
