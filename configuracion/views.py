@@ -335,9 +335,9 @@ def reporte_trazabilidad(request, id_proyecto, id_item):
     """
     futura implementación de generar reporte de trazabilidad
 
-    :param request:
-    :param id_item:
-    :param id_proyecto:
+    :param request: objeto tipo diccionario que permite acceder a datos
+    :param id_item: identificador del item
+    :param id_proyecto: identificador del proyecto
     :return:
     """
 
@@ -347,15 +347,15 @@ def reporte_trazabilidad(request, id_proyecto, id_item):
 
 def solicitud_modificacion_estado(request, id_proyecto, id_item):
     """
-    Funcion en donde se realiza la solicitud de desaprobación
+    Funcion en donde se realiza la solicitud de desaprobación de un item
 
-    :param request:
-    :param id_item:
-    :return:
+    :param request: objeto tipo diccionario que permite acceder a datos
+    :param id_proyecto: identificador del item
+    :param id_item: identificador del proyecto
+    :return: redirige a la pagina del proyecto una vez que se haya solicitado la desaprobacion
     """
     item = Item.objects.get(pk=id_item)
     if request.POST:
-        print(request.POST)
         solicitud = Solicitud(
             solicitado_por=request.user,
             justificacion=request.POST['mensaje'],
@@ -368,3 +368,30 @@ def solicitud_modificacion_estado(request, id_proyecto, id_item):
         for item in items_seleccionados:
             solicitud.items_a_modificar.add(item)
         return redirect('configuracion:verProyecto', id_proyecto=id_proyecto)
+
+def votar_solicitud_desaprobacion(request, id_proyecto,id_solicitud, voto):
+    """
+    Metodo que se encarga de registrar un voto en la solicitudes en la base de datos.
+
+    :param request: objeto tipo diccionario que permite acceder a datos
+    :param id_proyecto: identificador unico por proyecto
+    :param id_solicitud: identificador unico por proyecto
+    :param voto: valor numerico que simboliza el voto, 1 para Voto a favor, 0 para voto en contra
+    :return: objeto que renderea verIndexComite.html
+    :rtype: render
+    """
+    proyecto = Proyecto.objects.get(pk=id_proyecto)
+    solicitud_item = Solicitud.objects.get(pk=id_solicitud)
+    nuevo_voto = VotoRuptura(solicitud=solicitud_item, votante=request.user, valor_voto=(voto == 1))
+    nuevo_voto.save()
+    votos = len(solicitud_item.votoruptura_set.all())
+    if votos == proyecto.cant_comite:
+        votos_favor = len(solicitud_item.votoruptura_set.filter(valor_voto=True))
+        if votos_favor > proyecto.cant_comite / 2:
+            for item in solicitud_item.items_a_modificar.all():
+                if item.estado == Item.ESTADO_APROBADO:
+                    item.estado = Item.ESTADO_REVISION
+                    item.save()
+        solicitud_item.solicitud_activa = False
+        solicitud_item.save()
+    return redirect('configuracion:verIndexComite', id_proyecto)

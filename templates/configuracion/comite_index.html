@@ -64,10 +64,12 @@
                     {% if not solicitud.solicitante_ha_votado %}
                         <div class="card-footer row">
                             <div class="col-sm-6">
-                                <a href="{% url 'configuracion:votarSolicitud' proyecto.id solicitud.id 1 %}" class="btn btn-danger btn-block text-white">Votar Si</a>
+                                <a href="{% url 'configuracion:votarSolicitud' proyecto.id solicitud.id 1 %}"
+                                   class="btn btn-danger btn-block text-white">Votar Si</a>
                             </div>
                             <div class="col-sm-6">
-                                <a href="{% url 'configuracion:votarSolicitud' proyecto.id solicitud.id 0 %}" class="btn btn-primary btn-block text-white" >Votar No</a>
+                                <a href="{% url 'configuracion:votarSolicitud' proyecto.id solicitud.id 0 %}"
+                                   class="btn btn-primary btn-block text-white" >Votar No</a>
                             </div>
                         </div>
                     {% else %}
@@ -85,7 +87,7 @@
                 </div>
                 <div class="card-body">
                     {% for item in solicitud.items_a_modificar.all %}
-                        <h5 class="card-title font-weight-bold">Desaprobación de Item{{ item.nombre }}</h5>
+                        <h5 class="card-title font-weight-bold">Desaprobación de Item: {{ item.nombre }}</h5>
                     {% endfor %}
                     <p class="card-text"><span class="font-weight-bold">Justificacion:</span> {{solicitud.justificacion}}</p>
                     <p class="card-text"><span class="font-weight-bold">Solicitante:</span> {{solicitud.solicitado_por.username}}</p>
@@ -96,6 +98,7 @@
                         <thead>
                             <tr>
                                 <th>Nombre</th>
+                                <th>Antecesores</th>
                                 <th>Hijos</th>
                                 <th>Sucesores</th>
                             </tr>
@@ -104,6 +107,13 @@
                             {% for item in solicitud.items_a_modificar.all %}
                                 <tr>
                                     <td>{{ item.nombre }}</td>
+                                    <td>
+                                        <ul class="list-unstyled">
+                                            {% for antecesor in item.antecesores.all %}
+                                                <li>{{ antecesor.nombre }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    </td>
                                     <td>
                                         <ul class="list-unstyled">
                                             {% for hijo in item.hijos.all %}
@@ -126,10 +136,12 @@
                 {% if not solicitud.solicitante_ha_votado %}
                     <div class="card-footer row">
                         <div class="col-sm-6">
-                            <a href="{% url 'configuracion:votarSolicitud' proyecto.id solicitud.id 1 %}" class="btn btn-danger btn-block text-white">Votar Si</a>
+                            <a href="{% url 'configuracion:votarSolicitudDesaprobacion' proyecto.id solicitud.id 1 %}"
+                               class="btn btn-danger btn-block text-white">Votar Si</a>
                         </div>
                         <div class="col-sm-6">
-                            <a href="{% url 'configuracion:votarSolicitud' proyecto.id solicitud.id 0 %}" class="btn btn-primary btn-block text-white" >Votar No</a>
+                            <a href="{% url 'configuracion:votarSolicitudDesaprobacion' proyecto.id solicitud.id 0 %}"
+                               class="btn btn-primary btn-block text-white" >Votar No</a>
                         </div>
                     </div>
                 {% else %}
