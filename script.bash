@@ -110,13 +110,6 @@ esac
 done
 set -- "${POSITIONAL[@]}" # restore positional parameters
 
-#echo $dbname
-#echo $username
-#echo $pass
-#echo $filename
-#echo $port
-#echo $gitclone
-#echo $branch
 
 if [[ $prod == "true" ]]; then
     ./produccion.bash $branch $filename $tag
