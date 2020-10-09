@@ -83,6 +83,22 @@ def has_permiso(fase, usuario, permiso):
     return False
 
 
+def has_permiso_cerrar_proyecto(proyecto, usuario):
+    """
+    Metodo que comprueba si un usuario tiene un permiso en especifico
+    :param fase:
+    :param usuario:
+    :param permiso:
+    :return: Booleano que indica si el usuario tiene o no el permiso
+    """
+    for fase in proyecto.fase_set.all():
+        uxr_list = UsuarioxRol.objects.filter(fase=fase, usuario=usuario)
+        for user_x_rol in uxr_list:
+            if user_x_rol.activo and user_x_rol.rol.cerrar_proyecto:
+                return True
+    return False
+
+
 def get_permisos(fase, usuario):
     """
     Metodo que busca todos los permisos del usuario para una fase y los devuelve en una lista

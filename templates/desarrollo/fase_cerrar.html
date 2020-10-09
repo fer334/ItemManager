@@ -8,11 +8,13 @@
         </h5>
 
         {% if not es_gerente %}
+            <!--
             <div class="alert alert-danger m-3">
                 <h5 class="text-center">
                     Solo el gerente de proyecto puede cerrar fases
                 </h5>
             </div>
+            -->
         {% endif %}
         {% if mensaje_error %}
             <div class="alert alert-danger m-3">
@@ -48,7 +50,6 @@
                                     <button class="btn btn-danger align-middle"
                                             value="{{ fase.id }}"
                                             {% if not es_gerente %}
-                                                disabled="disable"
                                             {% endif %}
                                             name="cerrar"
                                             type="submit"
