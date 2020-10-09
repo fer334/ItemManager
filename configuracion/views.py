@@ -10,7 +10,7 @@ from desarrollo.models import Item
 from login.models import Usuario
 from django.utils.timezone import now
 from desarrollo.views import calcular_impacto_recursivo, crear_lista_relaciones_del_proyecto
-from desarrollo.getPermisos import has_permiso
+from desarrollo.getPermisos import has_permiso, has_permiso_cerrar_proyecto
 
 def index(request, filtro):
     """
@@ -59,11 +59,12 @@ def ver_proyecto(request, id_proyecto):
     proyecto = Proyecto.objects.get(pk=id_proyecto)
     es_comite = request.user in proyecto.comite.all()
     es_gerente = request.user.id == proyecto.gerente
-
+    puede_cerrar = has_permiso_cerrar_proyecto(proyecto, request.user)
     return render(request, 'configuracion/proyecto_ver_unico.html', {
         'proyecto': proyecto,
         'es_comite': es_comite,
-        'es_gerente': es_gerente
+        'es_gerente': es_gerente,
+        'puede_cerrar': puede_cerrar
     })
 
 
@@ -237,20 +238,18 @@ def cerrar_proyecto(request, id_proyecto):
         fase.cerrable = False
 
     # Comprobacion de gerencia de proyecto
-    es_gerente = proyecto.gerente == request.user.id
     es_cerrable = len(fases.filter(estado=Fase.FASE_ESTADO_CERRADA)) == proyecto.numero_fases
     # Dict a ser enviado a la vista
     content = {
         'proyecto': proyecto,
         'fases': fases,
-        'es_gerente': es_gerente,
         'es_cerrable': es_cerrable,
         'mensaje_error': "",
     }
 
     # Si el request es POST cierra el proyecto
     if request.method == "POST":
-        if es_cerrable and es_gerente:
+        if es_cerrable and has_permiso_cerrar_proyecto(proyecto, request.user):
             proyecto.estado = proyecto.ESTADO_FINALIZADO
             proyecto.fecha_finalizado = now()
             proyecto.save()
