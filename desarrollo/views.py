@@ -842,7 +842,12 @@ def cerrar_fase(request, id_proyecto):
             Todos los items de la fase deben estar en Linea Base para poder cerrarlo
             """
             return render(request, 'desarrollo/fase_cerrar.html', content)
-
+        # fase no debe estar vacía
+        if items_de_esta_fase.count() == 0:
+            content['mensaje_error'] = """
+            No se puede cerrar fases que no contengan ningún Ítem
+            """
+            return render(request, 'desarrollo/fase_cerrar.html', content)
         # Comprobacion de que todos los items dentro de la fase tengan antecedentes
         # se excluye de la condicion a la fase 1
         todos_tienen_antecedentes = True
