@@ -4,13 +4,13 @@ Vistas del modulo de configuracion
 from django.shortcuts import render, redirect
 
 # Create your views here.
-from administracion.models import Proyecto, Fase
+from administracion.models import Proyecto, Fase, Rol
 from .models import LineaBase, Solicitud, VotoRuptura
 from desarrollo.models import Item
 from login.models import Usuario
 from django.utils.timezone import now
 from desarrollo.views import calcular_impacto_recursivo, crear_lista_relaciones_del_proyecto
-
+from desarrollo.getPermisos import has_permiso, has_permiso_cerrar_proyecto
 
 def index(request, filtro):
     """
@@ -59,11 +59,12 @@ def ver_proyecto(request, id_proyecto):
     proyecto = Proyecto.objects.get(pk=id_proyecto)
     es_comite = request.user in proyecto.comite.all()
     es_gerente = request.user.id == proyecto.gerente
-
+    puede_cerrar = has_permiso_cerrar_proyecto(proyecto, request.user)
     return render(request, 'configuracion/proyecto_ver_unico.html', {
         'proyecto': proyecto,
         'es_comite': es_comite,
-        'es_gerente': es_gerente
+        'es_gerente': es_gerente,
+        'puede_cerrar': puede_cerrar
     })
 
 
@@ -86,6 +87,8 @@ def crear_linea_base(request, id_fase):
     :rtype: render
     """
     fase = Fase.objects.get(pk=id_fase)
+    if not has_permiso(fase=fase, usuario=request.user, permiso=Rol.CREAR_LINEA_BASE):
+        return redirect('administracion:accesoDenegado', id_proyecto=fase.proyecto.id, caso='permisos')
     if request.method == 'POST':
         items = [Item.objects.get(pk=item.split('-')[1]) for item in request.POST if len(item.split('-')) > 1]
         if len(items) > 0:
@@ -155,6 +158,9 @@ def solicitud_ruptura(request, id_lineabase):
     :rtype: render
     """
     lineabase = LineaBase.objects.get(pk=id_lineabase)
+    fase = lineabase.fase;
+    if not has_permiso(fase=fase, usuario=request.user, permiso=Rol.SOLICITAR_RUPTURA_LB):
+        return redirect('administracion:accesoDenegado', id_proyecto=fase.proyecto.id, caso='permisos')
     lista_calculo_impacto = []
     for item_en_lb in lineabase.items.all():
         lista_calculo_impacto.append(calcular_impacto_recursivo(item_en_lb))
@@ -232,20 +238,18 @@ def cerrar_proyecto(request, id_proyecto):
         fase.cerrable = False
 
     # Comprobacion de gerencia de proyecto
-    es_gerente = proyecto.gerente == request.user.id
     es_cerrable = len(fases.filter(estado=Fase.FASE_ESTADO_CERRADA)) == proyecto.numero_fases
     # Dict a ser enviado a la vista
     content = {
         'proyecto': proyecto,
         'fases': fases,
-        'es_gerente': es_gerente,
         'es_cerrable': es_cerrable,
         'mensaje_error': "",
     }
 
     # Si el request es POST cierra el proyecto
     if request.method == "POST":
-        if es_cerrable and es_gerente:
+        if es_cerrable and has_permiso_cerrar_proyecto(proyecto, request.user):
             proyecto.estado = proyecto.ESTADO_FINALIZADO
             proyecto.fecha_finalizado = now()
             proyecto.save()

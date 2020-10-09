@@ -8,7 +8,7 @@ from desarrollo.models import Item, AtributoParticular
 from administracion.models import Proyecto, TipoItem, Fase, Rol
 from desarrollo.forms import ItemForm
 from desarrollo.getPermisos import has_permiso
-
+from configuracion.models import Solicitud, LineaBase
 
 def get_numeracion(fase, tipo):
     items_del_tipo = fase.item_set.filter(tipo_item=tipo, estado__in=(Item.ESTADO_REVISION,
@@ -104,6 +104,9 @@ def ver_item(request, id_proyecto, id_item):
     item = Item.objects.get(pk=id_item)
     lista_atributos = AtributoParticular.objects.filter(item=item)
     fase = item.fase
+    if not has_permiso(fase=fase, usuario=request.user, permiso=Rol.VER_ITEM):
+        return redirect('administracion:accesoDenegado', id_proyecto=fase.proyecto.id, caso='permisos')
+
     proyecto = Proyecto.objects.get(pk=id_proyecto)
     impacto = calcular_impacto_recursivo(item)
     lista_impacto = calcular_lista_items_impacto_recursivo(item)
@@ -506,7 +509,10 @@ def desactivar_relacion_item(request, id_proyecto):
                 El item {} esta
                 aprobado, por lo cual no se puede desactivar la relacion
                 """.format(relacion.fin)
-
+        elif relacion.inicio.estado in (Item.ESTADO_LINEABASE):
+            mensaje_error = """
+                El item {} esta en linea base, por lo que no se puede desactivar la relacion
+            """.format(relacion.inicio)
         else:
 
             # se añade código para que al desactivar una relación cuente como una nueva versión para ambos items
@@ -823,6 +829,9 @@ def cerrar_fase(request, id_proyecto):
     if request.method == "POST":
         clave = int(request.POST['cerrar'])
         fase = Fase.objects.get(id=clave)
+        if not has_permiso(fase=fase, usuario=request.user, permiso=Rol.CERRAR_FASE):
+            return redirect('administracion:accesoDenegado', id_proyecto=fase.proyecto.id, caso='permisos')
+
         i = clave - fases[0].id
         items_de_esta_fase = fase.item_set.exclude(estado=Item.ESTADO_DESACTIVADO).all()
 
@@ -841,6 +850,14 @@ def cerrar_fase(request, id_proyecto):
             content['mensaje_error'] = """
             Todos los items de la fase deben estar en Linea Base para poder cerrarlo
             """
+
+            return render(request, 'desarrollo/fase_cerrar.html', content)
+
+        ##Si hay una solicitud activa, no se permite cerrar la fase
+        lineas_base = fase.lineabase_set.filter(estado=LineaBase.ESTADO_CERRADA)
+        if Solicitud.objects.filter(linea_base__in=lineas_base, solicitud_activa=True).count():
+            content['mensaje_error'] = """Hay solicitudes activas en la fase"""
+
             return render(request, 'desarrollo/fase_cerrar.html', content)
         # fase no debe estar vacía
         if items_de_esta_fase.count() == 0:

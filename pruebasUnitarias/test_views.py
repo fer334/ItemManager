@@ -6,6 +6,7 @@ from django.urls import reverse, resolve
 from django.utils import timezone
 from django.contrib.auth.models import AnonymousUser
 from django.test import TestCase
+import io
 
 from desarrollo.getPermisos import get_permisos
 from login.views import index, user_register, users_access, user_update
@@ -24,8 +25,9 @@ from desarrollo.views import solicitud_aprobacion, aprobar_item, desaprobar_item
 from configuracion.models import LineaBase, Solicitud
 from configuracion.views import crear_linea_base, ver_linea_base, solicitud_ruptura, votar_solicitud, cerrar_proyecto, \
     ramas_recursivas_trazabilidad
+from desarrollo.SubirArchivos import handle_uploaded_file
 import pytest
-
+from ItemManager.settings import BASE_DIR
 
 @pytest.mark.django_db
 class TestViews(TestCase):
@@ -786,7 +788,6 @@ class TestViews(TestCase):
         path = reverse('desarrollo:reversionarItem', args=[self.proyecto.id, version_nueva.id, item_original.id])
         request = RequestFactory().get(path)
         request.user = self.usuario
-        print(get_permisos(usuario=request.user, fase=self.fase))
         reversionar_item(request, self.proyecto.id, version_nueva.id, item_original.id)
         # obtenemos la versión reversionada
         item_reversionado = Item.objects.filter(id_version=item_original.id_version,
@@ -1092,3 +1093,35 @@ class TestViews(TestCase):
         # llamamos a la función
         calculo_impacto = calcular_impacto_recursivo(item_peso_cinco)
         self.assertEqual(calculo_impacto, 16, 'el calculo de impacto no se calculó correctamente')
+
+    def test_adjuntar_archivo(self):
+        """
+        CU 41: Adjuntar al archivos al item
+        Se invoca al metodo encargado de adjuntar archivo.
+
+        :return: Retorna si se realiza correctamente el attachment
+        """
+        myfile = open(BASE_DIR+'/desarrollo/temp/dummy.dum', 'r')
+        #file_object = io.BytesIO(myfile)
+        i_io = io.BytesIO()
+        def getsize(f):
+            f.seek(0)
+            f.read()
+            s = f.tell()
+            f.seek(0)
+            return s
+
+        name = 'dummy.dum'
+        import mimetypes
+        content_type, charset = mimetypes.guess_type(name)
+        size = getsize(myfile)
+        from django.core.files.uploadedfile import InMemoryUploadedFile
+        obj = InMemoryUploadedFile(file=i_io, name=name,
+                                     field_name=None, content_type=content_type,
+                                     charset=charset, size=size)
+
+        respuesta = handle_uploaded_file(None, 0, self.usuario)
+
+        self.assertEqual(respuesta, None, 'No se respondio lo esperado')
+        respuesta = handle_uploaded_file(obj, 0, self.usuario)
+        self.assertNotEqual(respuesta, None, 'No se respondio con la url')

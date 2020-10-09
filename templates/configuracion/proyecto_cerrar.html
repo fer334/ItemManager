@@ -4,13 +4,6 @@
     <div class="container">
         <h1 class="col-12 text-center my-5">Cerrar {{ proyecto.nombre }} </h1>
 
-        {% if not es_gerente %}
-            <div class="alert alert-danger m-3">
-                <h5 class="text-center">
-                    Solo el gerente de proyecto puede cerrar el proyecto
-                </h5>
-            </div>
-        {% endif %}
         {% if mensaje_error %}
             <div class="alert alert-danger m-3">
                 <h5 class="text-center">
