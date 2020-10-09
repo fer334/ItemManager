@@ -15,7 +15,19 @@
                         </tr>
                         <tr>
                             <td>Estado</td>
-                            <td>{{ item.estado }}</td>
+                            {% if  item.estado == item.ESTADO_LINEABASE%}
+                            <td class="text-dark font-weight-bold">{{ item.estado }}</td>
+                                {% elif item.estado == item.ESTADO_APROBADO %}
+                                <td class="text-success font-weight-bold">{{ item.estado }}</td>
+                                {% elif item.estado == item.ESTADO_PENDIENTE %}
+                                <td class="text-warning font-weight-bold">{{ item.estado }}</td>
+                                {% elif item.estado == item.ESTADO_DESARROLLO %}
+                                <td class="text-danger font-weight-bold">{{ item.estado }}</td>
+                                {% elif item.estado == item.ESTADO_REVISION %}
+                                <td class="text-info font-weight-bold">{{ item.estado }}</td>
+                                {% elif item.estado == item.ESTADO_DESACTIVADO %}
+                                <td class="text-muted font-weight-bold">{{ item.estado }}</td>
+                            {% endif %}
                         </tr>
                         <tr>
 

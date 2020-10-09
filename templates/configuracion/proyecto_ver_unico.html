@@ -1,7 +1,8 @@
 {% extends 'login/loginHeader.html' %}
 {% block content %}
     <div class="container">
-        <h1 class="text-center pt-3 mb-5">{{ proyecto.nombre }}</h1>
+        <h1 class="text-center pt-3 mb-3">{{ proyecto.nombre }}</h1>
+        <h4 class="text-center">(Se muestran los items aprobados y en Linea Base)</h4>
         <div class="btn float-right">
 
         </div>
@@ -79,6 +80,7 @@
             {% endif %}
             <a href="{% url 'configuracion:indexConfiguracion' 'todos' %}" class="btn btn-primary float-right">Volver atrás</a>
         </div>
+
 
     </div>
     <script>

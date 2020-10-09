@@ -11,10 +11,8 @@
                             </button>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                 <a class="dropdown-item" href="{% url 'configuracion:indexConfiguracion' 'todos' %}">Todos</a>
-                                <a class="dropdown-item" href="{% url 'configuracion:indexConfiguracion' 'iniciado'%}">Iniciado</a>
                                 <a class="dropdown-item" href="{% url 'configuracion:indexConfiguracion' 'en ejecucion'%}">En ejecución</a>
                                 <a class="dropdown-item" href="{% url 'configuracion:indexConfiguracion' 'finalizado'%}">Finalizado</a>
-                                <a class="dropdown-item" href="{% url 'configuracion:indexConfiguracion' 'cancelado'%}">Cancelado</a>
                             </div>
                         </div>
                     </div>
@@ -22,12 +20,48 @@
                     <table class="table table-hover col-sm-12 mt-3">
                         <tbody>
                             {% for proyecto in lista_proyectos %}
-                                {% if proyecto.estado != cancelado %}
+                                {% if proyecto.estado != proyecto.ESTADO_INICIADO and proyecto.estado != proyecto.ESTADO_CANCELADO %}
                                     <tr>
                                         <td>
                                             <a href="{% url 'configuracion:verProyecto' proyecto.id %}"
-                                               class="list-group-item list-group-item-action {% if proyecto.estado == ejecucion %}text-primary{% else %}text-mute{% endif %}">
-                                                {{proyecto}} <span class="text-secondary">({{ proyecto.estado }})</span></a>
+                                               class="list-group-item list-group-item-action
+                                                {% if proyecto.estado == ejecucion %}text-primary
+                                                {% else %} text-muted
+                                                {% endif %}">
+                                                {{proyecto}}
+                                                <span class="text-secondary">({{ proyecto.estado }})</span>
+                                            </a>
+
+                                                {% if proyecto.estado == proyecto.ESTADO_FINALIZADO  %}
+                                                    <button type="button" class="btn btn-outline-warning btn-sm
+                                                     font-weight-bold mt-1"
+                                                            data-toggle="modal" data-target="#myModal">
+                                                        Advertencia
+                                                    </button>
+
+                                                    <div id="myModal" class="modal fade" role="dialog">
+                                                        <div class="modal-dialog">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header ">
+                                                                    <h4 class="modal-title font-weight-bold">
+                                                                        Este proyecto ha FINALIZADO
+                                                                    </h4>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <p>Puede ingresar a observar su contenido pero
+                                                                        no puede editar.</p>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-info"
+                                                                            data-dismiss="modal">
+                                                                        Cerrar
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
                                         </td>
                                     </tr>
                                 {% endif %}

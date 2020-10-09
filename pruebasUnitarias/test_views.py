@@ -24,7 +24,7 @@ from desarrollo.views import solicitud_aprobacion, aprobar_item, desaprobar_item
 
 from configuracion.models import LineaBase, Solicitud
 from configuracion.views import crear_linea_base, ver_linea_base, solicitud_ruptura, votar_solicitud, cerrar_proyecto, \
-    ramas_recursivas_trazabilidad
+    ramas_recursivas_trazabilidad, solicitud_modificacion_estado
 from desarrollo.SubirArchivos import handle_uploaded_file
 import pytest
 from ItemManager.settings import BASE_DIR
@@ -705,7 +705,6 @@ class TestViews(TestCase):
         # casos
         crear_linea_base(request, self.fase.id)
         # asignamos a p el proyecto que se creó
-        print(LineaBase.objects.all())
         lb = LineaBase.objects.get(fase=self.fase)
         self.assertEqual(lb.creador, request.user, 'El creador de la lb no es correcto')
         self.assertIn(self.item, lb.items.all(), "No se agrego correctamente el item a la lb")
@@ -1138,3 +1137,23 @@ class TestViews(TestCase):
         self.assertEqual(respuesta, None, 'No se respondio lo esperado')
         respuesta = handle_uploaded_file(obj, 0, self.usuario)
         self.assertNotEqual(respuesta, None, 'No se respondio con la url')
+
+
+    def test_solicitud_modificacion_estado(self):
+        """
+        CU 55: Solicitud de modificacion de estado de Item
+        El test comprueba si se realiza la solicitud de modificacion de estado, el cual es posible si el
+        item se encuentra en estado APROBADO.
+
+        :return: Retrona true si la solicitud se realizo correctamente.
+        """
+        cu_55 = Item.objects.create(nombre='CU_55', estado=Item.ESTADO_APROBADO, complejidad=5, descripcion='solicitar modificar estado',
+                               tipo_item=self.tipo, fase=self.fase, id_version=20)
+
+        path = reverse('configuracion:solicitarModificarEstado', args=[self.proyecto.id,cu_55.id])
+        request = RequestFactory().post(path, {'item':'cu_55','mensaje':['justificacion']})
+        request.user = self.usuario
+
+        solicitud_modificacion_estado(request, id_proyecto= self.proyecto.id, id_item=cu_55.id )
+        self.assertNotEqual(len(Solicitud.objects.all()), 0, 'La prueba fallo, la solicitud no fue creada')
+
