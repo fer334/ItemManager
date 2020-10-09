@@ -8,7 +8,7 @@ from django.contrib.auth.models import AnonymousUser
 from django.test import TestCase
 import io
 
-from desarrollo.getPermisos import get_permisos
+from desarrollo.getPermisos import get_permisos, has_permiso_cerrar_proyecto
 from login.views import index, user_register, users_access, user_update
 from login.models import Usuario
 from administracion.models import Proyecto, Fase, Rol, UsuarioxRol, TipoItem
@@ -28,6 +28,7 @@ from configuracion.views import crear_linea_base, ver_linea_base, solicitud_rupt
 from desarrollo.SubirArchivos import handle_uploaded_file
 import pytest
 from ItemManager.settings import BASE_DIR
+
 
 @pytest.mark.django_db
 class TestViews(TestCase):
@@ -55,7 +56,7 @@ class TestViews(TestCase):
         cls.item = Item.objects.create(nombre='Item de prueba', complejidad=1, descripcion='Descripcion de prueba',
                                        tipo_item=cls.tipo,
                                        fase=cls.fase, numeracion=1)
-        cls.rol_asignado = UsuarioxRol(fase=cls.fase, rol=cls.rol, usuario=cls.usuario)
+        cls.rol_asignado = UsuarioxRol.objects.create(fase=cls.fase, rol=cls.rol, usuario=cls.usuario, activo=True)
 
     def test_index_usuario_no_autenticado(self):
         """
@@ -142,9 +143,10 @@ class TestViews(TestCase):
         """
         request = RequestFactory()
         request.user = self.usuario
-        uxr = UsuarioxRol.objects.create(usuario=self.usuario, fase=self.fase, rol=self.rol)
-        desasignar_rol_al_usuario(request, self.fase.id, self.usuario.id, self.rol.id)
-        uxr = UsuarioxRol.objects.get(usuario=self.usuario, fase=self.fase, rol=self.rol)
+        rol2 = Rol.objects.create(nombre='rol2', proyecto=self.proyecto)
+        uxr = UsuarioxRol.objects.create(usuario=self.usuario, fase=self.fase, rol=rol2)
+        desasignar_rol_al_usuario(request, self.fase.id, self.usuario.id, rol2.id)
+        uxr = UsuarioxRol.objects.get(usuario=self.usuario, fase=self.fase, rol=rol2)
         self.assertEqual(uxr.activo, False, "La prueba falló no se pudo desasignar el rol")
 
     def test_registrar_rol_por_fase(self):
@@ -560,11 +562,9 @@ class TestViews(TestCase):
         px = Proyecto.objects.create(nombre='projectTest', fecha_inicio=timezone.now().date(),
                                      gerente=self.usuario.id, numero_fases=3, cant_comite=3)
         tipox = TipoItem.objects.create(nombre='Casox', descripcion='uto', prefijo='cx')
-        fasx = Fase.objects.create(nombre='Fasx', descripcion='dshh', estado='abierta',
-                                   proyecto=Proyecto.objects.get(pk=px.id))
         cu_39_1 = Item.objects.create(nombre='cu_39_1', estado=Item.ESTADO_PENDIENTE, version=1, complejidad=5,
                                       descripcion='aprobar item', tipo_item=TipoItem.objects.get(pk=tipox.id),
-                                      fase=Fase.objects.get(pk=fasx.id))
+                                      fase=self.fase)
         request = RequestFactory()
         request.user = self.usuario
         aprobar_item(request, id_item=cu_39_1.id)
@@ -582,11 +582,9 @@ class TestViews(TestCase):
         pp = Proyecto.objects.create(nombre='proTest', fecha_inicio=timezone.now().date(),
                                      gerente=self.usuario.id, numero_fases=3, cant_comite=3)
         tipop = TipoItem.objects.create(nombre='Casop', descripcion='bkdls', prefijo='cp')
-        fasep = Fase.objects.create(nombre='Fasep', descripcion='shh', estado='abierta',
-                                    proyecto=Proyecto.objects.get(pk=pp.id))
         cu_39_2 = Item.objects.create(nombre='cu_39_2', estado=Item.ESTADO_PENDIENTE, version=1, complejidad=5,
                                       descripcion='desaprobar item', tipo_item=TipoItem.objects.get(pk=tipop.id),
-                                      fase=Fase.objects.get(pk=fasep.id))
+                                      fase=self.fase)
         request = RequestFactory()
         request.user = self.usuario
         desaprobar_item(request, id_item=cu_39_2.id)
@@ -605,11 +603,9 @@ class TestViews(TestCase):
         pm = Proyecto.objects.create(nombre='proTest', fecha_inicio=timezone.now().date(),
                                      gerente=self.usuario.id, numero_fases=3, cant_comite=3)
         tipom = TipoItem.objects.create(nombre='Casom', descripcion='uuuto', prefijo='cm')
-        fasem = Fase.objects.create(nombre='Fasem', descripcion='cdshh', estado='abierta',
-                                    proyecto=Proyecto.objects.get(pk=pm.id))
         cu_40 = Item.objects.create(nombre='cu_40', estado=Item.ESTADO_DESARROLLO, version=1, complejidad=5,
                                     descripcion='desactivar item', tipo_item=TipoItem.objects.get(pk=tipom.id),
-                                    fase=Fase.objects.get(pk=fasem.id))
+                                    fase=self.fase)
         request = RequestFactory()
         request.user = self.usuario
         desactivar_item(request, id_item=cu_40.id, id_proyecto=pm.id)
@@ -709,6 +705,7 @@ class TestViews(TestCase):
         # casos
         crear_linea_base(request, self.fase.id)
         # asignamos a p el proyecto que se creó
+        print(LineaBase.objects.all())
         lb = LineaBase.objects.get(fase=self.fase)
         self.assertEqual(lb.creador, request.user, 'El creador de la lb no es correcto')
         self.assertIn(self.item, lb.items.all(), "No se agrego correctamente el item a la lb")
@@ -749,6 +746,7 @@ class TestViews(TestCase):
             'complejidad': COMPLEJIDAD,
             'descripcion': DESCRIPCION
         })
+        request.user = self.usuario
         item_editado = Item(pk=item_1.id, nombre=NOMBRE, version=item_1.version + 1, complejidad=COMPLEJIDAD,
                             descripcion=DESCRIPCION)
         modificar_item(request, self.proyecto.id, self.item.id)
@@ -831,7 +829,16 @@ class TestViews(TestCase):
             cant_comite=3, gerente=self.usuario.id
         )
         fase1 = Fase(nombre='Fase1', estado='cerrada', proyecto=p)
+        fase1.save()
         fase2 = Fase(nombre='Fase2', estado='abierta', proyecto=p)
+        fase2.save()
+
+        nuevo_rol = Rol.objects.create(nombre='Rol cerrar proyecto', proyecto=p, cerrar_fase=True,
+                                       activo=True)
+        nuevo_rol_asignado_1 = UsuarioxRol.objects.create(fase=fase1, rol=nuevo_rol, usuario=self.usuario,
+                                                          activo=True)
+        nuevo_rol_asignado_2 = UsuarioxRol.objects.create(fase=fase2, rol=nuevo_rol, usuario=self.usuario,
+                                                          activo=True)
         itema = Item(
             nombre='A',
             complejidad=5,
@@ -996,11 +1003,16 @@ class TestViews(TestCase):
                                                  numero_fases=1, cant_comite=3, gerente=self.usuario.id)
         fase_nueva = Fase.objects.create(nombre='Fase de prueba', proyecto=proyecto_nuevo,
                                          estado=Fase.FASE_ESTADO_CERRADA)
+        nuevo_rol = Rol.objects.create(nombre='Rol cerrar proyecto', proyecto=proyecto_nuevo, cerrar_proyecto=True,
+                                       activo=True)
+        nuevo_rol_asignado = UsuarioxRol.objects.create(fase=fase_nueva, rol=nuevo_rol, usuario=self.usuario,
+                                                        activo=True)
         path = reverse('configuracion:cerrarProyecto', args=[proyecto_nuevo.id])
         request = RequestFactory().post(path)
         request.user = self.usuario
         cerrar_proyecto(request, id_proyecto=proyecto_nuevo.id)
         proyecto_nuevo = Proyecto.objects.get(pk=proyecto_nuevo.id)
+        # print(has_permiso_cerrar_proyecto(usuario=request.user, proyecto=proyecto_nuevo))
         self.assertEqual(Proyecto.ESTADO_FINALIZADO, proyecto_nuevo.estado, 'El proyecto no se pudo finalizar')
 
     def test_trazabilidad(self):
@@ -1101,9 +1113,10 @@ class TestViews(TestCase):
 
         :return: Retorna si se realiza correctamente el attachment
         """
-        myfile = open(BASE_DIR+'/desarrollo/temp/dummy.dum', 'r')
-        #file_object = io.BytesIO(myfile)
+        myfile = open(BASE_DIR + '/desarrollo/temp/dummy.dum', 'r')
+        # file_object = io.BytesIO(myfile)
         i_io = io.BytesIO()
+
         def getsize(f):
             f.seek(0)
             f.read()
@@ -1117,8 +1130,8 @@ class TestViews(TestCase):
         size = getsize(myfile)
         from django.core.files.uploadedfile import InMemoryUploadedFile
         obj = InMemoryUploadedFile(file=i_io, name=name,
-                                     field_name=None, content_type=content_type,
-                                     charset=charset, size=size)
+                                   field_name=None, content_type=content_type,
+                                   charset=charset, size=size)
 
         respuesta = handle_uploaded_file(None, 0, self.usuario)
 
