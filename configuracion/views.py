@@ -146,7 +146,7 @@ def comite_index(request, id_proyecto):
     # parte para desaprobar items
     desaprobaciones = []
     for solicitud_desaprobar in Solicitud.objects.filter(linea_base=None, solicitud_activa=True):
-        ##query primero por los items, luego busca la fase, luego el proyecto
+        # query primero por los items, luego busca la fase, luego el proyecto
         if solicitud_desaprobar.items_a_modificar.last().fase.proyecto.id == id_proyecto:
             solicitud_desaprobar.solicitante_ha_votado = solicitud_desaprobar.ha_votado(request.user)
             desaprobaciones.append(solicitud_desaprobar)
@@ -168,7 +168,7 @@ def solicitud_ruptura(request, id_lineabase):
     :rtype: render
     """
     lineabase = LineaBase.objects.get(pk=id_lineabase)
-    fase = lineabase.fase;
+    fase = lineabase.fase
     if not has_permiso(fase=fase, usuario=request.user, permiso=Rol.SOLICITAR_RUPTURA_LB):
         return redirect('administracion:accesoDenegado', id_proyecto=fase.proyecto.id, caso='permisos')
     lista_calculo_impacto = []
@@ -216,7 +216,7 @@ def votar_solicitud(request, id_proyecto, id_solicitud, voto):
         if votos_favor > proyecto.cant_comite / 2:
             if solicitud.linea_base is not None:
                 print('QUE: ' + solicitud.linea_base)
-                ##Si es la solicitud de linea base:
+                # Si es la solicitud de linea base:
                 solicitud.linea_base.estado = LineaBase.ESTADO_ROTA
                 solicitud.linea_base.save()
                 for item in solicitud.linea_base.items.all():
@@ -226,7 +226,7 @@ def votar_solicitud(request, id_proyecto, id_solicitud, voto):
                         item.estado = Item.ESTADO_APROBADO
                     item.save()
             else:
-                ##Si es una solicitud de desaprobacion de items:
+                # Si es una solicitud de desaprobacion de items:
                 for item in solicitud.items_a_modificar.all():
                     item.estado = Item.ESTADO_DESARROLLO
                     item.save()

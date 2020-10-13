@@ -92,7 +92,7 @@ WSGI_APPLICATION = 'ItemManager.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'itemmanagerdb',
+        'NAME': 'dbdesarrollo',
         'USER': 'postgres',
         'PASSWORD': 'postgres',
         'HOST': 'localhost',
