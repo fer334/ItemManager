@@ -3,12 +3,18 @@
 branch=$1
 backupfile=$2
 tag=$3
+gitclone=$4
 
 echo "Clonando el repositorio"
-git clone https://github.com/fer334/ItemManager/ || { echo "Error al clonar el repositorio" ; exit; }
 
-echo "Ingresando al proyecto"
-cd ItemManager || { echo "El directorio ItemManager no existe" ; exit; }
+if [[ $gitclone == "true" ]]
+then
+    echo "Clonando el repositorio"
+    git clone https://github.com/fer334/ItemManager/ || { echo "Error al clonar el repositorio" ; exit; }
+
+    echo "Ingresando al proyecto"
+    cd ItemManager || { echo "El directorio ItemManager no existe" ; exit; }
+fi
 
 git checkout $tag
 

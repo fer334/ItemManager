@@ -112,7 +112,7 @@ set -- "${POSITIONAL[@]}" # restore positional parameters
 
 
 if [[ $prod == "true" ]]; then
-    ./produccion.bash $branch $filename $tag
+    ./produccion.bash $branch $filename $tag $gitclone
 elif [[ $dev == "true" ]]; then
     ./desarrollo.bash $dbname $username $pass $filename $port $gitclone
 else
