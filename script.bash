@@ -33,10 +33,10 @@ PrintDefault(){
 }
 
 POSITIONAL=()
-dbname="itemmanagerdb"
+dbname="dbdesarrollo"
 username="postgres"
 pass="postgres"
-filename="poblacion_bd.sql"
+filename="dbdesarrollo_bk.sql"
 port="5432"
 gitclone="false"
 prod="false"
