@@ -69,6 +69,13 @@ def ver_proyecto(request, id_proyecto):
 
 
 def numeracion_lb_en_proyecto(proyecto):
+    """
+    retorna el valor para cargar la numeración en la linea base
+
+    :param proyecto: proyecto seleccionado
+    :return: entero con la numeración de la linea base
+    :rtype: int
+    """
     ultima_lb = LineaBase.objects.filter(fase__proyecto=proyecto,
                                          estado__regex='^(?!' + LineaBase.ESTADO_ROTA + ')').order_by(
         'numeracion').last()
