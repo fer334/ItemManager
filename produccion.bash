@@ -26,6 +26,8 @@ echo "Reseteando la base de datos"
 heroku pg:reset HEROKU_POSTGRESQL_RED_URL --confirm team-is2
 echo "Realizando el push a la rama de heroku"
 git push -f heroku HEAD:$branch
+echo "Realizando migraciones"
+heroku run "./manage.py makemigrations; ./manage.py migrate"
 echo "Poblando la base de datos"
 heroku pg:psql < ../$backupfile
 
