@@ -11,6 +11,14 @@ from desarrollo.getPermisos import has_permiso
 from configuracion.models import Solicitud, LineaBase
 
 def get_numeracion(fase, tipo):
+    """
+    genera los numeros de item en una fase del mismo tipo de item
+
+    :param fase: fase actual
+    :param tipo: tipo del item actual
+    :return: entero con el numero de item
+    :rtype: int
+    """
     items_del_tipo = fase.item_set.filter(tipo_item=tipo, estado__in=(Item.ESTADO_REVISION,
                                                                       Item.ESTADO_APROBADO,
                                                                       Item.ESTADO_LINEABASE,
