@@ -30,4 +30,4 @@ echo "Realizando migraciones"
 heroku run "./manage.py makemigrations; ./manage.py migrate"
 echo "Poblando la base de datos"
 heroku pg:psql < $backupfile
-
+heroku open
