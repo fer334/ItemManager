@@ -222,7 +222,7 @@ def votar_solicitud(request, id_proyecto, id_solicitud, voto):
         votos_favor = len(solicitud.votoruptura_set.filter(valor_voto=True))
         if votos_favor > proyecto.cant_comite / 2:
             if solicitud.linea_base is not None:
-                print('QUE: ' + solicitud.linea_base)
+                # print('QUE: ' + solicitud.linea_base)
                 # Si es la solicitud de linea base:
                 solicitud.linea_base.estado = LineaBase.ESTADO_ROTA
                 solicitud.linea_base.save()
