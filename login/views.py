@@ -8,6 +8,7 @@ from django.shortcuts import render, redirect
 from django.contrib import auth
 
 # Forms
+from administracion.models import Proyecto
 from login.forms import RegisterForm, UpdateUserForm
 
 # Models
@@ -51,8 +52,8 @@ def user_login(request):
             message = 'Credenciales invalidas'
             return render(request, 'login/login.html', {'error_message': message})
         login(request, user)
-        #request.session.set_expiry(3600)
-        #SE SACA EL SESSION TIMEOUT DE CADA USUSARIO
+        # request.session.set_expiry(3600)
+        # SE SACA EL SESSION TIMEOUT DE CADA USUSARIO
         return redirect('login:index')
 
     return render(request, 'login/login.html')
@@ -173,3 +174,10 @@ def user_update(request, name):
             'form': form,
         }
     )
+
+
+def auditoria(request, tipo):
+    lista = []
+    if tipo == 'proyecto':
+        lista = Proyecto.history.all()
+    return render(request, 'configuracion/auditoria.html', {'tipo': tipo, 'lista': lista})
