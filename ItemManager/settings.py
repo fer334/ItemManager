@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'administracion',
     'desarrollo',
     'configuracion',
+    'simple_history',
 ]
 
 SITE = 1
@@ -62,6 +63,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'ItemManager.middleware.ActiveAccountMiddleware',
     'ItemManager.middleware.EstadoProyectoMiddleware',
+    'simple_history.middleware.HistoryRequestMiddleware',
 ]
 
 ROOT_URLCONF = 'ItemManager.urls'
