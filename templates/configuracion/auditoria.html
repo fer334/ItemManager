@@ -2,11 +2,33 @@
 {% block content %}
     <div class="container">
         <h1 class="text-center pt-3 mb-5">Auditoría de {{ tipo }}s</h1>
-        <ul>
-            {% for elemento in lista %}
-                <li>{{ elemento.nombre }}({{ elemento.history_id }})({{ elemento.id }}){{ elemento.history_user }}{{ elemento.history_date }}{{ elemento.history_type }}</li>
-            {% endfor %}
-        </ul>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Id Historial</th><th>Nombre del {{ tipo }}</th><th>Tipo de acción</th><th>Usuario</th><th>Fecha y hora</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for elemento in lista %}
+                    <tr>
+                        <td>{{ elemento.history_id }}</td>
+                        <td>{% if tipo == 'proyecto' %}
+                            <a href="{% url 'administracion:verProyecto' elemento.id %}">{{ elemento.nombre }}</a>
+                        {% endif %}</td>
+                        <td>{% if elemento.history_type == '+' %}
+                                creación
+                            {% elif elemento.history_type == '~' %}
+                                modificación
+                            {% else %}
+                                eliminación
+                            {% endif %}
+                            ({{ elemento.history_type }})</td>
+                        <td>{{ elemento.history_user }}</td>
+                        <td>{{ elemento.history_date }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
 
         <div class="mt-5">
             <a href="{% url 'login:index' %}" class="btn btn-primary float-right">Volver atrás</a>
