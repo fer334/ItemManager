@@ -8,7 +8,7 @@ from django.shortcuts import render, redirect
 from django.contrib import auth
 
 # Forms
-from administracion.models import Proyecto
+from administracion.models import Proyecto, TipoItem, Fase, Rol
 from login.forms import RegisterForm, UpdateUserForm
 
 # Models
@@ -178,6 +178,16 @@ def user_update(request, name):
 
 def auditoria(request, tipo):
     lista = []
+    mostrar_proyecto = True
     if tipo == 'proyecto':
         lista = Proyecto.history.all()
-    return render(request, 'configuracion/auditoria.html', {'tipo': tipo, 'lista': lista})
+        mostrar_proyecto = False
+    elif tipo == 'tipoItem':
+        lista = TipoItem.history.all()
+        mostrar_proyecto = False
+    elif tipo == 'fase':
+        lista = Fase.history.all()
+    elif tipo == 'rol':
+        lista = Rol.history.all()
+    return render(request, 'configuracion/auditoria.html', {'tipo': tipo, 'lista': lista,
+                                                            'mostrar_proyecto': mostrar_proyecto})

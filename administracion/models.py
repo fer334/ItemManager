@@ -170,6 +170,9 @@ class Rol(models.Model):
     #: ver si el rol está activo
     activo = models.BooleanField(default=True)
 
+    #: campo que sirve para realizar auditoría de los objetos del modelo
+    history = HistoricalRecords()
+
     CREAR_ITEM = 'CREAR_ITEM'
     MODIFICAR_ITEM = 'MODIFICAR_ITEM'
     DESACTIVAR_ITEM = 'DESACTIVAR_ITEM'
