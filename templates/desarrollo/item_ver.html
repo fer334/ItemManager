@@ -26,7 +26,13 @@
                                 {% elif item.estado == item.ESTADO_REVISION %}
                                 <td class="text-info font-weight-bold">{{ item.estado }}</td>
                                 {% elif item.estado == item.ESTADO_DESACTIVADO %}
-                                <td class="text-muted font-weight-bold">{{ item.estado }}</td>
+                                <td class="text-muted font-weight-bold">
+                                    {% if es_vers_actual %}
+                                        {{ item.estado }}
+                                    {% else %}
+                                        Versión Anterior
+                                    {% endif %}
+                                </td>
                             {% endif %}
                         </tr>
                         <tr>

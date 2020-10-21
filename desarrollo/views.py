@@ -4,11 +4,12 @@ Modulo se detalla la logica para las vistas que serán utilizadas por la app
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from .SubirArchivos import handle_uploaded_file
-from desarrollo.models import Item, AtributoParticular
+from desarrollo.models import Item, AtributoParticular, HistoricalItem
 from administracion.models import Proyecto, TipoItem, Fase, Rol
 from desarrollo.forms import ItemForm
 from desarrollo.getPermisos import has_permiso
 from configuracion.models import Solicitud, LineaBase
+
 
 def get_numeracion(fase, tipo):
     """
@@ -75,6 +76,11 @@ def crear_item(request, id_fase, id_tipo):
                 nuevo_item.id_version = nuevo_item.id
                 nuevo_item.save()
 
+                # registramos para auditoría
+                auditoria = HistoricalItem(item=nuevo_item, history_user=request.user,
+                                           history_type=HistoricalItem.TIPO_CREAR)
+                auditoria.save()
+
                 # vinculamos el tipo a la fase
                 if tipo not in fase.tipos_item.all():
                     fase.tipos_item.add(tipo)
@@ -123,11 +129,15 @@ def ver_item(request, id_proyecto, id_item):
         lista_fases_impacto.append(items_impacto.fase)
     # convertimos en set para que no hayan repetidos
     lista_fases_impacto = set(lista_fases_impacto)
+    # verificamos si la versión es la más actual para emitir un mensaje
+    es_version_actual = False
+    if item.es_ultima_version():
+        es_version_actual = True
     return render(request, 'desarrollo/item_ver.html', {'item': item, 'lista_atributos': lista_atributos, 'fase': fase,
                                                         'proyecto': proyecto, 'desarrollo': Item.ESTADO_DESARROLLO,
                                                         'estado': Proyecto.ESTADO_EN_EJECUCION, 'impacto': impacto,
                                                         'lista_impacto': lista_impacto, 'lista_fases_impacto':
-                                                            lista_fases_impacto})
+                                                            lista_fases_impacto, 'es_vers_actual': es_version_actual})
 
 
 def historial_versiones_item(request, id_proyecto, id_item):
@@ -278,6 +288,10 @@ def reversionar_item(request, id_proyecto, id_item, id_version_anterior):
         validar_relaciones_desactivadas(nuevo_item.padres, nuevo_item.padres.all())
         validar_relaciones_desactivadas(nuevo_item.hijos, nuevo_item.hijos.all())
 
+        # registramos para auditoría
+        auditoria = HistoricalItem(item=nuevo_item, history_user=request.user,
+                                   history_type=HistoricalItem.TIPO_REVERSIONAR)
+        auditoria.save()
         return redirect('desarrollo:verItem', id_proyecto=id_proyecto, id_item=nuevo_item.id)
     else:
         return HttpResponse("No es posible revertir a esta versión porque no cumple con las restricciones")
@@ -445,10 +459,12 @@ def relacionar_item(request, id_proyecto):
                [x for x in fin.antecesores.all() if x.id == inicio.id]) > 0:
             context['error'] = 'Esta relacion ya existe'
         # verificamos que el usuario tenga permisos de crear relaciones padre hijo
-        if not has_permiso(fase=inicio.fase, usuario=request.user, permiso=Rol.CREAR_RELACIONES_PH) and inicio.fase == fin.fase:
+        if not has_permiso(fase=inicio.fase, usuario=request.user,
+                           permiso=Rol.CREAR_RELACIONES_PH) and inicio.fase == fin.fase:
             context['error'] = 'El Rol del Usuario Actual no tiene permisos para crear Relaciones de tipo Padre-Hijo'
         # verificamos que el usuario tenga permisos de crear relaciones antecesor sucesor
-        if not has_permiso(fase=inicio.fase, usuario=request.user, permiso=Rol.CREAR_RELACIONES_AS) and inicio.fase != fin.fase:
+        if not has_permiso(fase=inicio.fase, usuario=request.user,
+                           permiso=Rol.CREAR_RELACIONES_AS) and inicio.fase != fin.fase:
             context['error'] = 'El Rol del Usuario Actual no tiene permisos para crear Relaciones de tipo ' \
                                'Antecesor-Sucesor '
 
@@ -467,6 +483,15 @@ def relacionar_item(request, id_proyecto):
             nuevo_item_fin.antecesores.add(nuevo_item_inicio)
         nuevo_item_inicio.save()
         nuevo_item_fin.save()
+
+        # registramos para auditoría
+        auditoria1 = HistoricalItem(item=nuevo_item_inicio, history_user=request.user,
+                                    history_type=HistoricalItem.TIPO_RELACIONAR)
+        auditoria1.save()
+        auditoria2 = HistoricalItem(item=nuevo_item_fin, history_user=request.user,
+                                    history_type=HistoricalItem.TIPO_RELACIONAR)
+        auditoria2.save()
+
         return redirect('desarrollo:verProyecto', inicio.fase.proyecto.id)
     return render(request, "desarrollo/relacion_crear.html", context)
 
@@ -540,6 +565,14 @@ def desactivar_relacion_item(request, id_proyecto):
                 nuevo_item_fin.antecesores.remove(nuevo_item_inicio)
             nuevo_item_inicio.save()
             nuevo_item_fin.save()
+
+            # registramos para auditoría
+            auditoria1 = HistoricalItem(item=nuevo_item_inicio, history_user=request.user,
+                                        history_type=HistoricalItem.TIPO_DESRELACIONAR)
+            auditoria1.save()
+            auditoria2 = HistoricalItem(item=nuevo_item_fin, history_user=request.user,
+                                        history_type=HistoricalItem.TIPO_DESRELACIONAR)
+            auditoria2.save()
 
     relaciones = crear_lista_relaciones_del_proyecto(id_proyecto)
 
@@ -722,6 +755,10 @@ def desactivar_item(request, id_proyecto, id_item):
         item.antecesores.remove(antecesor_remover)
 
     item.save()
+    # registramos para auditoría
+    auditoria = HistoricalItem(item=item, history_user=request.user,
+                               history_type=HistoricalItem.TIPO_ELIMINAR)
+    auditoria.save()
 
     return redirect('desarrollo:verItem', id_proyecto, id_item)
 
@@ -785,6 +822,12 @@ def modificar_item(request, id_proyecto, id_item):
             # por ultimo desactivamos la versión anterior (mejorar esta parte)
             item.estado = Item.ESTADO_DESACTIVADO
             item.save()
+
+            # registramos para auditoría
+            auditoria = HistoricalItem(item=item_editado, history_user=request.user,
+                                       history_type=HistoricalItem.TIPO_MODIFICAR)
+            auditoria.save()
+
             return redirect('desarrollo:verItem', id_proyecto, item_editado.id)
     return render(request, 'desarrollo/item_editar.html', {'item': item, 'lista_atr': lista_atr})
 
@@ -861,7 +904,7 @@ def cerrar_fase(request, id_proyecto):
 
             return render(request, 'desarrollo/fase_cerrar.html', content)
 
-        ##Si hay una solicitud activa, no se permite cerrar la fase
+        # Si hay una solicitud activa, no se permite cerrar la fase
         lineas_base = fase.lineabase_set.filter(estado=LineaBase.ESTADO_CERRADA)
         if Solicitud.objects.filter(linea_base__in=lineas_base, solicitud_activa=True).count():
             content['mensaje_error'] = """Hay solicitudes activas en la fase"""

@@ -10,6 +10,7 @@ from django.contrib import auth
 # Forms
 from administracion.models import Proyecto, TipoItem, Fase, Rol, HistoricalParticipante
 from configuracion.models import LineaBase
+from desarrollo.models import HistoricalItem
 from login.forms import RegisterForm, UpdateUserForm
 
 # Models
@@ -209,5 +210,7 @@ def auditoria(request, tipo):
     elif tipo == 'acceso':
         lista = HistoricalAccesos.objects.all().order_by('id').reverse()
         mostrar_proyecto = False
+    elif tipo == 'Item':
+        lista = HistoricalItem.objects.all().order_by('id').reverse()
     return render(request, 'configuracion/auditoria.html', {'tipo': tipo, 'lista': lista,
                                                             'mostrar_proyecto': mostrar_proyecto})

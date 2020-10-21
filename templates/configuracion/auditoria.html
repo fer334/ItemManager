@@ -21,7 +21,7 @@
                 <tbody>
                     {% for elemento in lista %}
                         <tr>
-                            <td>{% if tipo != 'Participante' and tipo != 'acceso' %}
+                            <td>{% if tipo != 'Participante' and tipo != 'acceso' and tipo != 'Item' %}
                                     {{ elemento.history_id }}
                                 {% else %}
                                     {{ elemento.id }}
@@ -46,10 +46,18 @@
                                         Línea Base {{ elemento.numeracion }} de {{ elemento.fase.proyecto }}
                                     {% elif tipo == 'Participante' %}
                                         {{ elemento.usuario }}
+                                    {% elif tipo == 'Item' %}
+                                        <a href="{% url 'desarrollo:verItem' elemento.item.fase.proyecto.id elemento.item.id %}">{{ elemento.item }}</a>
                                     {% endif %}</td>
                             {% endif %}
                             {% if mostrar_proyecto %}
-                                <td>{{ elemento.proyecto }}</td>
+                                <td>
+                                    {% if tipo != 'Item' %}
+                                        {{ elemento.proyecto }}
+                                    {% else %}
+                                        {{ elemento.item.fase.proyecto }}
+                                    {% endif %}
+                                </td>
                             {% endif %}
                             <td>{% if elemento.history_type == '+' %}
                                     creación
