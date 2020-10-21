@@ -7,7 +7,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.utils import timezone
 # Models
-from administracion.models import TipoItem, Proyecto, PlantillaAtributo, Rol, Fase, UsuarioxRol
+from administracion.models import TipoItem, Proyecto, PlantillaAtributo, Rol, Fase, UsuarioxRol, HistoricalParticipante
 from login.models import Usuario
 # Forms
 from administracion.forms import ProyectoForm, RolForm, EditarTipoItemForm
@@ -108,6 +108,11 @@ def crear_proyecto(request):
             # ponemos al gerente como participante en el proyecto
             participante = Usuario.objects.get(pk=gerente)
             nuevo_proyecto.participantes.add(participante)
+            # registramos para auditoría
+            auditoria = HistoricalParticipante(usuario=participante, proyecto=nuevo_proyecto,
+                                               history_user=request.user,
+                                               history_type=HistoricalParticipante.TIPO_AGREGADO)
+            auditoria.save()
             # creamos la cantidad de fases para este proyecto
             for x in range(0, nuevo_proyecto.numero_fases):
                 nueva_fase = Fase(nombre='', descripcion='', proyecto=nuevo_proyecto)
@@ -178,6 +183,13 @@ def administrar_participantes(request, id_proyecto):
             id_usuario = request.POST['participante']
             participante = Usuario.objects.get(pk=id_usuario)
             proyecto.participantes.add(participante)
+
+            # registramos para auditoría
+            auditoria = HistoricalParticipante(usuario=participante, proyecto=proyecto,
+                                               history_user=request.user,
+                                               history_type=HistoricalParticipante.TIPO_AGREGADO)
+            auditoria.save()
+
             return HttpResponseRedirect(reverse('administracion:administrarParticipantes', args=[proyecto.id]))
         return render(request, 'administracion/administrarParticipantes.html', {'proyecto': proyecto,
                                                                                 'lista_usuarios': lista_usuarios})
@@ -332,6 +344,13 @@ def administrar_comite(request, id_proyecto):
             id_usuario = request.POST['miembro_comite']
             miembro_comite = Usuario.objects.get(pk=id_usuario)
             proyecto.comite.add(miembro_comite)
+
+            # registramos para auditoría
+            auditoria = HistoricalParticipante(usuario=miembro_comite, proyecto=proyecto,
+                                               history_user=request.user,
+                                               history_type=HistoricalParticipante.TIPO_COMITE)
+            auditoria.save()
+
             return HttpResponseRedirect(reverse('administracion:administrarComite', args=[proyecto.id]))
         return render(request, 'administracion/administrarComite.html', {'proyecto': proyecto})
 
@@ -351,10 +370,28 @@ def eliminar_participante_y_comite(request, id_proyecto, id_usuario, caso):
     usuario = Usuario.objects.get(pk=id_usuario)
     if caso == 'comite':
         proyecto.comite.remove(usuario)
+        # registramos para auditoría
+        auditoria = HistoricalParticipante(usuario=usuario, proyecto=proyecto,
+                                           history_user=request.user,
+                                           history_type=HistoricalParticipante.TIPO_COMITE_DESASIGNADO)
+        auditoria.save()
         return HttpResponseRedirect(reverse('administracion:administrarComite', args=[proyecto.id]))
     elif caso == 'participante':
         if proyecto.gerente != usuario.id:
+            # primero quitamos al participante del proyecto
             proyecto.participantes.remove(usuario)
+            # registramos para auditoría primero el remover usuario
+            auditoria_participante = HistoricalParticipante(usuario=usuario, proyecto=proyecto,
+                                                            history_user=request.user,
+                                                            history_type=HistoricalParticipante.TIPO_ELIMINADO)
+            auditoria_participante.save()
+            # registramos para auditoría el remover del comite
+            if usuario in proyecto.comite.all():
+                auditoria_comite = HistoricalParticipante(usuario=usuario, proyecto=proyecto,
+                                                          history_user=request.user,
+                                                          history_type=HistoricalParticipante.TIPO_COMITE_DESASIGNADO)
+                auditoria_comite.save()
+            # luego quitamos al participante del comité
             proyecto.comite.remove(usuario)
         return HttpResponseRedirect(reverse('administracion:administrarParticipantes', args=[proyecto.id]))
 
@@ -682,7 +719,7 @@ def asignar_rol_por_fase(request, id_fase, id_usuario):
     lista_usr_x_rol = UsuarioxRol.objects.filter(usuario=participante, fase=fase, activo=True)
     roles_fase_actual = [obj.rol for obj in lista_usr_x_rol]
     roles_proyecto = Rol.objects.filter(proyecto=fase.proyecto)
-    roles_disponibles = [rol for rol in roles_proyecto if (not (rol in roles_fase_actual) )and rol.activo]
+    roles_disponibles = [rol for rol in roles_proyecto if (not (rol in roles_fase_actual)) and rol.activo]
     return render(request, 'administracion/asignarRol.html', {
         'participante': participante,
         'fase': fase,
@@ -710,6 +747,11 @@ def registrar_rol_por_fase(request, id_fase, id_usuario, id_rol):
     else:
         rol_asignado = UsuarioxRol(fase=fase, rol=rol, usuario=usuario)
     rol_asignado.save()
+    # registramos para auditoría
+    auditoria = HistoricalParticipante(usuario=usuario, proyecto=fase.proyecto, fase=fase,
+                                       history_user=request.user,
+                                       history_type=HistoricalParticipante.TIPO_ROL+rol.nombre+' en fase ' +fase.nombre)
+    auditoria.save()
     return HttpResponseRedirect(reverse('administracion:verRolesUsuario', args=(fase.proyecto.id, id_usuario)))
 
 
@@ -729,4 +771,9 @@ def desasignar_rol_al_usuario(request, id_fase, id_usuario, id_rol):
     rol_actual = UsuarioxRol.objects.get(fase=fase, usuario=usuario, rol=rol)
     rol_actual.activo = False
     rol_actual.save()
+    # registramos para auditoría
+    auditoria = HistoricalParticipante(usuario=usuario, proyecto=fase.proyecto, fase=fase,
+                                       history_user=request.user,
+                                       history_type=HistoricalParticipante.TIPO_ROL_DESASIGNADO+rol.nombre+' en fase ' +fase.nombre)
+    auditoria.save()
     return HttpResponseRedirect(reverse('administracion:verRolesUsuario', args=(fase.proyecto.id, id_usuario)))

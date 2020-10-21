@@ -19,7 +19,12 @@
                 <tbody>
                     {% for elemento in lista %}
                         <tr>
-                            <td>{{ elemento.history_id }}</td>
+                            <td>{% if tipo != 'Participante' %}
+                                    {{ elemento.history_id }}
+                                {% else %}
+                                    {{ elemento.id }}
+                                {% endif %}
+                            </td>
                             <td>{% if tipo == 'proyecto' %}
                                     <a href="{% url 'administracion:verProyecto' elemento.id %}">{{ elemento.nombre }}</a>
                                 {% elif tipo == 'tipoItem' %}
@@ -34,8 +39,10 @@
                                     </strong>
                                 {% elif tipo == 'rol' %}
                                     {{ elemento.nombre }}
-                                {% elif tipo == 'lineaBase' %}
-                                    Linea Base {{ elemento.numeracion }} de {{ elemento.fase.proyecto }}
+                                {% elif tipo == 'Lineas Base' %}
+                                    Línea Base {{ elemento.numeracion }} de {{ elemento.fase.proyecto }}
+                                {% elif tipo == 'Participante' %}
+                                    {{ elemento.usuario }}
                                 {% endif %}</td>
                             {% if mostrar_proyecto %}
                                 <td>{{ elemento.proyecto }}</td>
@@ -44,7 +51,7 @@
                                     creación
                                 {% elif elemento.history_type == '~' %}
                                     modificación
-                                {% else %}
+                                {% elif elemento.history_type == '-' %}
                                     eliminación
                                 {% endif %}
                                 ({{ elemento.history_type }})</td>

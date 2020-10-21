@@ -3,6 +3,7 @@ Mapeador objeto-relacional en el que es posible definir la estructura de la base
 """
 from django.db import models
 from simple_history.models import HistoricalRecords
+from django.utils.timezone import now
 
 
 # Create your models here.
@@ -230,3 +231,30 @@ class UsuarioxRol(models.Model):
 
     def __str__(self):
         return f'{self.usuario.username} es {self.rol.nombre} en {self.fase.nombre} - {self.activo}'
+
+
+class HistoricalParticipante(models.Model):
+    """
+    Clase que sirve para guardar datos de auditoría para participantes del proyecto
+    """
+    #: usuario que participa en el proyecto
+    usuario = models.ForeignKey('login.Usuario', on_delete=models.CASCADE)
+    #: proyecto del que participa el usuario
+    proyecto = models.ForeignKey('administracion.Proyecto', on_delete=models.CASCADE)
+    #: fase para roles
+    fase = models.CharField(max_length=150, null=True)
+    #: usuario que realizó la acción
+    history_user = models.CharField(max_length=150, default='None')
+    #: fecha y hora en la que se realizó la acción
+    history_date = models.DateTimeField(default=now)
+    #: razón de cambio (nulo por defecto)
+    history_change_reason = models.CharField(max_length=200, null=True)
+    #: tipo de cambio = puede ser añadido al proyecto, eliminado del proyecto, asignado rol, asignado al comite, etc
+    history_type = models.CharField(max_length=200)
+    # constantes
+    TIPO_AGREGADO = 'Añadido al proyecto(+)'
+    TIPO_ROL = 'Se asigna Rol '
+    TIPO_COMITE = 'Se asigna al comite(~)'
+    TIPO_ROL_DESASIGNADO = 'Se desasigna Rol '
+    TIPO_COMITE_DESASIGNADO = 'Se desasigna del comite(~)'
+    TIPO_ELIMINADO = 'Eliminado del proyecto(-)'
