@@ -13,7 +13,7 @@ from configuracion.models import LineaBase
 from login.forms import RegisterForm, UpdateUserForm
 
 # Models
-from login.models import Usuario
+from login.models import Usuario, HistoricalAccesos
 
 
 @login_required
@@ -55,6 +55,11 @@ def user_login(request):
         login(request, user)
         # request.session.set_expiry(3600)
         # SE SACA EL SESSION TIMEOUT DE CADA USUSARIO
+
+        # registramos para auditoría
+        audit = HistoricalAccesos(history_user=request.user, history_type=HistoricalAccesos.TIPO_ACCESO)
+        audit.save()
+
         return redirect('login:index')
 
     return render(request, 'login/login.html')
@@ -68,7 +73,13 @@ def logout(request):
     :return: redireccion a la vista login
     :rtype: redirect
     """
+
+    # primero registramos para auditoría
+    audit = HistoricalAccesos(history_user=request.user, history_type=HistoricalAccesos.TIPO_SALIDA)
+    audit.save()
+
     auth.logout(request)
+
     return redirect('login:login')
 
 
@@ -195,5 +206,8 @@ def auditoria(request, tipo):
         mostrar_proyecto = False
     elif tipo == 'Participante':
         lista = HistoricalParticipante.objects.all().order_by('id').reverse()
+    elif tipo == 'acceso':
+        lista = HistoricalAccesos.objects.all().order_by('id').reverse()
+        mostrar_proyecto = False
     return render(request, 'configuracion/auditoria.html', {'tipo': tipo, 'lista': lista,
                                                             'mostrar_proyecto': mostrar_proyecto})

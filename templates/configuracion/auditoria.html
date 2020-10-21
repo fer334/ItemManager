@@ -7,7 +7,9 @@
                 <thead>
                     <tr>
                         <th>Id Historial</th>
-                        <th>Nombre de {{ tipo }}</th>
+                        {% if tipo != 'acceso' %}
+                            <th>Nombre de {{ tipo }}</th>
+                        {% endif %}
                         {% if mostrar_proyecto %}
                             <th>Proyecto</th>
                         {% endif %}
@@ -19,31 +21,33 @@
                 <tbody>
                     {% for elemento in lista %}
                         <tr>
-                            <td>{% if tipo != 'Participante' %}
+                            <td>{% if tipo != 'Participante' and tipo != 'acceso' %}
                                     {{ elemento.history_id }}
                                 {% else %}
                                     {{ elemento.id }}
                                 {% endif %}
                             </td>
-                            <td>{% if tipo == 'proyecto' %}
-                                    <a href="{% url 'administracion:verProyecto' elemento.id %}">{{ elemento.nombre }}</a>
-                                {% elif tipo == 'tipoItem' %}
-                                    {{ elemento.nombre }} [{{ elemento.prefijo }}]
-                                {% elif tipo == 'fase' %}
-                                    <strong>
-                                        {% if  elemento.nombre  %}
-                                            {{ elemento.nombre }}
-                                        {% else %}
-                                            Nombre sin definir
-                                        {% endif %}
-                                    </strong>
-                                {% elif tipo == 'rol' %}
-                                    {{ elemento.nombre }}
-                                {% elif tipo == 'Lineas Base' %}
-                                    Línea Base {{ elemento.numeracion }} de {{ elemento.fase.proyecto }}
-                                {% elif tipo == 'Participante' %}
-                                    {{ elemento.usuario }}
-                                {% endif %}</td>
+                            {% if tipo != 'acceso' %}
+                                <td>{% if tipo == 'proyecto' %}
+                                        <a href="{% url 'administracion:verProyecto' elemento.id %}">{{ elemento.nombre }}</a>
+                                    {% elif tipo == 'tipoItem' %}
+                                        {{ elemento.nombre }} [{{ elemento.prefijo }}]
+                                    {% elif tipo == 'fase' %}
+                                        <strong>
+                                            {% if  elemento.nombre  %}
+                                                {{ elemento.nombre }}
+                                            {% else %}
+                                                Nombre sin definir
+                                            {% endif %}
+                                        </strong>
+                                    {% elif tipo == 'rol' %}
+                                        {{ elemento.nombre }}
+                                    {% elif tipo == 'Lineas Base' %}
+                                        Línea Base {{ elemento.numeracion }} de {{ elemento.fase.proyecto }}
+                                    {% elif tipo == 'Participante' %}
+                                        {{ elemento.usuario }}
+                                    {% endif %}</td>
+                            {% endif %}
                             {% if mostrar_proyecto %}
                                 <td>{{ elemento.proyecto }}</td>
                             {% endif %}
