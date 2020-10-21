@@ -416,16 +416,16 @@
                 {% if item.estado != desactivado %}
                 // console.log('{ item.fase.nombre }}'),
                     {% if item.id == item_principal.id %}
-                        { key: "{{ item.tipo_item.prefijo }}_{{ item.nombre }} [{{ item.complejidad }}]", text: "{{ item.tipo_item.prefijo }}_{{ item.nombre }} ({{ item.complejidad }}) ", group: "{{ item.fase.id }}", color: "lightgreen", isGroup: true, category: "Pool" },
+                        { key: "{{ item.tipo_item.prefijo }}{{ item.numeracion }}_{{ item.nombre }} [{{ item.complejidad }}]", text: "{{ item.tipo_item.prefijo }}{{ item.numeracion }}_{{ item.nombre }} ({{ item.complejidad }}) ", group: "{{ item.fase.id }}", color: "lightgreen", isGroup: true, category: "Pool" },
                     {% else %}
-                        { key: "{{ item.tipo_item.prefijo }}_{{ item.nombre }} [{{ item.complejidad }}]", group: "{{ item.fase.id }}" },
+                        { key: "{{ item.tipo_item.prefijo }}{{ item.numeracion }}_{{ item.nombre }} [{{ item.complejidad }}]", group: "{{ item.fase.id }}" },
                     {% endif %}
                 {% endif %}
             {% endfor %}
         ],
         [ // link data
             {% for relacion in relaciones %}
-                { from: "{{ relacion.inicio.tipo_item.prefijo }}_{{ relacion.inicio.nombre }} [{{ relacion.inicio.complejidad }}]", to: "{{ relacion.fin.tipo_item.prefijo }}_{{ relacion.fin.nombre }} [{{ relacion.fin.complejidad }}]" },
+                { from: "{{ relacion.inicio.tipo_item.prefijo }}{{ relacion.inicio.numeracion }}_{{ relacion.inicio.nombre }} [{{ relacion.inicio.complejidad }}]", to: "{{ relacion.fin.tipo_item.prefijo }}{{ relacion.fin.numeracion }}_{{ relacion.fin.nombre }} [{{ relacion.fin.complejidad }}]" },
             {% endfor %}
         ]);
       // force all lanes' layouts to be performed
