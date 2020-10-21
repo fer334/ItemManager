@@ -9,6 +9,7 @@ from django.contrib import auth
 
 # Forms
 from administracion.models import Proyecto, TipoItem, Fase, Rol
+from configuracion.models import LineaBase
 from login.forms import RegisterForm, UpdateUserForm
 
 # Models
@@ -189,5 +190,8 @@ def auditoria(request, tipo):
         lista = Fase.history.all()
     elif tipo == 'rol':
         lista = Rol.history.all()
+    elif tipo == 'lineaBase':
+        lista = LineaBase.history.all()
+        mostrar_proyecto = False
     return render(request, 'configuracion/auditoria.html', {'tipo': tipo, 'lista': lista,
                                                             'mostrar_proyecto': mostrar_proyecto})

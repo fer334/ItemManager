@@ -34,6 +34,8 @@
                                     </strong>
                                 {% elif tipo == 'rol' %}
                                     {{ elemento.nombre }}
+                                {% elif tipo == 'lineaBase' %}
+                                    Linea Base {{ elemento.numeracion }} de {{ elemento.fase.proyecto }}
                                 {% endif %}</td>
                             {% if mostrar_proyecto %}
                                 <td>{{ elemento.proyecto }}</td>

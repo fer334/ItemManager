@@ -2,9 +2,13 @@
 Models del modulo de configuracion
 """
 from django.db import models
+from simple_history.models import HistoricalRecords
+
 from desarrollo.models import Item
 from django.utils.timezone import now
 from desarrollo.models import Fase
+
+
 # Create your models here.
 
 
@@ -26,6 +30,8 @@ class LineaBase(models.Model):
     estado = models.CharField(max_length=100, default=ESTADO_CERRADA, null=False)
     #: atributo para enumerar las lineas base dentro de un proyecto
     numeracion = models.IntegerField(default=1)
+    #: campo que sirve para realizar auditoría de los objetos del modelo
+    history = HistoricalRecords()
 
 
 class Solicitud(models.Model):
@@ -52,6 +58,5 @@ class VotoRuptura(models.Model):
     """
     solicitud = models.ForeignKey(Solicitud, null=False, on_delete=models.DO_NOTHING)
     votante = models.ForeignKey('login.Usuario', null=False, on_delete=models.DO_NOTHING)
-    valor_voto = models.BooleanField(default=False) #TRUE a favor FALSE en contra
+    valor_voto = models.BooleanField(default=False)  # TRUE a favor FALSE en contra
     fecha_voto = models.DateField(default=now)
-
