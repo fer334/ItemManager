@@ -94,6 +94,6 @@ class HistoricalItem(models.Model):
     TIPO_MODIFICAR = '~'
     TIPO_ELIMINAR = '-'
     TIPO_REVERSIONAR = 'reversión'
-    # TIPO_ESTADO = 'estado cambiado a '
+    TIPO_ESTADO = 'estado cambiado a '
     TIPO_RELACIONAR = 'relación creada'
     TIPO_DESRELACIONAR = 'relación eliminada'

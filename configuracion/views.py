@@ -6,7 +6,7 @@ from django.shortcuts import render, redirect
 # Create your views here.
 from administracion.models import Proyecto, Fase, Rol
 from .models import LineaBase, Solicitud, VotoRuptura
-from desarrollo.models import Item
+from desarrollo.models import Item, HistoricalItem
 from login.models import Usuario
 from django.utils.timezone import now
 from desarrollo.views import calcular_impacto_recursivo, crear_lista_relaciones_del_proyecto
@@ -112,6 +112,12 @@ def crear_linea_base(request, id_fase):
             for item in items:
                 item.estado = Item.ESTADO_LINEABASE
                 item.save()
+
+                # registramos para auditoría
+                auditoria = HistoricalItem(item=item, history_user=request.user,
+                                           history_type=HistoricalItem.TIPO_ESTADO + Item.ESTADO_LINEABASE)
+                auditoria.save()
+
                 nueva_linea_base.items.add(item)
             nueva_linea_base.save()
         return redirect('configuracion:verProyecto', id_proyecto=fase.proyecto_id)
@@ -229,14 +235,31 @@ def votar_solicitud(request, id_proyecto, id_solicitud, voto):
                 for item in solicitud.linea_base.items.all():
                     if item in solicitud.items_a_modificar.all():
                         item.estado = Item.ESTADO_REVISION
+
+                        # registramos para auditoría
+                        auditoria = HistoricalItem(item=item, history_user=request.user,
+                                                   history_type=HistoricalItem.TIPO_ESTADO + Item.ESTADO_REVISION)
+                        auditoria.save()
+
                     else:
                         item.estado = Item.ESTADO_APROBADO
+
+                        # registramos para auditoría
+                        auditoria = HistoricalItem(item=item, history_user=request.user,
+                                                   history_type=HistoricalItem.TIPO_ESTADO + Item.ESTADO_APROBADO)
+                        auditoria.save()
+
                     item.save()
             else:
                 # Si es una solicitud de desaprobacion de items:
                 for item in solicitud.items_a_modificar.all():
                     item.estado = Item.ESTADO_DESARROLLO
                     item.save()
+
+                    # registramos para auditoría
+                    auditoria = HistoricalItem(item=item, history_user=request.user,
+                                               history_type=HistoricalItem.TIPO_ESTADO + Item.ESTADO_DESARROLLO)
+                    auditoria.save()
 
         solicitud.solicitud_activa = False
         solicitud.save()

@@ -664,6 +664,12 @@ def solicitud_aprobacion(request, id_item):
     if item.estado == Item.ESTADO_DESARROLLO:
         item.estado = Item.ESTADO_PENDIENTE
         item.save()
+
+        # registramos para auditoría
+        auditoria = HistoricalItem(item=item, history_user=request.user,
+                                   history_type=HistoricalItem.TIPO_ESTADO + Item.ESTADO_PENDIENTE)
+        auditoria.save()
+
     return redirect('desarrollo:verItem', item.fase.proyecto.id, id_item)
 
 
@@ -684,6 +690,10 @@ def aprobar_item(request, id_item):
     if item.estado == Item.ESTADO_PENDIENTE:
         item.estado = Item.ESTADO_APROBADO
         item.save()
+        # registramos para auditoría
+        auditoria = HistoricalItem(item=item, history_user=request.user,
+                                   history_type=HistoricalItem.TIPO_ESTADO + Item.ESTADO_APROBADO)
+        auditoria.save()
     return redirect('desarrollo:menuAprobacion', item.fase.proyecto_id)
 
 
@@ -704,6 +714,11 @@ def desaprobar_item(request, id_item):
     if item.estado == Item.ESTADO_PENDIENTE:
         item.estado = Item.ESTADO_DESARROLLO
         item.save()
+
+        # registramos para auditoría
+        auditoria = HistoricalItem(item=item, history_user=request.user,
+                                   history_type=HistoricalItem.TIPO_ESTADO + Item.ESTADO_DESARROLLO)
+        auditoria.save()
     return redirect('desarrollo:menuAprobacion', item.fase.proyecto_id)
 
 
@@ -966,6 +981,11 @@ def votacion_item_en_revision_desarrollo(request, id_item):
         item.estado = Item.ESTADO_DESARROLLO
         item.save()
 
+        # registramos para auditoría
+        auditoria = HistoricalItem(item=item, history_user=request.user,
+                                   history_type=HistoricalItem.TIPO_ESTADO + Item.ESTADO_DESARROLLO)
+        auditoria.save()
+
     def pasar_a_revision(lista_items):
         for item in lista_items:
             item_hijo = Item.objects.filter(id_version=item.id_version,
@@ -973,6 +993,11 @@ def votacion_item_en_revision_desarrollo(request, id_item):
             if item_hijo.estado == Item.ESTADO_APROBADO or item_hijo.estado == Item.ESTADO_LINEABASE:
                 item_hijo.estado = Item.ESTADO_REVISION
                 item_hijo.save()
+
+                # registramos para auditoría
+                audit = HistoricalItem(item=item_hijo, history_user=request.user,
+                                       history_type=HistoricalItem.TIPO_ESTADO + Item.ESTADO_REVISION)
+                audit.save()
 
     # Luego de pasar el item a desarrollo se debe ver como quedan sus hijos y sucesores
     pasar_a_revision(item.hijos.all())
@@ -993,6 +1018,11 @@ def votacion_item_en_revision_desarrollo(request, id_item):
                     item.estado = Item.ESTADO_APROBADO
                     item.save()
 
+                    # registramos para auditoría
+                    audito = HistoricalItem(item=item, history_user=request.user,
+                                            history_type=HistoricalItem.TIPO_ESTADO + Item.ESTADO_APROBADO)
+                    audito.save()
+
     return redirect('desarrollo:verItem', item.fase.proyecto_id, id_item)
 
 
@@ -1009,6 +1039,12 @@ def votacion_item_en_revision_aprobado(request, id_item):
     if item.estado == Item.ESTADO_REVISION:
         item.estado = Item.ESTADO_APROBADO
         item.save()
+
+        # registramos para auditoría
+        auditoria = HistoricalItem(item=item, history_user=request.user,
+                                   history_type=HistoricalItem.TIPO_ESTADO+Item.ESTADO_APROBADO)
+        auditoria.save()
+
     # TODO Muchas cosas jeje
     for linea_base in item.lineabase_set.all():
         if linea_base.estado == linea_base.ESTADO_CERRADA:
@@ -1018,6 +1054,10 @@ def votacion_item_en_revision_aprobado(request, id_item):
                     item.estado = Item.ESTADO_LINEABASE
                     item.save()
 
+                    # registramos para auditoría
+                    auditoria = HistoricalItem(item=item, history_user=request.user,
+                                               history_type=HistoricalItem.TIPO_ESTADO+Item.ESTADO_LINEABASE)
+                    auditoria.save()
     return redirect('desarrollo:verItem', item.fase.proyecto_id, id_item)
 
 
@@ -1035,6 +1075,11 @@ def votacion_item_en_revision_lineaBase(request, id_item):
     if item.estado == Item.ESTADO_REVISION:
         item.estado = Item.ESTADO_LINEABASE
         item.save()
+
+        # registramos para auditoría
+        auditoria = HistoricalItem(item=item, history_user=request.user,
+                                   history_type=HistoricalItem.TIPO_ESTADO+Item.ESTADO_LINEABASE)
+        auditoria.save()
 
     return redirect('desarrollo:verItem', item.fase.proyecto_id, id_item)
 
