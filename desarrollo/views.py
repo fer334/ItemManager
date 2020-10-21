@@ -129,9 +129,9 @@ def ver_item(request, id_proyecto, id_item):
         lista_fases_impacto.append(items_impacto.fase)
     # convertimos en set para que no hayan repetidos
     lista_fases_impacto = set(lista_fases_impacto)
-    # verificamos si la versión es la más actual para emitir un mensaje
+    # verificamos si la versión es la más actual para emitir un mensaje (solo para items desactivados)
     es_version_actual = False
-    if item.es_ultima_version():
+    if item == Item.objects.filter(id_version=item.id_version).order_by('id').last():
         es_version_actual = True
     return render(request, 'desarrollo/item_ver.html', {'item': item, 'lista_atributos': lista_atributos, 'fase': fase,
                                                         'proyecto': proyecto, 'desarrollo': Item.ESTADO_DESARROLLO,
