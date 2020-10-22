@@ -9,8 +9,10 @@ from .models import LineaBase, Solicitud, VotoRuptura
 from desarrollo.models import Item, HistoricalItem
 from login.models import Usuario
 from django.utils.timezone import now
-from desarrollo.views import calcular_impacto_recursivo, crear_lista_relaciones_del_proyecto
+from desarrollo.views import calcular_impacto_recursivo, crear_lista_relaciones_del_proyecto, \
+    calcular_lista_items_impacto_recursivo
 from desarrollo.getPermisos import has_permiso, has_permiso_cerrar_proyecto
+
 
 def index(request, filtro):
     """
@@ -330,10 +332,21 @@ def trazabilidad(request, id_proyecto, id_item):
     items += ramas_recursivas_trazabilidad(item, 'derecha', item.hijos.all())
     # ahora eliminamos elementos duplicados con los sets de python
     setitems = set(items)
+    # generamos los datos requeridos para mostrar el cálculo de impacto
+    impacto = calcular_impacto_recursivo(item)
+    lista_impacto = calcular_lista_items_impacto_recursivo(item)
+    lista_fases_impacto = []
+    for items_impacto in lista_impacto:
+        lista_fases_impacto.append(items_impacto.fase)
+    # convertimos en set para que no hayan repetidos
+    lista_fases_impacto = set(lista_fases_impacto)
+
     return render(request, 'configuracion/item_trazabilidad.html', {'item_principal': item, 'fases': fases,
                                                                     'lista_items': setitems, 'proyecto': proyecto,
                                                                     'desactivado': Item.ESTADO_DESACTIVADO,
-                                                                    'relaciones': relaciones})
+                                                                    'relaciones': relaciones, 'impacto': impacto,
+                                                                    'lista_impacto': lista_impacto,
+                                                                    'lista_fases_impacto': lista_fases_impacto})
 
 
 def ramas_recursivas_trazabilidad(item, caso, lista):
@@ -417,4 +430,3 @@ def solicitud_modificacion_estado(request, id_proyecto, id_item):
         for item in items_seleccionados:
             solicitud.items_a_modificar.add(item)
         return redirect('configuracion:verProyecto', id_proyecto=id_proyecto)
-
