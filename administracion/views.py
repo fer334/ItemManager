@@ -8,7 +8,9 @@ from django.urls import reverse
 from django.utils import timezone
 # Models
 from administracion.models import TipoItem, Proyecto, PlantillaAtributo, Rol, Fase, UsuarioxRol, HistoricalParticipante
-from login.models import Usuario
+from configuracion.models import LineaBase
+from desarrollo.models import HistoricalItem, Item
+from login.models import Usuario, HistoricalAccesos
 # Forms
 from administracion.forms import ProyectoForm, RolForm, EditarTipoItemForm
 # Python
@@ -750,7 +752,7 @@ def registrar_rol_por_fase(request, id_fase, id_usuario, id_rol):
     # registramos para auditoría
     auditoria = HistoricalParticipante(usuario=usuario, proyecto=fase.proyecto, fase=fase,
                                        history_user=request.user,
-                                       history_type=HistoricalParticipante.TIPO_ROL+rol.nombre+' en fase ' +fase.nombre)
+                                       history_type=HistoricalParticipante.TIPO_ROL + rol.nombre + ' en fase ' + fase.nombre)
     auditoria.save()
     return HttpResponseRedirect(reverse('administracion:verRolesUsuario', args=(fase.proyecto.id, id_usuario)))
 
@@ -774,6 +776,40 @@ def desasignar_rol_al_usuario(request, id_fase, id_usuario, id_rol):
     # registramos para auditoría
     auditoria = HistoricalParticipante(usuario=usuario, proyecto=fase.proyecto, fase=fase,
                                        history_user=request.user,
-                                       history_type=HistoricalParticipante.TIPO_ROL_DESASIGNADO+rol.nombre+' en fase ' +fase.nombre)
+                                       history_type=HistoricalParticipante.TIPO_ROL_DESASIGNADO + rol.nombre + ' en fase ' + fase.nombre)
     auditoria.save()
     return HttpResponseRedirect(reverse('administracion:verRolesUsuario', args=(fase.proyecto.id, id_usuario)))
+
+
+def auditoria_particular(request, id_proyecto, tipo):
+    proyecto_actual = Proyecto.objects.get(pk=id_proyecto)
+    lista_tipos_item = proyecto_actual.tipoitem_set.all()
+    lista_fases = proyecto_actual.fase_set.all()
+    audit_particular = True
+    lista = []
+    mostrar_proyecto = True
+    if tipo == 'proyecto':
+        lista = Proyecto.history.filter(id=id_proyecto)
+        mostrar_proyecto = False
+    elif tipo == 'tipoItem':
+        for tipoItem in lista_tipos_item:
+            lista += TipoItem.history.filter(id=tipoItem.id)
+        mostrar_proyecto = False
+    elif tipo == 'fase':
+        lista = Fase.history.filter(proyecto_id=id_proyecto)
+    elif tipo == 'rol':
+        lista = Rol.history.filter(proyecto_id=id_proyecto)
+    elif tipo == 'Lineas Base':
+        for fase in lista_fases:
+            lista += LineaBase.history.filter(fase_id=fase.id)
+        mostrar_proyecto = False
+    elif tipo == 'Participante':
+        lista = HistoricalParticipante.objects.filter(proyecto_id=id_proyecto).order_by('id').reverse()
+    elif tipo == 'Item':
+        for item in Item.objects.filter(fase__in=lista_fases):
+            lista += HistoricalItem.objects.filter(item=item).order_by('id').reverse()
+    return render(request, 'configuracion/auditoria.html', {'tipo': tipo, 'lista': lista, 'proyecto': proyecto_actual,
+                                                            'mostrar_proyecto': mostrar_proyecto,
+                                                            'audit_particular': audit_particular})
+
+

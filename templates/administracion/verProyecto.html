@@ -129,7 +129,28 @@
                         <h5 class="alert alert-warning">Proyecto Cancelado: No se permiten acciones</h5>
                     </div>
                 {% endif %}
+
                 <div class="float-right">
+                    <button id="btnGroupDrop2" type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                        Auditoría del Proyecto
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="btnGroupDrop2">
+                        <a class="list-group-item dropdown-item" role="button"
+                           href="{% url 'administracion:auditoriaParticular' proyecto.id 'proyecto' %}">Proyecto</a>
+                        <a class="list-group-item dropdown-item" role="button"
+                           href="{% url 'administracion:auditoriaParticular' proyecto.id 'tipoItem' %}">Tipos de Item</a>
+                        <a class="list-group-item dropdown-item " role="button"
+                           href="{% url 'administracion:auditoriaParticular' proyecto.id 'fase' %}">Fases</a>
+                        <a class="list-group-item dropdown-item"role="button"
+                           href="{% url 'administracion:auditoriaParticular' proyecto.id 'rol' %}">Roles</a>
+                        <a class="list-group-item dropdown-item" role="button"
+                           href="{% url 'administracion:auditoriaParticular' proyecto.id 'Lineas Base' %}">Líneas Base</a>
+                        <a class="list-group-item dropdown-item"role="button"
+                           href="{% url 'administracion:auditoriaParticular' proyecto.id 'Participante' %}">Participantes</a>
+                        <a class="list-group-item dropdown-item"role="button"
+                           href="{% url 'administracion:auditoriaParticular' proyecto.id 'Item' %}">Items</a>
+                    </div>
                     <a class="btn btn-primary" href="{% url 'administracion:proyectos' 'todos'%}" role="button">
                         Volver a Lista de Proyectos
                     </a>

@@ -1,7 +1,7 @@
 {% extends 'login/loginHeader.html' %}
 {% block content %}
     <div class="container">
-        <h1 class="text-center pt-3 mb-5">Auditoría de {{ tipo }}s</h1>
+        <h1 class="text-center pt-3 mb-5">Auditoría de {% if not audit_particular %}{{ tipo }}s{% else %}{{ proyecto.nombre }}({{ tipo }}){% endif %}</h1>
         <div class="table-responsive" style="overflow-y: auto;">
             <table class="table table-bordered">
                 <thead>
