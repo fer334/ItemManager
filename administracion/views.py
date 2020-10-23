@@ -35,7 +35,8 @@ def acceso_denegado(request, id_proyecto, caso):
         'gerente': 'El usuario actual no puede acceder a esta URL porque no es el Gerente del Proyecto actual',
         'tiimportado': 'No se puede editar este tipo de ítem porque se utiliza en otros proyectos',
         'tiponovalido': 'El tipo seleccionado no es válido para esta fase',
-        'permisos': 'El Rol del usuario actual no cuenta con los permisos necesarios para realizar esta acción'
+        'permisos': 'El Rol del usuario actual no cuenta con los permisos necesarios para realizar esta acción',
+        'auditoria': 'El usuario actual no puede ver los datos de Auditoría General porque no es Gerente ni Super Administrador'
     }
     mensaje = posibles_casos.get(caso)
 
@@ -782,9 +783,22 @@ def desasignar_rol_al_usuario(request, id_fase, id_usuario, id_rol):
 
 
 def auditoria_particular(request, id_proyecto, tipo):
+    """
+    Vista que se encarga de mostrar los datos de auditoría particular de items, lineas base, fases de un proyecto
+
+    :param request: objeto de tipo diccionario que permite acceder a los datos
+    :param id_proyecto: identificador del proyecto actual
+    :param tipo: el tipo de auditoría que se quiere realizar
+    :return: objeto que se encarga de renderear auditoria.html
+    :rtype: render
+    """
+    # primero verificamos que sea gerente del proyecto actual
     proyecto_actual = Proyecto.objects.get(pk=id_proyecto)
-    lista_tipos_item = proyecto_actual.tipoitem_set.all()
-    lista_fases = proyecto_actual.fase_set.all()
+    if not (request.user.id == proyecto_actual.gerente):
+        return redirect('administracion:accesoDenegado', id_proyecto=proyecto_actual.id, caso='gerente')
+    # si es gerente del proyecto actual continuamos
+    lista_tipos_item = proyecto_actual.tipoitem_set.all().order_by('id').reverse()
+    lista_fases = proyecto_actual.fase_set.all().order_by('id').reverse()
     audit_particular = True
     lista = []
     mostrar_proyecto = True

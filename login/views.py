@@ -190,6 +190,19 @@ def user_update(request, name):
 
 
 def auditoria(request, tipo):
+    """
+    Vista que se encarga de mostrar los datos de auditoría general para proyectos, items, lineas base, login, etc
+
+    :param request: objeto de tipo diccionario que permite acceder a los datos
+    :param tipo: el tipo de auditoría que se quiere realizar
+    :return: objeto que se encarga de renderear auditoria.html
+    :rtype: render
+    """
+    # primero verificamos que sea gerente o super user
+    usuario = Usuario.objects.get(pk=request.user.id)
+    if not (usuario.is_gerente or usuario.is_superuser):
+        return redirect('administracion:accesoDenegado', id_proyecto=1, caso='auditoria')
+    # si es gerente o super user continuamos
     lista = []
     mostrar_proyecto = True
     if tipo == 'proyecto':
