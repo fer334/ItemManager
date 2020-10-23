@@ -1139,7 +1139,6 @@ class TestViews(TestCase):
         respuesta = handle_uploaded_file(obj, 0, self.usuario)
         self.assertNotEqual(respuesta, None, 'No se respondio con la url')
 
-
     def test_solicitud_modificacion_estado(self):
         """
         CU 55: Solicitud de modificacion de estado de Item
@@ -1148,14 +1147,15 @@ class TestViews(TestCase):
 
         :return: Retrona true si la solicitud se realizo correctamente.
         """
-        cu_55 = Item.objects.create(nombre='CU_55', estado=Item.ESTADO_APROBADO, complejidad=5, descripcion='solicitar modificar estado',
-                               tipo_item=self.tipo, fase=self.fase, id_version=20)
+        cu_55 = Item.objects.create(nombre='CU_55', estado=Item.ESTADO_APROBADO, complejidad=5,
+                                    descripcion='solicitar modificar estado',
+                                    tipo_item=self.tipo, fase=self.fase, id_version=20)
 
-        path = reverse('configuracion:solicitarModificarEstado', args=[self.proyecto.id,cu_55.id])
-        request = RequestFactory().post(path, {'item':'cu_55','mensaje':['justificacion']})
+        path = reverse('configuracion:solicitarModificarEstado', args=[self.proyecto.id, cu_55.id])
+        request = RequestFactory().post(path, {'item': 'cu_55', 'mensaje': ['justificacion']})
         request.user = self.usuario
 
-        solicitud_modificacion_estado(request, id_proyecto= self.proyecto.id, id_item=cu_55.id )
+        solicitud_modificacion_estado(request, id_proyecto=self.proyecto.id, id_item=cu_55.id)
         self.assertNotEqual(len(Solicitud.objects.all()), 0, 'La prueba fallo, la solicitud no fue creada')
 
     def test_auditoria(self):
