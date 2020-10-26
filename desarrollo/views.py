@@ -3,6 +3,7 @@ Modulo se detalla la logica para las vistas que serán utilizadas por la app
 """
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
+from django.core.mail import send_mail
 from .SubirArchivos import handle_uploaded_file
 from desarrollo.models import Item, AtributoParticular
 from administracion.models import Proyecto, TipoItem, Fase, Rol
@@ -651,6 +652,7 @@ def aprobar_item(request, id_item):
     if item.estado == Item.ESTADO_PENDIENTE:
         item.estado = Item.ESTADO_APROBADO
         item.save()
+
     return redirect('desarrollo:menuAprobacion', item.fase.proyecto_id)
 
 
