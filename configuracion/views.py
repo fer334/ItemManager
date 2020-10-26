@@ -192,7 +192,8 @@ def solicitud_ruptura(request, id_lineabase):
         )
         solicitud.save()
         send_mail('Nueva solicitud de ruptura', f'El usuario {request.user.username} ha solicitado una ruptura de la '
-        f'linea base {lineabase.id} en el proyecto {proyecto.nombre}', 'isteampoli2020@gmail.com', [integrante.email for integrante in proyecto.comite.all()], fail_silently=False)
+        f'linea base {lineabase.id} en el proyecto {proyecto.nombre}', 'isteampoli2020@gmail.com',
+        [integrante.email for integrante in proyecto.comite.all()], fail_silently=False)
         items_seleccionados = [
             Item.objects.get(pk=item.split('-')[1])
             for item in request.POST
@@ -245,7 +246,13 @@ def votar_solicitud(request, id_proyecto, id_solicitud, voto):
 
         solicitud.solicitud_activa = False
         solicitud.save()
-
+        if solicitud.linea_base.estado == LineaBase.ESTADO_ROTA:
+            texto = f'La linea base {solicitud.linea_base.id} en el proyecto {proyecto.nombre} ha sido rota'
+        else:
+            texto = f'La linea base {solicitud.linea_base.id} en el proyecto {proyecto.nombre} NO ha sido rota'
+        send_mail('Solicitud finalizada', texto,
+                  'isteampoli2020@gmail.com',
+                  [integrante.email for integrante in proyecto.comite.all()], fail_silently=False)
     return redirect('configuracion:verIndexComite', id_proyecto)
 
 
