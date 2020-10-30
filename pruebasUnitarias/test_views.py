@@ -283,6 +283,7 @@ class TestViews(TestCase):
         # eliminamos al participante del proyecto
         path2 = reverse('administracion:desasignarUsuario', args=[self.proyecto.id, partipante.id, 'participante'])
         request = RequestFactory().get(path2)
+        request.user = self.usuario
         eliminar_participante_y_comite(request, self.proyecto.id, partipante.id, 'participante')
         self.assertNotIn(partipante, self.proyecto.participantes.all(), 'participante no fue quitado del proyecto')
 
@@ -1138,7 +1139,6 @@ class TestViews(TestCase):
         respuesta = handle_uploaded_file(obj, 0, self.usuario)
         self.assertNotEqual(respuesta, None, 'No se respondio con la url')
 
-
     def test_solicitud_modificacion_estado(self):
         """
         CU 55: Solicitud de modificacion de estado de Item
@@ -1147,13 +1147,31 @@ class TestViews(TestCase):
 
         :return: Retrona true si la solicitud se realizo correctamente.
         """
-        cu_55 = Item.objects.create(nombre='CU_55', estado=Item.ESTADO_APROBADO, complejidad=5, descripcion='solicitar modificar estado',
-                               tipo_item=self.tipo, fase=self.fase, id_version=20)
+        cu_55 = Item.objects.create(nombre='CU_55', estado=Item.ESTADO_APROBADO, complejidad=5,
+                                    descripcion='solicitar modificar estado',
+                                    tipo_item=self.tipo, fase=self.fase, id_version=20)
 
-        path = reverse('configuracion:solicitarModificarEstado', args=[self.proyecto.id,cu_55.id])
-        request = RequestFactory().post(path, {'item':'cu_55','mensaje':['justificacion']})
+        path = reverse('configuracion:solicitarModificarEstado', args=[self.proyecto.id, cu_55.id])
+        request = RequestFactory().post(path, {'item': 'cu_55', 'mensaje': ['justificacion']})
         request.user = self.usuario
 
-        solicitud_modificacion_estado(request, id_proyecto= self.proyecto.id, id_item=cu_55.id )
+        solicitud_modificacion_estado(request, id_proyecto=self.proyecto.id, id_item=cu_55.id)
         self.assertNotEqual(len(Solicitud.objects.all()), 0, 'La prueba fallo, la solicitud no fue creada')
 
+    def test_auditoria(self):
+        """
+        CU 54: Mostrar historial de inicio de Sesión. Iteración 6.
+        Este test comprueba que se realice correctamente la auditoria general de proyectos verificando que un
+        proyecto creado aparezca entre los datos de auditoria.
+
+        :return: El assert retornará true si el nombre del proyecto aparece entre los datos de auditoria
+        """
+        # llamamos a la función history que realiza la auditoria para los objetos proyecto
+        lista_auditoria_proyectos = Proyecto.history.all()
+        lista = []
+        # hacemos una lista con los nombres
+        for elemento in lista_auditoria_proyectos:
+            lista = elemento.nombre
+        # buscamos un elemento especifico
+        elemento_proyec = Proyecto.history.get(id=self.proyecto.id)
+        self.assertIn(elemento_proyec.nombre, lista, 'el proyecto no aparece en la auditoria')

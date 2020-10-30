@@ -8,8 +8,10 @@ from django.urls import reverse
 from django.utils import timezone
 from django.core.mail import send_mail
 # Models
-from administracion.models import TipoItem, Proyecto, PlantillaAtributo, Rol, Fase, UsuarioxRol
-from login.models import Usuario
+from administracion.models import TipoItem, Proyecto, PlantillaAtributo, Rol, Fase, UsuarioxRol, HistoricalParticipante
+from configuracion.models import LineaBase
+from desarrollo.models import HistoricalItem, Item
+from login.models import Usuario, HistoricalAccesos
 # Forms
 from administracion.forms import ProyectoForm, RolForm, EditarTipoItemForm
 # Python
@@ -34,7 +36,8 @@ def acceso_denegado(request, id_proyecto, caso):
         'gerente': 'El usuario actual no puede acceder a esta URL porque no es el Gerente del Proyecto actual',
         'tiimportado': 'No se puede editar este tipo de ítem porque se utiliza en otros proyectos',
         'tiponovalido': 'El tipo seleccionado no es válido para esta fase',
-        'permisos': 'El Rol del usuario actual no cuenta con los permisos necesarios para realizar esta acción'
+        'permisos': 'El Rol del usuario actual no cuenta con los permisos necesarios para realizar esta acción',
+        'auditoria': 'El usuario actual no puede ver los datos de Auditoría General porque no es Gerente ni Super Administrador'
     }
     mensaje = posibles_casos.get(caso)
 
@@ -109,6 +112,11 @@ def crear_proyecto(request):
             # ponemos al gerente como participante en el proyecto
             participante = Usuario.objects.get(pk=gerente)
             nuevo_proyecto.participantes.add(participante)
+            # registramos para auditoría
+            auditoria = HistoricalParticipante(usuario=participante, proyecto=nuevo_proyecto,
+                                               history_user=request.user,
+                                               history_type=HistoricalParticipante.TIPO_AGREGADO)
+            auditoria.save()
             # creamos la cantidad de fases para este proyecto
             for x in range(0, nuevo_proyecto.numero_fases):
                 nueva_fase = Fase(nombre='', descripcion='', proyecto=nuevo_proyecto)
@@ -181,6 +189,12 @@ def administrar_participantes(request, id_proyecto):
             proyecto.participantes.add(participante)
             send_mail('Nuevo participante', f'El usuario {request.user.username}, lo ha agregado al proyecto "{proyecto.nombre}".',
             'isteampoli2020@gmail.com', [participante.email], fail_silently=False)
+
+            # registramos para auditoría
+            auditoria = HistoricalParticipante(usuario=participante, proyecto=proyecto,
+                                               history_user=request.user,
+                                               history_type=HistoricalParticipante.TIPO_AGREGADO)
+            auditoria.save()
             return HttpResponseRedirect(reverse('administracion:administrarParticipantes', args=[proyecto.id]))
         return render(request, 'administracion/administrarParticipantes.html', {'proyecto': proyecto,
                                                                                 'lista_usuarios': lista_usuarios})
@@ -344,6 +358,13 @@ def administrar_comite(request, id_proyecto):
             id_usuario = request.POST['miembro_comite']
             miembro_comite = Usuario.objects.get(pk=id_usuario)
             proyecto.comite.add(miembro_comite)
+
+            # registramos para auditoría
+            auditoria = HistoricalParticipante(usuario=miembro_comite, proyecto=proyecto,
+                                               history_user=request.user,
+                                               history_type=HistoricalParticipante.TIPO_COMITE)
+            auditoria.save()
+
             return HttpResponseRedirect(reverse('administracion:administrarComite', args=[proyecto.id]))
         return render(request, 'administracion/administrarComite.html', {'proyecto': proyecto})
 
@@ -363,10 +384,28 @@ def eliminar_participante_y_comite(request, id_proyecto, id_usuario, caso):
     usuario = Usuario.objects.get(pk=id_usuario)
     if caso == 'comite':
         proyecto.comite.remove(usuario)
+        # registramos para auditoría
+        auditoria = HistoricalParticipante(usuario=usuario, proyecto=proyecto,
+                                           history_user=request.user,
+                                           history_type=HistoricalParticipante.TIPO_COMITE_DESASIGNADO)
+        auditoria.save()
         return HttpResponseRedirect(reverse('administracion:administrarComite', args=[proyecto.id]))
     elif caso == 'participante':
         if proyecto.gerente != usuario.id:
+            # primero quitamos al participante del proyecto
             proyecto.participantes.remove(usuario)
+            # registramos para auditoría primero el remover usuario
+            auditoria_participante = HistoricalParticipante(usuario=usuario, proyecto=proyecto,
+                                                            history_user=request.user,
+                                                            history_type=HistoricalParticipante.TIPO_ELIMINADO)
+            auditoria_participante.save()
+            # registramos para auditoría el remover del comite
+            if usuario in proyecto.comite.all():
+                auditoria_comite = HistoricalParticipante(usuario=usuario, proyecto=proyecto,
+                                                          history_user=request.user,
+                                                          history_type=HistoricalParticipante.TIPO_COMITE_DESASIGNADO)
+                auditoria_comite.save()
+            # luego quitamos al participante del comité
             proyecto.comite.remove(usuario)
         return HttpResponseRedirect(reverse('administracion:administrarParticipantes', args=[proyecto.id]))
 
@@ -694,7 +733,7 @@ def asignar_rol_por_fase(request, id_fase, id_usuario):
     lista_usr_x_rol = UsuarioxRol.objects.filter(usuario=participante, fase=fase, activo=True)
     roles_fase_actual = [obj.rol for obj in lista_usr_x_rol]
     roles_proyecto = Rol.objects.filter(proyecto=fase.proyecto)
-    roles_disponibles = [rol for rol in roles_proyecto if (not (rol in roles_fase_actual) )and rol.activo]
+    roles_disponibles = [rol for rol in roles_proyecto if (not (rol in roles_fase_actual)) and rol.activo]
     return render(request, 'administracion/asignarRol.html', {
         'participante': participante,
         'fase': fase,
@@ -722,6 +761,11 @@ def registrar_rol_por_fase(request, id_fase, id_usuario, id_rol):
     else:
         rol_asignado = UsuarioxRol(fase=fase, rol=rol, usuario=usuario)
     rol_asignado.save()
+    # registramos para auditoría
+    auditoria = HistoricalParticipante(usuario=usuario, proyecto=fase.proyecto, fase=fase,
+                                       history_user=request.user,
+                                       history_type=HistoricalParticipante.TIPO_ROL + rol.nombre + ' en fase ' + fase.nombre)
+    auditoria.save()
     return HttpResponseRedirect(reverse('administracion:verRolesUsuario', args=(fase.proyecto.id, id_usuario)))
 
 
@@ -741,4 +785,56 @@ def desasignar_rol_al_usuario(request, id_fase, id_usuario, id_rol):
     rol_actual = UsuarioxRol.objects.get(fase=fase, usuario=usuario, rol=rol)
     rol_actual.activo = False
     rol_actual.save()
+    # registramos para auditoría
+    auditoria = HistoricalParticipante(usuario=usuario, proyecto=fase.proyecto, fase=fase,
+                                       history_user=request.user,
+                                       history_type=HistoricalParticipante.TIPO_ROL_DESASIGNADO + rol.nombre + ' en fase ' + fase.nombre)
+    auditoria.save()
     return HttpResponseRedirect(reverse('administracion:verRolesUsuario', args=(fase.proyecto.id, id_usuario)))
+
+
+def auditoria_particular(request, id_proyecto, tipo):
+    """
+    Vista que se encarga de mostrar los datos de auditoría particular de items, lineas base, fases de un proyecto
+
+    :param request: objeto de tipo diccionario que permite acceder a los datos
+    :param id_proyecto: identificador del proyecto actual
+    :param tipo: el tipo de auditoría que se quiere realizar
+    :return: objeto que se encarga de renderear auditoria.html
+    :rtype: render
+    """
+    # primero verificamos que sea gerente del proyecto actual
+    proyecto_actual = Proyecto.objects.get(pk=id_proyecto)
+    if not (request.user.id == proyecto_actual.gerente):
+        return redirect('administracion:accesoDenegado', id_proyecto=proyecto_actual.id, caso='gerente')
+    # si es gerente del proyecto actual continuamos
+    lista_tipos_item = proyecto_actual.tipoitem_set.all().order_by('id').reverse()
+    lista_fases = proyecto_actual.fase_set.all().order_by('id').reverse()
+    audit_particular = True
+    lista = []
+    mostrar_proyecto = True
+    if tipo == 'proyecto':
+        lista = Proyecto.history.filter(id=id_proyecto)
+        mostrar_proyecto = False
+    elif tipo == 'tipoItem':
+        for tipoItem in lista_tipos_item:
+            lista += TipoItem.history.filter(id=tipoItem.id)
+        mostrar_proyecto = False
+    elif tipo == 'fase':
+        lista = Fase.history.filter(proyecto_id=id_proyecto)
+    elif tipo == 'rol':
+        lista = Rol.history.filter(proyecto_id=id_proyecto)
+    elif tipo == 'Lineas Base':
+        for fase in lista_fases:
+            lista += LineaBase.history.filter(fase_id=fase.id)
+        mostrar_proyecto = False
+    elif tipo == 'Participante':
+        lista = HistoricalParticipante.objects.filter(proyecto_id=id_proyecto).order_by('id').reverse()
+    elif tipo == 'Item':
+        for item in Item.objects.filter(fase__in=lista_fases):
+            lista += HistoricalItem.objects.filter(item=item).order_by('id').reverse()
+    return render(request, 'configuracion/auditoria.html', {'tipo': tipo, 'lista': lista, 'proyecto': proyecto_actual,
+                                                            'mostrar_proyecto': mostrar_proyecto,
+                                                            'audit_particular': audit_particular})
+
+

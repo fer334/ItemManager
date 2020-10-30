@@ -3,11 +3,12 @@ Mapeador objeto-relacional en el que es posible definir la estructura de la base
 """
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.utils.timezone import now
+from django.db.models import Q
+from administracion.models import Proyecto
 
 
 # Create your models here.
-from django.db.models import Q
-from administracion.models import Proyecto
 
 
 class Usuario(AbstractUser):
@@ -48,3 +49,20 @@ class Usuario(AbstractUser):
             return False
         else:
             return True
+
+
+class HistoricalAccesos(models.Model):
+    """
+    Clase que sirve para guardar datos de auditoría de los accesos al sistema
+    """
+    #: usuario que realizó la acción
+    history_user = models.CharField(max_length=150, default='None')
+    #: fecha y hora en la que se realizó la acción
+    history_date = models.DateTimeField(default=now)
+    #: razón de cambio (nulo por defecto)
+    history_change_reason = models.CharField(max_length=200, null=True)
+    #: tipo de acción que puede ser o acceder al sistema o salir del sistema
+    history_type = models.CharField(max_length=200)
+    # constantes
+    TIPO_ACCESO = 'Acceso al sistema'
+    TIPO_SALIDA = 'Salida del Sistema '

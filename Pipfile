@@ -16,6 +16,7 @@ whitenoise = "*"
 dj-database-url = "*"
 python-decouple = "*"
 config = "*"
+django-simple-history = "*"
 
 [packages]
 django = "*"
@@ -27,6 +28,7 @@ whitenoise = "*"
 dj-database-url = "*"
 python-decouple = "*"
 config = "*"
+django-simple-history = "*"
 
 [requires]
 python_version = "3.8"

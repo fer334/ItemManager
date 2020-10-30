@@ -2,6 +2,8 @@
 Mapeador objeto-relacional en el que es posible definir la estructura de la base de datos utilizando código Python.
 """
 from django.db import models
+from simple_history.models import HistoricalRecords
+from django.utils.timezone import now
 
 
 # Create your models here.
@@ -32,12 +34,13 @@ class Proyecto(models.Model):
     comite = models.ManyToManyField('login.Usuario', related_name='usuario_login_comite')
     #: equipo de usuarios que participa en el proyecto
     participantes = models.ManyToManyField('login.Usuario', related_name='usuario_login_participante')
+    #: campo que sirve para realizar auditoría de los objetos del modelo
+    history = HistoricalRecords()
 
     ESTADO_CANCELADO = 'cancelado'
     ESTADO_INICIADO = 'iniciado'
     ESTADO_EN_EJECUCION = 'en ejecucion'
     ESTADO_FINALIZADO = 'finalizado'
-
 
     def __str__(self):
         return self.nombre
@@ -79,6 +82,8 @@ class TipoItem(models.Model):
     prefijo = models.CharField(max_length=5)
     #: Proyecto asociado al Tipo de Item
     proyecto = models.ManyToManyField('Proyecto')
+    #: campo que sirve para realizar auditoría de los objetos del modelo
+    history = HistoricalRecords()
 
     def __str__(self):
         return self.nombre
@@ -119,6 +124,8 @@ class Fase(models.Model):
     proyecto = models.ForeignKey('Proyecto', on_delete=models.CASCADE)
     #: lista de tipos de ítem
     tipos_item = models.ManyToManyField('TipoItem', blank=True)
+    #: campo que sirve para realizar auditoría de los objetos del modelo
+    history = HistoricalRecords()
 
     class Meta:
         ordering = ['id']
@@ -163,6 +170,9 @@ class Rol(models.Model):
 
     #: ver si el rol está activo
     activo = models.BooleanField(default=True)
+
+    #: campo que sirve para realizar auditoría de los objetos del modelo
+    history = HistoricalRecords()
 
     CREAR_ITEM = 'CREAR_ITEM'
     MODIFICAR_ITEM = 'MODIFICAR_ITEM'
@@ -221,3 +231,30 @@ class UsuarioxRol(models.Model):
 
     def __str__(self):
         return f'{self.usuario.username} es {self.rol.nombre} en {self.fase.nombre} - {self.activo}'
+
+
+class HistoricalParticipante(models.Model):
+    """
+    Clase que sirve para guardar datos de auditoría para participantes del proyecto
+    """
+    #: usuario que participa en el proyecto
+    usuario = models.ForeignKey('login.Usuario', on_delete=models.CASCADE)
+    #: proyecto del que participa el usuario
+    proyecto = models.ForeignKey('administracion.Proyecto', on_delete=models.CASCADE)
+    #: fase para roles
+    fase = models.CharField(max_length=150, null=True)
+    #: usuario que realizó la acción
+    history_user = models.CharField(max_length=150, default='None')
+    #: fecha y hora en la que se realizó la acción
+    history_date = models.DateTimeField(default=now)
+    #: razón de cambio (nulo por defecto)
+    history_change_reason = models.CharField(max_length=200, null=True)
+    #: tipo de cambio = puede ser añadido al proyecto, eliminado del proyecto, asignado rol, asignado al comite, etc
+    history_type = models.CharField(max_length=200)
+    # constantes
+    TIPO_AGREGADO = 'Añadido al proyecto(+)'
+    TIPO_ROL = 'Se asigna Rol '
+    TIPO_COMITE = 'Se asigna al comite(~)'
+    TIPO_ROL_DESASIGNADO = 'Se desasigna Rol '
+    TIPO_COMITE_DESASIGNADO = 'Se desasigna del comite(~)'
+    TIPO_ELIMINADO = 'Eliminado del proyecto(-)'

@@ -77,6 +77,34 @@
           </div>
         </div>
       </li>
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTres" aria-expanded="true" aria-controls="collapseTres">
+          <i class="fas fa-fw fa-cog"></i>
+          <span>Auditoría</span>
+        </a>
+        <div id="collapseTres" class="collapse show" aria-labelledby="headingTres" data-parent="#accordionSidebar">
+          <div class="bg-white py-2 collapse-inner rounded">
+            <a class="collapse-item" href="{% url 'login:auditoria' 'proyecto' %}">Proyectos</a>
+            <a class="collapse-item" href="{% url 'login:auditoria' 'tipoItem' %}">Tipos de Item</a>
+            <a class="collapse-item" href="{% url 'login:auditoria' 'fase' %}">Fases</a>
+            <a class="collapse-item" href="{% url 'login:auditoria' 'rol' %}">Roles</a>
+            <a class="collapse-item" href="{% url 'login:auditoria' 'Lineas Base' %}">Líneas Base</a>
+            <a class="collapse-item" href="{% url 'login:auditoria' 'Participante' %}">Participantes</a>
+            <a class="collapse-item" href="{% url 'login:auditoria' 'Item' %}">Items</a>
+          </div>
+        </div>
+      </li>
+
+      <!-- Divider -->
+      <hr class="sidebar-divider d-none d-md-block">
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{% url 'login:auditoria' 'acceso'%}" >
+          <i class="fas fa-fw fa-cog"></i>
+          <span>Control de Accesos al Sistema</span>
+        </a>
+      </li>
       <!-- Divider -->
       <hr class="sidebar-divider d-none d-md-block">
 

@@ -416,16 +416,16 @@
                 {% if item.estado != desactivado %}
                 // console.log('{ item.fase.nombre }}'),
                     {% if item.id == item_principal.id %}
-                        { key: "{{ item.tipo_item.prefijo }}_{{ item.nombre }} [{{ item.complejidad }}]", text: "{{ item.tipo_item.prefijo }}_{{ item.nombre }} ({{ item.complejidad }}) ", group: "{{ item.fase.id }}", color: "lightgreen", isGroup: true, category: "Pool" },
+                        { key: "{{ item.tipo_item.prefijo }}{{ item.numeracion }}_{{ item.nombre }} [{{ item.complejidad }}]", text: "{{ item.tipo_item.prefijo }}{{ item.numeracion }}_{{ item.nombre }} ({{ item.complejidad }}) ", group: "{{ item.fase.id }}", color: "lightgreen", isGroup: true, category: "Pool" },
                     {% else %}
-                        { key: "{{ item.tipo_item.prefijo }}_{{ item.nombre }} [{{ item.complejidad }}]", group: "{{ item.fase.id }}" },
+                        { key: "{{ item.tipo_item.prefijo }}{{ item.numeracion }}_{{ item.nombre }} [{{ item.complejidad }}]", group: "{{ item.fase.id }}" },
                     {% endif %}
                 {% endif %}
             {% endfor %}
         ],
         [ // link data
             {% for relacion in relaciones %}
-                { from: "{{ relacion.inicio.tipo_item.prefijo }}_{{ relacion.inicio.nombre }} [{{ relacion.inicio.complejidad }}]", to: "{{ relacion.fin.tipo_item.prefijo }}_{{ relacion.fin.nombre }} [{{ relacion.fin.complejidad }}]" },
+                { from: "{{ relacion.inicio.tipo_item.prefijo }}{{ relacion.inicio.numeracion }}_{{ relacion.inicio.nombre }} [{{ relacion.inicio.complejidad }}]", to: "{{ relacion.fin.tipo_item.prefijo }}{{ relacion.fin.numeracion }}_{{ relacion.fin.nombre }} [{{ relacion.fin.complejidad }}]" },
             {% endfor %}
         ]);
       // force all lanes' layouts to be performed
@@ -448,28 +448,63 @@
        <div class="tab-content" id="myDiagramDiv" style=" width:100%; height:600px;"></div>
         <br>
         <div class="container">
-            <div class="col-sm-12 mt-4">
-                <a href="{% url 'configuracion:verProyecto' proyecto.id %}" class="btn btn-primary float-right">Volver atrás</a>
-                <a href="{% url 'configuracion:reporteTrazabilidad' proyecto.id item_principal.id %}" class="btn btn-info float-left">Generar Reporte</a>
-                {% if item_principal.estado != item_principal.ESTADO_LINEABASE %}
-                    <form method="post"  METHOD="post"
-                              ACTION="{% url 'configuracion:solicitarModificarEstado' proyecto.id  item_principal.id%}">
-                    {% if item_principal.solicitud_set.all.count != 0 %}
+            <div class="row">
+                <div class="col col-md-4 col-md-offset-4">
+                    <h5 class="text-info m-3 font-weight-bold" align="middle">
+                        El Cálculo de Impacto para el item "{{ item_principal.nombre }}" genera un resultado igual a:
+                    </h5>
+                    <div class="alert alert-warning center" align="center">
+                        <h5 align="middle">
+                            {{ impacto }}
+                        </h5>
+                    </div>
+                    <div class="table center">
+                        <table>
+                            <thead>
+                            {% for fase in lista_fases_impacto %}
+                                 <th>{{ fase.nombre }}</th>
+                            {% endfor %}
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    {% for fase in lista_fases_impacto %}
+                                        <td>
+                                            {% for sumando in lista_impacto %}
+                                                {% if sumando.fase == fase %}
+                                                    {{ sumando.nombre }}({{ sumando.complejidad }})<hr>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </td>
+                                    {% endfor %}
+                                </tr>
+                          </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-md-4 col-md-offset-4">
+                    {% if item_principal.estado != item_principal.ESTADO_LINEABASE %}
+                        <form method="post"  METHOD="post"
+                                  ACTION="{% url 'configuracion:solicitarModificarEstado' proyecto.id  item_principal.id%}">
+                        {% if item_principal.solicitud_set.all.count != 0 %}
                              <button class="btn btn-secondary" style="margin-left: 10px" disabled="disabled">Desaprobación solicitada</button>
-
                         {% else %}
                         <br>
-                        {% csrf_token %}
+                            {% csrf_token %}
                             <div class="form-group pt-3">
-                            <label for="mensaje" class="mt-lg-2 font-weight-bold">Solicitud de desaprobación</label>
-                                <textarea class="form-control col-5" id="mensaje" rows="3" name="mensaje"
-                                          placeholder="Escriba aquí su justificación"></textarea>
+                                <label for="mensaje" class="mt-lg-2 font-weight-bold">Solicitud de desaprobación</label>
+                                    <textarea class="form-control col-10" id="mensaje" rows="3" name="mensaje"
+                                              placeholder="Escriba aquí su justificación"></textarea>
                             </div>
                             <button type="submit" class="btn btn-success float-center btn-sm" >Solicitar Desaprobación</button>
                             <br>
                         {% endif %}
-                    </form>
-                {% endif %}
+                        </form>
+                    {% endif %}
+                </div>
+                <div class="col-md-4 col-md-offset-4">
+                    <a href="{% url 'configuracion:reporteTrazabilidad' proyecto.id item_principal.id %}" class="btn btn-info">Generar Reporte</a>
+                    <a href="{% url 'configuracion:verProyecto' proyecto.id %}" class="btn btn-primary">Volver atrás</a>
+                </div>
             </div>
         </div>
         {#    por si se quiera mostrar los datos json descomentar lo de abajo#}
