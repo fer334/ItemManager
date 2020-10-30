@@ -10,7 +10,7 @@ from administracion.models import Proyecto, TipoItem, Fase, Rol
 from desarrollo.forms import ItemForm
 from desarrollo.getPermisos import has_permiso
 from configuracion.models import Solicitud, LineaBase
-
+from login.models import Usuario
 
 def get_numeracion(fase, tipo):
     """
@@ -684,19 +684,30 @@ def aprobar_item(request, id_item):
     """
     item = Item.objects.get(pk=id_item)
     fase = item.fase
+    proyecto = fase.proyecto
     # primero verificamos que cumpla con el permiso
     if not has_permiso(fase=fase, usuario=request.user, permiso=Rol.APROBAR_ITEM):
-        return redirect('administracion:accesoDenegado', id_proyecto=fase.proyecto.id, caso='permisos')
-
+        return redirect('administracion:accesoDenegado', id_proyecto=proyecto.id, caso='permisos')
     if item.estado == Item.ESTADO_PENDIENTE:
         item.estado = Item.ESTADO_APROBADO
         item.save()
         # registramos para auditoría
         auditoria = HistoricalItem(item=item, history_user=request.user,
-                                   history_type=HistoricalItem.TIPO_ESTADO + Item.ESTADO_APROBADO)
+        history_type = HistoricalItem.TIPO_ESTADO + Item.ESTADO_APROBADO)
         auditoria.save()
+        send_mail_aprobacion(request, item, proyecto, True)
     return redirect('desarrollo:menuAprobacion', item.fase.proyecto_id)
 
+
+def send_mail_aprobacion(request, item, proyecto, aprobar):
+    item_auditoria = HistoricalItem.objects.filter(item=item,
+                                                   history_type=HistoricalItem.TIPO_ESTADO + Item.ESTADO_PENDIENTE).order_by(
+        'id').last()
+    solicitante = Usuario.objects.get(username=item_auditoria.history_user)
+    send_mail('Item aprobado', f'El usuario "{request.user.username}" {"no" if not aprobar else ""} ha aprobado su item "{item.nombre}"'
+                               f'en el proyecto "{proyecto.nombre}"',
+              'isteampoli2020@gmail.com',
+              [solicitante.email], fail_silently=False)
 
 def desaprobar_item(request, id_item):
     """
@@ -708,9 +719,10 @@ def desaprobar_item(request, id_item):
     """
     item = Item.objects.get(pk=id_item)
     fase = item.fase
+    proyecto = fase.proyecto
     # primero verificamos que cumpla con el permiso
     if not has_permiso(fase=fase, usuario=request.user, permiso=Rol.APROBAR_ITEM):
-        return redirect('administracion:accesoDenegado', id_proyecto=fase.proyecto.id, caso='permisos')
+        return redirect('administracion:accesoDenegado', id_proyecto=proyecto.id, caso='permisos')
 
     if item.estado == Item.ESTADO_PENDIENTE:
         item.estado = Item.ESTADO_DESARROLLO
@@ -720,6 +732,7 @@ def desaprobar_item(request, id_item):
         auditoria = HistoricalItem(item=item, history_user=request.user,
                                    history_type=HistoricalItem.TIPO_ESTADO + Item.ESTADO_DESARROLLO)
         auditoria.save()
+        send_mail_aprobacion(request, item, proyecto, False)
     return redirect('desarrollo:menuAprobacion', item.fase.proyecto_id)
 
 
