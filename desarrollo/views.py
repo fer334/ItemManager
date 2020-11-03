@@ -1032,9 +1032,8 @@ def votacion_item_en_revision_desarrollo(request, id_item):
         #Recorro todas las lb y voy cruzando la lista de items de la lb, con los items hijos
         if items_hijos_en_lb.count() == 0:
             return
-        print(items_hijos_en_lb)
-        for lb in lbs :
-            if lb.items.count() > 0:
+        for lb in lbs:
+            if lb.items.count() > 0 and len(lb.solicitud_set.filter(solicitud_activa=True)) > 0:
                 items_cruce = [item for item in lb.items.all() if item in items_hijos_en_lb]
                 #En items cruce tengo la lista de items que debo solicitar modificar para esa linea base
                 if len(items_cruce) > 0:
