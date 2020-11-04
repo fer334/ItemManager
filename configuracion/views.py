@@ -1,16 +1,22 @@
 """
 Vistas del modulo de configuracion
 """
+from datetime import datetime, date
+
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
 # Create your views here.
 from administracion.models import Proyecto, Fase, Rol
 from .models import LineaBase, Solicitud, VotoRuptura
-from desarrollo.models import Item
+from desarrollo.models import Item, HistoricalItem
 from login.models import Usuario
 from django.utils.timezone import now
-from desarrollo.views import calcular_impacto_recursivo, crear_lista_relaciones_del_proyecto
+from desarrollo.views import calcular_impacto_recursivo, crear_lista_relaciones_del_proyecto, \
+    calcular_lista_items_impacto_recursivo
 from desarrollo.getPermisos import has_permiso, has_permiso_cerrar_proyecto
+from .reporte import ReporteProyecto
+
 
 def index(request, filtro):
     """
@@ -69,7 +75,16 @@ def ver_proyecto(request, id_proyecto):
 
 
 def numeracion_lb_en_proyecto(proyecto):
-    ultima_lb = LineaBase.objects.filter(fase__proyecto=proyecto, estado__regex='^(?!' + LineaBase.ESTADO_ROTA + ')').order_by('numeracion').last()
+    """
+    retorna el valor para cargar la numeración en la linea base
+
+    :param proyecto: proyecto seleccionado
+    :return: entero con la numeración de la linea base
+    :rtype: int
+    """
+    ultima_lb = LineaBase.objects.filter(fase__proyecto=proyecto,
+                                         estado__regex='^(?!' + LineaBase.ESTADO_ROTA + ')').order_by(
+        'numeracion').last()
     if ultima_lb:
         return ultima_lb.numeracion + 1
     else:
@@ -103,6 +118,12 @@ def crear_linea_base(request, id_fase):
             for item in items:
                 item.estado = Item.ESTADO_LINEABASE
                 item.save()
+
+                # registramos para auditoría
+                auditoria = HistoricalItem(item=item, history_user=request.user,
+                                           history_type=HistoricalItem.TIPO_ESTADO + Item.ESTADO_LINEABASE)
+                auditoria.save()
+
                 nueva_linea_base.items.add(item)
             nueva_linea_base.save()
         return redirect('configuracion:verProyecto', id_proyecto=fase.proyecto_id)
@@ -141,9 +162,17 @@ def comite_index(request, id_proyecto):
             if solicitud.solicitud_activa:
                 solicitud.solicitante_ha_votado = solicitud.ha_votado(request.user)
                 solicitudes.append(solicitud)
+    # parte para desaprobar items
+    desaprobaciones = []
+    for solicitud_desaprobar in Solicitud.objects.filter(linea_base=None, solicitud_activa=True):
+        # query primero por los items, luego busca la fase, luego el proyecto
+        if solicitud_desaprobar.items_a_modificar.last().fase.proyecto.id == id_proyecto:
+            solicitud_desaprobar.solicitante_ha_votado = solicitud_desaprobar.ha_votado(request.user)
+            desaprobaciones.append(solicitud_desaprobar)
     return render(request, 'configuracion/comite_index.html', {
         'proyecto': proyecto,
         'solicitudes': solicitudes,
+        'desaprobaciones': desaprobaciones,
         'usuario': request.user
     })
 
@@ -158,7 +187,7 @@ def solicitud_ruptura(request, id_lineabase):
     :rtype: render
     """
     lineabase = LineaBase.objects.get(pk=id_lineabase)
-    fase = lineabase.fase;
+    fase = lineabase.fase
     if not has_permiso(fase=fase, usuario=request.user, permiso=Rol.SOLICITAR_RUPTURA_LB):
         return redirect('administracion:accesoDenegado', id_proyecto=fase.proyecto.id, caso='permisos')
     lista_calculo_impacto = []
@@ -201,17 +230,43 @@ def votar_solicitud(request, id_proyecto, id_solicitud, voto):
     nuevo_voto = VotoRuptura(solicitud=solicitud, votante=request.user, valor_voto=(voto == 1))
     nuevo_voto.save()
     votos = len(solicitud.votoruptura_set.all())
-    if votos == proyecto.cant_comite:
+    if votos >= proyecto.cant_comite:
         votos_favor = len(solicitud.votoruptura_set.filter(valor_voto=True))
         if votos_favor > proyecto.cant_comite / 2:
-            solicitud.linea_base.estado = LineaBase.ESTADO_ROTA
-            solicitud.linea_base.save()
-            for item in solicitud.linea_base.items.all():
-                if item in solicitud.items_a_modificar.all():
-                    item.estado = Item.ESTADO_REVISION
-                else:
-                    item.estado = Item.ESTADO_APROBADO
-                item.save()
+            if solicitud.linea_base is not None:
+                # print('QUE: ' + solicitud.linea_base)
+                # Si es la solicitud de linea base:
+                solicitud.linea_base.estado = LineaBase.ESTADO_ROTA
+                solicitud.linea_base.save()
+                for item in solicitud.linea_base.items.all():
+                    if item in solicitud.items_a_modificar.all():
+                        item.estado = Item.ESTADO_REVISION
+
+                        # registramos para auditoría
+                        auditoria = HistoricalItem(item=item, history_user=request.user,
+                                                   history_type=HistoricalItem.TIPO_ESTADO + Item.ESTADO_REVISION)
+                        auditoria.save()
+
+                    else:
+                        item.estado = Item.ESTADO_APROBADO
+
+                        # registramos para auditoría
+                        auditoria = HistoricalItem(item=item, history_user=request.user,
+                                                   history_type=HistoricalItem.TIPO_ESTADO + Item.ESTADO_APROBADO)
+                        auditoria.save()
+
+                    item.save()
+            else:
+                # Si es una solicitud de desaprobacion de items:
+                for item in solicitud.items_a_modificar.all():
+                    item.estado = Item.ESTADO_DESARROLLO
+                    item.save()
+
+                    # registramos para auditoría
+                    auditoria = HistoricalItem(item=item, history_user=request.user,
+                                               history_type=HistoricalItem.TIPO_ESTADO + Item.ESTADO_DESARROLLO)
+                    auditoria.save()
+
         solicitud.solicitud_activa = False
         solicitud.save()
 
@@ -281,10 +336,21 @@ def trazabilidad(request, id_proyecto, id_item):
     items += ramas_recursivas_trazabilidad(item, 'derecha', item.hijos.all())
     # ahora eliminamos elementos duplicados con los sets de python
     setitems = set(items)
+    # generamos los datos requeridos para mostrar el cálculo de impacto
+    impacto = calcular_impacto_recursivo(item)
+    lista_impacto = calcular_lista_items_impacto_recursivo(item)
+    lista_fases_impacto = []
+    for items_impacto in lista_impacto:
+        lista_fases_impacto.append(items_impacto.fase)
+    # convertimos en set para que no hayan repetidos
+    lista_fases_impacto = set(lista_fases_impacto)
+
     return render(request, 'configuracion/item_trazabilidad.html', {'item_principal': item, 'fases': fases,
                                                                     'lista_items': setitems, 'proyecto': proyecto,
                                                                     'desactivado': Item.ESTADO_DESACTIVADO,
-                                                                    'relaciones': relaciones})
+                                                                    'relaciones': relaciones, 'impacto': impacto,
+                                                                    'lista_impacto': lista_impacto,
+                                                                    'lista_fases_impacto': lista_fases_impacto})
 
 
 def ramas_recursivas_trazabilidad(item, caso, lista):
@@ -332,11 +398,62 @@ def reporte_trazabilidad(request, id_proyecto, id_item):
     """
     futura implementación de generar reporte de trazabilidad
 
-    :param request:
-    :param id_item:
-    :param id_proyecto:
+    :param request: objeto tipo diccionario que permite acceder a datos
+    :param id_item: identificador del item
+    :param id_proyecto: identificador del proyecto
     :return:
     """
 
     return render(request, 'configuracion/item_trazabilidad_reporte.html', {'id_proyecto': id_proyecto,
                                                                             'id_item': id_item})
+
+
+def solicitud_modificacion_estado(request, id_proyecto, id_item):
+    """
+    Funcion en donde se realiza la solicitud de desaprobación de un item al comite,
+    para poder modificar su estado, esto es posible si el item esta en estado APROBADO,
+    luego se lleva a votacion por el comite y si se aprueba en su mayoria el item pasa a
+    estado EN DESARROLLO, para poder modificarlo a gusto.
+
+    :param request: objeto tipo diccionario que permite acceder a datos
+    :param id_proyecto: identificador del item
+    :param id_item: identificador del proyecto
+    :return: redirige a la pagina del proyecto una vez que se haya solicitado la desaprobacion
+    """
+    item = Item.objects.get(pk=id_item)
+    if request.POST:
+        solicitud = Solicitud(
+            solicitado_por=request.user,
+            justificacion=request.POST['mensaje'],
+        )
+        solicitud.save()
+        items_seleccionados = [
+            Item.objects.get(pk=item.id)
+        ]
+
+        for item in items_seleccionados:
+            solicitud.items_a_modificar.add(item)
+        return redirect('configuracion:verProyecto', id_proyecto=id_proyecto)
+
+
+def reporte(request, id_proyecto):
+    """
+    Vista donde se genera el archivo pdf utilizado en los reportes, recibe a traves
+    del request la lista de fases seleccionadas para el reporte y las fechas de inicio
+    y fin para el rango de Solicitudes
+
+    :param request: lista de fases y fechas de inicio y fin
+    :param id_proyecto: identificador del proyecto
+    :return: retorna como respuesta la descarga del archivo pdf
+    """
+    if request.POST:
+        fases = [int(x.split('-')[1]) for x in request.POST if x.__contains__('check')]
+        inicio = [int(x) for x in str(request.POST['inicio']).split('-')]
+        fin = [int(x) for x in str(request.POST['fin']).split('-')]
+        fecha_ini = date(inicio[0], inicio[1], inicio[2])
+        fecha_fin = date(fin[0], fin[1], fin[2])
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="reporte.pdf"'
+        r = ReporteProyecto()
+        response.write(r.run(id_proyecto, fases, fecha_ini, fecha_fin))
+        return response
