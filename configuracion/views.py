@@ -1,6 +1,9 @@
 """
 Vistas del modulo de configuracion
 """
+from datetime import datetime, date
+
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
 # Create your views here.
@@ -12,6 +15,8 @@ from django.utils.timezone import now
 from desarrollo.views import calcular_impacto_recursivo, crear_lista_relaciones_del_proyecto, \
     calcular_lista_items_impacto_recursivo
 from desarrollo.getPermisos import has_permiso, has_permiso_cerrar_proyecto
+from django.core.mail import send_mail
+from .reporte import ReporteProyecto
 
 
 def index(request, filtro):
@@ -184,8 +189,9 @@ def solicitud_ruptura(request, id_lineabase):
     """
     lineabase = LineaBase.objects.get(pk=id_lineabase)
     fase = lineabase.fase
+    proyecto = fase.proyecto
     if not has_permiso(fase=fase, usuario=request.user, permiso=Rol.SOLICITAR_RUPTURA_LB):
-        return redirect('administracion:accesoDenegado', id_proyecto=fase.proyecto.id, caso='permisos')
+        return redirect('administracion:accesoDenegado', id_proyecto=proyecto.id, caso='permisos')
     lista_calculo_impacto = []
     for item_en_lb in lineabase.items.all():
         lista_calculo_impacto.append(calcular_impacto_recursivo(item_en_lb))
@@ -196,6 +202,9 @@ def solicitud_ruptura(request, id_lineabase):
             justificacion=request.POST['mensaje'],
         )
         solicitud.save()
+        send_mail('Nueva solicitud de ruptura', f'El usuario {request.user.username} ha solicitado una ruptura de la '
+        f'linea base {lineabase.id} en el proyecto {proyecto.nombre}', 'isteampoli2020@gmail.com',
+        [integrante.email for integrante in proyecto.comite.all()], fail_silently=False)
         items_seleccionados = [
             Item.objects.get(pk=item.split('-')[1])
             for item in request.POST
@@ -265,7 +274,13 @@ def votar_solicitud(request, id_proyecto, id_solicitud, voto):
 
         solicitud.solicitud_activa = False
         solicitud.save()
-
+        if solicitud.linea_base.estado == LineaBase.ESTADO_ROTA:
+            texto = f'La linea base {solicitud.linea_base.id} en el proyecto {proyecto.nombre} ha sido rota'
+        else:
+            texto = f'La linea base {solicitud.linea_base.id} en el proyecto {proyecto.nombre} NO ha sido rota'
+        send_mail('Solicitud finalizada', texto,
+                  'isteampoli2020@gmail.com',
+                  [integrante.email for integrante in proyecto.comite.all()], fail_silently=False)
     return redirect('configuracion:verIndexComite', id_proyecto)
 
 
@@ -430,3 +445,26 @@ def solicitud_modificacion_estado(request, id_proyecto, id_item):
         for item in items_seleccionados:
             solicitud.items_a_modificar.add(item)
         return redirect('configuracion:verProyecto', id_proyecto=id_proyecto)
+
+
+def reporte(request, id_proyecto):
+    """
+    Vista donde se genera el archivo pdf utilizado en los reportes, recibe a traves
+    del request la lista de fases seleccionadas para el reporte y las fechas de inicio
+    y fin para el rango de Solicitudes
+
+    :param request: lista de fases y fechas de inicio y fin
+    :param id_proyecto: identificador del proyecto
+    :return: retorna como respuesta la descarga del archivo pdf
+    """
+    if request.POST:
+        fases = [int(x.split('-')[1]) for x in request.POST if x.__contains__('check')]
+        inicio = [int(x) for x in str(request.POST['inicio']).split('-')]
+        fin = [int(x) for x in str(request.POST['fin']).split('-')]
+        fecha_ini = date(inicio[0], inicio[1], inicio[2])
+        fecha_fin = date(fin[0], fin[1], fin[2])
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="reporte.pdf"'
+        r = ReporteProyecto()
+        response.write(r.run(id_proyecto, fases, fecha_ini, fecha_fin))
+        return response

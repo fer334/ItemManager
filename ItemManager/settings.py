@@ -153,6 +153,15 @@ AUTHENTICATION_BACKENDS = {
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
+#EMAIL CONF
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST_USER = "isteampoli2020@gmail.com"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_PASSWORD = "davidfermatipao"
+
+
 if config('DESARROLLO', default=True, cast=bool):
     print("SE ENCUENTRAN EN EL AMBIENTE DE DESARROLLO")
 else:

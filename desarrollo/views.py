@@ -3,13 +3,14 @@ Modulo se detalla la logica para las vistas que serán utilizadas por la app
 """
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
+from django.core.mail import send_mail
 from .SubirArchivos import handle_uploaded_file
 from desarrollo.models import Item, AtributoParticular, HistoricalItem
 from administracion.models import Proyecto, TipoItem, Fase, Rol
 from desarrollo.forms import ItemForm
 from desarrollo.getPermisos import has_permiso
 from configuracion.models import Solicitud, LineaBase
-
+from login.models import Usuario
 
 def get_numeracion(fase, tipo):
     """
@@ -683,18 +684,38 @@ def aprobar_item(request, id_item):
     """
     item = Item.objects.get(pk=id_item)
     fase = item.fase
+    proyecto = fase.proyecto
     # primero verificamos que cumpla con el permiso
     if not has_permiso(fase=fase, usuario=request.user, permiso=Rol.APROBAR_ITEM):
-        return redirect('administracion:accesoDenegado', id_proyecto=fase.proyecto.id, caso='permisos')
-
+        return redirect('administracion:accesoDenegado', id_proyecto=proyecto.id, caso='permisos')
     if item.estado == Item.ESTADO_PENDIENTE:
         item.estado = Item.ESTADO_APROBADO
         item.save()
         # registramos para auditoría
         auditoria = HistoricalItem(item=item, history_user=request.user,
-                                   history_type=HistoricalItem.TIPO_ESTADO + Item.ESTADO_APROBADO)
+        history_type = HistoricalItem.TIPO_ESTADO + Item.ESTADO_APROBADO)
         auditoria.save()
+        send_mail_aprobacion(request, item, proyecto, True)
     return redirect('desarrollo:menuAprobacion', item.fase.proyecto_id)
+
+
+def send_mail_aprobacion(request, item, proyecto, aprobar):
+    """
+    Funcion utilizada para mandar el mail de aprobacion o desaprobacion al solicitante
+    :param request: diccionario del request
+    :param item: Item que se esta aprobando
+    :param proyecto: Proyecto del item
+    :param aprobar: Bandera que indica si se aprobo o no
+    :return:
+    """
+    item_auditoria = HistoricalItem.objects.filter(item=item,
+                                                   history_type=HistoricalItem.TIPO_ESTADO + Item.ESTADO_PENDIENTE).order_by(
+        'id').last()
+    solicitante = Usuario.objects.get(username=item_auditoria.history_user)
+    send_mail('Item aprobado', f'El usuario "{request.user.username}" {"no" if not aprobar else ""} ha aprobado su item "{item.nombre}"'
+                               f'en el proyecto "{proyecto.nombre}"',
+              'isteampoli2020@gmail.com',
+              [solicitante.email], fail_silently=False)
 
 
 def desaprobar_item(request, id_item):
@@ -707,9 +728,10 @@ def desaprobar_item(request, id_item):
     """
     item = Item.objects.get(pk=id_item)
     fase = item.fase
+    proyecto = fase.proyecto
     # primero verificamos que cumpla con el permiso
     if not has_permiso(fase=fase, usuario=request.user, permiso=Rol.APROBAR_ITEM):
-        return redirect('administracion:accesoDenegado', id_proyecto=fase.proyecto.id, caso='permisos')
+        return redirect('administracion:accesoDenegado', id_proyecto=proyecto.id, caso='permisos')
 
     if item.estado == Item.ESTADO_PENDIENTE:
         item.estado = Item.ESTADO_DESARROLLO
@@ -719,6 +741,7 @@ def desaprobar_item(request, id_item):
         auditoria = HistoricalItem(item=item, history_user=request.user,
                                    history_type=HistoricalItem.TIPO_ESTADO + Item.ESTADO_DESARROLLO)
         auditoria.save()
+        send_mail_aprobacion(request, item, proyecto, False)
     return redirect('desarrollo:menuAprobacion', item.fase.proyecto_id)
 
 
@@ -976,6 +999,7 @@ def votacion_item_en_revision_desarrollo(request, id_item):
     :return: redireccion a los detalles del item
     """
     item = Item.objects.get(pk=id_item)
+    proyecto = item.fase.proyecto
     # Se pregunta si el item esta en EN REVISION
     if item.estado == Item.ESTADO_REVISION:
         item.estado = Item.ESTADO_DESARROLLO
@@ -983,14 +1007,14 @@ def votacion_item_en_revision_desarrollo(request, id_item):
 
         # registramos para auditoría
         auditoria = HistoricalItem(item=item, history_user=request.user,
-                                   history_type=HistoricalItem.TIPO_ESTADO + Item.ESTADO_DESARROLLO)
+                history_type=HistoricalItem.TIPO_ESTADO + Item.ESTADO_DESARROLLO)
         auditoria.save()
 
     def pasar_a_revision(lista_items):
         for item in lista_items:
             item_hijo = Item.objects.filter(id_version=item.id_version,
                                             estado__regex='^(?!' + Item.ESTADO_DESACTIVADO + ')').order_by('id').last()
-            if item_hijo.estado == Item.ESTADO_APROBADO or item_hijo.estado == Item.ESTADO_LINEABASE:
+            if item_hijo.estado == Item.ESTADO_APROBADO:
                 item_hijo.estado = Item.ESTADO_REVISION
                 item_hijo.save()
 
@@ -998,30 +1022,31 @@ def votacion_item_en_revision_desarrollo(request, id_item):
                 audit = HistoricalItem(item=item_hijo, history_user=request.user,
                                        history_type=HistoricalItem.TIPO_ESTADO + Item.ESTADO_REVISION)
                 audit.save()
-
-    # Luego de pasar el item a desarrollo se debe ver como quedan sus hijos y sucesores
+    # Luego de pasar el item a desarrollo se debe ver como quedan sus hijos y sucesores (En estado aprobado)
     pasar_a_revision(item.hijos.all())
     pasar_a_revision(item.sucesores.all())
 
-    # Luego se ve si el item pertenece a una linea base y se ajusta los items de esa linea base
-    for linea_base in item.lineabase_set.all():
-        if linea_base.estado == linea_base.ESTADO_CERRADA:
-            # Si marque un item en estado en desarrollo, se debe romper la lb
-            linea_base.estado = linea_base.ESTADO_ROTA
-            linea_base.save()
-            for item in linea_base.items.all():
-                """LOS ITEMS DE LA LINEA BASE SIGUEN LA SIGUIENTE LOGICA
-                LINEA BASE -> APROBADO
-                REVISION -> REVISION
-                """
-                if item.estado == Item.ESTADO_LINEABASE:
-                    item.estado = Item.ESTADO_APROBADO
-                    item.save()
+    def crear_solicitud(items_hijos_en_lb):
+        #Luego junto todas las lb
+        lbs = LineaBase.objects.filter(estado=LineaBase.ESTADO_CERRADA, fase__proyecto=proyecto)
+        #Recorro todas las lb y voy cruzando la lista de items de la lb, con los items hijos
+        if items_hijos_en_lb.count() == 0:
+            return
+        for lb in lbs:
+            if lb.items.count() > 0 and len(lb.solicitud_set.filter(solicitud_activa=True)) == 0:
+                items_cruce = [item for item in lb.items.all() if item in items_hijos_en_lb]
+                #En items cruce tengo la lista de items que debo solicitar modificar para esa linea base
+                if len(items_cruce) > 0:
+                    solicitud = Solicitud(linea_base=lb, justificacion='Solicitud generada automaticamente', solicitado_por=request.user)
+                    solicitud.save()
+                    #Agrego los resultados del cruce a la lista de la solicitud
+                    for item_para_solicitar in items_cruce:
+                        solicitud.items_a_modificar.add(item_para_solicitar)
 
-                    # registramos para auditoría
-                    audito = HistoricalItem(item=item, history_user=request.user,
-                                            history_type=HistoricalItem.TIPO_ESTADO + Item.ESTADO_APROBADO)
-                    audito.save()
+    # Luego de ver los hijos aprobados checkeamos los hijos en LB
+    #Primero junto todos los items que estan en lb
+    crear_solicitud(item.hijos.filter(estado=Item.ESTADO_LINEABASE))
+    crear_solicitud(item.sucesores.filter(estado=Item.ESTADO_LINEABASE))
 
     return redirect('desarrollo:verItem', item.fase.proyecto_id, id_item)
 
