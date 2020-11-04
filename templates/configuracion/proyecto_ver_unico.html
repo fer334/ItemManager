@@ -78,22 +78,64 @@
             {% if puede_cerrar %}
                 <a class="btn btn-primary" href="{% url 'configuracion:cerrarProyecto' proyecto.id %}">Cerrar proyecto</a>
             {% endif %}
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Generar reporte</button>
             <a href="{% url 'configuracion:indexConfiguracion' 'todos' %}" class="btn btn-primary float-right">Volver atrás</a>
         </div>
-
-
+{#        Modal reporte #}
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel"> Generar reporte</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form id="reporteForm"action="{% url 'configuracion:reporte'  proyecto.id %}" method="post">
+                    {% csrf_token %}
+                    <h4>Seleccione las fases que quiere incluir al reporte</h4>
+                    {% for fase in proyecto.fase_set.all %}
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="checkFase-{{ fase.id }}" id="checkFase-{{ fase.id }}">
+                        <label class="form-check-label" for="checkFase-{{ fase.id }}">{{ fase.nombre }}</label>
+                      </div>
+                    {% endfor %}
+                    <hr>
+                    <h4>Seleccione el rango para ver la cantidad de solicitudes de cambio en el reporte</h4>
+                    <div class="form-group">
+                        <label for="inicio" class="col-form-label">Fecha Inicio:</label>
+                        <input type="date" class="form-group" id="inicio" name="inicio" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="fin" class="col-form-label">Fecha Fin:</label>
+                        <input type="date" class="form-group" id="fin" name="fin" required>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button id="reporteButton" type="button" class="btn btn-primary" onclick="submitReporte()">Descargar PDF</button>
+                    </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
     </div>
     <script>
-        const pintarLB = ()=>{
+        const pintarLB = ()=> {
             const enLB = document.getElementsByClassName('listaEnLB');
-            for( i = 0; i < enLB.length; i++){
+            for (i = 0; i < enLB.length; i++) {
                 let item = enLB[i];
-                if( item.childElementCount > 0){
+                if (item.childElementCount > 0) {
                     item.classList.add('border');
                     item.classList.add('border-primary');
                 }
             }
-        }
+        };
         pintarLB();
+        const submitReporte = ()=>{
+            $('#reporteForm').submit();
+            $('#exampleModal').modal('hide');
+        };
     </script>
 {% endblock %}

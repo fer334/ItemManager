@@ -1,6 +1,9 @@
 """
 Vistas del modulo de configuracion
 """
+from datetime import datetime, date
+
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
 # Create your views here.
@@ -13,7 +16,7 @@ from desarrollo.views import calcular_impacto_recursivo, crear_lista_relaciones_
     calcular_lista_items_impacto_recursivo
 from desarrollo.getPermisos import has_permiso, has_permiso_cerrar_proyecto
 from django.core.mail import send_mail
-
+from .reporte import ReporteProyecto
 
 
 def index(request, filtro):
@@ -442,3 +445,26 @@ def solicitud_modificacion_estado(request, id_proyecto, id_item):
         for item in items_seleccionados:
             solicitud.items_a_modificar.add(item)
         return redirect('configuracion:verProyecto', id_proyecto=id_proyecto)
+
+
+def reporte(request, id_proyecto):
+    """
+    Vista donde se genera el archivo pdf utilizado en los reportes, recibe a traves
+    del request la lista de fases seleccionadas para el reporte y las fechas de inicio
+    y fin para el rango de Solicitudes
+
+    :param request: lista de fases y fechas de inicio y fin
+    :param id_proyecto: identificador del proyecto
+    :return: retorna como respuesta la descarga del archivo pdf
+    """
+    if request.POST:
+        fases = [int(x.split('-')[1]) for x in request.POST if x.__contains__('check')]
+        inicio = [int(x) for x in str(request.POST['inicio']).split('-')]
+        fin = [int(x) for x in str(request.POST['fin']).split('-')]
+        fecha_ini = date(inicio[0], inicio[1], inicio[2])
+        fecha_fin = date(fin[0], fin[1], fin[2])
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="reporte.pdf"'
+        r = ReporteProyecto()
+        response.write(r.run(id_proyecto, fases, fecha_ini, fecha_fin))
+        return response
