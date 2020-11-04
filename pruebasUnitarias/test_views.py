@@ -8,7 +8,6 @@ from django.contrib.auth.models import AnonymousUser
 from django.test import TestCase
 import io
 
-from desarrollo.getPermisos import get_permisos, has_permiso_cerrar_proyecto
 from login.views import index, user_register, users_access, user_update
 from login.models import Usuario
 from administracion.models import Proyecto, Fase, Rol, UsuarioxRol, TipoItem
@@ -16,9 +15,9 @@ from administracion.views import crear_rol, proyectos, desactivar_tipo_item, edi
     eliminar_participante_y_comite, crear_proyecto, \
     administrar_participantes, registrar_rol_por_fase, asignar_rol_por_fase, desasignar_rol_al_usuario, \
     administrar_comite, importar_tipo, confirmar_tipo_import, mostrar_tipo_import, administrar_fases_del_proyecto
-from desarrollo.models import Item, AtributoParticular
+from desarrollo.models import Item, HistoricalItem
 from desarrollo.views import solicitud_aprobacion, aprobar_item, desaprobar_item, desactivar_item, ver_item, \
-    relacionar_item, desactivar_relacion_item, ver_proyecto, modificar_item, versionar_item, reversionar_item, \
+    ver_proyecto, modificar_item, versionar_item, reversionar_item, \
     validar_reversion, votacion_item_en_revision_desarrollo, votacion_item_en_revision_aprobado, \
     votacion_item_en_revision_lineaBase, cerrar_fase, calcular_impacto_recursivo
 
@@ -566,6 +565,10 @@ class TestViews(TestCase):
         cu_39_1 = Item.objects.create(nombre='cu_39_1', estado=Item.ESTADO_PENDIENTE, version=1, complejidad=5,
                                       descripcion='aprobar item', tipo_item=TipoItem.objects.get(pk=tipox.id),
                                       fase=self.fase)
+        # añadimos una entrada en auditoría para el item pendiente para que no hayan problemas con send_mail_aprobacion
+        auditoria = HistoricalItem(item=cu_39_1, history_user=self.usuario,
+                                   history_type=HistoricalItem.TIPO_ESTADO + Item.ESTADO_PENDIENTE)
+        auditoria.save()
         request = RequestFactory()
         request.user = self.usuario
         aprobar_item(request, id_item=cu_39_1.id)
@@ -586,6 +589,11 @@ class TestViews(TestCase):
         cu_39_2 = Item.objects.create(nombre='cu_39_2', estado=Item.ESTADO_PENDIENTE, version=1, complejidad=5,
                                       descripcion='desaprobar item', tipo_item=TipoItem.objects.get(pk=tipop.id),
                                       fase=self.fase)
+        # añadimos una entrada en auditoría para el item pendiente para que no hayan problemas con send_mail_aprobacion
+        auditoria = HistoricalItem(item=cu_39_2, history_user=self.usuario,
+                                   history_type=HistoricalItem.TIPO_ESTADO + Item.ESTADO_PENDIENTE)
+        auditoria.save()
+
         request = RequestFactory()
         request.user = self.usuario
         desaprobar_item(request, id_item=cu_39_2.id)
@@ -948,7 +956,7 @@ class TestViews(TestCase):
         item_hijo = Item.objects.create(nombre='hijo_item_1', estado=Item.ESTADO_APROBADO, version=1,
                                         complejidad=5, descripcion='Aprobado a Revision',
                                         tipo_item=self.tipo, fase=self.fase)
-        cu_28_1.hijos.add(item_hijo);
+        cu_28_1.hijos.add(item_hijo)
         cu_28_1.save()
         request = RequestFactory()
         request.user = self.usuario
