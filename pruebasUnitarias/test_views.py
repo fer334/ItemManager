@@ -1,6 +1,7 @@
 """
 Modulo para hacer test sobre el modulo views.py
 """
+from django.contrib.sessions.middleware import SessionMiddleware
 from django.test import RequestFactory
 from django.urls import reverse, resolve
 from django.utils import timezone
@@ -8,8 +9,9 @@ from django.contrib.auth.models import AnonymousUser
 from django.test import TestCase
 import io
 
-from login.views import index, user_register, users_access, user_update
-from login.models import Usuario
+from login.Register import crear_usuario
+from login.views import index, user_register, users_access, user_update, user_login
+from login.models import Usuario, HistoricalAccesos
 from administracion.models import Proyecto, Fase, Rol, UsuarioxRol, TipoItem
 from administracion.views import crear_rol, proyectos, desactivar_tipo_item, editar_tipo, estado_proyectov2, \
     eliminar_participante_y_comite, crear_proyecto, \
@@ -1168,7 +1170,7 @@ class TestViews(TestCase):
 
     def test_auditoria(self):
         """
-        CU 54: Mostrar historial de inicio de Sesión. Iteración 6.
+        CU 52: Mostrar datos de auditoria. Iteración 6.
         Este test comprueba que se realice correctamente la auditoria general de proyectos verificando que un
         proyecto creado aparezca entre los datos de auditoria.
 
@@ -1183,3 +1185,55 @@ class TestViews(TestCase):
         # buscamos un elemento especifico
         elemento_proyec = Proyecto.history.get(id=self.proyecto.id)
         self.assertIn(elemento_proyec.nombre, lista, 'el proyecto no aparece en la auditoria')
+
+    def test_historial_inicio_sesion(self):
+        """
+        CU 54: Mostrar historial de inicio de Sesión. Iteración 6.
+        Este test comprueba que se realice correctamente la auditoria sobre el historial de inicio de sesión de los
+        usuarios del sistema. Para comprobar esto primero logeamos a un usuario y luego verificamos que el registro
+        de login de ese usuario se encuentre en el historial
+
+        :return: el assert retorna true si el nombre de usuario se encuentra en la lista de logins
+        """
+
+        # primero registramos un usuario
+        # para que el mail sea aleatorio y no haya problemas con firebase
+        aux = str(timezone.now()).split(' ')[1].split('.')[1].split('+')[0]
+        path = reverse('login:register')
+        request1 = RequestFactory().post(path, {
+            'username': 'tester1',
+            'email': 'tester' + aux + '@admin.com',
+            'password': 'hola1234',
+            'pass_confirmation': 'hola1234',
+            'first_name': 'Pruebitas',
+            'last_name': 'Johnson',
+        })
+        user_register(request1)
+
+        # buscamos al usuario
+        usuario_registrado = Usuario.objects.get(username='tester1')
+
+        # creamos el request para el login
+        path = reverse('login:login')
+        request = RequestFactory().post(path, {
+            'email': 'tester' + aux + '@admin.com',
+            'password': 'hola1234',
+        })
+        # adding session
+        middleware = SessionMiddleware()
+        middleware.process_request(request)
+        request.session.save()
+        request.user = usuario_registrado
+
+        # logeamos al usuario
+        user_login(request)
+
+        # creamos una lista que contenga todos los nombres de usuarios en el historial
+        lista_sesiones = []
+        print(HistoricalAccesos.objects.all())
+        for elemento in HistoricalAccesos.objects.all():
+            lista_sesiones = elemento.history_user
+
+        # ahora buscamos al usuario en el historial de inicio de sesión
+        self.assertIn(usuario_registrado.username, lista_sesiones,
+                      "No se ha registrado el inicio de sesion de este usuario")
