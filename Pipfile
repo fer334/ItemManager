@@ -29,6 +29,7 @@ dj-database-url = "*"
 python-decouple = "*"
 config = "*"
 django-simple-history = "*"
+reportlab = "*"
 
 [requires]
 python_version = "3.8"
