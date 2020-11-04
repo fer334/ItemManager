@@ -12,6 +12,7 @@ from desarrollo.getPermisos import has_permiso
 from configuracion.models import Solicitud, LineaBase
 from login.models import Usuario
 
+
 def get_numeracion(fase, tipo):
     """
     genera los numeros de item en una fase del mismo tipo de item
@@ -693,7 +694,7 @@ def aprobar_item(request, id_item):
         item.save()
         # registramos para auditoría
         auditoria = HistoricalItem(item=item, history_user=request.user,
-        history_type = HistoricalItem.TIPO_ESTADO + Item.ESTADO_APROBADO)
+                                   history_type=HistoricalItem.TIPO_ESTADO + Item.ESTADO_APROBADO)
         auditoria.save()
         send_mail_aprobacion(request, item, proyecto, True)
     return redirect('desarrollo:menuAprobacion', item.fase.proyecto_id)
@@ -712,8 +713,9 @@ def send_mail_aprobacion(request, item, proyecto, aprobar):
                                                    history_type=HistoricalItem.TIPO_ESTADO + Item.ESTADO_PENDIENTE).order_by(
         'id').last()
     solicitante = Usuario.objects.get(username=item_auditoria.history_user)
-    send_mail('Item aprobado', f'El usuario "{request.user.username}" {"no" if not aprobar else ""} ha aprobado su item "{item.nombre}"'
-                               f'en el proyecto "{proyecto.nombre}"',
+    send_mail('Item aprobado',
+              f'El usuario "{request.user.username}" {"no" if not aprobar else ""} ha aprobado su item "{item.nombre}"'
+              f'en el proyecto "{proyecto.nombre}"',
               'isteampoli2020@gmail.com',
               [solicitante.email], fail_silently=False)
 
@@ -1007,7 +1009,7 @@ def votacion_item_en_revision_desarrollo(request, id_item):
 
         # registramos para auditoría
         auditoria = HistoricalItem(item=item, history_user=request.user,
-                history_type=HistoricalItem.TIPO_ESTADO + Item.ESTADO_DESARROLLO)
+                                   history_type=HistoricalItem.TIPO_ESTADO + Item.ESTADO_DESARROLLO)
         auditoria.save()
 
     def pasar_a_revision(lista_items):
@@ -1022,29 +1024,31 @@ def votacion_item_en_revision_desarrollo(request, id_item):
                 audit = HistoricalItem(item=item_hijo, history_user=request.user,
                                        history_type=HistoricalItem.TIPO_ESTADO + Item.ESTADO_REVISION)
                 audit.save()
+
     # Luego de pasar el item a desarrollo se debe ver como quedan sus hijos y sucesores (En estado aprobado)
     pasar_a_revision(item.hijos.all())
     pasar_a_revision(item.sucesores.all())
 
     def crear_solicitud(items_hijos_en_lb):
-        #Luego junto todas las lb
+        # Luego junto todas las lb
         lbs = LineaBase.objects.filter(estado=LineaBase.ESTADO_CERRADA, fase__proyecto=proyecto)
-        #Recorro todas las lb y voy cruzando la lista de items de la lb, con los items hijos
+        # Recorro todas las lb y voy cruzando la lista de items de la lb, con los items hijos
         if items_hijos_en_lb.count() == 0:
             return
         for lb in lbs:
             if lb.items.count() > 0 and len(lb.solicitud_set.filter(solicitud_activa=True)) == 0:
                 items_cruce = [item for item in lb.items.all() if item in items_hijos_en_lb]
-                #En items cruce tengo la lista de items que debo solicitar modificar para esa linea base
+                # En items cruce tengo la lista de items que debo solicitar modificar para esa linea base
                 if len(items_cruce) > 0:
-                    solicitud = Solicitud(linea_base=lb, justificacion='Solicitud generada automaticamente', solicitado_por=request.user)
+                    solicitud = Solicitud(linea_base=lb, justificacion='Solicitud generada automaticamente',
+                                          solicitado_por=request.user)
                     solicitud.save()
-                    #Agrego los resultados del cruce a la lista de la solicitud
+                    # Agrego los resultados del cruce a la lista de la solicitud
                     for item_para_solicitar in items_cruce:
                         solicitud.items_a_modificar.add(item_para_solicitar)
 
     # Luego de ver los hijos aprobados checkeamos los hijos en LB
-    #Primero junto todos los items que estan en lb
+    # Primero junto todos los items que estan en lb
     crear_solicitud(item.hijos.filter(estado=Item.ESTADO_LINEABASE))
     crear_solicitud(item.sucesores.filter(estado=Item.ESTADO_LINEABASE))
 
@@ -1067,7 +1071,7 @@ def votacion_item_en_revision_aprobado(request, id_item):
 
         # registramos para auditoría
         auditoria = HistoricalItem(item=item, history_user=request.user,
-                                   history_type=HistoricalItem.TIPO_ESTADO+Item.ESTADO_APROBADO)
+                                   history_type=HistoricalItem.TIPO_ESTADO + Item.ESTADO_APROBADO)
         auditoria.save()
 
     # TODO Muchas cosas jeje
@@ -1081,7 +1085,7 @@ def votacion_item_en_revision_aprobado(request, id_item):
 
                     # registramos para auditoría
                     auditoria = HistoricalItem(item=item, history_user=request.user,
-                                               history_type=HistoricalItem.TIPO_ESTADO+Item.ESTADO_LINEABASE)
+                                               history_type=HistoricalItem.TIPO_ESTADO + Item.ESTADO_LINEABASE)
                     auditoria.save()
     return redirect('desarrollo:verItem', item.fase.proyecto_id, id_item)
 
@@ -1103,7 +1107,7 @@ def votacion_item_en_revision_lineaBase(request, id_item):
 
         # registramos para auditoría
         auditoria = HistoricalItem(item=item, history_user=request.user,
-                                   history_type=HistoricalItem.TIPO_ESTADO+Item.ESTADO_LINEABASE)
+                                   history_type=HistoricalItem.TIPO_ESTADO + Item.ESTADO_LINEABASE)
         auditoria.save()
 
     return redirect('desarrollo:verItem', item.fase.proyecto_id, id_item)
