@@ -491,7 +491,7 @@
                         <br>
                             {% csrf_token %}
                             <div class="form-group pt-3">
-                                <label for="mensaje" class="mt-lg-2 font-weight-bold">Solicitud de desaprobación</label>
+                                <label for="mensaje" class="font-weight-bold">Solicitud de desaprobación</label>
                                     <textarea class="form-control col-10" id="mensaje" rows="3" name="mensaje"
                                               placeholder="Escriba aquí su justificación"></textarea>
                             </div>
@@ -502,7 +502,7 @@
                     {% endif %}
                 </div>
                 <div class="col-md-4 col-md-offset-4">
-                    <a href="{% url 'configuracion:reporteTrazabilidad' proyecto.id item_principal.id %}" class="btn btn-info">Generar Reporte</a>
+                    <a href="{% url 'configuracion:reporteTrazabilidad' proyecto.id item_principal.id %}" class="btn btn-info">Confidencial</a>
                     <a href="{% url 'configuracion:verProyecto' proyecto.id %}" class="btn btn-primary">Volver atrás</a>
                 </div>
             </div>
