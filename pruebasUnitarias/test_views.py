@@ -913,7 +913,8 @@ class TestViews(TestCase):
     def test_votar_ruptura(self):
         """
         CU 27: Votar sobre ruptura de LB. Iteración 4
-        EL test invoca a la vista encargada de contabilizar los votos por ruptura de lb
+        EL test invoca a la vista encargada de contabilizar los votos por ruptura de lb.
+
         :return: Se retorna true al validar la votacion
         """
         lb_nueva = LineaBase(fase=self.fase, creador=self.usuario)
@@ -946,11 +947,11 @@ class TestViews(TestCase):
 
     def test_votacion_item_en_revision_desarrollo_hijos(self):
         """
-            CU 28: Votación de modificación de items en estado de "En revisión". Iteracion 4
-            El test prueba que el item pasa de estadado en Revision a estado en Desarrollo,
-            teniendo la oportunidad de modificar el item.
+        CU 28: Votación de modificación de items en estado de "En revisión". Iteracion 4
+        El test prueba que el item pasa de estadado en Revision a estado en Desarrollo,
+        teniendo la oportunidad de modificar el item.
 
-            :return: Retrona true si cambio a Desarrollo
+        :return: Retrona true si cambio a Desarrollo
             """
         cu_28_1 = Item.objects.create(nombre='item_1', estado=Item.ESTADO_REVISION, version=1,
                                       complejidad=5, descripcion='Revision a Desarrollo',
@@ -1031,8 +1032,7 @@ class TestViews(TestCase):
         El test comprueba el correcto funcionamiento de la función recursiva de trazabilidad que trae todos
         los items relacionados al elegido.
 
-        :return: los primeros dos asserts retornan true si los items relacionados son parte de la lista, el último
-        assert retorna true si el item sin relacion con el resto no es parte de la lista
+        :return: los primeros dos asserts retornan true si los items relacionados son parte de la lista, el último assert retorna true si el item sin relacion con el resto no es parte de la lista
         """
         item_principal = Item(nombre='principal', estado=Item.ESTADO_APROBADO, complejidad=5, descripcion='principal',
                               tipo_item=self.tipo, fase=self.fase, id_version=2)
@@ -1066,8 +1066,7 @@ class TestViews(TestCase):
         El test comprueba el correcto funcionamiento de la función recursiva de trazabilidad que trae todos
         los items relacionados de manera directa e indirecta.
 
-        :return: El primer assert retorna true si el hijo directo del ítem está en la lista para graficar la
-        trazabilidad, el segundo assert retorna true si el hijo indirecto del item está en la lista.
+        :return: El primer assert retorna true si el hijo directo del ítem está en la lista para graficar la trazabilidad, el segundo assert retorna true si el hijo indirecto del item está en la lista.
         """
         item_principal = Item(nombre='principal', estado=Item.ESTADO_APROBADO, complejidad=3, descripcion='principal',
                               tipo_item=self.tipo, fase=self.fase, id_version=2)
@@ -1118,7 +1117,7 @@ class TestViews(TestCase):
 
     def test_adjuntar_archivo(self):
         """
-        CU 41: Adjuntar al archivos al item
+        CU 41: Adjuntar al archivos al item. Iteracion 3
         Se invoca al metodo encargado de adjuntar archivo.
 
         :return: Retorna si se realiza correctamente el attachment
