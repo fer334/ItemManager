@@ -92,7 +92,7 @@
                 </button>
               </div>
               <div class="modal-body">
-                <form id="reporteForm"action="{% url 'configuracion:reporte'  proyecto.id %}" method="post">
+                <form id="reporteForm" action="{% url 'configuracion:reporte'  proyecto.id %}" method="post">
                     {% csrf_token %}
                     <h4>Seleccione las fases que quiere incluir al reporte</h4>
                     {% for fase in proyecto.fase_set.all %}
@@ -113,7 +113,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button id="reporteButton" type="button" class="btn btn-primary" onclick="submitReporte()">Descargar PDF</button>
+                        <button id="reporteButton" type="submit" class="btn btn-primary" onclick="submitReporte()">Descargar PDF</button>
                     </div>
                 </form>
               </div>
@@ -134,8 +134,12 @@
         };
         pintarLB();
         const submitReporte = ()=>{
-            $('#reporteForm').submit();
-            $('#exampleModal').modal('hide');
+            form =  document.getElementById('reporteForm');
+            if(form.checkValidity()){
+                form.submit();
+                $('#exampleModal').modal('hide');
+            }
         };
+
     </script>
 {% endblock %}
