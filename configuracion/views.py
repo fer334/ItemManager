@@ -15,6 +15,7 @@ from django.utils.timezone import now
 from desarrollo.views import calcular_impacto_recursivo, crear_lista_relaciones_del_proyecto, \
     calcular_lista_items_impacto_recursivo
 from desarrollo.getPermisos import has_permiso, has_permiso_cerrar_proyecto
+from django.core.mail import send_mail
 from .reporte import ReporteProyecto
 
 
@@ -188,8 +189,9 @@ def solicitud_ruptura(request, id_lineabase):
     """
     lineabase = LineaBase.objects.get(pk=id_lineabase)
     fase = lineabase.fase
+    proyecto = fase.proyecto
     if not has_permiso(fase=fase, usuario=request.user, permiso=Rol.SOLICITAR_RUPTURA_LB):
-        return redirect('administracion:accesoDenegado', id_proyecto=fase.proyecto.id, caso='permisos')
+        return redirect('administracion:accesoDenegado', id_proyecto=proyecto.id, caso='permisos')
     lista_calculo_impacto = []
     for item_en_lb in lineabase.items.all():
         lista_calculo_impacto.append(calcular_impacto_recursivo(item_en_lb))
@@ -200,6 +202,9 @@ def solicitud_ruptura(request, id_lineabase):
             justificacion=request.POST['mensaje'],
         )
         solicitud.save()
+        send_mail('Nueva solicitud de ruptura', f'El usuario {request.user.username} ha solicitado una ruptura de la '
+        f'linea base {lineabase.id} en el proyecto {proyecto.nombre}', 'isteampoli2020@gmail.com',
+        [integrante.email for integrante in proyecto.comite.all()], fail_silently=False)
         items_seleccionados = [
             Item.objects.get(pk=item.split('-')[1])
             for item in request.POST
@@ -269,7 +274,13 @@ def votar_solicitud(request, id_proyecto, id_solicitud, voto):
 
         solicitud.solicitud_activa = False
         solicitud.save()
-
+        if solicitud.linea_base.estado == LineaBase.ESTADO_ROTA:
+            texto = f'La linea base {solicitud.linea_base.id} en el proyecto {proyecto.nombre} ha sido rota'
+        else:
+            texto = f'La linea base {solicitud.linea_base.id} en el proyecto {proyecto.nombre} NO ha sido rota'
+        send_mail('Solicitud finalizada', texto,
+                  'isteampoli2020@gmail.com',
+                  [integrante.email for integrante in proyecto.comite.all()], fail_silently=False)
     return redirect('configuracion:verIndexComite', id_proyecto)
 
 

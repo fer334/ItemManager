@@ -13,7 +13,15 @@
     </facet>
   </component>
   <component name="NewModuleRootManager">
-    <content url="file://$MODULE_DIR$" />
+    <content url="file://$MODULE_DIR$">
+      <excludeFolder url="file://$MODULE_DIR$/.idea/dataSources" />
+      <excludeFolder url="file://$MODULE_DIR$/.pytest_cache" />
+      <excludeFolder url="file://$MODULE_DIR$/docs/build/doctrees" />
+      <excludeFolder url="file://$MODULE_DIR$/docs/build/html/_modules/configuracion" />
+      <excludeFolder url="file://$MODULE_DIR$/docs/build/html/_static/_autosummary" />
+      <excludeFolder url="file://$MODULE_DIR$/docs/build/html/_static/css" />
+      <excludeFolder url="file://$MODULE_DIR$/docs/source/_autosummary" />
+    </content>
     <orderEntry type="jdk" jdkName="Pipenv (ItemManager)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>

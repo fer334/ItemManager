@@ -3,14 +3,25 @@ Modulo se detalla la logica para las vistas que serán utilizadas por la app
 """
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
+from django.core.mail import send_mail
 from .SubirArchivos import handle_uploaded_file
-from desarrollo.models import Item, AtributoParticular
+from desarrollo.models import Item, AtributoParticular, HistoricalItem
 from administracion.models import Proyecto, TipoItem, Fase, Rol
 from desarrollo.forms import ItemForm
 from desarrollo.getPermisos import has_permiso
 from configuracion.models import Solicitud, LineaBase
+from login.models import Usuario
+
 
 def get_numeracion(fase, tipo):
+    """
+    genera los numeros de item en una fase del mismo tipo de item
+
+    :param fase: fase actual
+    :param tipo: tipo del item actual
+    :return: entero con el numero de item
+    :rtype: int
+    """
     items_del_tipo = fase.item_set.filter(tipo_item=tipo, estado__in=(Item.ESTADO_REVISION,
                                                                       Item.ESTADO_APROBADO,
                                                                       Item.ESTADO_LINEABASE,
@@ -67,6 +78,11 @@ def crear_item(request, id_fase, id_tipo):
                 nuevo_item.id_version = nuevo_item.id
                 nuevo_item.save()
 
+                # registramos para auditoría
+                auditoria = HistoricalItem(item=nuevo_item, history_user=request.user,
+                                           history_type=HistoricalItem.TIPO_CREAR)
+                auditoria.save()
+
                 # vinculamos el tipo a la fase
                 if tipo not in fase.tipos_item.all():
                     fase.tipos_item.add(tipo)
@@ -115,11 +131,15 @@ def ver_item(request, id_proyecto, id_item):
         lista_fases_impacto.append(items_impacto.fase)
     # convertimos en set para que no hayan repetidos
     lista_fases_impacto = set(lista_fases_impacto)
+    # verificamos si la versión es la más actual para emitir un mensaje (solo para items desactivados)
+    es_version_actual = False
+    if item == Item.objects.filter(id_version=item.id_version).order_by('id').last():
+        es_version_actual = True
     return render(request, 'desarrollo/item_ver.html', {'item': item, 'lista_atributos': lista_atributos, 'fase': fase,
                                                         'proyecto': proyecto, 'desarrollo': Item.ESTADO_DESARROLLO,
                                                         'estado': Proyecto.ESTADO_EN_EJECUCION, 'impacto': impacto,
                                                         'lista_impacto': lista_impacto, 'lista_fases_impacto':
-                                                            lista_fases_impacto})
+                                                            lista_fases_impacto, 'es_vers_actual': es_version_actual})
 
 
 def historial_versiones_item(request, id_proyecto, id_item):
@@ -175,6 +195,12 @@ def reversionar_item(request, id_proyecto, id_item, id_version_anterior):
     :return: redireccion a item_ver.html
     :rtype: redirect
     """
+    it = Item.objects.get(pk=id_item)
+    fase = it.fase
+    # primero verificamos que cumpla con el permiso
+    if not has_permiso(fase=fase, usuario=request.user, permiso=Rol.REVERSIONAR_ITEM):
+        return redirect('administracion:accesoDenegado', id_proyecto=fase.proyecto.id, caso='permisos')
+
     if validar_reversion(id_item, id_version_anterior):
         item_actual = Item.objects.get(pk=id_item)
         item_version_anterior = Item.objects.get(pk=id_version_anterior)
@@ -264,6 +290,10 @@ def reversionar_item(request, id_proyecto, id_item, id_version_anterior):
         validar_relaciones_desactivadas(nuevo_item.padres, nuevo_item.padres.all())
         validar_relaciones_desactivadas(nuevo_item.hijos, nuevo_item.hijos.all())
 
+        # registramos para auditoría
+        auditoria = HistoricalItem(item=nuevo_item, history_user=request.user,
+                                   history_type=HistoricalItem.TIPO_REVERSIONAR)
+        auditoria.save()
         return redirect('desarrollo:verItem', id_proyecto=id_proyecto, id_item=nuevo_item.id)
     else:
         return HttpResponse("No es posible revertir a esta versión porque no cumple con las restricciones")
@@ -430,6 +460,15 @@ def relacionar_item(request, id_proyecto):
         if len([x for x in inicio.antecesores.all() if x.id == fin.id] +
                [x for x in fin.antecesores.all() if x.id == inicio.id]) > 0:
             context['error'] = 'Esta relacion ya existe'
+        # verificamos que el usuario tenga permisos de crear relaciones padre hijo
+        if not has_permiso(fase=inicio.fase, usuario=request.user,
+                           permiso=Rol.CREAR_RELACIONES_PH) and inicio.fase == fin.fase:
+            context['error'] = 'El Rol del Usuario Actual no tiene permisos para crear Relaciones de tipo Padre-Hijo'
+        # verificamos que el usuario tenga permisos de crear relaciones antecesor sucesor
+        if not has_permiso(fase=inicio.fase, usuario=request.user,
+                           permiso=Rol.CREAR_RELACIONES_AS) and inicio.fase != fin.fase:
+            context['error'] = 'El Rol del Usuario Actual no tiene permisos para crear Relaciones de tipo ' \
+                               'Antecesor-Sucesor '
 
         if context['error']:
             return render(request, "desarrollo/relacion_crear.html", context)
@@ -446,6 +485,15 @@ def relacionar_item(request, id_proyecto):
             nuevo_item_fin.antecesores.add(nuevo_item_inicio)
         nuevo_item_inicio.save()
         nuevo_item_fin.save()
+
+        # registramos para auditoría
+        auditoria1 = HistoricalItem(item=nuevo_item_inicio, history_user=request.user,
+                                    history_type=HistoricalItem.TIPO_RELACIONAR)
+        auditoria1.save()
+        auditoria2 = HistoricalItem(item=nuevo_item_fin, history_user=request.user,
+                                    history_type=HistoricalItem.TIPO_RELACIONAR)
+        auditoria2.save()
+
         return redirect('desarrollo:verProyecto', inicio.fase.proyecto.id)
     return render(request, "desarrollo/relacion_crear.html", context)
 
@@ -481,6 +529,13 @@ def desactivar_relacion_item(request, id_proyecto):
     if request.method == "POST":
         clave = request.POST['desactivar']
         clave = clave.split('-')
+
+        # primero verificamos que cumpla con el permiso
+        proy = Proyecto.objects.get(pk=id_proyecto)
+        it_ini = Item.objects.get(pk=clave[0])
+        if not has_permiso(fase=it_ini.fase, usuario=request.user, permiso=Rol.BORRAR_RELACIONES):
+            return redirect('administracion:accesoDenegado', id_proyecto=proy.id, caso='permisos')
+
         relacion = Relacion()
         relacion.inicio = Item.objects.get(pk=clave[0])
         relacion.fin = Item.objects.get(pk=clave[1])
@@ -512,6 +567,14 @@ def desactivar_relacion_item(request, id_proyecto):
                 nuevo_item_fin.antecesores.remove(nuevo_item_inicio)
             nuevo_item_inicio.save()
             nuevo_item_fin.save()
+
+            # registramos para auditoría
+            auditoria1 = HistoricalItem(item=nuevo_item_inicio, history_user=request.user,
+                                        history_type=HistoricalItem.TIPO_DESRELACIONAR)
+            auditoria1.save()
+            auditoria2 = HistoricalItem(item=nuevo_item_fin, history_user=request.user,
+                                        history_type=HistoricalItem.TIPO_DESRELACIONAR)
+            auditoria2.save()
 
     relaciones = crear_lista_relaciones_del_proyecto(id_proyecto)
 
@@ -603,6 +666,12 @@ def solicitud_aprobacion(request, id_item):
     if item.estado == Item.ESTADO_DESARROLLO:
         item.estado = Item.ESTADO_PENDIENTE
         item.save()
+
+        # registramos para auditoría
+        auditoria = HistoricalItem(item=item, history_user=request.user,
+                                   history_type=HistoricalItem.TIPO_ESTADO + Item.ESTADO_PENDIENTE)
+        auditoria.save()
+
     return redirect('desarrollo:verItem', item.fase.proyecto.id, id_item)
 
 
@@ -615,11 +684,40 @@ def aprobar_item(request, id_item):
     :return: redirecciona al menu de aprobacion del item
     """
     item = Item.objects.get(pk=id_item)
-
+    fase = item.fase
+    proyecto = fase.proyecto
+    # primero verificamos que cumpla con el permiso
+    if not has_permiso(fase=fase, usuario=request.user, permiso=Rol.APROBAR_ITEM):
+        return redirect('administracion:accesoDenegado', id_proyecto=proyecto.id, caso='permisos')
     if item.estado == Item.ESTADO_PENDIENTE:
         item.estado = Item.ESTADO_APROBADO
         item.save()
+        # registramos para auditoría
+        auditoria = HistoricalItem(item=item, history_user=request.user,
+                                   history_type=HistoricalItem.TIPO_ESTADO + Item.ESTADO_APROBADO)
+        auditoria.save()
+        send_mail_aprobacion(request, item, proyecto, True)
     return redirect('desarrollo:menuAprobacion', item.fase.proyecto_id)
+
+
+def send_mail_aprobacion(request, item, proyecto, aprobar):
+    """
+    Funcion utilizada para mandar el mail de aprobacion o desaprobacion al solicitante
+    :param request: diccionario del request
+    :param item: Item que se esta aprobando
+    :param proyecto: Proyecto del item
+    :param aprobar: Bandera que indica si se aprobo o no
+    :return:
+    """
+    item_auditoria = HistoricalItem.objects.filter(item=item,
+                                                   history_type=HistoricalItem.TIPO_ESTADO + Item.ESTADO_PENDIENTE).order_by(
+        'id').last()
+    solicitante = Usuario.objects.get(username=item_auditoria.history_user)
+    send_mail('Item aprobado',
+              f'El usuario "{request.user.username}" {"no" if not aprobar else ""} ha aprobado su item "{item.nombre}"'
+              f'en el proyecto "{proyecto.nombre}"',
+              'isteampoli2020@gmail.com',
+              [solicitante.email], fail_silently=False)
 
 
 def desaprobar_item(request, id_item):
@@ -631,9 +729,21 @@ def desaprobar_item(request, id_item):
     :return: redirecciona al menu de aprobacion del item
     """
     item = Item.objects.get(pk=id_item)
+    fase = item.fase
+    proyecto = fase.proyecto
+    # primero verificamos que cumpla con el permiso
+    if not has_permiso(fase=fase, usuario=request.user, permiso=Rol.APROBAR_ITEM):
+        return redirect('administracion:accesoDenegado', id_proyecto=proyecto.id, caso='permisos')
+
     if item.estado == Item.ESTADO_PENDIENTE:
         item.estado = Item.ESTADO_DESARROLLO
         item.save()
+
+        # registramos para auditoría
+        auditoria = HistoricalItem(item=item, history_user=request.user,
+                                   history_type=HistoricalItem.TIPO_ESTADO + Item.ESTADO_DESARROLLO)
+        auditoria.save()
+        send_mail_aprobacion(request, item, proyecto, False)
     return redirect('desarrollo:menuAprobacion', item.fase.proyecto_id)
 
 
@@ -649,6 +759,10 @@ def desactivar_item(request, id_proyecto, id_item):
     :return: redirecciona a los detalles del item
     """
     it = Item.objects.get(pk=id_item)
+    fase = it.fase
+    # primero verificamos que cumpla con el permiso
+    if not has_permiso(fase=fase, usuario=request.user, permiso=Rol.DESACTIVAR_ITEM):
+        return redirect('administracion:accesoDenegado', id_proyecto=id_proyecto, caso='permisos')
     item = versionar_item(it, request.user)
     # se verifica si es antecesor o padre
     if item.sucesores.count() != 0 or item.hijos.count() != 0:
@@ -681,6 +795,10 @@ def desactivar_item(request, id_proyecto, id_item):
         item.antecesores.remove(antecesor_remover)
 
     item.save()
+    # registramos para auditoría
+    auditoria = HistoricalItem(item=item, history_user=request.user,
+                               history_type=HistoricalItem.TIPO_ELIMINAR)
+    auditoria.save()
 
     return redirect('desarrollo:verItem', id_proyecto, id_item)
 
@@ -744,6 +862,12 @@ def modificar_item(request, id_proyecto, id_item):
             # por ultimo desactivamos la versión anterior (mejorar esta parte)
             item.estado = Item.ESTADO_DESACTIVADO
             item.save()
+
+            # registramos para auditoría
+            auditoria = HistoricalItem(item=item_editado, history_user=request.user,
+                                       history_type=HistoricalItem.TIPO_MODIFICAR)
+            auditoria.save()
+
             return redirect('desarrollo:verItem', id_proyecto, item_editado.id)
     return render(request, 'desarrollo/item_editar.html', {'item': item, 'lista_atr': lista_atr})
 
@@ -820,13 +944,18 @@ def cerrar_fase(request, id_proyecto):
 
             return render(request, 'desarrollo/fase_cerrar.html', content)
 
-        ##Si hay una solicitud activa, no se permite cerrar la fase
+        # Si hay una solicitud activa, no se permite cerrar la fase
         lineas_base = fase.lineabase_set.filter(estado=LineaBase.ESTADO_CERRADA)
         if Solicitud.objects.filter(linea_base__in=lineas_base, solicitud_activa=True).count():
             content['mensaje_error'] = """Hay solicitudes activas en la fase"""
 
             return render(request, 'desarrollo/fase_cerrar.html', content)
-
+        # fase no debe estar vacía
+        if items_de_esta_fase.count() == 0:
+            content['mensaje_error'] = """
+            No se puede cerrar fases que no contengan ningún Ítem
+            """
+            return render(request, 'desarrollo/fase_cerrar.html', content)
         # Comprobacion de que todos los items dentro de la fase tengan antecedentes
         # se excluye de la condicion a la fase 1
         todos_tienen_antecedentes = True
@@ -872,37 +1001,56 @@ def votacion_item_en_revision_desarrollo(request, id_item):
     :return: redireccion a los detalles del item
     """
     item = Item.objects.get(pk=id_item)
+    proyecto = item.fase.proyecto
     # Se pregunta si el item esta en EN REVISION
     if item.estado == Item.ESTADO_REVISION:
         item.estado = Item.ESTADO_DESARROLLO
         item.save()
 
+        # registramos para auditoría
+        auditoria = HistoricalItem(item=item, history_user=request.user,
+                                   history_type=HistoricalItem.TIPO_ESTADO + Item.ESTADO_DESARROLLO)
+        auditoria.save()
+
     def pasar_a_revision(lista_items):
         for item in lista_items:
             item_hijo = Item.objects.filter(id_version=item.id_version,
                                             estado__regex='^(?!' + Item.ESTADO_DESACTIVADO + ')').order_by('id').last()
-            if item_hijo.estado == Item.ESTADO_APROBADO or item_hijo.estado == Item.ESTADO_LINEABASE:
+            if item_hijo.estado == Item.ESTADO_APROBADO:
                 item_hijo.estado = Item.ESTADO_REVISION
                 item_hijo.save()
 
-    # Luego de pasar el item a desarrollo se debe ver como quedan sus hijos y sucesores
+                # registramos para auditoría
+                audit = HistoricalItem(item=item_hijo, history_user=request.user,
+                                       history_type=HistoricalItem.TIPO_ESTADO + Item.ESTADO_REVISION)
+                audit.save()
+
+    # Luego de pasar el item a desarrollo se debe ver como quedan sus hijos y sucesores (En estado aprobado)
     pasar_a_revision(item.hijos.all())
     pasar_a_revision(item.sucesores.all())
 
-    # Luego se ve si el item pertenece a una linea base y se ajusta los items de esa linea base
-    for linea_base in item.lineabase_set.all():
-        if linea_base.estado == linea_base.ESTADO_CERRADA:
-            # Si marque un item en estado en desarrollo, se debe romper la lb
-            linea_base.estado = linea_base.ESTADO_ROTA
-            linea_base.save()
-            for item in linea_base.items.all():
-                """LOS ITEMS DE LA LINEA BASE SIGUEN LA SIGUIENTE LOGICA
-                LINEA BASE -> APROBADO
-                REVISION -> REVISION
-                """
-                if item.estado == Item.ESTADO_LINEABASE:
-                    item.estado = Item.ESTADO_APROBADO
-                    item.save()
+    def crear_solicitud(items_hijos_en_lb):
+        # Luego junto todas las lb
+        lbs = LineaBase.objects.filter(estado=LineaBase.ESTADO_CERRADA, fase__proyecto=proyecto)
+        # Recorro todas las lb y voy cruzando la lista de items de la lb, con los items hijos
+        if items_hijos_en_lb.count() == 0:
+            return
+        for lb in lbs:
+            if lb.items.count() > 0 and len(lb.solicitud_set.filter(solicitud_activa=True)) == 0:
+                items_cruce = [item for item in lb.items.all() if item in items_hijos_en_lb]
+                # En items cruce tengo la lista de items que debo solicitar modificar para esa linea base
+                if len(items_cruce) > 0:
+                    solicitud = Solicitud(linea_base=lb, justificacion='Solicitud generada automaticamente',
+                                          solicitado_por=request.user)
+                    solicitud.save()
+                    # Agrego los resultados del cruce a la lista de la solicitud
+                    for item_para_solicitar in items_cruce:
+                        solicitud.items_a_modificar.add(item_para_solicitar)
+
+    # Luego de ver los hijos aprobados checkeamos los hijos en LB
+    # Primero junto todos los items que estan en lb
+    crear_solicitud(item.hijos.filter(estado=Item.ESTADO_LINEABASE))
+    crear_solicitud(item.sucesores.filter(estado=Item.ESTADO_LINEABASE))
 
     return redirect('desarrollo:verItem', item.fase.proyecto_id, id_item)
 
@@ -920,6 +1068,12 @@ def votacion_item_en_revision_aprobado(request, id_item):
     if item.estado == Item.ESTADO_REVISION:
         item.estado = Item.ESTADO_APROBADO
         item.save()
+
+        # registramos para auditoría
+        auditoria = HistoricalItem(item=item, history_user=request.user,
+                                   history_type=HistoricalItem.TIPO_ESTADO + Item.ESTADO_APROBADO)
+        auditoria.save()
+
     # TODO Muchas cosas jeje
     for linea_base in item.lineabase_set.all():
         if linea_base.estado == linea_base.ESTADO_CERRADA:
@@ -929,6 +1083,10 @@ def votacion_item_en_revision_aprobado(request, id_item):
                     item.estado = Item.ESTADO_LINEABASE
                     item.save()
 
+                    # registramos para auditoría
+                    auditoria = HistoricalItem(item=item, history_user=request.user,
+                                               history_type=HistoricalItem.TIPO_ESTADO + Item.ESTADO_LINEABASE)
+                    auditoria.save()
     return redirect('desarrollo:verItem', item.fase.proyecto_id, id_item)
 
 
@@ -946,6 +1104,11 @@ def votacion_item_en_revision_lineaBase(request, id_item):
     if item.estado == Item.ESTADO_REVISION:
         item.estado = Item.ESTADO_LINEABASE
         item.save()
+
+        # registramos para auditoría
+        auditoria = HistoricalItem(item=item, history_user=request.user,
+                                   history_type=HistoricalItem.TIPO_ESTADO + Item.ESTADO_LINEABASE)
+        auditoria.save()
 
     return redirect('desarrollo:verItem', item.fase.proyecto_id, id_item)
 

@@ -1,31 +1,35 @@
 """
 Modulo para hacer test sobre el modulo views.py
 """
+from django.contrib.sessions.middleware import SessionMiddleware
 from django.test import RequestFactory
 from django.urls import reverse, resolve
 from django.utils import timezone
 from django.contrib.auth.models import AnonymousUser
 from django.test import TestCase
 import io
-from login.views import index, user_register, users_access, user_update
-from login.models import Usuario
+
+from login.Register import crear_usuario
+from login.views import index, user_register, users_access, user_update, user_login
+from login.models import Usuario, HistoricalAccesos
 from administracion.models import Proyecto, Fase, Rol, UsuarioxRol, TipoItem
 from administracion.views import crear_rol, proyectos, desactivar_tipo_item, editar_tipo, estado_proyectov2, \
     eliminar_participante_y_comite, crear_proyecto, \
     administrar_participantes, registrar_rol_por_fase, asignar_rol_por_fase, desasignar_rol_al_usuario, \
     administrar_comite, importar_tipo, confirmar_tipo_import, mostrar_tipo_import, administrar_fases_del_proyecto
-from desarrollo.models import Item, AtributoParticular
+from desarrollo.models import Item, HistoricalItem
 from desarrollo.views import solicitud_aprobacion, aprobar_item, desaprobar_item, desactivar_item, ver_item, \
-    relacionar_item, desactivar_relacion_item, ver_proyecto, modificar_item, versionar_item, reversionar_item, \
+    ver_proyecto, modificar_item, versionar_item, reversionar_item, \
     validar_reversion, votacion_item_en_revision_desarrollo, votacion_item_en_revision_aprobado, \
     votacion_item_en_revision_lineaBase, cerrar_fase, calcular_impacto_recursivo
 
 from configuracion.models import LineaBase, Solicitud
 from configuracion.views import crear_linea_base, ver_linea_base, solicitud_ruptura, votar_solicitud, cerrar_proyecto, \
-    ramas_recursivas_trazabilidad
+    ramas_recursivas_trazabilidad, solicitud_modificacion_estado
 from desarrollo.SubirArchivos import handle_uploaded_file
 import pytest
 from ItemManager.settings import BASE_DIR
+
 
 @pytest.mark.django_db
 class TestViews(TestCase):
@@ -44,11 +48,16 @@ class TestViews(TestCase):
         cls.proyecto = Proyecto.objects.create(nombre='proyectoTestGeneral', fecha_inicio=timezone.now().date(),
                                                numero_fases=5, cant_comite=3, gerente=cls.usuario.id)
         cls.fase = Fase.objects.create(nombre='Fase de prueba', proyecto=cls.proyecto)
-        cls.rol = Rol.objects.create(nombre='Rol de prueba', proyecto=cls.proyecto)
+        cls.rol = Rol.objects.create(nombre='Rol de prueba', proyecto=cls.proyecto, crear_item=True, aprobar_item=True,
+                                     desactivar_item=True, modificar_item=True, reversionar_item=True, ver_item=True,
+                                     crear_relaciones_as=True, crear_relaciones_ph=True, borrar_relaciones=True,
+                                     ver_proyecto=True, crear_linea_base=True, cerrar_fase=True, cerrar_proyecto=True,
+                                     solicitar_ruptura_lb=True, activo=True)
         cls.tipo = TipoItem.objects.create(nombre='Tipo de item de prueba', prefijo='TIP')
         cls.item = Item.objects.create(nombre='Item de prueba', complejidad=1, descripcion='Descripcion de prueba',
                                        tipo_item=cls.tipo,
                                        fase=cls.fase, numeracion=1)
+        cls.rol_asignado = UsuarioxRol.objects.create(fase=cls.fase, rol=cls.rol, usuario=cls.usuario, activo=True)
 
     def test_index_usuario_no_autenticado(self):
         """
@@ -135,9 +144,10 @@ class TestViews(TestCase):
         """
         request = RequestFactory()
         request.user = self.usuario
-        uxr = UsuarioxRol.objects.create(usuario=self.usuario, fase=self.fase, rol=self.rol)
-        desasignar_rol_al_usuario(request, self.fase.id, self.usuario.id, self.rol.id)
-        uxr = UsuarioxRol.objects.get(usuario=self.usuario, fase=self.fase, rol=self.rol)
+        rol2 = Rol.objects.create(nombre='rol2', proyecto=self.proyecto)
+        uxr = UsuarioxRol.objects.create(usuario=self.usuario, fase=self.fase, rol=rol2)
+        desasignar_rol_al_usuario(request, self.fase.id, self.usuario.id, rol2.id)
+        uxr = UsuarioxRol.objects.get(usuario=self.usuario, fase=self.fase, rol=rol2)
         self.assertEqual(uxr.activo, False, "La prueba falló no se pudo desasignar el rol")
 
     def test_registrar_rol_por_fase(self):
@@ -274,6 +284,7 @@ class TestViews(TestCase):
         # eliminamos al participante del proyecto
         path2 = reverse('administracion:desasignarUsuario', args=[self.proyecto.id, partipante.id, 'participante'])
         request = RequestFactory().get(path2)
+        request.user = self.usuario
         eliminar_participante_y_comite(request, self.proyecto.id, partipante.id, 'participante')
         self.assertNotIn(partipante, self.proyecto.participantes.all(), 'participante no fue quitado del proyecto')
 
@@ -553,11 +564,13 @@ class TestViews(TestCase):
         px = Proyecto.objects.create(nombre='projectTest', fecha_inicio=timezone.now().date(),
                                      gerente=self.usuario.id, numero_fases=3, cant_comite=3)
         tipox = TipoItem.objects.create(nombre='Casox', descripcion='uto', prefijo='cx')
-        fasx = Fase.objects.create(nombre='Fasx', descripcion='dshh', estado='abierta',
-                                   proyecto=Proyecto.objects.get(pk=px.id))
         cu_39_1 = Item.objects.create(nombre='cu_39_1', estado=Item.ESTADO_PENDIENTE, version=1, complejidad=5,
                                       descripcion='aprobar item', tipo_item=TipoItem.objects.get(pk=tipox.id),
-                                      fase=Fase.objects.get(pk=fasx.id))
+                                      fase=self.fase)
+        # añadimos una entrada en auditoría para el item pendiente para que no hayan problemas con send_mail_aprobacion
+        auditoria = HistoricalItem(item=cu_39_1, history_user=self.usuario,
+                                   history_type=HistoricalItem.TIPO_ESTADO + Item.ESTADO_PENDIENTE)
+        auditoria.save()
         request = RequestFactory()
         request.user = self.usuario
         aprobar_item(request, id_item=cu_39_1.id)
@@ -575,11 +588,14 @@ class TestViews(TestCase):
         pp = Proyecto.objects.create(nombre='proTest', fecha_inicio=timezone.now().date(),
                                      gerente=self.usuario.id, numero_fases=3, cant_comite=3)
         tipop = TipoItem.objects.create(nombre='Casop', descripcion='bkdls', prefijo='cp')
-        fasep = Fase.objects.create(nombre='Fasep', descripcion='shh', estado='abierta',
-                                    proyecto=Proyecto.objects.get(pk=pp.id))
         cu_39_2 = Item.objects.create(nombre='cu_39_2', estado=Item.ESTADO_PENDIENTE, version=1, complejidad=5,
                                       descripcion='desaprobar item', tipo_item=TipoItem.objects.get(pk=tipop.id),
-                                      fase=Fase.objects.get(pk=fasep.id))
+                                      fase=self.fase)
+        # añadimos una entrada en auditoría para el item pendiente para que no hayan problemas con send_mail_aprobacion
+        auditoria = HistoricalItem(item=cu_39_2, history_user=self.usuario,
+                                   history_type=HistoricalItem.TIPO_ESTADO + Item.ESTADO_PENDIENTE)
+        auditoria.save()
+
         request = RequestFactory()
         request.user = self.usuario
         desaprobar_item(request, id_item=cu_39_2.id)
@@ -598,11 +614,9 @@ class TestViews(TestCase):
         pm = Proyecto.objects.create(nombre='proTest', fecha_inicio=timezone.now().date(),
                                      gerente=self.usuario.id, numero_fases=3, cant_comite=3)
         tipom = TipoItem.objects.create(nombre='Casom', descripcion='uuuto', prefijo='cm')
-        fasem = Fase.objects.create(nombre='Fasem', descripcion='cdshh', estado='abierta',
-                                    proyecto=Proyecto.objects.get(pk=pm.id))
         cu_40 = Item.objects.create(nombre='cu_40', estado=Item.ESTADO_DESARROLLO, version=1, complejidad=5,
                                     descripcion='desactivar item', tipo_item=TipoItem.objects.get(pk=tipom.id),
-                                    fase=Fase.objects.get(pk=fasem.id))
+                                    fase=self.fase)
         request = RequestFactory()
         request.user = self.usuario
         desactivar_item(request, id_item=cu_40.id, id_proyecto=pm.id)
@@ -742,6 +756,7 @@ class TestViews(TestCase):
             'complejidad': COMPLEJIDAD,
             'descripcion': DESCRIPCION
         })
+        request.user = self.usuario
         item_editado = Item(pk=item_1.id, nombre=NOMBRE, version=item_1.version + 1, complejidad=COMPLEJIDAD,
                             descripcion=DESCRIPCION)
         modificar_item(request, self.proyecto.id, self.item.id)
@@ -824,7 +839,16 @@ class TestViews(TestCase):
             cant_comite=3, gerente=self.usuario.id
         )
         fase1 = Fase(nombre='Fase1', estado='cerrada', proyecto=p)
+        fase1.save()
         fase2 = Fase(nombre='Fase2', estado='abierta', proyecto=p)
+        fase2.save()
+
+        nuevo_rol = Rol.objects.create(nombre='Rol cerrar proyecto', proyecto=p, cerrar_fase=True,
+                                       activo=True)
+        nuevo_rol_asignado_1 = UsuarioxRol.objects.create(fase=fase1, rol=nuevo_rol, usuario=self.usuario,
+                                                          activo=True)
+        nuevo_rol_asignado_2 = UsuarioxRol.objects.create(fase=fase2, rol=nuevo_rol, usuario=self.usuario,
+                                                          activo=True)
         itema = Item(
             nombre='A',
             complejidad=5,
@@ -934,7 +958,7 @@ class TestViews(TestCase):
         item_hijo = Item.objects.create(nombre='hijo_item_1', estado=Item.ESTADO_APROBADO, version=1,
                                         complejidad=5, descripcion='Aprobado a Revision',
                                         tipo_item=self.tipo, fase=self.fase)
-        cu_28_1.hijos.add(item_hijo);
+        cu_28_1.hijos.add(item_hijo)
         cu_28_1.save()
         request = RequestFactory()
         request.user = self.usuario
@@ -989,11 +1013,16 @@ class TestViews(TestCase):
                                                  numero_fases=1, cant_comite=3, gerente=self.usuario.id)
         fase_nueva = Fase.objects.create(nombre='Fase de prueba', proyecto=proyecto_nuevo,
                                          estado=Fase.FASE_ESTADO_CERRADA)
+        nuevo_rol = Rol.objects.create(nombre='Rol cerrar proyecto', proyecto=proyecto_nuevo, cerrar_proyecto=True,
+                                       activo=True)
+        nuevo_rol_asignado = UsuarioxRol.objects.create(fase=fase_nueva, rol=nuevo_rol, usuario=self.usuario,
+                                                        activo=True)
         path = reverse('configuracion:cerrarProyecto', args=[proyecto_nuevo.id])
         request = RequestFactory().post(path)
         request.user = self.usuario
         cerrar_proyecto(request, id_proyecto=proyecto_nuevo.id)
         proyecto_nuevo = Proyecto.objects.get(pk=proyecto_nuevo.id)
+        # print(has_permiso_cerrar_proyecto(usuario=request.user, proyecto=proyecto_nuevo))
         self.assertEqual(Proyecto.ESTADO_FINALIZADO, proyecto_nuevo.estado, 'El proyecto no se pudo finalizar')
 
     def test_trazabilidad(self):
@@ -1094,9 +1123,10 @@ class TestViews(TestCase):
 
         :return: Retorna si se realiza correctamente el attachment
         """
-        myfile = open(BASE_DIR+'/desarrollo/temp/dummy.dum', 'r')
-        #file_object = io.BytesIO(myfile)
+        myfile = open(BASE_DIR + '/desarrollo/temp/dummy.dum', 'r')
+        # file_object = io.BytesIO(myfile)
         i_io = io.BytesIO()
+
         def getsize(f):
             f.seek(0)
             f.read()
@@ -1110,11 +1140,100 @@ class TestViews(TestCase):
         size = getsize(myfile)
         from django.core.files.uploadedfile import InMemoryUploadedFile
         obj = InMemoryUploadedFile(file=i_io, name=name,
-                                     field_name=None, content_type=content_type,
-                                     charset=charset, size=size)
+                                   field_name=None, content_type=content_type,
+                                   charset=charset, size=size)
 
         respuesta = handle_uploaded_file(None, 0, self.usuario)
 
         self.assertEqual(respuesta, None, 'No se respondio lo esperado')
         respuesta = handle_uploaded_file(obj, 0, self.usuario)
         self.assertNotEqual(respuesta, None, 'No se respondio con la url')
+
+    def test_solicitud_modificacion_estado(self):
+        """
+        CU 55: Solicitud de modificacion de estado de Item
+        El test comprueba si se realiza la solicitud de modificacion de estado, el cual es posible si el
+        item se encuentra en estado APROBADO.
+
+        :return: Retrona true si la solicitud se realizo correctamente.
+        """
+        cu_55 = Item.objects.create(nombre='CU_55', estado=Item.ESTADO_APROBADO, complejidad=5,
+                                    descripcion='solicitar modificar estado',
+                                    tipo_item=self.tipo, fase=self.fase, id_version=20)
+
+        path = reverse('configuracion:solicitarModificarEstado', args=[self.proyecto.id, cu_55.id])
+        request = RequestFactory().post(path, {'item': 'cu_55', 'mensaje': ['justificacion']})
+        request.user = self.usuario
+
+        solicitud_modificacion_estado(request, id_proyecto=self.proyecto.id, id_item=cu_55.id)
+        self.assertNotEqual(len(Solicitud.objects.all()), 0, 'La prueba fallo, la solicitud no fue creada')
+
+    def test_auditoria(self):
+        """
+        CU 52: Mostrar datos de auditoria. Iteración 6.
+        Este test comprueba que se realice correctamente la auditoria general de proyectos verificando que un
+        proyecto creado aparezca entre los datos de auditoria.
+
+        :return: El assert retornará true si el nombre del proyecto aparece entre los datos de auditoria
+        """
+        # llamamos a la función history que realiza la auditoria para los objetos proyecto
+        lista_auditoria_proyectos = Proyecto.history.all()
+        lista = []
+        # hacemos una lista con los nombres
+        for elemento in lista_auditoria_proyectos:
+            lista = elemento.nombre
+        # buscamos un elemento especifico
+        elemento_proyec = Proyecto.history.get(id=self.proyecto.id)
+        self.assertIn(elemento_proyec.nombre, lista, 'el proyecto no aparece en la auditoria')
+
+    def test_historial_inicio_sesion(self):
+        """
+        CU 54: Mostrar historial de inicio de Sesión. Iteración 6.
+        Este test comprueba que se realice correctamente la auditoria sobre el historial de inicio de sesión de los
+        usuarios del sistema. Para comprobar esto primero logeamos a un usuario y luego verificamos que el registro
+        de login de ese usuario se encuentre en el historial
+
+        :return: el assert retorna true si el nombre de usuario se encuentra en la lista de logins
+        """
+
+        # primero registramos un usuario
+        # para que el mail sea aleatorio y no haya problemas con firebase
+        aux = str(timezone.now()).split(' ')[1].split('.')[1].split('+')[0]
+        path = reverse('login:register')
+        request1 = RequestFactory().post(path, {
+            'username': 'tester1',
+            'email': 'tester' + aux + '@admin.com',
+            'password': 'hola1234',
+            'pass_confirmation': 'hola1234',
+            'first_name': 'Pruebitas',
+            'last_name': 'Johnson',
+        })
+        user_register(request1)
+
+        # buscamos al usuario
+        usuario_registrado = Usuario.objects.get(username='tester1')
+
+        # creamos el request para el login
+        path = reverse('login:login')
+        request = RequestFactory().post(path, {
+            'email': 'tester' + aux + '@admin.com',
+            'password': 'hola1234',
+        })
+        # adding session
+        middleware = SessionMiddleware()
+        middleware.process_request(request)
+        request.session.save()
+        request.user = usuario_registrado
+
+        # logeamos al usuario
+        user_login(request)
+
+        # creamos una lista que contenga todos los nombres de usuarios en el historial
+        lista_sesiones = []
+        print(HistoricalAccesos.objects.all())
+        for elemento in HistoricalAccesos.objects.all():
+            lista_sesiones = elemento.history_user
+
+        # ahora buscamos al usuario en el historial de inicio de sesión
+        self.assertIn(usuario_registrado.username, lista_sesiones,
+                      "No se ha registrado el inicio de sesion de este usuario")

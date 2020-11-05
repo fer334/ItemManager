@@ -33,10 +33,10 @@ PrintDefault(){
 }
 
 POSITIONAL=()
-dbname="itemmanagerdb"
+dbname="dbdesarrollo"
 username="postgres"
 pass="postgres"
-filename="poblacion_bd.sql"
+filename="dbdesarrollo_bk.sql"
 port="5432"
 gitclone="false"
 prod="false"
@@ -112,7 +112,7 @@ set -- "${POSITIONAL[@]}" # restore positional parameters
 
 
 if [[ $prod == "true" ]]; then
-    ./produccion.bash $branch $filename $tag
+    ./produccion.bash $branch $filename $tag $gitclone
 elif [[ $dev == "true" ]]; then
     ./desarrollo.bash $dbname $username $pass $filename $port $gitclone
 else

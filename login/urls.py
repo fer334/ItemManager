@@ -17,4 +17,7 @@ urlpatterns = [
         TemplateView.as_view(template_name='login/accesoDenegado.html'),
         name='AccesoDenegado',
     ),
+
+    # urls de Mati
+    path('auditoria/<str:tipo>', views.auditoria, name='auditoria'),
 ]

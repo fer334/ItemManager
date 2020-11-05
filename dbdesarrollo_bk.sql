@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.5.23
--- Dumped by pg_dump version 12.4 (Ubuntu 12.4-1.pgdg18.04+1)
+-- Dumped from database version 12.4 (Ubuntu 12.4-0ubuntu0.20.04.1)
+-- Dumped by pg_dump version 12.4 (Ubuntu 12.4-0ubuntu0.20.04.1)
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -111,7 +111,7 @@ COPY public.login_usuario (id, password, last_login, is_superuser, username, fir
 6		\N	f	Comite1			f	t	2020-10-05 21:14:12.527246-03	comite1@itemmanager.com	WnTsGirfw5cpYvVn2rna38kp46m2	\N	f
 7		\N	f	Comite2			f	t	2020-10-05 21:14:36.888025-03	comite2@itemmanager.com	9jjJ3c2ysHgFtSYIWKNXyJHFj0E3	\N	f
 8		\N	f	Comite3			f	t	2020-10-05 21:15:04.147847-03	comite3@itemmanager.com	J4Xrqsn7XRbMKzH5aiNW4XSx5V53	\N	f
-1		2020-10-05 21:15:43.295528-03	f	fer	Fernando		f	t	2020-09-25 18:00:35.643582-04	fer@itemmanager.com	oJRGK2Rcp9RwwdcDOQZwmuqqfEH2	\N	t
+1		2020-10-13 15:39:57.120595-03	f	fer	Fernando		f	t	2020-09-25 18:00:35.643582-04	fer@itemmanager.com	oJRGK2Rcp9RwwdcDOQZwmuqqfEH2	\N	t
 \.
 
 
@@ -178,15 +178,20 @@ COPY public.administracion_proyecto_participantes (id, proyecto_id, usuario_id) 
 -- Data for Name: administracion_rol; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.administracion_rol (id, nombre, crear_item, modificar_item, desactivar_item, aprobar_item, reversionar_item, crear_relaciones_ph, crear_relaciones_as, borrar_relaciones, activo, proyecto_id) FROM stdin;
-1	Aprobador	f	f	f	t	f	f	f	f	f	6
-2	Creador	t	f	f	f	f	f	f	f	f	6
-3	Relacionador	f	f	f	f	f	t	t	t	f	6
-4	Reversor	f	f	f	f	t	f	f	f	f	6
-5	Editor	f	t	t	f	f	f	f	f	f	6
-6	Dev	t	t	t	f	t	t	t	t	t	6
-7	Tester	f	f	t	t	f	f	f	f	t	6
-8	All in	t	t	t	t	t	t	t	t	t	7
+COPY public.administracion_rol (id, nombre, crear_item, modificar_item, desactivar_item, aprobar_item, reversionar_item, crear_relaciones_ph, crear_relaciones_as, borrar_relaciones, ver_item, crear_linea_base, cerrar_fase, cerrar_proyecto, ver_proyecto, solicitar_ruptura_lb, activo, proyecto_id) FROM stdin;
+9	Creador de Items	t	t	f	f	f	f	f	f	f	f	f	f	f	f	t	1
+10	Developer	t	t	t	f	t	t	t	t	t	f	f	f	f	f	t	5
+11	Tester	f	f	t	t	f	f	f	t	t	f	f	f	f	f	t	5
+12	Gerente	t	t	t	t	t	t	t	t	t	t	t	t	f	t	t	5
+13	Aprobador(LB)	f	f	f	t	f	f	f	f	f	t	f	f	f	t	t	5
+14	Desarrollador	t	t	t	f	t	t	t	t	t	f	f	f	f	f	t	6
+15	Tester	f	f	t	t	f	f	f	t	t	f	f	f	f	f	t	6
+16	Gerente	t	t	t	t	t	t	t	t	t	t	t	t	f	t	t	6
+17	Aprobador(LB)	f	f	f	t	f	f	f	f	t	t	f	f	f	t	t	6
+18	Desarrollador	t	t	t	f	t	t	t	t	t	f	f	f	f	f	t	7
+19	Tester	f	f	t	t	f	f	f	t	t	f	f	f	f	f	t	7
+20	Gerente	t	t	t	t	t	t	t	t	t	t	t	t	f	t	t	7
+21	Aprobador(LB)	f	f	f	t	f	f	f	f	t	t	f	f	f	t	t	7
 \.
 
 
@@ -218,15 +223,44 @@ COPY public.administracion_tipoitem_proyecto (id, tipoitem_id, proyecto_id) FROM
 --
 
 COPY public.administracion_usuarioxrol (id, activo, fase_id, rol_id, usuario_id) FROM stdin;
-1	t	16	6	4
-2	t	17	6	2
-3	t	18	6	3
-4	t	18	7	3
-5	t	17	7	3
-6	t	16	7	3
-7	t	19	8	4
-8	t	20	8	4
-9	t	21	8	4
+10	t	1	9	1
+13	t	14	12	1
+14	t	15	12	1
+11	t	13	12	1
+15	t	13	11	3
+16	t	14	11	3
+17	t	15	11	3
+18	t	13	10	4
+19	f	14	13	4
+20	t	14	10	4
+21	t	15	10	4
+22	t	13	13	2
+23	t	14	13	2
+24	t	15	13	2
+25	t	16	17	2
+26	t	17	17	2
+27	t	18	17	2
+28	t	16	15	3
+29	t	17	15	3
+30	t	18	15	3
+31	t	16	14	4
+32	t	17	14	4
+33	t	18	14	4
+34	t	16	16	1
+35	t	17	16	1
+36	t	18	16	1
+37	t	19	21	2
+38	t	20	21	2
+39	t	21	21	2
+40	t	19	19	3
+41	t	20	19	3
+42	t	21	19	3
+43	t	19	18	4
+44	t	20	18	4
+45	t	21	18	4
+46	t	19	20	1
+47	t	20	20	1
+48	t	21	20	1
 \.
 
 
@@ -356,12 +390,11 @@ COPY public.auth_group_permissions (id, group_id, permission_id) FROM stdin;
 -- Data for Name: configuracion_lineabase; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.configuracion_lineabase (id, fecha_creacion, tipo, estado, creador_id, fase_id) FROM stdin;
-1	2020-09-25	Parcial	Cerrada	1	1
-2	2020-10-05	Parcial	Cerrada	1	16
-3	2020-10-05	Parcial	Cerrada	1	19
-4	2020-10-05	Parcial	Cerrada	1	20
-5	2020-10-05	Parcial	Cerrada	1	21
+COPY public.configuracion_lineabase (id, fecha_creacion, tipo, estado, numeracion, creador_id, fase_id) FROM stdin;
+6	2020-10-13	Parcial	Cerrada	1	1	16
+7	2020-10-13	Parcial	Cerrada	1	1	19
+8	2020-10-13	Parcial	Cerrada	2	1	20
+9	2020-10-13	Parcial	Cerrada	3	1	21
 \.
 
 
@@ -382,8 +415,6 @@ COPY public.desarrollo_item (id, nombre, estado, numeracion, version, complejida
 12	Las relaciones se muestran en colores representativos segun su tipo	Desactivado	1	2	2	\N	5	3	3	5
 13	Relacionar items en fases anteriores y posteriores	Aprobado	2	4	6	None	4	2	2	10
 14	Las relaciones se muestran en colores representativos segun su tipo	En Desarrollo	1	3	2	\N	5	3	3	12
-2	Detallar proyecto	En Linea Base	2	1	5	\N	2	1	1	\N
-8	Crear relaciones	En Linea Base	1	3	5	\N	1	1	1	6
 30	Creando un proyecto	Desactivado	1	4	3	1. Entrar a crear proyecto, 2. Seleccionar un Nombre, 3. Guardar cambios	18	17	1	29
 19	Vista creacion de proyecto	Desactivado	1	1	2	\N	19	18	4	\N
 32	Creando un proyecto	Aprobado	1	5	3	1. Entrar a crear proyecto, 2. Seleccionar un Nombre, 3. Guardar cambios	18	17	1	30
@@ -391,11 +422,8 @@ COPY public.desarrollo_item (id, nombre, estado, numeracion, version, complejida
 21	Crear proyecto	Desactivado	1	2	5	Descripcion modificada	15	16	2	15
 18	Creando un proyecto	Desactivado	1	1	3	\N	18	17	1	\N
 33	Vista creacion de proyecto	En Desarrollo	1	2	2	\N	19	18	4	19
-24	Crear proyecto	En Linea Base	1	4	4	Descripcion modificada	15	16	2	22
 22	Crear proyecto	Desactivado	1	3	4	Descripcion modificada	15	16	2	21
 16	Crear fase	Desactivado	2	1	5	\N	16	16	2	\N
-26	Crear fase	En Linea Base	2	3	5	\N	16	16	2	25
-28	Crear item	En Linea Base	3	3	9	\N	17	16	2	27
 25	Crear fase	Desactivado	2	2	5	\N	16	16	2	16
 17	Crear item	Desactivado	3	1	9	\N	17	16	2	\N
 27	Crear item	Desactivado	3	2	9	\N	17	16	2	17
@@ -407,6 +435,13 @@ COPY public.desarrollo_item (id, nombre, estado, numeracion, version, complejida
 35	CU1	Desactivado	1	1	2	\N	35	20	1	\N
 38	CU1	Desactivado	1	2	2	\N	35	20	1	35
 36	PT3	Desactivado	1	1	5	\N	36	21	4	\N
+42	caso de usas	En Desarrollo	3	2	5	Nonesdsd	41	1	1	41
+41	caso de usaasfdafd	Desactivado	3	1	5	\N	41	1	1	\N
+8	Crear relaciones	Aprobado	1	3	5	\N	1	1	1	6
+2	Detallar proyecto	Aprobado	2	1	5	\N	2	1	1	\N
+24	Crear proyecto	En Linea Base	1	4	4	Descripcion modificada	15	16	2	22
+26	Crear fase	En Linea Base	2	3	5	\N	16	16	2	25
+28	Crear item	En Linea Base	3	3	9	\N	17	16	2	27
 37	RF1	En Linea Base	1	2	1	\N	34	19	2	34
 39	CU1	En Linea Base	1	3	2	\N	35	20	1	38
 40	PT3	En Linea Base	1	2	5	\N	36	21	4	36
@@ -418,14 +453,12 @@ COPY public.desarrollo_item (id, nombre, estado, numeracion, version, complejida
 --
 
 COPY public.configuracion_lineabase_items (id, lineabase_id, item_id) FROM stdin;
-1	1	2
-2	1	8
-3	2	24
-4	2	26
-5	2	28
-6	3	37
-7	4	39
-8	5	40
+9	6	24
+10	6	26
+11	6	28
+12	7	37
+13	8	39
+14	9	40
 \.
 
 
@@ -476,6 +509,8 @@ COPY public.desarrollo_atributoparticular (id, nombre, tipo, valor, item_id) FRO
 16	Fecha limite de entrega	date		38
 17	Fecha limite de entrega	date		39
 18	Cantidad de comentarios	number		40
+19	Fecha limite de entrega	date		41
+20	Fecha limite de entrega	date		42
 \.
 
 
@@ -557,40 +592,32 @@ COPY public.django_admin_log (id, action_time, object_id, object_repr, action_fl
 --
 
 COPY public.django_migrations (id, app, name, applied) FROM stdin;
-1	contenttypes	0001_initial	2020-10-05 20:42:33.829521-03
-2	contenttypes	0002_remove_content_type_name	2020-10-05 20:42:33.856758-03
-3	auth	0001_initial	2020-10-05 20:42:33.916822-03
-4	auth	0002_alter_permission_name_max_length	2020-10-05 20:42:33.988278-03
-5	auth	0003_alter_user_email_max_length	2020-10-05 20:42:34.005184-03
-6	auth	0004_alter_user_username_opts	2020-10-05 20:42:34.014847-03
-7	auth	0005_alter_user_last_login_null	2020-10-05 20:42:34.024399-03
-8	auth	0006_require_contenttypes_0002	2020-10-05 20:42:34.029575-03
-9	auth	0007_alter_validators_add_error_messages	2020-10-05 20:42:34.042765-03
-10	auth	0008_alter_user_username_max_length	2020-10-05 20:42:34.057192-03
-11	auth	0009_alter_user_last_name_max_length	2020-10-05 20:42:34.068169-03
-12	auth	0010_alter_group_name_max_length	2020-10-05 20:42:34.076828-03
-13	auth	0011_update_proxy_permissions	2020-10-05 20:42:34.085397-03
-14	auth	0012_alter_user_first_name_max_length	2020-10-05 20:42:34.094357-03
-15	login	0001_initial	2020-10-05 20:42:34.158083-03
-16	admin	0001_initial	2020-10-05 20:42:34.271264-03
-17	admin	0002_logentry_remove_auto_add	2020-10-05 20:42:34.323529-03
-18	admin	0003_logentry_add_action_flag_choices	2020-10-05 20:42:34.351538-03
-19	admin	0004_auto_20200314_0204	2020-10-05 20:42:34.398828-03
-20	admin	0005_auto_20200314_0208	2020-10-05 20:42:34.431214-03
-21	admin	0006_auto_20200314_0210	2020-10-05 20:42:34.47701-03
-22	admin	0007_auto_20200314_0212	2020-10-05 20:42:34.511739-03
-23	admin	0008_auto_20200314_0236	2020-10-05 20:42:34.555053-03
-24	admin	0009_auto_20200314_0237	2020-10-05 20:42:34.583251-03
-25	admin	0010_auto_20200314_0411	2020-10-05 20:42:34.60748-03
-26	admin	0011_auto_20200314_0532	2020-10-05 20:42:34.626027-03
-27	administracion	0001_initial	2020-10-05 20:42:34.703908-03
-28	administracion	0002_auto_20200922_1120	2020-10-05 20:42:34.944551-03
-29	desarrollo	0001_initial	2020-10-05 20:42:35.237758-03
-30	configuracion	0001_initial	2020-10-05 20:42:35.421038-03
-31	configuracion	0002_auto_20200922_1120	2020-10-05 20:42:35.635107-03
-32	sessions	0001_initial	2020-10-05 20:42:35.763021-03
-33	sites	0001_initial	2020-10-05 20:42:35.793372-03
-34	sites	0002_alter_domain_unique	2020-10-05 20:42:35.816749-03
+1	contenttypes	0001_initial	2020-10-13 15:38:09.67995-03
+2	contenttypes	0002_remove_content_type_name	2020-10-13 15:38:09.723115-03
+3	auth	0001_initial	2020-10-13 15:38:09.99154-03
+4	auth	0002_alter_permission_name_max_length	2020-10-13 15:38:10.381783-03
+5	auth	0003_alter_user_email_max_length	2020-10-13 15:38:10.426712-03
+6	auth	0004_alter_user_username_opts	2020-10-13 15:38:10.476749-03
+7	auth	0005_alter_user_last_login_null	2020-10-13 15:38:10.521297-03
+8	auth	0006_require_contenttypes_0002	2020-10-13 15:38:10.588937-03
+9	auth	0007_alter_validators_add_error_messages	2020-10-13 15:38:10.642124-03
+10	auth	0008_alter_user_username_max_length	2020-10-13 15:38:10.70635-03
+11	auth	0009_alter_user_last_name_max_length	2020-10-13 15:38:10.748795-03
+12	auth	0010_alter_group_name_max_length	2020-10-13 15:38:10.785903-03
+13	auth	0011_update_proxy_permissions	2020-10-13 15:38:10.821182-03
+14	auth	0012_alter_user_first_name_max_length	2020-10-13 15:38:10.862463-03
+15	login	0001_initial	2020-10-13 15:38:11.40953-03
+16	admin	0001_initial	2020-10-13 15:38:12.056963-03
+17	admin	0002_logentry_remove_auto_add	2020-10-13 15:38:12.224738-03
+18	admin	0003_logentry_add_action_flag_choices	2020-10-13 15:38:12.25899-03
+19	administracion	0001_initial	2020-10-13 15:38:12.772279-03
+20	administracion	0002_auto_20201013_1538	2020-10-13 15:38:13.258439-03
+21	desarrollo	0001_initial	2020-10-13 15:38:14.691898-03
+22	configuracion	0001_initial	2020-10-13 15:38:15.886752-03
+23	configuracion	0002_auto_20201013_1538	2020-10-13 15:38:16.239484-03
+24	sessions	0001_initial	2020-10-13 15:38:16.997546-03
+25	sites	0001_initial	2020-10-13 15:38:17.222657-03
+26	sites	0002_alter_domain_unique	2020-10-13 15:38:17.474259-03
 \.
 
 
@@ -601,6 +628,8 @@ COPY public.django_migrations (id, app, name, applied) FROM stdin;
 COPY public.django_session (session_key, session_data, expire_date) FROM stdin;
 so54urdt8mov2txuiou5djbeelhxgbsv	.eJxVjMsKwjAQRf8la5HUvLsU3PkPIZOZ2KCkpbGgiP9usrObC_fcx4f5sD0nv1VafUY2MsEO_wxCvFPpwWO-5XK8dj03eCm4M_vZFOrUNkTaRqdSdIIkDEZZ3gglLg0qN1iJBgAjOBSWhNPJIQbAE3FuWlH100q15rl4ei15fbNRaM6_P397PDs:1kLwBa:4eTxkcXeTW1Vfkt6WpF5-v39LmLKlKZvRkKD8SNv7V4	2020-09-25 19:27:26.958723-04
 9djn8h89bv9rk1t3v5d2o52yzq766dep	.eJxVi8EOwiAQRP9lz8aAQGE9mnjzHwjLLtJoMGntyfTfS2_2Msm8mfeDmJZvjcssUxwZrqDh9M8o5Ze0fXh_nmM7P_a8dXhvfChHraa5dkdkCBldyWjEkvYuqE6kKOvZoQ6WPRFnQjZBDA4FmRPxRZTy_ehg3QBo3TRj:1kPadr:VJrGcn2D0wjNOqhxDwxA4UAWVDXzqcdqIz-i3sgsDE4	2020-10-19 21:15:43.305243-03
+z1a2q08nrw2zzhno3uhca9stz03ehp72	.eJxVi8EOwiAQRP9lz8aAQGE9mnjzHwjLLtJoMGntyfTfS2_2Msm8mfeDmJZvjcssUxwZrqDh9M8o5Ze0fXh_nmM7P_a8dXhvfChHraa5dkdkCBldyWjEkvYuqE6kKOvZoQ6WPRFnQjZBDA4FmRPxRZTy_ehg3QBo3TRj:1kPrfp:DhfrJrZlA8jsmGrvtJQB6hybQL9AsleqO46v69mezTQ	2020-10-20 15:26:53.663951-03
+xqx0lsm8gz8lqzy0yno0ehg45idacu28	.eJxVi8EOwiAQRP9lz8aAQGE9mnjzHwjLLtJoMGntyfTfS2_2Msm8mfeDmJZvjcssUxwZrqDh9M8o5Ze0fXh_nmM7P_a8dXhvfChHraa5dkdkCBldyWjEkvYuqE6kKOvZoQ6WPRFnQjZBDA4FmRPxRZTy_ehg3QBo3TRj:1kSPDJ:KNml15EdfCj-Ub5PJbMTj2HK2fF0NZUZ7kqaTwcX0_E	2020-10-27 15:39:57.145557-03
 \.
 
 
@@ -675,7 +704,7 @@ SELECT pg_catalog.setval('public.administracion_proyecto_participantes_id_seq', 
 -- Name: administracion_rol_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.administracion_rol_id_seq', 8, true);
+SELECT pg_catalog.setval('public.administracion_rol_id_seq', 21, true);
 
 
 --
@@ -696,7 +725,7 @@ SELECT pg_catalog.setval('public.administracion_tipoitem_proyecto_id_seq', 15, t
 -- Name: administracion_usuarioxrol_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.administracion_usuarioxrol_id_seq', 9, true);
+SELECT pg_catalog.setval('public.administracion_usuarioxrol_id_seq', 48, true);
 
 
 --
@@ -724,14 +753,14 @@ SELECT pg_catalog.setval('public.auth_permission_id_seq', 72, true);
 -- Name: configuracion_lineabase_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.configuracion_lineabase_id_seq', 5, true);
+SELECT pg_catalog.setval('public.configuracion_lineabase_id_seq', 9, true);
 
 
 --
 -- Name: configuracion_lineabase_items_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.configuracion_lineabase_items_id_seq', 8, true);
+SELECT pg_catalog.setval('public.configuracion_lineabase_items_id_seq', 14, true);
 
 
 --
@@ -759,7 +788,7 @@ SELECT pg_catalog.setval('public.configuracion_votoruptura_id_seq', 1, false);
 -- Name: desarrollo_atributoparticular_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.desarrollo_atributoparticular_id_seq', 18, true);
+SELECT pg_catalog.setval('public.desarrollo_atributoparticular_id_seq', 20, true);
 
 
 --
@@ -780,7 +809,7 @@ SELECT pg_catalog.setval('public.desarrollo_item_hijos_id_seq', 2, true);
 -- Name: desarrollo_item_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.desarrollo_item_id_seq', 40, true);
+SELECT pg_catalog.setval('public.desarrollo_item_id_seq', 42, true);
 
 
 --

@@ -1,0 +1,28 @@
+{% extends 'login/loginHeader.html' %}
+{% block content %}
+    <div class="container">
+        <h1 class="text-center pt-3 mb-5">Solicitud de modificacion de estado</h1>
+        <form method="post">
+            <div class="form-group">
+                <form method="post" class="pt-3 mt-1" METHOD="post"
+                                        ACTION="{% url 'configuracion:solicitarModificarEstado' proyecto.id  item_principal.id%}">
+                                    {% csrf_token %}
+                                    <div class="form-group">
+                                        <label for="mensaje" class="col-form-label">Justificación</label>
+                                        <textarea class="form-control" id="mensaje" rows="3" name="mensaje"></textarea>
+                                    </div>
+                                </form>
+                            </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-danger float-center" data-dismiss="modal">
+                                                Solicitar Desaprobación</button>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+
+

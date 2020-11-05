@@ -2,8 +2,22 @@
 {% block content %}
     <div class="container">
         <h1 class="text-center pt-3 mb-5">Comite de decisiones</h1>
-        <h3 class="mb-5">Solicitudes de ruptura</h3>
-            <div class="row d-flex justify-content-around">
+            <br>
+  <!-- Nav tabs -->
+  <ul class="nav nav-tabs" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#solicitudRuptura">
+          Solicitudes de Ruptura</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#solicitudItem">Solicitudes de modificacion de items</a>
+    </li>
+  </ul>
+
+  <!-- Tab panes -->
+  <div class="tab-content">
+    <div id="solicitudRuptura" class="container tab-pane active"><br>
+      <div class="row d-flex justify-content-around">
             {% for solicitud in solicitudes %}
                 <div class="card bg-light mb-3 col-sm-12  col-md-5">
                     <div class="card-header">
@@ -50,10 +64,12 @@
                     {% if not solicitud.solicitante_ha_votado %}
                         <div class="card-footer row">
                             <div class="col-sm-6">
-                                <a href="{% url 'configuracion:votarSolicitud' proyecto.id solicitud.id 1 %}" class="btn btn-danger btn-block text-white">Votar Si</a>
+                                <a href="{% url 'configuracion:votarSolicitud' proyecto.id solicitud.id 1 %}"
+                                   class="btn btn-danger btn-block text-white">Votar Si</a>
                             </div>
                             <div class="col-sm-6">
-                                <a href="{% url 'configuracion:votarSolicitud' proyecto.id solicitud.id 0 %}" class="btn btn-primary btn-block text-white" >Votar No</a>
+                                <a href="{% url 'configuracion:votarSolicitud' proyecto.id solicitud.id 0 %}"
+                                   class="btn btn-primary btn-block text-white" >Votar No</a>
                             </div>
                         </div>
                     {% else %}
@@ -62,6 +78,82 @@
                 </div>
             {% endfor %}
             </div>
+    </div>
+    <div id="solicitudItem" class="container tab-pane fade"><br>
+    <div class="row d-flex justify-content-around">
+        {% for solicitud in desaprobaciones %}
+            <div class="card bg-light mb-3 col-sm-12  col-md-5">
+                <div class="card-header">
+                    <h3 class="card-title font-weight-bold text-center">Solicitud {{ solicitud.id }}</h3>
+                </div>
+                <div class="card-body">
+                    {% for item in solicitud.items_a_modificar.all %}
+                        <h5 class="card-title font-weight-bold">Desaprobación de Item: {{ item.nombre }}</h5>
+                    {% endfor %}
+                    <p class="card-text"><span class="font-weight-bold">Justificacion:</span> {{solicitud.justificacion}}</p>
+                    <p class="card-text"><span class="font-weight-bold">Solicitante:</span> {{solicitud.solicitado_por.username}}</p>
+                    <p class="card-text"><span class="font-weight-bold">Fecha:</span> {{solicitud.fecha_solicitud}}</p>
+                    <hr/>
+                    <h5 class="card-title font-weight-bold">Relaciones:</h5>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Antecesores</th>
+                                <th>Hijos</th>
+                                <th>Sucesores</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in solicitud.items_a_modificar.all %}
+                                <tr>
+                                    <td>{{ item.nombre }}</td>
+                                    <td>
+                                        <ul class="list-unstyled">
+                                            {% for antecesor in item.antecesores.all %}
+                                                <li>{{ antecesor.nombre }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    </td>
+                                    <td>
+                                        <ul class="list-unstyled">
+                                            {% for hijo in item.hijos.all %}
+                                                <li>{{ hijo.nombre }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    </td>
+                                    <td>
+                                        <ul class="list-unstyled">
+                                            {% for sucesor in item.sucesores.all %}
+                                                <li>{{ sucesor.nombre }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% if not solicitud.solicitante_ha_votado %}
+                    <div class="card-footer row">
+                        <div class="col-sm-6">
+                            <a href="{% url 'configuracion:votarSolicitud' proyecto.id solicitud.id 1 %}"
+                               class="btn btn-danger btn-block text-white">Votar Si</a>
+                        </div>
+                        <div class="col-sm-6">
+                            <a href="{% url 'configuracion:votarSolicitud' proyecto.id solicitud.id 0 %}"
+                               class="btn btn-primary btn-block text-white" >Votar No</a>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="alert alert-info text-center">Usted ya ha votado</div>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+    </div>
+
+  </div>
         <div class="mt-5">
             <button class="btn btn-primary">Confirmar</button>
             <a href="{% url 'configuracion:verProyecto' proyecto.id %}" class="btn btn-primary float-right">Volver atrás</a>

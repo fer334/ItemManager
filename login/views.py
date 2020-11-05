@@ -8,10 +8,13 @@ from django.shortcuts import render, redirect
 from django.contrib import auth
 
 # Forms
+from administracion.models import Proyecto, TipoItem, Fase, Rol, HistoricalParticipante
+from configuracion.models import LineaBase
+from desarrollo.models import HistoricalItem
 from login.forms import RegisterForm, UpdateUserForm
 
 # Models
-from login.models import Usuario
+from login.models import Usuario, HistoricalAccesos
 
 
 @login_required
@@ -51,8 +54,13 @@ def user_login(request):
             message = 'Credenciales invalidas'
             return render(request, 'login/login.html', {'error_message': message})
         login(request, user)
-        #request.session.set_expiry(3600)
-        #SE SACA EL SESSION TIMEOUT DE CADA USUSARIO
+        # request.session.set_expiry(3600)
+        # SE SACA EL SESSION TIMEOUT DE CADA USUSARIO
+
+        # registramos para auditoría
+        audit = HistoricalAccesos(history_user=request.user, history_type=HistoricalAccesos.TIPO_ACCESO)
+        audit.save()
+
         return redirect('login:index')
 
     return render(request, 'login/login.html')
@@ -66,7 +74,13 @@ def logout(request):
     :return: redireccion a la vista login
     :rtype: redirect
     """
+
+    # primero registramos para auditoría
+    audit = HistoricalAccesos(history_user=request.user, history_type=HistoricalAccesos.TIPO_SALIDA)
+    audit.save()
+
     auth.logout(request)
+
     return redirect('login:login')
 
 
@@ -173,3 +187,43 @@ def user_update(request, name):
             'form': form,
         }
     )
+
+
+def auditoria(request, tipo):
+    """
+    Vista que se encarga de mostrar los datos de auditoría general para proyectos, items, lineas base, login, etc
+
+    :param request: objeto de tipo diccionario que permite acceder a los datos
+    :param tipo: el tipo de auditoría que se quiere realizar
+    :return: objeto que se encarga de renderear auditoria.html
+    :rtype: render
+    """
+    # primero verificamos que sea gerente o super user
+    usuario = Usuario.objects.get(pk=request.user.id)
+    if not (usuario.is_gerente or usuario.is_superuser):
+        return redirect('administracion:accesoDenegado', id_proyecto=1, caso='auditoria')
+    # si es gerente o super user continuamos
+    lista = []
+    mostrar_proyecto = True
+    if tipo == 'proyecto':
+        lista = Proyecto.history.all()
+        mostrar_proyecto = False
+    elif tipo == 'tipoItem':
+        lista = TipoItem.history.all()
+        mostrar_proyecto = False
+    elif tipo == 'fase':
+        lista = Fase.history.all()
+    elif tipo == 'rol':
+        lista = Rol.history.all()
+    elif tipo == 'Lineas Base':
+        lista = LineaBase.history.all()
+        mostrar_proyecto = False
+    elif tipo == 'Participante':
+        lista = HistoricalParticipante.objects.all().order_by('id').reverse()
+    elif tipo == 'acceso':
+        lista = HistoricalAccesos.objects.all().order_by('id').reverse()
+        mostrar_proyecto = False
+    elif tipo == 'Item':
+        lista = HistoricalItem.objects.all().order_by('id').reverse()
+    return render(request, 'configuracion/auditoria.html', {'tipo': tipo, 'lista': lista,
+                                                            'mostrar_proyecto': mostrar_proyecto})

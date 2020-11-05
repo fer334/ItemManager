@@ -3,6 +3,7 @@ Mapeador objeto-relacional en el que es posible definir la estructura de la base
 """
 from django.db import models
 from administracion.models import Fase
+from django.utils.timezone import now
 
 
 class Item(models.Model):
@@ -46,7 +47,7 @@ class Item(models.Model):
 
     def __str__(self):
         return self.nombre
-        
+
     def es_ultima_version(self):
         ultima_item_version = Item.objects.filter(id_version=self.id_version, estado__regex='^(?!' + Item.ESTADO_DESACTIVADO + ')'
                                    ).order_by('version').last()
@@ -72,3 +73,27 @@ class AtributoParticular(models.Model):
 
     def __str__(self):
         return self.nombre
+
+
+class HistoricalItem(models.Model):
+    """
+    Clase que sirve para guardar datos de auditoría para cada item del proyecto
+    """
+    #: usuario que participa en el proyecto
+    item = models.ForeignKey('desarrollo.Item', on_delete=models.CASCADE)
+    #: usuario que realizó la acción
+    history_user = models.CharField(max_length=150, default='None')
+    #: fecha y hora en la que se realizó la acción
+    history_date = models.DateTimeField(default=now)
+    #: razón de cambio (nulo por defecto)
+    history_change_reason = models.CharField(max_length=200, null=True)
+    #: tipo de cambio: puede ser crear, modificar, eliminar, reversionar, cambiar estado, relacionar, desrelacionar
+    history_type = models.CharField(max_length=250)
+    # constantes
+    TIPO_CREAR = '+'
+    TIPO_MODIFICAR = '~'
+    TIPO_ELIMINAR = '-'
+    TIPO_REVERSIONAR = 'reversión'
+    TIPO_ESTADO = 'estado cambiado a '
+    TIPO_RELACIONAR = 'relación creada'
+    TIPO_DESRELACIONAR = 'relación eliminada'

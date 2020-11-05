@@ -21,7 +21,7 @@ def handle_uploaded_file(archivo, id_proyecto, user):
     user_obj = Usuario.objects.get(username=user)
     with open(final_path, 'wb+') as destination:
         try:
-            for chunk in archivo.chunks():
+            for chunk in archivo.chunks(): 
                 destination.write(chunk)
             storage = firebase.storage()
             storage.child(final_storage_path).put(final_path)
