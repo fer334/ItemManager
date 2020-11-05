@@ -38,7 +38,7 @@ class ReporteProyecto(object):
         self.encabezado("Informe de todos los items pendiente y en desarrollo")
         self.tabla_items_proyecto(proyecto)
 
-        self.solicitudes(fecha_ini, fecha_fin)
+        self.solicitudes(fecha_ini, fecha_fin, id_proyecto)
 
         self.doc.build(self.story, onFirstPage=self.numeroPagina,
                        onLaterPages=self.numeroPagina)
@@ -56,8 +56,11 @@ class ReporteProyecto(object):
         self.story.append(p)
         self.story.append(Spacer(1, 0.1 * inch))
 
-    def solicitudes(self, fecha_ini, fecha_fin):
-        solicitudes = Solicitud.objects.filter(fecha_solicitud__range=[fecha_ini, fecha_fin])
+    def solicitudes(self, fecha_ini, fecha_fin, id_proyecto):
+        solicitudes = Solicitud.objects.filter(
+            fecha_solicitud__range=[fecha_ini, fecha_fin],
+            linea_base__fase__proyecto=id_proyecto
+        )
         num = len(solicitudes)
         texto = 'En el rango: {0}/{1}/{2}-{3}/{4}/{5}. '.format(fecha_ini.day,fecha_ini.month,fecha_ini.year,fecha_fin.day,fecha_fin.month,fecha_fin.year)
         if num ==1:
