@@ -717,7 +717,7 @@ def send_mail_aprobacion(request, item, proyecto, aprobar):
               f'El usuario "{request.user.username}" {"no" if not aprobar else ""} ha aprobado su item "{item.nombre}"'
               f'en el proyecto "{proyecto.nombre}"',
               'isteampoli2020@gmail.com',
-              [solicitante.email], fail_silently=False)
+              [solicitante.email], fail_silently=True)
 
 
 def desaprobar_item(request, id_item):
