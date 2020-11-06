@@ -188,7 +188,7 @@ def administrar_participantes(request, id_proyecto):
             participante = Usuario.objects.get(pk=id_usuario)
             proyecto.participantes.add(participante)
             send_mail('Nuevo participante', f'El usuario {request.user.username}, lo ha agregado al proyecto "{proyecto.nombre}".',
-            'isteampoli2020@gmail.com', [participante.email], fail_silently=False)
+            'isteampoli2020@gmail.com', [participante.email], fail_silently=True)
 
             # registramos para auditoría
             auditoria = HistoricalParticipante(usuario=participante, proyecto=proyecto,
@@ -302,7 +302,7 @@ def estado_proyectov2(request, id_proyecto, estado):
                 send_mail(f'Proyecto "{proyecto.nombre}" pasa a estado "{estado}"',
                           f'El proyecto "{proyecto.nombre}" ha pasado al estado "{estado}".',
                           'isteampoli2020@gmail.com', [request.user.email] +
-                          [us.email for us in proyecto.participantes.all()], fail_silently=False)
+                          [us.email for us in proyecto.participantes.all()], fail_silently=True)
 
                 return HttpResponseRedirect(reverse('administracion:verProyecto', args=[id_proyecto]))
 
